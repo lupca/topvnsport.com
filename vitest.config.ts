@@ -9,12 +9,11 @@ export default defineConfig({
     include: [path.resolve(__dirname, 'src/**/*.test.{ts,tsx}')],
     exclude: ['/app/**', '**/node_modules/**'],
     root: path.resolve(__dirname),
+    setupFiles: [path.resolve(__dirname, 'src/test-setup.ts')],
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@topvnsport/ui-kit': path.resolve(__dirname, '../packages/ui-kit/src/index.ts'),
-      '@topvnsport/api-client': path.resolve(__dirname, '../packages/api-client/src/index.ts'),
     },
   },
 });

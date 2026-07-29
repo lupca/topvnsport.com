@@ -166,7 +166,7 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
 
   const parsedBalance = Number(attrByCode.balance);
   const parsedMaxTension = Number(attrByCode.maxTension);
-  const resolvedPrice = minPrice;
+  const resolvedPrice = minPrice > 0 ? minPrice : 100000;
 
   const hasActivePromotion = Boolean(
     pmiProduct.has_active_promotion || mappedVariants.some((v) => v.hasActivePromotion)
