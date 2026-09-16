@@ -1,7 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { mapPmiProduct } from '../services/sport-api/productMappers';
 import { sportApi } from '../services/sport-api/index';
-import { WMS_API_URL } from '../services/sport-api/constants';
+import { WMS_PROXY_URL } from '../services/sport-api/constants';
 
 describe('Forensic Integrity Audit M2-1 for Requirement R2', () => {
   beforeEach(() => {
@@ -65,7 +65,7 @@ describe('Forensic Integrity Audit M2-1 for Requirement R2', () => {
     // Verify GET /public/stock was called
     const wmsStockCalls = calledUrls.filter((u) => u.includes('/public/stock'));
     expect(wmsStockCalls.length).toBeGreaterThan(0);
-    expect(wmsStockCalls[0]).toContain(`${WMS_API_URL}/public/stock?sku_codes=SKU-WMS-TEST`);
+    expect(wmsStockCalls[0]).toContain(`${WMS_PROXY_URL}/public/stock?sku_codes=SKU-WMS-TEST`);
 
     // Verify fetched stock (42) was merged over initial stock (5)
     expect(products[0].stock).toBe(42);
