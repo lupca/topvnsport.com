@@ -1,6 +1,6 @@
 import { Blog, Branch, Category, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
-import { delay, OMS_API_URL, PMI_API_URL, SIMULATED_LATENCY, WMS_API_URL } from './constants';
+import { delay, OMS_API_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { findManualChannel, findStorefrontChannel, getChannels } from './omsHelpers';
 import { extractItems, mapPmiProduct } from './productMappers';
 import { CreateOrderPayload, OmsChannel, OmsCustomer, OmsCustomerInput, PmiProduct, SendOtpResponse, VerifyOtpResponse } from './types';
@@ -21,7 +21,7 @@ async function fetchWmsStock(skuCodes: string[]): Promise<Record<string, number>
 
   const fetchChunk = async (chunk: string[]) => {
     try {
-      const url = `${WMS_API_URL}/public/stock?sku_codes=${encodeURIComponent(chunk.join(','))}`;
+      const url = `${WMS_PROXY_URL}/public/stock?sku_codes=${encodeURIComponent(chunk.join(','))}`;
       const response = await fetch(url);
       if (!response.ok) {
         console.warn(`WMS public stock endpoint returned status ${response.status}`);
@@ -103,7 +103,7 @@ async function mergeWmsStock(products: Product[]): Promise<Product[]> {
 
 async function getCategories(): Promise<Category[]> {
   try {
-    const response = await fetch(`${PMI_API_URL}/public/categories`);
+    const response = await fetch(`${PMI_PROXY_URL}/public/categories`);
     if (!response.ok) {
       return [];
     }
@@ -120,7 +120,7 @@ async function getProducts(): Promise<Product[]> {
   await delay(SIMULATED_LATENCY);
   try {
     const [response, categories] = await Promise.all([
-      fetch(`${PMI_API_URL}/public/products?limit=100`),
+      fetch(`${PMI_PROXY_URL}/public/products?limit=100`),
       getCategories()
     ]);
 
@@ -142,7 +142,7 @@ async function getProductById(id: string): Promise<Product | null> {
   await delay(SIMULATED_LATENCY);
   try {
     const [response, categories] = await Promise.all([
-      fetch(`${PMI_API_URL}/public/products/${id}`),
+      fetch(`${PMI_PROXY_URL}/public/products/${id}`),
       getCategories()
     ]);
 
