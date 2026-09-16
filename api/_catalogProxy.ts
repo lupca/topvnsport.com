@@ -38,6 +38,15 @@ function resolveCatalogGrantToken(): string | undefined {
 }
 
 export async function proxyToVoma(req: any, res: any, baseUrl: string | undefined) {
+  // This proxy exists only to attach a read-scoped catalog-grant token to
+  // public catalog/stock reads -- it must never forward a write. Reject
+  // before resolving the token so a non-GET request never even confirms
+  // whether a seller/token is configured.
+  if (req.method !== 'GET') {
+    res.status(405).json({ detail: 'method_not_allowed' });
+    return;
+  }
+
   const token = resolveCatalogGrantToken();
   if (!baseUrl || !token) {
     console.error('Catalog proxy misconfigured: missing upstream URL, or no valid CATALOG_GRANT_TOKENS entry for STOREFRONT_SELLER_ID');
