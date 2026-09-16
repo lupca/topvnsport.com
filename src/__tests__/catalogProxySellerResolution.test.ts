@@ -24,8 +24,8 @@ function makeRes() {
   };
 }
 
-function makeReq(path: string[] = ['public', 'products']) {
-  return { method: 'GET', query: { path }, url: `/api/pmi/${path.join('/')}` };
+function makeReq(path: string[] = ['public', 'products'], method = 'GET') {
+  return { method, query: { path }, url: `/api/pmi/${path.join('/')}` };
 }
 
 describe('catalogProxy seller resolution (CATALOG_GRANT_TOKENS + STOREFRONT_SELLER_ID)', () => {
@@ -96,5 +96,20 @@ describe('catalogProxy seller resolution (CATALOG_GRANT_TOKENS + STOREFRONT_SELL
 
     expect(res.statusCode).toBe(500);
     expect(res.body).toEqual({ detail: 'proxy_misconfigured' });
+  });
+
+  test('non-GET method -> 405 method_not_allowed, never resolves a token or calls fetch', async () => {
+    process.env.CATALOG_GRANT_TOKENS = JSON.stringify({ 'seller-a': 'token-a' });
+    process.env.STOREFRONT_SELLER_ID = 'seller-a';
+    global.fetch = vi.fn();
+
+    for (const method of ['POST', 'PUT', 'PATCH', 'DELETE']) {
+      const res = makeRes();
+      await proxyToVoma(makeReq(['public', 'products'], method), res, 'https://pmi.example.test');
+
+      expect(res.statusCode).toBe(405);
+      expect(res.body).toEqual({ detail: 'method_not_allowed' });
+    }
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });
