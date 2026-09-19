@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/pmi/:path*", "destination": "/api/pmi/:path*" },
-    { "source": "/api/wms/:path*", "destination": "/api/wms/:path*" },
+    { "source": "/api/pmi/:path*", "destination": "/api/pmi/[...path]?path=:path*" },
+    { "source": "/api/wms/:path*", "destination": "/api/wms/[...path]?path=:path*" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
