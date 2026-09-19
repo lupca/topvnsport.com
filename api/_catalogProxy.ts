@@ -56,7 +56,11 @@ export async function proxyToVoma(req: any, res: any, baseUrl: string | undefine
 
   const segments: string[] = Array.isArray(req.query.path) ? req.query.path : [req.query.path].filter(Boolean);
   const queryIndex = req.url.indexOf('?');
-  const queryString = queryIndex === -1 ? '' : req.url.slice(queryIndex);
+  // `path` is injected by the vercel.json rewrite that routes multi-segment
+  // requests here -- it is not a client parameter, so it must not be forwarded.
+  const params = new URLSearchParams(queryIndex === -1 ? '' : req.url.slice(queryIndex + 1));
+  params.delete('path');
+  const queryString = params.size > 0 ? `?${params}` : '';
   const upstreamUrl = `${baseUrl}/${segments.join('/')}${queryString}`;
 
   try {
