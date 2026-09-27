@@ -6,6 +6,7 @@ import ProductPurchaseSection from './product-detail/ProductPurchaseSection';
 import ProductDetailTabs, { DetailTab } from './product-detail/ProductDetailTabs';
 import MobilePurchaseBar from './product-detail/MobilePurchaseBar';
 import { isNoStringOption } from './product-detail/helpers';
+import { isRacketCategoryCode } from '../config/storefront';
 
 interface ProductDetailPageProps {
   product: Product;
@@ -17,8 +18,10 @@ interface ProductDetailPageProps {
 
 export default function ProductDetailPage({ product, stringOptions, onAddToCartWithSpecs }: Omit<ProductDetailPageProps, 'onBackToCatalog'|'onBookTestAtStore'>) {
   const [activeTab, setActiveTab] = useState<DetailTab>('details');
+  // Không bịa trọng lượng theo ngành -- lấy từ thông số thật của sản phẩm nếu
+  // có, còn lại dùng sentinel "Tiêu chuẩn" chung của hệ thống (giống màu sắc).
   const [selectedWeight, setSelectedWeight] = useState(
-    product.category === 'Vợt' ? '4U/G5' : 'Tiêu chuẩn'
+    product.specs.weight || 'Tiêu chuẩn'
   );
   const [selectedColor, setSelectedColor] = useState(
     product.colors && product.colors.length > 0 ? product.colors[0] : 'Tiêu chuẩn'
@@ -45,7 +48,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   const [withStringing, setWithStringing] = useState(false);
   const [selectedString, setSelectedString] = useState<StringOption | null>(null);
   const [tension, setTension] = useState(10.5);
-  const isRacket = product.category === 'Vợt';
+  const isRacket = isRacketCategoryCode(product.categoryCode);
 
   useEffect(() => {
     const t1 = product.tier_variations?.find(tv => tv.tier_index === 1);

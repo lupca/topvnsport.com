@@ -44,7 +44,10 @@ export default function StringingAssistant({
   onSetSelectedString,
   onSetTension
 }: StringingAssistantProps) {
-  if (!hasStringingVariation && !isRacket) {
+  // Nếu sản phẩm không có sẵn biến thể cước riêng (hasStringingVariation),
+  // trợ lý chỉ đề xuất dựa trên danh mục cước chung (stringOptions) -- không
+  // có dữ liệu cước thật nào thì ẩn hẳn phần này thay vì hiện một khung chọn rỗng.
+  if (!hasStringingVariation && (!isRacket || stringOptions.length === 0)) {
     return null;
   }
 

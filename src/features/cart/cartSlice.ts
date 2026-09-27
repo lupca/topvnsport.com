@@ -102,7 +102,9 @@ export function resolveSkuCode(product: Product, color: string, weight: string):
 
 export function buildDefaultCartItem(product: Product): CartItem {
   const selectedColor = product.colors && product.colors.length > 0 ? product.colors[0] : 'Tiêu chuẩn';
-  const selectedWeight = product.category === 'Vợt' ? '4U/G5' : 'Tiêu chuẩn';
+  // Không bịa trọng lượng theo ngành -- lấy từ thông số thật nếu có, còn lại
+  // dùng sentinel "Tiêu chuẩn" chung (giống màu sắc) khi sản phẩm chưa có dữ liệu.
+  const selectedWeight = product.specs?.weight || 'Tiêu chuẩn';
 
   return {
     id: `${product.id}-${selectedWeight}-${selectedColor}`,

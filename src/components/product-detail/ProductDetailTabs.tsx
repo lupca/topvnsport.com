@@ -56,30 +56,45 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
               <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider mb-4 text-brand-primary">Thông số cơ bản:</h4>
               {isRacket ? (
                 <div className="space-y-2.5 text-xs text-gray-600 font-mono">
-                  <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                    <span>Trọng lượng:</span>
-                    <strong className="text-gray-900">{product.specs.weight}</strong>
-                  </div>
-                  <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                    <span>Độ cứng đũa:</span>
-                    <strong className="text-gray-900">{product.specs.stiffness}</strong>
-                  </div>
-                  <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                    <span>Điểm cân bằng:</span>
-                    <strong className="text-gray-900">{product.specs.balance} mm</strong>
-                  </div>
-                  <div className="flex justify-between border-b border-gray-100 pb-1.5">
-                    <span>Sức căng tối đa:</span>
-                    <strong className="text-gray-900">
-                      {product.specs.maxTension} Lbs ({Math.round((product.specs.maxTension / 2.20462) * 10) / 10} Kg)
-                    </strong>
-                  </div>
+                  {product.specs.weight && (
+                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
+                      <span>Trọng lượng:</span>
+                      <strong className="text-gray-900">{product.specs.weight}</strong>
+                    </div>
+                  )}
+                  {product.specs.stiffness && (
+                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
+                      <span>Độ cứng đũa:</span>
+                      <strong className="text-gray-900">{product.specs.stiffness}</strong>
+                    </div>
+                  )}
+                  {typeof product.specs.balance === 'number' && (
+                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
+                      <span>Điểm cân bằng:</span>
+                      <strong className="text-gray-900">{product.specs.balance} mm</strong>
+                    </div>
+                  )}
+                  {typeof product.specs.maxTension === 'number' && (
+                    <div className="flex justify-between border-b border-gray-100 pb-1.5">
+                      <span>Sức căng tối đa:</span>
+                      <strong className="text-gray-900">
+                        {product.specs.maxTension} Lbs ({Math.round((product.specs.maxTension / 2.20462) * 10) / 10} Kg)
+                      </strong>
+                    </div>
+                  )}
                   {product.specs.swingWeight && (
                     <div className="flex justify-between border-b border-gray-100 pb-1.5">
                       <span>Swing Weight:</span>
                       <strong className="text-gray-900">{product.specs.swingWeight} kg/cm²</strong>
                     </div>
                   )}
+                  {!product.specs.weight &&
+                    !product.specs.stiffness &&
+                    typeof product.specs.balance !== 'number' &&
+                    typeof product.specs.maxTension !== 'number' &&
+                    !product.specs.swingWeight && (
+                      <p className="text-gray-500">Sản phẩm chưa có thông số kỹ thuật chi tiết.</p>
+                    )}
                 </div>
               ) : (
                 <div className="space-y-2.5 text-xs text-gray-600">
@@ -105,103 +120,118 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
               <div className="bg-gray-950 text-white rounded-2xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-4 gap-6 relative overflow-hidden">
                 <div className="absolute right-0 top-0 w-32 h-32 bg-brand-primary/5 rounded-full blur-3xl" />
 
-                <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                  <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Trọng lượng (Weight)</p>
-                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
-                      <circle
-                        cx="48"
-                        cy="48"
-                        r="40"
-                        className="stroke-brand-primary"
-                        strokeWidth="6"
-                        fill="transparent"
-                        strokeDasharray="251.2"
-                        strokeDashoffset={product.category === 'Vợt' ? '100' : '180'}
-                      />
-                    </svg>
-                    <div className="absolute font-mono text-sm font-bold text-white">{product.specs.weight.split(' ')[0]}</div>
-                  </div>
-                  <p className="text-xs text-gray-400">{product.specs.weight}</p>
-                </div>
-
-                <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                  <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Điểm Cân Bằng (Balance)</p>
-                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
-                      <circle
-                        cx="48"
-                        cy="48"
-                        r="40"
-                        className="stroke-brand-primary"
-                        strokeWidth="6"
-                        fill="transparent"
-                        strokeDasharray="251.2"
-                        strokeDashoffset={product.specs.balance > 295 ? '50' : '150'}
-                      />
-                    </svg>
-                    <div className="absolute font-mono text-sm font-bold text-white">{product.specs.balance}mm</div>
-                  </div>
-                  <p className="text-xs text-gray-400">
-                    {product.specs.balance === 0
-                      ? 'Tiêu chuẩn'
-                      : product.specs.balance > 295
-                        ? 'Nặng đầu (Tấn Công)'
-                        : product.specs.balance < 285
-                          ? 'Nhẹ đầu (Tốc độ)'
-                          : 'Cân bằng (Toàn diện)'}
-                  </p>
-                </div>
-
-                <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                  <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Độ Cứng Thân (Stiffness)</p>
-                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
-                      <circle
-                        cx="48"
-                        cy="48"
-                        r="40"
-                        className="stroke-brand-primary"
-                        strokeWidth="6"
-                        fill="transparent"
-                        strokeDasharray="251.2"
-                        strokeDashoffset={product.specs.stiffness.includes('Cứng') ? '60' : '170'}
-                      />
-                    </svg>
-                    <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none">
-                      {product.specs.stiffness.split(' ')[0]}
+                {product.specs.weight && (
+                  <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Trọng lượng (Weight)</p>
+                    <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r="40"
+                          className="stroke-brand-primary"
+                          strokeWidth="6"
+                          fill="transparent"
+                          strokeDasharray="251.2"
+                          strokeDashoffset="100"
+                        />
+                      </svg>
+                      <div className="absolute font-mono text-sm font-bold text-white">{product.specs.weight.split(' ')[0]}</div>
                     </div>
+                    <p className="text-xs text-gray-400">{product.specs.weight}</p>
                   </div>
-                  <p className="text-xs text-gray-400">{product.specs.stiffness}</p>
-                </div>
+                )}
 
-                <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                  <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Sức Căng Khung (Max Tension)</p>
-                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
-                      <circle
-                        cx="48"
-                        cy="48"
-                        r="40"
-                        className="stroke-brand-primary"
-                        strokeWidth="6"
-                        fill="transparent"
-                        strokeDasharray="251.2"
-                        strokeDashoffset="80"
-                      />
-                    </svg>
-                    <div className="absolute font-mono text-sm font-bold text-white">{product.specs.maxTension} Lbs</div>
+                {typeof product.specs.balance === 'number' && (
+                  <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Điểm Cân Bằng (Balance)</p>
+                    <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r="40"
+                          className="stroke-brand-primary"
+                          strokeWidth="6"
+                          fill="transparent"
+                          strokeDasharray="251.2"
+                          strokeDashoffset={product.specs.balance > 295 ? '50' : '150'}
+                        />
+                      </svg>
+                      <div className="absolute font-mono text-sm font-bold text-white">{product.specs.balance}mm</div>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      {product.specs.balance === 0
+                        ? 'Tiêu chuẩn'
+                        : product.specs.balance > 295
+                          ? 'Nặng đầu (Tấn Công)'
+                          : product.specs.balance < 285
+                            ? 'Nhẹ đầu (Tốc độ)'
+                            : 'Cân bằng (Toàn diện)'}
+                    </p>
                   </div>
-                  <p className="text-xs text-gray-400">
-                    {product.specs.maxTension === 0
-                      ? 'Tiêu chuẩn'
-                      : `Lên tới ~ ${Math.round((product.specs.maxTension / 2.20462) * 10) / 10} Kg`}
-                  </p>
-                </div>
+                )}
+
+                {product.specs.stiffness && (
+                  <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Độ Cứng Thân (Stiffness)</p>
+                    <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r="40"
+                          className="stroke-brand-primary"
+                          strokeWidth="6"
+                          fill="transparent"
+                          strokeDasharray="251.2"
+                          strokeDashoffset={product.specs.stiffness.includes('Cứng') ? '60' : '170'}
+                        />
+                      </svg>
+                      <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none">
+                        {product.specs.stiffness.split(' ')[0]}
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-400">{product.specs.stiffness}</p>
+                  </div>
+                )}
+
+                {typeof product.specs.maxTension === 'number' && (
+                  <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Sức Căng Khung (Max Tension)</p>
+                    <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r="40"
+                          className="stroke-brand-primary"
+                          strokeWidth="6"
+                          fill="transparent"
+                          strokeDasharray="251.2"
+                          strokeDashoffset="80"
+                        />
+                      </svg>
+                      <div className="absolute font-mono text-sm font-bold text-white">{product.specs.maxTension} Lbs</div>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      {product.specs.maxTension === 0
+                        ? 'Tiêu chuẩn'
+                        : `Lên tới ~ ${Math.round((product.specs.maxTension / 2.20462) * 10) / 10} Kg`}
+                    </p>
+                  </div>
+                )}
+
+                {!product.specs.weight &&
+                  typeof product.specs.balance !== 'number' &&
+                  !product.specs.stiffness &&
+                  typeof product.specs.maxTension !== 'number' && (
+                    <p className="text-gray-400 text-sm md:col-span-4">Sản phẩm chưa có thông số kỹ thuật chi tiết.</p>
+                  )}
               </div>
             ) : (
               <div className="bg-white rounded-2xl border border-gray-100 p-6">

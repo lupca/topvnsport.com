@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Trophy, ShieldCheck, DollarSign, RefreshCw, ChevronRight, Check } from 'lucide-react';
 import { Product } from '../types';
 import { getProductPath } from '../utils/productSlug';
+import { isRacketCategoryCode } from '../config/storefront';
 
 interface RacketFinderProps {
   products: Product[];
@@ -29,7 +30,7 @@ export default function RacketFinder({ products }: RacketFinderProps) {
 
   const handleCalculate = () => {
     // Basic heuristic rules for matching rackets based on inputs
-    let matches = products.filter(p => p.category === 'Vợt');
+    let matches = products.filter(p => isRacketCategoryCode(p.categoryCode));
 
     // Filter by budget
     if (answers.budget === 'low') {
@@ -49,7 +50,7 @@ export default function RacketFinder({ products }: RacketFinderProps) {
 
     // Default Fallbacks if list is too narrow
     if (matches.length === 0) {
-      matches = products.filter(p => p.category === 'Vợt').slice(0, 3);
+      matches = products.filter(p => isRacketCategoryCode(p.categoryCode)).slice(0, 3);
     }
 
     setRecommendations(matches.slice(0, 3));
@@ -256,11 +257,11 @@ export default function RacketFinder({ products }: RacketFinderProps) {
                       <span className="text-[10px] font-mono font-bold text-brand-primary block mb-1 uppercase tracking-wider">{p.brand}</span>
                       <h4 className="font-bold text-sm text-white group-hover:text-brand-primary transition line-clamp-2 leading-snug">{p.name}</h4>
                       
-                      {/* Specs indicator in result */}
+                      {/* Specs indicator in result -- chỉ hiện dòng có dữ liệu thật */}
                       <div className="mt-3 space-y-1 text-[11px] text-gray-400 font-mono">
-                        <p>• Trọng lượng: <span className="text-white font-bold">{p.specs.weight}</span></p>
-                        <p>• Điểm cân bằng: <span className="text-white font-bold">{p.specs.balance}mm</span></p>
-                        <p>• Độ cứng đũa: <span className="text-white font-bold">{p.specs.stiffness}</span></p>
+                        {p.specs.weight && <p>• Trọng lượng: <span className="text-white font-bold">{p.specs.weight}</span></p>}
+                        {typeof p.specs.balance === 'number' && <p>• Điểm cân bằng: <span className="text-white font-bold">{p.specs.balance}mm</span></p>}
+                        {p.specs.stiffness && <p>• Độ cứng đũa: <span className="text-white font-bold">{p.specs.stiffness}</span></p>}
                       </div>
                     </div>
 

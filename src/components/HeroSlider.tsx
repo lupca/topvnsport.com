@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Trophy, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { RACKET_CATEGORY_CODES } from '../config/storefront';
 
 interface Slide {
   id: number;
@@ -10,11 +11,11 @@ interface Slide {
   badge: string;
   image: string;
   ctaText: string;
-  category: string;
-  productSlug?: string;
+  // Đường dẫn khi bấm CTA. Không trỏ tới một sản phẩm cụ thể theo slug cố định
+  // (slug demo cũ có thể không còn tồn tại trong catalog thật -> trang rỗng
+  // "Not Found"), luôn dẫn về trang catalog để chắc chắn có nội dung.
+  linkTo: string;
 }
-
-interface HeroSliderProps {}
 
 const slides: Slide[] = [
   {
@@ -24,8 +25,7 @@ const slides: Slide[] = [
     badge: 'MÃ JP CHÍNH HÃNG',
     image: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80',
     ctaText: 'Khám Phá Siêu Phẩm',
-    category: 'Vợt',
-    productSlug: 'yonex-astrox-100zz'
+    linkTo: `/catalog?category=${encodeURIComponent(RACKET_CATEGORY_CODES[0])}`
   },
   {
     id: 2,
@@ -34,8 +34,7 @@ const slides: Slide[] = [
     badge: 'GIÁ TỐT NHẬP MÔN',
     image: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1200&q=80',
     ctaText: 'Mua Ngay Chỉ 850K',
-    category: 'Vợt',
-    productSlug: 'lining-gforce-x5'
+    linkTo: `/catalog?category=${encodeURIComponent(RACKET_CATEGORY_CODES[0])}`
   },
   {
     id: 3,
@@ -44,8 +43,8 @@ const slides: Slide[] = [
     badge: 'KHUYẾN MÃI HOT',
     image: 'https://images.unsplash.com/photo-1613531415875-161a5622c5b7?auto=format&fit=crop&w=1200&q=80',
     ctaText: 'Xem Ngay Ưu Đãi',
-    category: 'Cước',
-    productSlug: 'yonex-exbolt-68'
+    // Cước chưa có ngành VOMA riêng, nên tìm theo từ khoá thay vì theo danh mục.
+    linkTo: `/catalog?search=${encodeURIComponent('cước')}`
   }
 ];
 
@@ -122,13 +121,7 @@ export default function HeroSlider() {
                   className="pt-2"
                 >
                   <button
-                    onClick={() => {
-                      if (slides[current].productSlug) {
-                        navigate(`/product/${slides[current].productSlug}`);
-                      } else {
-                        navigate(`/catalog?category=${slides[current].category}`);
-                      }
-                    }}
+                    onClick={() => navigate(slides[current].linkTo)}
                     className="bg-brand-primary hover:bg-brand-secondary text-white text-xs md:text-sm font-bold px-6 py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-brand-primary/20 "
                   >
                     {slides[current].ctaText}

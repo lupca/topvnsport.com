@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Clock, Calendar, ShieldCheck, CheckCircle2, User, ChevronRight, MessageSquare } from 'lucide-react';
 import { Branch, Product } from '../types';
 import { popupService } from '@topvnsport/ui-kit';
+import { isRacketCategoryCode } from '../config/storefront';
 
 interface StoreLocatorProps {
   branches: Branch[];
@@ -231,7 +232,7 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                       className="w-full bg-gray-850 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:border-brand-primary transition"
                     >
                       <option value="">-- Click để lựa chọn --</option>
-                      {products.filter(p => p.category === 'Vợt').map(p => (
+                      {products.filter(p => isRacketCategoryCode(p.categoryCode)).map(p => (
                         <option key={p.id} value={p.name}>{p.name}</option>
                       ))}
                     </select>

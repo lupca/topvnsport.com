@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Eye, ShoppingCart, Star, Zap, Activity } from 'lucide-react';
 import { getProductPath } from '../utils/productSlug';
+import { isRacketCategoryCode } from '../config/storefront';
 
 interface ProductCardProps {
   key?: string;
@@ -116,26 +117,34 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
             {product.name}
           </h3>
 
-          {/* Core Technical Indicator Tags (for Rackets / Paddles) */}
-          {product.category === 'Vợt' && product.specs && (
+          {/* Core Technical Indicator Tags (for Rackets / Paddles) -- chỉ hiện
+              khi sản phẩm thuộc ngành vợt VÀ có ít nhất một thông số thật */}
+          {isRacketCategoryCode(product.categoryCode) &&
+            (product.specs.weight || typeof product.specs.balance === 'number' || product.specs.stiffness) && (
             <div className="py-2 grid grid-cols-2 gap-x-2 gap-y-1 border-t border-b border-gray-50 my-2 text-[10px] text-gray-500 font-mono">
-              <div className="flex items-center gap-1">
-                <span className="text-gray-400">Trọng lượng:</span>
-                <span className="font-semibold text-gray-700">{product.specs?.weight?.split(' ')[0] ?? 'N/A'}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-gray-400">Điểm CB:</span>
-                <span className="font-semibold text-gray-700">{product.specs?.balance ?? 0}mm</span>
-              </div>
-              <div className="flex items-center gap-1 col-span-2">
-                <span className="text-gray-400">Độ cứng:</span>
-                <span className="font-semibold text-gray-700 truncate max-w-[120px]">{product.specs?.stiffness?.split(' ')[0] ?? 'N/A'}</span>
-              </div>
+              {product.specs.weight && (
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-400">Trọng lượng:</span>
+                  <span className="font-semibold text-gray-700">{product.specs.weight.split(' ')[0]}</span>
+                </div>
+              )}
+              {typeof product.specs.balance === 'number' && (
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-400">Điểm CB:</span>
+                  <span className="font-semibold text-gray-700">{product.specs.balance}mm</span>
+                </div>
+              )}
+              {product.specs.stiffness && (
+                <div className="flex items-center gap-1 col-span-2">
+                  <span className="text-gray-400">Độ cứng:</span>
+                  <span className="font-semibold text-gray-700 truncate max-w-[120px]">{product.specs.stiffness.split(' ')[0]}</span>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Wide format shoe indicator */}
-          {product.category === 'Giày' && product.isWide && (
+          {/* Wide format shoe indicator -- theo isWide thật, không theo tên ngành */}
+          {product.isWide === true && (
             <div className="my-1.5 inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] px-2 py-0.5 rounded border border-amber-100 font-medium">
               <Activity className="w-3 h-3" /> Form chân bè (Wide Fit)
             </div>
