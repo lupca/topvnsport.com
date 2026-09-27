@@ -13,6 +13,7 @@ const mockUnpromotedProduct: Product = {
   brand: 'Yonex',
   image: 'http://localhost:18100/images/astrox88d.jpg',
   category: 'Vợt',
+  categoryCode: 'VC001491',
   price: 2500000,
   hasActivePromotion: false,
   characteristics: 'Tấn Công',
@@ -166,6 +167,51 @@ describe('ProductCard component', () => {
     );
 
     expect(screen.getByText(/Form chân bè \(Wide Fit\)/)).toBeTruthy();
+  });
+
+  it('renders wide fit indicator based on isWide alone, regardless of category name', () => {
+    const wideRacket: Product = { ...mockUnpromotedProduct, isWide: true };
+    render(
+      <MemoryRouter>
+        <ProductCard product={wideRacket} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(/Form chân bè \(Wide Fit\)/)).toBeTruthy();
+  });
+
+  it('does not render wide fit indicator when isWide is not true', () => {
+    render(
+      <MemoryRouter>
+        <ProductCard product={mockUnpromotedProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByText(/Form chân bè \(Wide Fit\)/)).toBeNull();
+  });
+
+  it('hides racket spec chips when the product is not in a racket category', () => {
+    const nonRacket: Product = { ...mockUnpromotedProduct, categoryCode: 'VC001488' };
+    render(
+      <MemoryRouter>
+        <ProductCard product={nonRacket} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByText('Trọng lượng:')).toBeNull();
+  });
+
+  it('hides racket spec chips entirely when a racket-category product has no real spec data', () => {
+    const racketWithoutSpecs: Product = { ...mockUnpromotedProduct, specs: {} };
+    render(
+      <MemoryRouter>
+        <ProductCard product={racketWithoutSpecs} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByText('Trọng lượng:')).toBeNull();
+    expect(screen.queryByText('Điểm CB:')).toBeNull();
+    expect(screen.queryByText('Độ cứng:')).toBeNull();
   });
 
   it('handles Quick View, Add to Cart, and detail navigation click events', () => {

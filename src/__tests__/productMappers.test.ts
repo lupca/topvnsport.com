@@ -5,8 +5,8 @@ import { Category } from '../types';
 
 describe('productMappers', () => {
   const mockCategories: Category[] = [
-    { id: 1, name: 'Vợt cầu lông', icon: 'racket', banner: '' },
-    { id: 2, name: 'Giày cầu lông', icon: 'shoes', banner: '' }
+    { id: 1, name: 'Vợt cầu lông', code: 'VC001491', parent_id: 10, display_name: 'Thể Thao > Cầu Lông > Vợt cầu lông' },
+    { id: 2, name: 'Giày cầu lông', code: 'VC002000', parent_id: 10, display_name: 'Thể Thao > Cầu Lông > Giày cầu lông' }
   ];
 
   it('extractItems extracts array items from direct array or paginated object', () => {
@@ -48,7 +48,7 @@ describe('productMappers', () => {
       id: '1',
       name: 'Vợt Yonex Astrox 88D Pro',
       description: 'Dòng vợt tấn công mạnh mẽ.',
-      category_id: 1,
+      voma_category_id: 1,
       weight: '4U',
       attribute_values: [
         { id: 1, attribute_id: 10, value_string: 'Yonex', attribute: { code: 'brand', name: 'Thương hiệu' } },
@@ -80,6 +80,7 @@ describe('productMappers', () => {
     expect(product.name).toBe('Vợt Yonex Astrox 88D Pro');
     expect(product.brand).toBe('Yonex');
     expect(product.category).toBe('Vợt cầu lông');
+    expect(product.categoryCode).toBe('VC001491');
     expect(product.image).toBe('http://localhost/cover.jpg');
     expect(product.gallery).toHaveLength(2);
     expect(product.hasActivePromotion).toBe(true);
@@ -96,7 +97,7 @@ describe('productMappers', () => {
     const pmiProduct: PmiProduct = {
       id: '2',
       name: 'Giày Victor A970ACE',
-      category_id: 2,
+      voma_category_id: 2,
       has_active_promotion: false,
       attribute_values: [
         { id: 1, attribute_id: 10, value_string: 'Lining', attribute: { code: 'brand', name: 'Thương hiệu' } }
@@ -122,5 +123,48 @@ describe('productMappers', () => {
     expect(product.percentageDiscount).toBeUndefined();
     expect(product.salePrice).toBe(1800000);
     expect(product.price).toBe(1800000);
+  });
+
+  it('mapPmiProduct gán "Chưa phân loại" và không có categoryCode khi voma_category_id không khớp ngành nào', () => {
+    const pmiProduct: PmiProduct = {
+      id: '3',
+      name: 'Sản phẩm chưa gắn ngành',
+      voma_category_id: 999,
+      variants: []
+    };
+
+    const product = mapPmiProduct(pmiProduct, mockCategories);
+
+    expect(product.category).toBe('Chưa phân loại');
+    expect(product.categoryCode).toBeUndefined();
+  });
+
+  it('mapPmiProduct gán "Chưa phân loại" khi sản phẩm không có voma_category_id', () => {
+    const pmiProduct: PmiProduct = {
+      id: '4',
+      name: 'Sản phẩm không gắn ngành',
+      variants: []
+    };
+
+    const product = mapPmiProduct(pmiProduct, mockCategories);
+
+    expect(product.category).toBe('Chưa phân loại');
+    expect(product.categoryCode).toBeUndefined();
+  });
+
+  it('mapPmiProduct không bịa giá trị thông số vợt khi PIM chưa có thuộc tính', () => {
+    const pmiProduct: PmiProduct = {
+      id: '5',
+      name: 'Vợt chưa có thông số',
+      voma_category_id: 1,
+      variants: []
+    };
+
+    const product = mapPmiProduct(pmiProduct, mockCategories);
+
+    expect(product.specs.weight).toBeUndefined();
+    expect(product.specs.stiffness).toBeUndefined();
+    expect(product.specs.balance).toBeUndefined();
+    expect(product.specs.maxTension).toBeUndefined();
   });
 });

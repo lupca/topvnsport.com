@@ -61,7 +61,7 @@ describe('WMS Stock Integration & Product Mappers Tests (Requirement R2)', () =>
           })
         });
       }
-      if (url.includes('/public/categories')) {
+      if (url.includes('/public/voma-categories')) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve([])

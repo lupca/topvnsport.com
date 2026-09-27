@@ -47,7 +47,9 @@ describe('Milestone 7 - Cart Persistence & Reducer Logic', () => {
     const defaultItem1 = buildDefaultCartItem(mockProduct);
     const defaultItem2 = buildDefaultCartItem(mockProduct);
 
-    expect(defaultItem1.id).toBe('PROD-100-4U/G5-Đỏ/Đen');
+    // mockProduct không có specs.weight thật -> mặc định dùng sentinel "Tiêu chuẩn",
+    // không bịa ra một lớp cân nặng cụ thể như "4U/G5".
+    expect(defaultItem1.id).toBe('PROD-100-Tiêu chuẩn-Đỏ/Đen');
     expect(defaultItem2.id).toBe(defaultItem1.id);
     expect(defaultItem1.id).not.toContain('Date.now');
 

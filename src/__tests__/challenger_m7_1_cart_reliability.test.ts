@@ -129,15 +129,16 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
     });
 
     it('EMPIRICAL BUG: buildDefaultCartItem and equivalent buildConfiguredCartItem produce different IDs for identical item specs', () => {
-      // Default racket selected weight = 4U/G5, selected color = Đỏ/Đen, string = null, tension = 10.5
+      // mockRacket không có specs.weight thật -> buildDefaultCartItem không bịa
+      // ra một lớp cân nặng cụ thể, mà dùng sentinel chung "Tiêu chuẩn".
       const defaultItem = buildDefaultCartItem(mockRacket);
-      // Configured racket with exact same weight, color, string=null, tension=10.5
-      const configuredItem = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', null, 10.5);
+      // Configured racket with the SAME weight/color/string/tension as default
+      const configuredItem = buildConfiguredCartItem(mockRacket, 'Tiêu chuẩn', 'Đỏ/Đen', null, 10.5);
 
       // Default ID format: `${product.id}-${selectedWeight}-${selectedColor}`
       // Configured ID format: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`
-      expect(defaultItem.id).toBe('PROD-RACKET-1-4U/G5-Đỏ/Đen');
-      expect(configuredItem.id).toBe('PROD-RACKET-1-4U/G5-Đỏ/Đen-none-10.5');
+      expect(defaultItem.id).toBe('PROD-RACKET-1-Tiêu chuẩn-Đỏ/Đen');
+      expect(configuredItem.id).toBe('PROD-RACKET-1-Tiêu chuẩn-Đỏ/Đen-none-10.5');
       expect(defaultItem.id).not.toBe(configuredItem.id);
 
       // Adding both to cart results in 2 separate cart items despite identical physical specifications!
