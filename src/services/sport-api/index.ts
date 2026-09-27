@@ -103,7 +103,7 @@ async function mergeWmsStock(products: Product[]): Promise<Product[]> {
 
 async function getCategories(): Promise<Category[]> {
   try {
-    const response = await fetch(`${PMI_PROXY_URL}/public/categories`);
+    const response = await fetch(`${PMI_PROXY_URL}/public/voma-categories`);
     if (!response.ok) {
       return [];
     }
@@ -195,24 +195,25 @@ async function getStringOptions(): Promise<StringOption[]> {
   await delay(SIMULATED_LATENCY);
   try {
     const products = await getProducts();
-    const stringProducts = products.filter((product) => product.category === 'Cước');
+    // Cước chưa có ngành VOMA riêng (nằm lẫn trong nhóm "Khác"), nên nhận diện
+    // sản phẩm cước qua thuộc tính `thickness` thật của PIM thay vì theo ngành.
+    const stringProducts = products.filter((product) =>
+      product.attributes?.some((attribute) => attribute.code === 'thickness')
+    );
 
-    if (stringProducts.length > 0) {
-      return stringProducts.map((product) => ({
-        id: product.id,
-        name: product.name,
-        brand: resolveStringBrand(product.brand),
-        type: resolveStringType(product.specs.stiffness),
-        thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value || '0.65mm',
-        price: product.price,
-        colors: product.colors || []
-      }));
-    }
+    return stringProducts.map((product) => ({
+      id: product.id,
+      name: product.name,
+      brand: resolveStringBrand(product.brand),
+      type: resolveStringType(product.specs.stiffness),
+      thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value || '',
+      price: product.price,
+      colors: product.colors || []
+    }));
   } catch (error) {
     console.warn('Failed to fetch dynamic string options from API:', error);
+    return [];
   }
-
-  return JSON.parse(JSON.stringify(rawData.stringOptions)) as StringOption[];
 }
 
 async function getConstants() {

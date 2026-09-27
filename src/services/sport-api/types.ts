@@ -51,6 +51,7 @@ export type PmiProduct = {
   description?: string;
   weight?: string | number;
   category_id?: number;
+  voma_category_id?: number | null;
   family_id?: number;
   attribute_values?: PmiAttributeValue[];
   variants?: PmiVariant[];

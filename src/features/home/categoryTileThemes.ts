@@ -49,5 +49,11 @@ export function getCategoryMonogram(name: string) {
 }
 
 export function getCategorySubtitle(category: Category) {
-  return category.display_name.replace(/^\[root\]\s*\/\s*/, '');
+  // display_name là đường dẫn đầy đủ từ gốc tới ngành này, nối bằng " > ".
+  // Phụ đề chỉ cần phần đường dẫn CHA (bỏ đoạn cuối, vì đó chính là tên ngành).
+  const segments = category.display_name
+    .split('>')
+    .map(segment => segment.trim())
+    .filter(Boolean);
+  return segments.slice(0, -1).join(' > ');
 }
