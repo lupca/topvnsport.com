@@ -2,6 +2,8 @@ import { RefreshCw, SlidersHorizontal, X } from 'lucide-react';
 import { MouseEvent, useMemo } from 'react';
 import ProductCard from '../../components/ProductCard';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { RACKET_CATEGORY_CODES } from '../../config/storefront';
+import { getCategoriesSortedByCount, getCategoryLabel } from '../../utils/categories';
 import {
   resetCatalogFilters,
   setMaxPrice,
@@ -14,9 +16,12 @@ import {
 } from './catalogSlice';
 import { addCartItem, buildDefaultCartItem, openCart, setQuickViewProduct } from '../cart/cartSlice';
 
+const ALL_CATEGORIES_OPTION = 'Tất cả';
+
 export default function CatalogPage() {
   const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.appData.products);
+  const categories = useAppSelector(state => state.appData.categories);
   const {
     selectedBrand,
     selectedCategory,
@@ -27,26 +32,56 @@ export default function CatalogPage() {
     searchQuery
   } = useAppSelector(state => state.catalog);
 
+  const isRacketCategorySelected = RACKET_CATEGORY_CODES.includes(selectedCategory);
+
+  const sortedCategories = useMemo(
+    () => getCategoriesSortedByCount(categories, products),
+    [categories, products]
+  );
+
+  const categoryFilterOptions = useMemo(() => {
+    const allOption = { code: ALL_CATEGORIES_OPTION, label: ALL_CATEGORIES_OPTION, count: products.length };
+    const rest = sortedCategories.map(category => ({
+      code: category.code,
+      label: getCategoryLabel(category, categories),
+      count: products.filter(p => p.categoryCode === category.code).length
+    }));
+    return [allOption, ...rest];
+  }, [categories, products, sortedCategories]);
+
+  // Sản phẩm đang xem trong ngành vợt đang chọn -- dùng để quyết định có hiện
+  // bộ lọc thông số (trọng lượng/cân bằng/độ cứng) hay không: chỉ hiện khi
+  // thực sự có ít nhất một sản phẩm mang giá trị thông số đó.
+  const racketProductsInView = useMemo(
+    () => (isRacketCategorySelected ? products.filter(p => p.categoryCode === selectedCategory) : []),
+    [isRacketCategorySelected, products, selectedCategory]
+  );
+  const hasWeightData = racketProductsInView.some(p => Boolean(p.specs.weight));
+  const hasBalanceData = racketProductsInView.some(p => typeof p.specs.balance === 'number');
+  const hasStiffnessData = racketProductsInView.some(p => Boolean(p.specs.stiffness));
+
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
-      if (selectedCategory !== 'Tất cả' && p.category !== selectedCategory) return false;
+      if (selectedCategory !== ALL_CATEGORIES_OPTION && p.categoryCode !== selectedCategory) return false;
       if (selectedBrand.length > 0 && !selectedBrand.includes(p.brand)) return false;
 
       const displayPrice = p.salePrice || p.price;
       if (displayPrice > maxPrice) return false;
 
-      if (selectedWeight.length > 0 && p.category === 'Vợt') {
-        const match = selectedWeight.some(wt => p.specs.weight.includes(wt));
+      if (selectedWeight.length > 0 && RACKET_CATEGORY_CODES.includes(p.categoryCode || '')) {
+        const match = selectedWeight.some(wt => p.specs.weight?.includes(wt));
         if (!match) return false;
       }
 
-      if (selectedBalance !== 'Tất cả' && p.category === 'Vợt') {
+      if (selectedBalance !== 'Tất cả' && RACKET_CATEGORY_CODES.includes(p.categoryCode || '')) {
+        if (typeof p.specs.balance !== 'number') return false;
         if (selectedBalance === 'nặng' && p.specs.balance < 298) return false;
         if (selectedBalance === 'nhẹ' && p.specs.balance > 288) return false;
         if (selectedBalance === 'cân bằng' && (p.specs.balance < 288 || p.specs.balance >= 298)) return false;
       }
 
-      if (selectedStiffness !== 'Tất cả' && p.category === 'Vợt') {
+      if (selectedStiffness !== 'Tất cả' && RACKET_CATEGORY_CODES.includes(p.categoryCode || '')) {
+        if (!p.specs.stiffness) return false;
         const pStiff = p.specs.stiffness.toLowerCase();
         if (selectedStiffness === 'cứng' && !pStiff.includes('cứng')) return false;
         if (selectedStiffness === 'dẻo' && !pStiff.includes('dẻo')) return false;
@@ -124,16 +159,14 @@ export default function CatalogPage() {
             <div className="space-y-2">
               <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Phân loại sản phẩm</h4>
               <div className="space-y-1.5 flex flex-col">
-                {['Tất cả', ...Array.from(new Set(products.map(p => p.category)))].map(cat => (
+                {categoryFilterOptions.map(option => (
                   <button
-                    key={cat}
-                    onClick={() => dispatch(setSelectedCategory(cat))}
-                    className={`text-xs text-left py-1.5 px-2.5 rounded-lg font-bold transition flex items-center justify-between ${selectedCategory === cat ? 'bg-brand-light text-brand-primary font-black' : 'text-gray-600 hover:bg-gray-50'}`}
+                    key={option.code}
+                    onClick={() => dispatch(setSelectedCategory(option.code))}
+                    className={`text-xs text-left py-1.5 px-2.5 rounded-lg font-bold transition flex items-center justify-between ${selectedCategory === option.code ? 'bg-brand-light text-brand-primary font-black' : 'text-gray-600 hover:bg-gray-50'}`}
                   >
-                    <span>{cat}</span>
-                    <span className="text-[10px] text-gray-400 font-mono">
-                      ({cat === 'Tất cả' ? products.length : products.filter(p => p.category === cat).length})
-                    </span>
+                    <span>{option.label}</span>
+                    <span className="text-[10px] text-gray-400 font-mono">({option.count})</span>
                   </button>
                 ))}
               </div>
@@ -159,56 +192,62 @@ export default function CatalogPage() {
               </div>
             </div>
 
-            {selectedCategory === 'Vợt' && (
+            {isRacketCategorySelected && (
               <>
-                <div className="space-y-2 pt-3 border-t border-gray-100">
-                  <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Trọng lượng (U)</h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['3U', '4U', '5U'].map(wt => (
-                      <button
-                        key={wt}
-                        onClick={() => {
-                          if (selectedWeight.includes(wt)) {
-                            dispatch(setSelectedWeight(selectedWeight.filter(w => w !== wt)));
-                          } else {
-                            dispatch(setSelectedWeight([...selectedWeight, wt]));
-                          }
-                        }}
-                        className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-md border transition ${selectedWeight.includes(wt) ? 'bg-brand-primary text-white border-brand-primary shadow-xs' : 'bg-white border-gray-150 text-gray-700 hover:bg-gray-50'}`}
-                      >
-                        {wt}
-                      </button>
-                    ))}
+                {hasWeightData && (
+                  <div className="space-y-2 pt-3 border-t border-gray-100">
+                    <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Trọng lượng (U)</h4>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['3U', '4U', '5U'].map(wt => (
+                        <button
+                          key={wt}
+                          onClick={() => {
+                            if (selectedWeight.includes(wt)) {
+                              dispatch(setSelectedWeight(selectedWeight.filter(w => w !== wt)));
+                            } else {
+                              dispatch(setSelectedWeight([...selectedWeight, wt]));
+                            }
+                          }}
+                          className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-md border transition ${selectedWeight.includes(wt) ? 'bg-brand-primary text-white border-brand-primary shadow-xs' : 'bg-white border-gray-150 text-gray-700 hover:bg-gray-50'}`}
+                        >
+                          {wt}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="space-y-2 pt-3 border-t border-gray-100">
-                  <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Điểm Cân Bằng</h4>
-                  <select
-                    value={selectedBalance}
-                    onChange={(e) => dispatch(setSelectedBalance(e.target.value))}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
-                  >
-                    <option value="Tất cả">Mọi điểm cân bằng</option>
-                    <option value="nặng">Nặng Đầu (&gt; 298mm - Công)</option>
-                    <option value="nhẹ">Nhẹ Đầu (&lt; 288mm - Thủ)</option>
-                    <option value="cân bằng">Cân Bằng (288 - 298mm - Công Thủ)</option>
-                  </select>
-                </div>
+                {hasBalanceData && (
+                  <div className="space-y-2 pt-3 border-t border-gray-100">
+                    <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Điểm Cân Bằng</h4>
+                    <select
+                      value={selectedBalance}
+                      onChange={(e) => dispatch(setSelectedBalance(e.target.value))}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
+                    >
+                      <option value="Tất cả">Mọi điểm cân bằng</option>
+                      <option value="nặng">Nặng Đầu (&gt; 298mm - Công)</option>
+                      <option value="nhẹ">Nhẹ Đầu (&lt; 288mm - Thủ)</option>
+                      <option value="cân bằng">Cân Bằng (288 - 298mm - Công Thủ)</option>
+                    </select>
+                  </div>
+                )}
 
-                <div className="space-y-2 pt-3 border-t border-gray-100">
-                  <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Độ Cứng Thân (Stiffness)</h4>
-                  <select
-                    value={selectedStiffness}
-                    onChange={(e) => dispatch(setSelectedStiffness(e.target.value))}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
-                  >
-                    <option value="Tất cả">Mọi độ cứng</option>
-                    <option value="cứng">Siêu Cứng / Cứng (Extra Stiff/Stiff)</option>
-                    <option value="trung bình">Trung Bình (Medium)</option>
-                    <option value="dẻo">Thân Dẻo Trợ Lực (Flexible)</option>
-                  </select>
-                </div>
+                {hasStiffnessData && (
+                  <div className="space-y-2 pt-3 border-t border-gray-100">
+                    <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Độ Cứng Thân (Stiffness)</h4>
+                    <select
+                      value={selectedStiffness}
+                      onChange={(e) => dispatch(setSelectedStiffness(e.target.value))}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
+                    >
+                      <option value="Tất cả">Mọi độ cứng</option>
+                      <option value="cứng">Siêu Cứng / Cứng (Extra Stiff/Stiff)</option>
+                      <option value="trung bình">Trung Bình (Medium)</option>
+                      <option value="dẻo">Thân Dẻo Trợ Lực (Flexible)</option>
+                    </select>
+                  </div>
+                )}
               </>
             )}
           </div>

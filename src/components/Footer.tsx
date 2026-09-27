@@ -2,15 +2,16 @@ import React from 'react';
 import { Trophy, Phone, MapPin, Mail, ShieldCheck, Heart, Sparkles, Facebook, Youtube, Share2 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
-import { Category } from '../types';
-import { getTopLevelProductCategories } from '../utils/categories';
+import { Category, Product } from '../types';
+import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
 
 interface FooterProps {
   categories: Category[];
+  products: Product[];
 }
 
-export default function Footer({ categories }: FooterProps) {
-  const topLevelCategories = getTopLevelProductCategories(categories);
+export default function Footer({ categories, products }: FooterProps) {
+  const sortedCategories = getCategoriesSortedByCount(categories, products);
 
   return (
     <footer className="bg-gray-950 text-gray-400 text-xs md:text-sm border-t border-gray-900 mt-20" id="topvnsport-footer">
@@ -87,13 +88,13 @@ export default function Footer({ categories }: FooterProps) {
         </div>
 
         {/* Directory links */}
-        {topLevelCategories.length > 0 && (
+        {sortedCategories.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-bold text-white text-xs uppercase tracking-wider">Sản phẩm cốt lõi</h4>
             <ul className="space-y-1.5 text-xs text-gray-500">
-              {topLevelCategories.map(category => (
+              {sortedCategories.map(category => (
                 <li key={category.id}>
-                  <Link to={`/catalog?category=${encodeURIComponent(category.name)}`} className="hover:text-white transition">{category.name}</Link>
+                  <Link to={`/catalog?category=${encodeURIComponent(category.code)}`} className="hover:text-white transition">{getCategoryLabel(category, categories)}</Link>
                 </li>
               ))}
             </ul>

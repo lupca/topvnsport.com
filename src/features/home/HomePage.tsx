@@ -6,7 +6,7 @@ import HeroSlider from '../../components/HeroSlider';
 import ProductCard from '../../components/ProductCard';
 import RacketFinder from '../../components/RacketFinder';
 import TrustBadges from '../../components/TrustBadges';
-import { getProductCategoryCounts, getTopLevelProductCategories } from '../../utils/categories';
+import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { addCartItem, buildDefaultCartItem, openCart, setQuickViewProduct } from '../cart/cartSlice';
 import { categoryTileThemes, getCategoryMonogram, getCategorySubtitle } from './categoryTileThemes';
 
@@ -18,7 +18,7 @@ export default function HomePage() {
   const blogs = useAppSelector(state => state.appData.blogs ?? []);
   const categories = useAppSelector(state => state.appData.categories ?? []);
 
-  const topLevelCategories = getTopLevelProductCategories(categories);
+  const sortedCategories = getCategoriesSortedByCount(categories, products);
   const categoryCounts = getProductCategoryCounts(products);
 
   const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 45, seconds: 30 });
@@ -47,22 +47,24 @@ export default function HomePage() {
       <HeroSlider />
       <TrustBadges />
 
-      {topLevelCategories.length > 0 && (
+      {sortedCategories.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="font-display font-black text-lg md:text-2xl text-gray-900 tracking-tight uppercase mb-6 flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-brand-primary" /> Danh mục trang thiết bị cầu lông
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {topLevelCategories.map((cat, index) => {
+            {sortedCategories.map((cat, index) => {
               const theme = categoryTileThemes[index % categoryTileThemes.length];
+              const label = getCategoryLabel(cat, categories);
+              const count = categoryCounts[cat.code] || 0;
 
               return (
                 <button
                   type="button"
                   key={cat.id}
-                  onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.name)}`)}
-                  aria-label={`Mở danh mục ${cat.name}`}
+                  onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.code)}`)}
+                  aria-label={`Mở danh mục ${label}`}
                   className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 text-left shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
                 >
                   <div className={`absolute inset-0 bg-gradient-to-br ${theme.accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
@@ -71,7 +73,7 @@ export default function HomePage() {
                   <div className="relative flex h-full min-h-[180px] flex-col gap-5">
                     <div className="flex items-start justify-between gap-3">
                       <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.28em] ${theme.chip}`}>
-                        {categoryCounts[cat.name] || 0} sản phẩm
+                        {count} sản phẩm
                       </span>
                       <ChevronRight className={`w-4 h-4 ${theme.badge} transition-transform duration-300 group-hover:translate-x-1`} />
                     </div>
@@ -80,7 +82,7 @@ export default function HomePage() {
                       <div className="min-w-0">
                         <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-gray-400 group-hover:text-brand-primary transition">Danh mục</p>
                         <h3 className="mt-1 font-display text-xl font-black tracking-tight text-gray-900 group-hover:text-brand-primary transition">
-                          {cat.name}
+                          {label}
                         </h3>
                         <p className="mt-2 text-sm leading-relaxed text-gray-500 line-clamp-3">
                           {getCategorySubtitle(cat)}
@@ -89,13 +91,13 @@ export default function HomePage() {
 
                       <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br ${theme.shell} shadow-inner`}>
                         <span className={`font-display text-xl font-black tracking-tight ${theme.monogram}`}>
-                          {getCategoryMonogram(cat.name)}
+                          {getCategoryMonogram(label)}
                         </span>
                       </div>
                     </div>
 
                     <div className="mt-auto flex items-center justify-between text-[11px] font-medium text-gray-500">
-                      <span>{categoryCounts[cat.name] || 0} sản phẩm</span>
+                      <span>{count} sản phẩm</span>
                       <span className="font-bold text-brand-primary">Khám phá</span>
                     </div>
                   </div>

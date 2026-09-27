@@ -3,7 +3,7 @@ import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Sparkles,
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';
-import { getTopLevelProductCategories } from '../utils/categories';
+import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
 import { getProductPath } from '../utils/productSlug';
 
 export const normalizeSearchText = (value: string) =>
@@ -76,8 +76,10 @@ export default function Header({ cartCount, openCart, products, categories }: He
     setShowSearchDropdown(false);
   };
 
-  const topLevelCategories = getTopLevelProductCategories(categories);
-  const trendKeywords = topLevelCategories.slice(0, 4).map(category => category.name);
+  const sortedCategories = getCategoriesSortedByCount(categories, products);
+  const trendCategories = sortedCategories
+    .slice(0, 4)
+    .map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs" id="topvnsport-header">
@@ -171,16 +173,16 @@ export default function Header({ cartCount, openCart, products, categories }: He
           {/* Quick Trends under Search Bar */}
           <div className="hidden md:flex mt-1.5 flex-wrap items-center gap-1.5 text-[11px] text-gray-500 px-2">
             <span className="font-medium text-gray-400">Xu hướng:</span>
-            {trendKeywords.map((kw, idx) => (
+            {trendCategories.map((cat) => (
               <button
-                key={idx}
+                key={cat.code}
                 onClick={() => {
-                  setSearchQuery(kw);
-                  navigate(`/catalog?category=${encodeURIComponent(kw)}`);
+                  setSearchQuery(cat.label);
+                  navigate(`/catalog?category=${encodeURIComponent(cat.code)}`);
                 }}
                 className="hover:text-brand-primary hover:underline transition"
               >
-                {kw}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -308,14 +310,14 @@ export default function Header({ cartCount, openCart, products, categories }: He
                 {/* Main Links */}
                 <div className="p-4 space-y-6 overflow-y-auto max-h-[calc(100vh-140px)]">
                   {/* Shop Section */}
-                  {topLevelCategories.length > 0 && (
+                  {sortedCategories.length > 0 && (
                     <div className="space-y-2">
                       <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Danh Mục Sản Phẩm</h4>
                       <div className="grid grid-cols-1 gap-1">
-                        {topLevelCategories.map((category, index) => (
+                        {sortedCategories.map((category, index) => (
                           <button
                             key={category.id}
-                            onClick={() => { navigate(`/catalog?category=${encodeURIComponent(category.name)}`); setIsMobileMenuOpen(false); }}
+                            onClick={() => { navigate(`/catalog?category=${encodeURIComponent(category.code)}`); setIsMobileMenuOpen(false); }}
                             className={`w-full text-left py-2 px-3 rounded-lg text-xs font-semibold flex items-center gap-2 ${currentView === 'catalog' ? 'bg-brand-light text-brand-primary' : 'text-gray-700 hover:bg-gray-50'}`}
                           >
                             {index === 0 ? (
@@ -323,7 +325,7 @@ export default function Header({ cartCount, openCart, products, categories }: He
                             ) : (
                               <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
                             )}
-                            {category.name}
+                            {getCategoryLabel(category, categories)}
                           </button>
                         ))}
                       </div>
@@ -412,8 +414,8 @@ export default function Header({ cartCount, openCart, products, categories }: He
         <div className="max-w-7xl mx-auto flex items-center justify-between text-sm font-medium">
           {/* Main Links */}
           <div className="flex items-center gap-6 overflow-x-auto scrollbar-hide py-3 pr-4">
-            {topLevelCategories.map(category => (
-              <button key={category.id} onClick={() => navigate(`/catalog?category=${encodeURIComponent(category.name)}`)} className="text-gray-800 hover:text-brand-primary transition shrink-0 py-1">{category.name}</button>
+            {sortedCategories.map(category => (
+              <button key={category.id} onClick={() => navigate(`/catalog?category=${encodeURIComponent(category.code)}`)} className="text-gray-800 hover:text-brand-primary transition shrink-0 py-1">{getCategoryLabel(category, categories)}</button>
             ))}
             
             <button onClick={() => navigate('/blog')} className="text-gray-800 hover:text-brand-primary transition shrink-0 py-1">Đánh Giá Sân Bãi</button>

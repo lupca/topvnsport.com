@@ -120,7 +120,7 @@ export default function App() {
         </Suspense>
       </main>
 
-      <Footer categories={categories} />
+      <Footer categories={categories} products={products} />
 
       {hasOpenedCart && (
         <Suspense fallback={<PageLoader />}>
