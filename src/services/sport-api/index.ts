@@ -102,16 +102,20 @@ async function mergeWmsStock(products: Product[]): Promise<Product[]> {
 }
 
 async function getCategories(): Promise<Category[]> {
+  const url = `${PMI_PROXY_URL}/public/voma-categories`;
   try {
-    const response = await fetch(`${PMI_PROXY_URL}/public/voma-categories`);
+    const response = await fetch(url);
     if (!response.ok) {
+      // Không fallback im lặng: lỗi phải thấy được (status + URL), nhưng
+      // trang vẫn chạy tiếp với danh mục rỗng thay vì crash.
+      console.error(`Failed to fetch categories: ${url} returned status ${response.status}`);
       return [];
     }
 
     const data = await response.json();
     return Array.isArray(data) ? data : [];
   } catch (error) {
-    console.warn('Failed to fetch categories:', error);
+    console.error(`Failed to fetch categories from ${url}:`, error);
     return [];
   }
 }
@@ -206,7 +210,7 @@ async function getStringOptions(): Promise<StringOption[]> {
       name: product.name,
       brand: resolveStringBrand(product.brand),
       type: resolveStringType(product.specs.stiffness),
-      thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value || '',
+      thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value,
       price: product.price,
       colors: product.colors || []
     }));

@@ -63,6 +63,22 @@ describe('utils/categories', () => {
       const sorted = getCategoriesSortedByCount([otherUnderBadminton, racket], products);
       expect(sorted.map(c => c.code)).toEqual(['VC001491', 'VC001488']);
     });
+
+    it('bỏ hẳn ngành có 0 sản phẩm trong danh sách đã tải (không chỉ xếp cuối)', () => {
+      const emptyCategory: Category = {
+        id: 99,
+        name: 'Ngành rỗng',
+        code: 'VC000099',
+        parent_id: 3,
+        display_name: 'Thể Thao & Dã Ngoại > Ngành rỗng'
+      };
+      const products = [makeProduct({ id: 'a', categoryCode: 'VC001491' })];
+
+      const sorted = getCategoriesSortedByCount([racket, emptyCategory], products);
+
+      expect(sorted.map(c => c.code)).toEqual(['VC001491']);
+      expect(sorted.some(c => c.code === 'VC000099')).toBe(false);
+    });
   });
 
   describe('getCategoryLabel', () => {
@@ -75,6 +91,29 @@ describe('utils/categories', () => {
       const all = [racket, otherUnderBadminton, otherUnderSports];
       expect(getCategoryLabel(otherUnderBadminton, all)).toBe('Cầu Lông – Khác');
       expect(getCategoryLabel(otherUnderSports, all)).toBe('Thể Thao & Dã Ngoại – Khác');
+    });
+
+    it('thêm dần tới 3 tầng khi cả tên lá lẫn tên cha trực tiếp đều trùng (vd Áo thun Nam/Nữ)', () => {
+      const aoThunNam: Category = {
+        id: 10,
+        name: 'Áo thun',
+        code: 'VC000101',
+        parent_id: 20,
+        display_name: 'Thời Trang Nam > Áo > Áo thun'
+      };
+      const aoThunNu: Category = {
+        id: 11,
+        name: 'Áo thun',
+        code: 'VC000102',
+        parent_id: 21,
+        display_name: 'Thời Trang Nữ > Áo > Áo thun'
+      };
+      const all = [aoThunNam, aoThunNu];
+
+      // Một cấp cha ("Áo") chưa đủ phân biệt -- phải lên tới cấp 2 ("Thời
+      // Trang Nam/Nữ") mới ra nhãn duy nhất.
+      expect(getCategoryLabel(aoThunNam, all)).toBe('Thời Trang Nam – Áo – Áo thun');
+      expect(getCategoryLabel(aoThunNu, all)).toBe('Thời Trang Nữ – Áo – Áo thun');
     });
   });
 

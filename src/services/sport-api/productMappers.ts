@@ -207,7 +207,10 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     percentageDiscount: hasActivePromotion ? percentageDiscount : undefined,
     hasActivePromotion,
     specs: {
-      weight: attrByCode.weightClass || (pmiProduct.weight ? String(pmiProduct.weight) : undefined),
+      // pmiProduct.weight là TRỌNG LƯỢNG GÓI HÀNG (gram, NOT NULL trên mọi
+      // sản phẩm) -- không phải thông số lớp cân vợt, nên KHÔNG dùng làm
+      // fallback. Chỉ lấy từ thuộc tính vợt thật `weightClass`.
+      weight: attrByCode.weightClass || undefined,
       stiffness: attrByCode.stiffness || undefined,
       balance: Number.isFinite(parsedBalance) ? parsedBalance : undefined,
       maxTension: Number.isFinite(parsedMaxTension) ? parsedMaxTension : undefined

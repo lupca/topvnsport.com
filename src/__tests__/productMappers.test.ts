@@ -49,7 +49,7 @@ describe('productMappers', () => {
       name: 'Vợt Yonex Astrox 88D Pro',
       description: 'Dòng vợt tấn công mạnh mẽ.',
       voma_category_id: 1,
-      weight: '4U',
+      weight: 1000, // trọng lượng GÓI HÀNG (gram) -- không phải lớp cân vợt
       attribute_values: [
         { id: 1, attribute_id: 10, value_string: 'Yonex', attribute: { code: 'brand', name: 'Thương hiệu' } },
         { id: 2, attribute_id: 11, value_string: '4U5', attribute: { code: 'weightClass', name: 'Trọng lượng' } },
@@ -166,5 +166,25 @@ describe('productMappers', () => {
     expect(product.specs.stiffness).toBeUndefined();
     expect(product.specs.balance).toBeUndefined();
     expect(product.specs.maxTension).toBeUndefined();
+  });
+
+  it('mapPmiProduct KHÔNG lấy specs.weight từ pmiProduct.weight (đó là trọng lượng gói hàng, không phải lớp cân vợt)', () => {
+    // Hợp đồng thật: mọi sản phẩm (kể cả 51 vợt Published) đều có
+    // products.weight = 1000 (gram, NOT NULL) -- không liên quan tới lớp cân
+    // vợt (weightClass), và không sản phẩm nào hiện có thuộc tính weightClass.
+    const pmiProduct: PmiProduct = {
+      id: '6',
+      name: 'Vợt Yonex Astrox 88D Pro',
+      voma_category_id: 1,
+      weight: 1000,
+      attribute_values: [
+        { id: 1, attribute_id: 10, value_string: 'Yonex', attribute: { code: 'brand', name: 'Thương hiệu' } }
+      ],
+      variants: []
+    };
+
+    const product = mapPmiProduct(pmiProduct, mockCategories);
+
+    expect(product.specs.weight).toBeUndefined();
   });
 });

@@ -135,8 +135,10 @@ export interface StringOption {
   id: string;
   name: string;
   brand: 'Yonex' | 'Lining' | 'Victor';
-  type: 'Trợ lực / Âm thanh' | 'Độ bền' | 'Kiểm soát';
-  thickness: string; // e.g., "0.63mm", "0.68mm", "0.70mm"
+  // Chỉ có khi khớp được với một sản phẩm cước thật trong catalog -- không
+  // bịa giá trị khi không có dữ liệu (xem product-detail/helpers.ts#inferStringMeta).
+  type?: 'Trợ lực / Âm thanh' | 'Độ bền' | 'Kiểm soát';
+  thickness?: string; // e.g., "0.63mm", "0.68mm", "0.70mm"
   price: number;
   colors: string[];
 }
