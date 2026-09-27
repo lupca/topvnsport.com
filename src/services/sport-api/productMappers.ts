@@ -65,28 +65,6 @@ function buildAttrByCode(attributes: ProductAttribute[]): Record<string, string>
   }, {});
 }
 
-function mapSkuByColor(variants: PmiVariant[]): Record<string, string> {
-  return variants.reduce<Record<string, string>>((accumulator, variant) => {
-    if (variant.sku_code && variant.tier_1_option) {
-      accumulator[variant.tier_1_option] = variant.sku_code;
-    }
-    return accumulator;
-  }, {});
-}
-
-function mapSkuByVariant(variants: PmiVariant[]): Record<string, string> {
-  return variants.reduce<Record<string, string>>((accumulator, variant) => {
-    if (!variant.sku_code) {
-      return accumulator;
-    }
-
-    const tier1 = variant.tier_1_option || 'Tiêu chuẩn';
-    const tier2 = variant.tier_2_option || 'Tiêu chuẩn';
-    accumulator[`${tier1}||${tier2}`] = variant.sku_code;
-    return accumulator;
-  }, {});
-}
-
 export function mapProductVariant(variant: PmiVariant, productId: number): ProductVariant {
   const price = Number(variant.price || 0);
   const originalPrice = variant.original_price !== undefined && variant.original_price !== null
@@ -220,8 +198,6 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     reviews: [],
     stock: stock > 0 ? stock : 0,
     defaultSku: variants.find((variant) => Boolean(variant.sku_code))?.sku_code,
-    skuByColor: mapSkuByColor(variants),
-    skuByVariant: mapSkuByVariant(variants),
     colors: colors.length > 0 ? colors : ['Tiêu chuẩn'],
     tier_variations: pmiProduct.tier_variations || [],
     variants: mappedVariants

@@ -21,8 +21,13 @@ const mockRacket: Product = {
   salePrice: 4300000,
   image: 'https://example.com/arcsaber11.jpg',
   colors: ['Đỏ/Đen', 'Xám'],
-  skuByColor: { 'Đỏ/Đen': 'SKU-ARC11-RED', 'Xám': 'SKU-ARC11-GREY' },
-  defaultSku: 'SKU-ARC11-DEF'
+  defaultSku: 'SKU-ARC11-DEF',
+  // Một tầng (màu sắc) -- resolveSkuCode khớp theo tier1, bỏ skuByColor cũ.
+  tier_variations: [{ tier_index: 1, name: 'Màu sắc', options: ['Đỏ/Đen', 'Xám'] }],
+  variants: [
+    { tier_1_option: 'Đỏ/Đen', tier_2_option: null, sku_code: 'SKU-ARC11-RED', price: 4600000, stock: 5 },
+    { tier_1_option: 'Xám', tier_2_option: null, sku_code: 'SKU-ARC11-GREY', price: 4600000, stock: 5 }
+  ]
 };
 
 const mockAccessory: Product = {
@@ -33,7 +38,12 @@ const mockAccessory: Product = {
   price: 120000,
   image: 'https://example.com/grip.jpg',
   colors: ['Trắng', 'Đen'],
-  defaultSku: 'SKU-GRIP-DEF'
+  defaultSku: 'SKU-GRIP-DEF',
+  tier_variations: [{ tier_index: 1, name: 'Màu sắc', options: ['Trắng', 'Đen'] }],
+  variants: [
+    { tier_1_option: 'Trắng', tier_2_option: null, sku_code: 'SKU-GRIP-WHITE', price: 120000, stock: 10 },
+    { tier_1_option: 'Đen', tier_2_option: null, sku_code: 'SKU-GRIP-BLACK', price: 120000, stock: 10 }
+  ]
 };
 
 describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {

@@ -3,6 +3,7 @@ import { X, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
+import { isFabricatedSkuCode } from '../features/cart/cartSlice';
 import OtpModal from './OtpModal';
 
 
@@ -90,7 +91,10 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       const channelId = await sportApi.getOrCreateStorefrontChannelId();
 
       for (const item of cartItems) {
-        if (!item.skuCode) {
+        // Chặn cả SKU rỗng lẫn SKU bịa còn sót trong giỏ hàng cũ lưu ở
+        // localStorage (dạng `SKU-<id>-...` do lỗi resolveSkuCode trước đây) --
+        // không bao giờ gửi những SKU này đi đặt hàng.
+        if (!item.skuCode || isFabricatedSkuCode(item.skuCode)) {
           await popupService.alert(`Sản phẩm "${item.name}" bị lỗi thiếu mã SKU từ hệ thống, không thể đặt hàng!`);
           setIsSubmitting(false);
           return;

@@ -6,6 +6,7 @@
 import { lazy, MouseEvent, Suspense, useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import BlogSection from './components/BlogSection';
 import Footer from './components/Footer';
@@ -28,6 +29,7 @@ import {
 import HomePage from './features/home/HomePage';
 import MobileBottomNav from './features/navigation/MobileBottomNav';
 import CheckoutCallbackPage from './features/checkout/CheckoutCallbackPage';
+import { getProductPath } from './utils/productSlug';
 
 const CartModal = lazy(() => import('./components/CartModal'));
 const ProductDetailRoute = lazy(() => import('./features/product/ProductDetailRoute'));
@@ -72,7 +74,15 @@ export default function App() {
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
-    dispatch(addCartItem(buildDefaultCartItem(product)));
+    const item = buildDefaultCartItem(product);
+    if (!item) {
+      // Sản phẩm có nhiều tầng phân loại -- không tự chọn tổ hợp đại diện,
+      // dẫn khách vào trang chi tiết để chọn đủ.
+      void popupService.alert('Vui lòng chọn đủ phân loại trước khi thêm vào giỏ.');
+      navigate(getProductPath(product));
+      return;
+    }
+    dispatch(addCartItem(item));
     dispatch(openCart());
   };
 

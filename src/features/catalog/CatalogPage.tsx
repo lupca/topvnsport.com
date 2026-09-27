@@ -1,5 +1,7 @@
 import { RefreshCw, SlidersHorizontal, X } from 'lucide-react';
 import { MouseEvent, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { popupService } from '@topvnsport/ui-kit';
 import ProductCard from '../../components/ProductCard';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RACKET_CATEGORY_CODES } from '../../config/storefront';
@@ -15,10 +17,12 @@ import {
   setSelectedWeight
 } from './catalogSlice';
 import { addCartItem, buildDefaultCartItem, openCart, setQuickViewProduct } from '../cart/cartSlice';
+import { getProductPath } from '../../utils/productSlug';
 
 const ALL_CATEGORIES_OPTION = 'Tất cả';
 
 export default function CatalogPage() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.appData.products);
   const categories = useAppSelector(state => state.appData.categories);
@@ -102,7 +106,15 @@ export default function CatalogPage() {
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
-    dispatch(addCartItem(buildDefaultCartItem(product)));
+    const item = buildDefaultCartItem(product);
+    if (!item) {
+      // Sản phẩm có nhiều tầng phân loại -- không tự chọn tổ hợp đại diện,
+      // dẫn khách vào trang chi tiết để chọn đủ.
+      void popupService.alert('Vui lòng chọn đủ phân loại trước khi thêm vào giỏ.');
+      navigate(getProductPath(product));
+      return;
+    }
+    dispatch(addCartItem(item));
     dispatch(openCart());
   };
 

@@ -29,8 +29,10 @@ const mockProduct: Product = {
   salePrice: 4200000,
   image: 'https://example.com/astrox88d.jpg',
   colors: ['Đỏ/Đen'],
-  skuByColor: { 'Đỏ/Đen': 'SKU-ASTROX-RED' },
-  defaultSku: 'SKU-ASTROX-DEF'
+  defaultSku: 'SKU-ASTROX-DEF',
+  // Sản phẩm không có tier_variations -- đúng một biến thể, resolveSkuCode
+  // suy ra thẳng từ đây thay vì skuByColor (đã bỏ vì là nguồn SKU sai).
+  variants: [{ tier_1_option: null, tier_2_option: null, sku_code: 'SKU-ASTROX-RED', price: 4500000, stock: 5 }]
 };
 
 describe('Milestone 7 - Cart Persistence & Reducer Logic', () => {

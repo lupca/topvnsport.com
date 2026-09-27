@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductDetailPage from '../../components/ProductDetailPage';
 import { addCartItem, buildConfiguredCartItem, openCart } from '../cart/cartSlice';
@@ -21,7 +22,15 @@ export default function ProductDetailRoute() {
     stringChoice: StringOption | null,
     tension: number
   ) => {
-    dispatch(addCartItem(buildConfiguredCartItem(targetProduct, weight, color, stringChoice, tension)));
+    const item = buildConfiguredCartItem(targetProduct, weight, color, stringChoice, tension);
+    if (!item) {
+      // Tổ hợp phân loại khách vừa chọn không khớp biến thể thật nào -- không
+      // bịa SKU, không thêm vào giỏ.
+      void popupService.alert('Phân loại này hiện không bán, vui lòng chọn phân loại khác.');
+      return;
+    }
+
+    dispatch(addCartItem(item));
     dispatch(openCart());
   };
 

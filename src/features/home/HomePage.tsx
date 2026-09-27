@@ -1,6 +1,7 @@
 import { ChevronRight, Sparkles } from 'lucide-react';
 import { MouseEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import HeroSlider from '../../components/HeroSlider';
 import ProductCard from '../../components/ProductCard';
@@ -8,6 +9,7 @@ import RacketFinder from '../../components/RacketFinder';
 import TrustBadges from '../../components/TrustBadges';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { addCartItem, buildDefaultCartItem, openCart, setQuickViewProduct } from '../cart/cartSlice';
+import { getProductPath } from '../../utils/productSlug';
 import { categoryTileThemes, getCategoryMonogram, getCategorySubtitle } from './categoryTileThemes';
 
 
@@ -38,7 +40,15 @@ export default function HomePage() {
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
-    dispatch(addCartItem(buildDefaultCartItem(product)));
+    const item = buildDefaultCartItem(product);
+    if (!item) {
+      // Sản phẩm có nhiều tầng phân loại -- không tự chọn tổ hợp đại diện,
+      // dẫn khách vào trang chi tiết để chọn đủ.
+      void popupService.alert('Vui lòng chọn đủ phân loại trước khi thêm vào giỏ.');
+      navigate(getProductPath(product));
+      return;
+    }
+    dispatch(addCartItem(item));
     dispatch(openCart());
   };
 
