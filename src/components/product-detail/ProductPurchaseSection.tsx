@@ -3,6 +3,7 @@ import { ArrowLeft, Phone, ShoppingCart, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product, StringOption, TierVariation } from '../../types';
 import StringingAssistant from './StringingAssistant';
+import { isStringingTierName } from './helpers';
 
 interface ProductPurchaseSectionProps {
   product: Product;
@@ -14,7 +15,6 @@ interface ProductPurchaseSectionProps {
   stringPrice: number;
   selectedTier1: string;
   selectedTier2: string;
-  selectedWeight: string;
   selectedColor: string;
   withStringing: boolean;
   selectedString: StringOption | null;
@@ -28,7 +28,6 @@ interface ProductPurchaseSectionProps {
   isOutOfStock: boolean;
   onSetSelectedTier1: (value: string) => void;
   onSetSelectedTier2: (value: string) => void;
-  onSetSelectedWeight: (value: string) => void;
   onSetSelectedColor: (value: string) => void;
   onSetWithStringing: (value: boolean) => void;
   onSetSelectedString: (value: StringOption | null) => void;
@@ -47,7 +46,6 @@ export default function ProductPurchaseSection({
   stringPrice,
   selectedTier1,
   selectedTier2,
-  selectedWeight,
   selectedColor,
   withStringing,
   selectedString,
@@ -61,7 +59,6 @@ export default function ProductPurchaseSection({
   isOutOfStock,
   onSetSelectedTier1,
   onSetSelectedTier2,
-  onSetSelectedWeight,
   onSetSelectedColor,
   onSetWithStringing,
   onSetSelectedString,
@@ -108,7 +105,10 @@ export default function ProductPurchaseSection({
                 <Star key={star} className="w-4.5 h-4.5 fill-current" />
               ))}
             </div>
-            <span className="text-gray-500 font-medium">({product.reviews.length || 3} đánh giá từ các tay vợt)</span>
+            {/* Số đánh giá là số THẬT từ product.reviews -- không bịa số khi mảng rỗng */}
+            {product.reviews.length > 0 && (
+              <span className="text-gray-500 font-medium">({product.reviews.length} đánh giá từ các tay vợt)</span>
+            )}
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export default function ProductPurchaseSection({
         {product.tier_variations && product.tier_variations.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {product.tier_variations
-              .filter((tier) => tier.name !== 'Loại cước')
+              .filter((tier) => !isStringingTierName(tier.name))
               .map((tier) => {
                 const selectedValue = tier.tier_index === 1 ? selectedTier1 : selectedTier2;
                 const setValue = tier.tier_index === 1 ? onSetSelectedTier1 : onSetSelectedTier2;
@@ -181,26 +181,9 @@ export default function ProductPurchaseSection({
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {isRacket && (
-              <div>
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Trọng lượng / Cán cầm</label>
-                <div className="flex gap-2">
-                  {['4U/G5', '3U/G5', '5U/G5'].map((weight) => (
-                    <button
-                      key={weight}
-                      onClick={() => onSetSelectedWeight(weight)}
-                      className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition ${
-                        selectedWeight === weight
-                          ? 'bg-brand-primary border-brand-primary text-white shadow-md'
-                          : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {weight}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Không có tier_variations nghĩa là PIM không cung cấp danh sách
+                lớp cân thật để chọn -- không bịa ra các lựa chọn lớp cân cố
+                định, ẩn hẳn ô chọn trọng lượng khi thiếu dữ liệu thật. */}
 
             {product.colors && product.colors.length > 0 && (
               <div>

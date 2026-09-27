@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { Product, StringOption, TierVariation } from '../../types';
-import { getTensionTooltip, inferStringMeta, isNoStringOption } from './helpers';
+import { formatStringMeta, getTensionTooltip, inferStringMeta, isNoStringOption } from './helpers';
 
 interface StringingAssistantProps {
   product: Product;
@@ -44,7 +44,10 @@ export default function StringingAssistant({
   onSetSelectedString,
   onSetTension
 }: StringingAssistantProps) {
-  if (!hasStringingVariation && !isRacket) {
+  // Nếu sản phẩm không có sẵn biến thể cước riêng (hasStringingVariation),
+  // trợ lý chỉ đề xuất dựa trên danh mục cước chung (stringOptions) -- không
+  // có dữ liệu cước thật nào thì ẩn hẳn phần này thay vì hiện một khung chọn rỗng.
+  if (!hasStringingVariation && (!isRacket || stringOptions.length === 0)) {
     return null;
   }
 
@@ -142,7 +145,7 @@ export default function StringingAssistant({
                       : product.salePrice || product.price;
                     const optionPrice = resolveVariantPrice(optionName);
                     const diffPrice = optionPrice - noStringPrice;
-                    const metadata = inferStringMeta(optionName, stringOptions);
+                    const metadata = formatStringMeta(inferStringMeta(optionName, stringOptions));
                     const isSelected = activeStringValue === optionName;
 
                     return (
@@ -163,9 +166,10 @@ export default function StringingAssistant({
                       >
                         <div>
                           <p className="font-bold text-xs text-gray-900">{optionName}</p>
-                          <p className="text-[10px] text-gray-400 font-mono">
-                            {metadata.type} • Ø {metadata.thickness}
-                          </p>
+                          {/* Không khớp được sản phẩm cước thật -> không bịa loại/độ dày, chỉ hiện tên lựa chọn */}
+                          {metadata && (
+                            <p className="text-[10px] text-gray-400 font-mono">{metadata}</p>
+                          )}
                         </div>
                         <span className="text-xs font-extrabold text-brand-primary">
                           {diffPrice > 0 ? `+${diffPrice.toLocaleString('vi-VN')}đ` : 'Miễn phí'}
@@ -186,9 +190,9 @@ export default function StringingAssistant({
                   >
                     <div>
                       <p className="font-bold text-xs text-gray-900">{option.name}</p>
-                      <p className="text-[10px] text-gray-400 font-mono">
-                        {option.type} • Ø {option.thickness}
-                      </p>
+                      {formatStringMeta(option) && (
+                        <p className="text-[10px] text-gray-400 font-mono">{formatStringMeta(option)}</p>
+                      )}
                     </div>
                     <span className="text-xs font-extrabold text-brand-primary">
                       +{option.price.toLocaleString('vi-VN')}đ

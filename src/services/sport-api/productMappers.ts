@@ -162,7 +162,9 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
   const attributes = mapPmiAttributes(pmiProduct.attribute_values || []);
   const attrByCode = buildAttrByCode(attributes);
   const brand = mapBrandValue(attrByCode.brand) || 'Other';
-  const category = categories.find((item) => item.id === pmiProduct.category_id)?.name || 'Chua phan loai';
+  const matchedCategory = categories.find((item) => item.id === pmiProduct.voma_category_id);
+  const category = matchedCategory?.name || 'Chưa phân loại';
+  const categoryCode = matchedCategory?.code;
 
   const parsedBalance = Number(attrByCode.balance);
   const parsedMaxTension = Number(attrByCode.maxTension);
@@ -197,6 +199,7 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     gallery,
     media: mappedMedia,
     category,
+    categoryCode,
     price: resolvedPrice,
     salePrice: hasActivePromotion ? computedPrice : (minPrice > 0 ? minPrice : undefined),
     computedPrice: hasActivePromotion ? computedPrice : undefined,
@@ -204,10 +207,13 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     percentageDiscount: hasActivePromotion ? percentageDiscount : undefined,
     hasActivePromotion,
     specs: {
-      weight: attrByCode.weightClass || (pmiProduct.weight ? String(pmiProduct.weight) : 'Tiêu chuẩn'),
-      stiffness: attrByCode.stiffness || 'Tiêu chuẩn',
-      balance: Number.isFinite(parsedBalance) ? parsedBalance : 0,
-      maxTension: Number.isFinite(parsedMaxTension) ? parsedMaxTension : 0
+      // pmiProduct.weight là TRỌNG LƯỢNG GÓI HÀNG (gram, NOT NULL trên mọi
+      // sản phẩm) -- không phải thông số lớp cân vợt, nên KHÔNG dùng làm
+      // fallback. Chỉ lấy từ thuộc tính vợt thật `weightClass`.
+      weight: attrByCode.weightClass || undefined,
+      stiffness: attrByCode.stiffness || undefined,
+      balance: Number.isFinite(parsedBalance) ? parsedBalance : undefined,
+      maxTension: Number.isFinite(parsedMaxTension) ? parsedMaxTension : undefined
     },
     description: pmiProduct.description || 'Sản phẩm chính hãng.',
     attributes,

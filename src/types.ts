@@ -1,8 +1,11 @@
 export interface ProductSpecs {
-  weight: string;       // e.g., "4U (80-84g)", "3U (85-89g)", "5U (75-79g)"
-  stiffness: string;    // e.g., "Cứng (Stiff)", "Trung bình (Medium)", "Dẻo (Flexible)"
-  balance: number;      // Balance point in mm, e.g., 295
-  maxTension: number;   // Max tension in lbs or kg, e.g., 28 lbs (12.5 kg)
+  // Các thông số kỹ thuật của vợt: chỉ có khi sản phẩm THẬT SỰ có thuộc tính
+  // tương ứng từ PIM. Không bịa giá trị mặc định khi thiếu dữ liệu -- UI phải
+  // tự ẩn phần liên quan khi các trường này là undefined.
+  weight?: string;       // e.g., "4U (80-84g)", "3U (85-89g)", "5U (75-79g)"
+  stiffness?: string;    // e.g., "Cứng (Stiff)", "Trung bình (Medium)", "Dẻo (Flexible)"
+  balance?: number;      // Balance point in mm, e.g., 295
+  maxTension?: number;   // Max tension in lbs or kg, e.g., 28 lbs (12.5 kg)
   swingWeight?: number;  // Swing weight in kg/cm2, e.g., 85.5
 }
 
@@ -54,6 +57,9 @@ export interface Product {
   gallery?: string[];
   media?: ProductMedia[];
   category: string;
+  // Mã ngành VOMA (vd "VC001491"). Dùng mã để so khớp/lọc theo ngành vì tên
+  // hiển thị (category) có thể đổi hoặc trùng giữa các nhánh cây khác nhau.
+  categoryCode?: string;
   price: number;
   salePrice?: number;
   computedPrice?: number;
@@ -129,8 +135,10 @@ export interface StringOption {
   id: string;
   name: string;
   brand: 'Yonex' | 'Lining' | 'Victor';
-  type: 'Trợ lực / Âm thanh' | 'Độ bền' | 'Kiểm soát';
-  thickness: string; // e.g., "0.63mm", "0.68mm", "0.70mm"
+  // Chỉ có khi khớp được với một sản phẩm cước thật trong catalog -- không
+  // bịa giá trị khi không có dữ liệu (xem product-detail/helpers.ts#inferStringMeta).
+  type?: 'Trợ lực / Âm thanh' | 'Độ bền' | 'Kiểm soát';
+  thickness?: string; // e.g., "0.63mm", "0.68mm", "0.70mm"
   price: number;
   colors: string[];
 }

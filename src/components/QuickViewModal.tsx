@@ -2,6 +2,7 @@ import React from 'react';
 import { X, ShoppingBag } from 'lucide-react';
 import { Product } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
+import { isRacketCategoryCode } from '../config/storefront';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -47,25 +48,40 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                   </p>
                 </div>
 
-                {/* Spec Sheet block */}
-                <div className="space-y-1.5 text-xs text-gray-600 font-mono py-3 border-t border-b border-gray-100">
-                  <div className="flex justify-between">
-                    <span>Cân nặng:</span>
-                    <strong className="text-gray-900">{product.specs.weight}</strong>
+                {/* Spec Sheet block -- chỉ hiện khi sản phẩm thuộc ngành vợt
+                    VÀ có ít nhất một thông số thật, không bịa dữ liệu */}
+                {isRacketCategoryCode(product.categoryCode) &&
+                  (product.specs.weight ||
+                    product.specs.stiffness ||
+                    typeof product.specs.balance === 'number' ||
+                    typeof product.specs.maxTension === 'number') && (
+                  <div className="space-y-1.5 text-xs text-gray-600 font-mono py-3 border-t border-b border-gray-100">
+                    {product.specs.weight && (
+                      <div className="flex justify-between">
+                        <span>Cân nặng:</span>
+                        <strong className="text-gray-900">{product.specs.weight}</strong>
+                      </div>
+                    )}
+                    {product.specs.stiffness && (
+                      <div className="flex justify-between">
+                        <span>Độ cứng thân:</span>
+                        <strong className="text-gray-900">{product.specs.stiffness}</strong>
+                      </div>
+                    )}
+                    {typeof product.specs.balance === 'number' && (
+                      <div className="flex justify-between">
+                        <span>Điểm cân bằng:</span>
+                        <strong className="text-gray-900">{product.specs.balance}mm</strong>
+                      </div>
+                    )}
+                    {typeof product.specs.maxTension === 'number' && (
+                      <div className="flex justify-between">
+                        <span>Lực căng tối đa:</span>
+                        <strong className="text-gray-900">{product.specs.maxTension} Lbs</strong>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex justify-between">
-                    <span>Độ cứng thân:</span>
-                    <strong className="text-gray-900">{product.specs.stiffness}</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Điểm cân bằng:</span>
-                    <strong className="text-gray-900">{product.specs.balance}mm</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Lực căng tối đa:</span>
-                    <strong className="text-gray-900">{product.specs.maxTension} Lbs</strong>
-                  </div>
-                </div>
+                )}
 
                 <div className="flex items-center justify-between">
                   <div>

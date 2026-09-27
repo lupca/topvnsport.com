@@ -51,7 +51,7 @@ describe('Forensic Integrity Audit M2-1 for Requirement R2', () => {
           })
         });
       }
-      if (url.includes('/public/categories')) {
+      if (url.includes('/public/voma-categories')) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve([])

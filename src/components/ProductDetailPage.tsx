@@ -5,7 +5,8 @@ import TrustSealsPanel from './TrustSealsPanel';
 import ProductPurchaseSection from './product-detail/ProductPurchaseSection';
 import ProductDetailTabs, { DetailTab } from './product-detail/ProductDetailTabs';
 import MobilePurchaseBar from './product-detail/MobilePurchaseBar';
-import { isNoStringOption } from './product-detail/helpers';
+import { inferStringMeta, isNoStringOption, isStringingTierName } from './product-detail/helpers';
+import { isRacketCategoryCode } from '../config/storefront';
 
 interface ProductDetailPageProps {
   product: Product;
@@ -17,9 +18,12 @@ interface ProductDetailPageProps {
 
 export default function ProductDetailPage({ product, stringOptions, onAddToCartWithSpecs }: Omit<ProductDetailPageProps, 'onBackToCatalog'|'onBookTestAtStore'>) {
   const [activeTab, setActiveTab] = useState<DetailTab>('details');
-  const [selectedWeight, setSelectedWeight] = useState(
-    product.category === 'Vợt' ? '4U/G5' : 'Tiêu chuẩn'
-  );
+  // Không bịa trọng lượng theo ngành -- lấy từ thông số thật của sản phẩm nếu
+  // có, còn lại dùng sentinel "Tiêu chuẩn" chung của hệ thống (giống màu sắc).
+  // Không có ô chọn nào ghi lại giá trị này (không bịa lựa chọn khi thiếu dữ
+  // liệu thật -- xem ProductPurchaseSection), nên đây là giá trị suy ra thẳng
+  // từ sản phẩm, không cần state.
+  const selectedWeight = product.specs.weight || 'Tiêu chuẩn';
   const [selectedColor, setSelectedColor] = useState(
     product.colors && product.colors.length > 0 ? product.colors[0] : 'Tiêu chuẩn'
   );
@@ -34,7 +38,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   });
 
   const stringingVariation = product.tier_variations?.find(
-    (tv) => tv.name === 'Loại cước'
+    (tv) => isStringingTierName(tv.name)
   );
   const hasStringingVariation = !!stringingVariation;
   const stringingTierIndex = stringingVariation?.tier_index;
@@ -45,7 +49,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   const [withStringing, setWithStringing] = useState(false);
   const [selectedString, setSelectedString] = useState<StringOption | null>(null);
   const [tension, setTension] = useState(10.5);
-  const isRacket = product.category === 'Vợt';
+  const isRacket = isRacketCategoryCode(product.categoryCode);
 
   useEffect(() => {
     const t1 = product.tier_variations?.find(tv => tv.tier_index === 1);
@@ -110,8 +114,9 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
         id: activeStringValue,
         name: activeStringValue,
         brand: product.brand as any,
-        type: 'Trợ lực / Âm thanh' as any,
-        thickness: '0.65mm',
+        // Không bịa loại/độ dày -- chỉ điền khi khớp được sản phẩm cước thật
+        // trong catalog (stringOptions), còn lại để undefined.
+        ...inferStringMeta(activeStringValue, stringOptions),
         price: 0,
         colors: []
       } : null)
@@ -186,7 +191,6 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
             stringPrice={stringPrice}
             selectedTier1={selectedTier1}
             selectedTier2={selectedTier2}
-            selectedWeight={selectedWeight}
             selectedColor={selectedColor}
             withStringing={withStringing}
             selectedString={selectedString}
@@ -200,7 +204,6 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
             isOutOfStock={isOutOfStock}
             onSetSelectedTier1={setSelectedTier1}
             onSetSelectedTier2={setSelectedTier2}
-            onSetSelectedWeight={setSelectedWeight}
             onSetSelectedColor={setSelectedColor}
             onSetWithStringing={setWithStringing}
             onSetSelectedString={setSelectedString}

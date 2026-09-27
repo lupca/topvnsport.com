@@ -113,7 +113,7 @@ describe('Empirical Challenge R2: Stock Mapper & UI Integration Verification', (
             })
           });
         }
-        if (url.includes('/public/categories')) {
+        if (url.includes('/public/voma-categories')) {
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve([])
@@ -157,7 +157,7 @@ describe('Empirical Challenge R2: Stock Mapper & UI Integration Verification', (
             })
           });
         }
-        if (url.includes('/public/categories')) {
+        if (url.includes('/public/voma-categories')) {
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve([])

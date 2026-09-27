@@ -1,11 +1,11 @@
 import { describe, test, expect } from 'vitest';
-import { products, stringOptions } from '../data';
+import { products } from '../data';
 import { Product } from '../types';
-import { getTopLevelProductCategories } from '../utils/categories';
+import { isRacketCategoryCode } from '../config/storefront';
 
 // Helper matching logic extracted from RacketFinder.tsx for verification
 function calculateRecommendations(answers: { skill: string; style: string; budget: string }): Product[] {
-  let matches = products.filter(p => p.category === 'Vợt');
+  let matches = products.filter(p => isRacketCategoryCode(p.categoryCode));
 
   // Filter by budget
   if (answers.budget === 'low') {
@@ -24,7 +24,7 @@ function calculateRecommendations(answers: { skill: string; style: string; budge
   }
 
   if (matches.length === 0) {
-    matches = products.filter(p => p.category === 'Vợt').slice(0, 3);
+    matches = products.filter(p => isRacketCategoryCode(p.categoryCode)).slice(0, 3);
   }
 
   return matches.slice(0, 3);
@@ -124,19 +124,9 @@ describe('Automated System Verification Tests', () => {
     });
   });
 
-  test('Top-level category helper keeps actual parent-child catalog categories only', () => {
-    const categories = [
-      { id: 1, name: 'Thiết bị cầu lông', code: 'badminton_equipment', parent_id: null, display_name: '[root] / Thiết bị cầu lông' },
-      { id: 2, name: 'Phụ kiện cầu lông', code: 'badminton_accessories', parent_id: null, display_name: '[root] / Phụ kiện cầu lông' },
-      { id: 3, name: 'Vợt', code: 'rackets', parent_id: 1, display_name: '[root] / Thiết bị cầu lông / Vợt' },
-      { id: 4, name: 'Giày', code: 'shoes', parent_id: 1, display_name: '[root] / Thiết bị cầu lông / Giày' },
-      { id: 5, name: 'Cước', code: 'strings', parent_id: 2, display_name: '[root] / Phụ kiện cầu lông / Cước' },
-      { id: 6, name: 'Túi xách', code: 'bags', parent_id: 2, display_name: '[root] / Phụ kiện cầu lông / Túi xách' },
-      { id: 7, name: 'Quả cầu', code: 'shuttlecocks', parent_id: 2, display_name: '[root] / Phụ kiện cầu lông / Quả cầu' }
-    ];
-
-    const result = getTopLevelProductCategories(categories as any);
-
-    expect(result.map(category => category.code)).toEqual(['rackets', 'shoes', 'strings', 'bags', 'shuttlecocks']);
-  });
+  // Hành vi "danh mục con của gốc" (getTopLevelProductCategories) đã bị bỏ
+  // cùng với việc đổi nguồn danh mục sang cây ngành VOMA (/public/voma-categories),
+  // vốn không còn khái niệm gốc/con theo kiểu bảng danh mục cũ. Bộ test tương
+  // đương cho logic sắp xếp + gán nhãn danh mục mới nằm ở
+  // src/__tests__/categories.test.ts (getCategoriesSortedByCount, getCategoryLabel).
 });
