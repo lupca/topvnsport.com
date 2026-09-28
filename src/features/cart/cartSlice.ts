@@ -90,75 +90,109 @@ export const {
   setQuickViewProduct
 } = cartSlice.actions;
 
-export type SkuLookupResult =
+export type SkuSelectionDescription =
   | { status: 'ok'; skuCode: string }
   | { status: 'missing_selection'; tierName: string }
   | { status: 'not_available' };
 
+// "SKU bán được" = biến thể có sku_code khác rỗng. Biến thể sku_code rỗng
+// không được tính vào bất kỳ phép đếm/khớp nào (không đoán đại một biến thể
+// vô danh).
+function sellableVariantsOf(product: Product) {
+  return (product.variants || []).filter(v => Boolean(v.sku_code));
+}
+
 // Tra SKU thật theo đúng cặp (tier1, tier2) trong product.variants -- KHÔNG
 // còn tra qua skuByColor/skuByVariant (nguồn SKU sai cho sản phẩm hai tầng: nó
 // giữ biến thể CUỐI cùng của mỗi tier1, không phân biệt tier2). Ba kết quả:
-// - 'ok': khớp ĐÚNG MỘT biến thể -> skuCode thật.
+// - 'ok': khớp ĐÚNG MỘT biến thể bán được -> skuCode thật.
 // - 'missing_selection': tầng đó có thật (tier_variations) nhưng chưa chọn
 //   giá trị -- caller hỏi lại đúng tên tầng (vd "Vui lòng chọn Kích cỡ").
 // - 'not_available': không có biến thể nào khớp, HOẶC khớp nhiều hơn một
 //   (dữ liệu trùng tier_1_option/tier_2_option) -- không đoán đại một cái,
 //   console.error ghi lại product id + tổ hợp để dò dữ liệu nguồn.
-export function resolveSkuCode(product: Product, tier1: string, tier2: string): SkuLookupResult {
-  const variants = product.variants || [];
+export function describeSkuSelection(product: Product, tier1: string, tier2: string): SkuSelectionDescription {
   const tier1Def = product.tier_variations?.find(tv => tv.tier_index === 1);
   const tier2Def = product.tier_variations?.find(tv => tv.tier_index === 2);
   const hasTier1 = Boolean(tier1Def);
   const hasTier2 = Boolean(tier2Def);
 
   if (hasTier1 && !tier1) {
-    console.error(`resolveSkuCode: sản phẩm ${product.id} thiếu lựa chọn tầng "${tier1Def!.name}".`);
+    console.error(`describeSkuSelection: sản phẩm ${product.id} thiếu lựa chọn tầng "${tier1Def!.name}".`);
     return { status: 'missing_selection', tierName: tier1Def!.name };
   }
   if (hasTier2 && !tier2) {
-    console.error(`resolveSkuCode: sản phẩm ${product.id} thiếu lựa chọn tầng "${tier2Def!.name}".`);
+    console.error(`describeSkuSelection: sản phẩm ${product.id} thiếu lựa chọn tầng "${tier2Def!.name}".`);
     return { status: 'missing_selection', tierName: tier2Def!.name };
   }
 
+  const sellable = sellableVariantsOf(product);
   const candidates = (!hasTier1 && !hasTier2)
-    ? variants
-    : variants.filter(v =>
+    ? sellable
+    : sellable.filter(v =>
         (!hasTier1 || v.tier_1_option === tier1) &&
         (!hasTier2 || v.tier_2_option === tier2)
       );
 
-  if (candidates.length === 1 && candidates[0].sku_code) {
+  if (candidates.length === 1) {
     return { status: 'ok', skuCode: candidates[0].sku_code };
   }
 
   console.error(
-    `resolveSkuCode: sản phẩm ${product.id} tổ hợp (${tier1 || '—'} / ${tier2 || '—'}) khớp ${candidates.length} biến thể -- không đoán SKU.`
+    `describeSkuSelection: sản phẩm ${product.id} tổ hợp (${tier1 || '—'} / ${tier2 || '—'}) khớp ${candidates.length} biến thể bán được -- không đoán SKU.`
   );
   return { status: 'not_available' };
 }
 
-// SKU bịa dạng `SKU-<id>-...` mà bản build cũ từng ghi vào giỏ hàng khi không
-// khớp được biến thể thật. SKU thật từ PIM luôn có tiền tố "PRD-" hoặc "SP-",
-// không bao giờ là "SKU-<số>-...", nên nhận diện được để chặn gửi đi cho các
-// giỏ hàng cũ còn lưu trong localStorage của khách.
-export function isFabricatedSkuCode(skuCode: string | undefined): boolean {
-  return Boolean(skuCode && /^SKU-\d+-/.test(skuCode));
+// Chỉ lấy SKU thật -- không khớp/nhiều ứng viên -> null. Lý do chặn cụ thể
+// (thiếu tầng nào, hay không có sẵn) tra riêng qua describeSkuSelection (dùng
+// ở nơi cần hiển thị câu báo, ví dụ ProductDetailRoute).
+export function resolveSkuCode(product: Product, tier1: string, tier2: string): string | null {
+  const result = describeSkuSelection(product, tier1, tier2);
+  return result.status === 'ok' ? result.skuCode : null;
 }
 
 // Sản phẩm có ĐÚNG một biến thể bán được (không tầng, hoặc mọi tầng chỉ có
 // một lựa chọn duy nhất) -- trường hợp DUY NHẤT được phép thêm nhanh từ thẻ
 // sản phẩm mà không cần khách vào trang chi tiết chọn phân loại. Không dùng
-// options[0]/colors[0] để đoán khi có từ hai biến thể trở lên.
+// options[0]/colors[0] để đoán khi có từ hai biến thể bán được trở lên.
 export function getSingleSellableSku(product: Product): string | null {
-  const variants = product.variants || [];
-  return variants.length === 1 && variants[0].sku_code ? variants[0].sku_code : null;
+  const sellable = sellableVariantsOf(product);
+  return sellable.length === 1 ? sellable[0].sku_code : null;
+}
+
+// Nhãn phân loại hiển thị trong giỏ hàng, dựng từ TÊN TẦNG THẬT (tier_variations)
+// + giá trị đã chọn -- không dùng chuỗi cứng "Phiên bản: {weight} | {color}".
+// Sản phẩm không có tầng nào (hoặc tầng không có tên/giá trị thật) -> undefined,
+// để UI tự ẩn dòng này thay vì hiện nhãn rỗng/sai.
+export function buildVariantLabel(product: Product, tier1: string, tier2: string): string | undefined {
+  const tier1Def = product.tier_variations?.find(tv => tv.tier_index === 1);
+  const tier2Def = product.tier_variations?.find(tv => tv.tier_index === 2);
+
+  const parts: string[] = [];
+  if (tier1Def && tier1) parts.push(`${tier1Def.name}: ${tier1}`);
+  if (tier2Def && tier2) parts.push(`${tier2Def.name}: ${tier2}`);
+
+  return parts.length > 0 ? parts.join(' · ') : undefined;
+}
+
+// Món hàng trong giỏ hợp lệ khi (1) sản phẩm của nó vẫn còn trong dữ liệu đã
+// tải (theo productId) và (2) skuCode khớp ĐÚNG một biến thể bán được của
+// chính sản phẩm đó -- không chỉ kiểm rỗng/khớp mẫu chuỗi "SKU-<id>-...".
+// Sản phẩm không tìm thấy hoặc biến thể đã đổi/xoá (PIM cập nhật lại tổ hợp)
+// đều bị coi là không hợp lệ, không đoán.
+export function isCartItemSkuValid(item: CartItem, products: Product[]): boolean {
+  if (!item.skuCode) return false;
+  const product = products.find(p => p.id === item.productId);
+  if (!product) return false;
+  return sellableVariantsOf(product).some(v => v.sku_code === item.skuCode);
 }
 
 export function buildDefaultCartItem(product: Product): CartItem | null {
   const skuCode = getSingleSellableSku(product);
   if (!skuCode) {
-    // Có từ hai biến thể trở lên (một tầng nhiều lựa chọn, hoặc hai tầng) --
-    // thêm nhanh không được tự chọn tổ hợp đại diện. Xem ProductCard/
+    // Có từ hai biến thể bán được trở lên (một tầng nhiều lựa chọn, hoặc hai
+    // tầng) -- thêm nhanh không được tự chọn tổ hợp đại diện. Xem ProductCard/
     // QuickViewModal: những nơi gọi hàm này phải tự chặn từ trước bằng
     // getSingleSellableSku và dẫn khách sang trang chi tiết thay vì gọi đây.
     return null;
@@ -179,16 +213,12 @@ export function buildDefaultCartItem(product: Product): CartItem | null {
     price: product.salePrice || product.price,
     selectedWeight,
     selectedColor,
+    variantLabel: buildVariantLabel(product, selectedColor, selectedWeight),
     stringOption: null,
     tension: 10.5,
     quantity: 1
   };
 }
-
-export type BuildCartItemResult =
-  | { status: 'ok'; item: CartItem }
-  | { status: 'missing_selection'; tierName: string }
-  | { status: 'not_available' };
 
 export function buildConfiguredCartItem(
   product: Product,
@@ -196,28 +226,26 @@ export function buildConfiguredCartItem(
   color: string,
   stringChoice: StringOption | null,
   tension: number
-): BuildCartItemResult {
-  const lookup = resolveSkuCode(product, color, weight);
-  if (lookup.status !== 'ok') {
-    return lookup;
+): CartItem | null {
+  const skuCode = resolveSkuCode(product, color, weight);
+  if (!skuCode) {
+    return null;
   }
 
   return {
-    status: 'ok',
-    item: {
-      id: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`,
-      productId: product.id,
-      skuCode: lookup.skuCode,
-      name: product.name,
-      brand: product.brand,
-      image: product.image,
-      price: product.salePrice || product.price,
-      selectedWeight: weight,
-      selectedColor: color,
-      stringOption: stringChoice,
-      tension,
-      quantity: 1
-    }
+    id: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`,
+    productId: product.id,
+    skuCode,
+    name: product.name,
+    brand: product.brand,
+    image: product.image,
+    price: product.salePrice || product.price,
+    selectedWeight: weight,
+    selectedColor: color,
+    variantLabel: buildVariantLabel(product, color, weight),
+    stringOption: stringChoice,
+    tension,
+    quantity: 1
   };
 }
 

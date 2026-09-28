@@ -3,7 +3,8 @@ import { X, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
-import { isFabricatedSkuCode } from '../features/cart/cartSlice';
+import { isCartItemSkuValid } from '../features/cart/cartSlice';
+import { useAppSelector } from '../app/hooks';
 import OtpModal from './OtpModal';
 
 
@@ -17,6 +18,10 @@ export interface CartItem {
   price: number;
   selectedWeight: string;
   selectedColor: string;
+  // Nhãn phân loại dựng từ tên tầng thật (tier_variations) + giá trị đã chọn,
+  // vd "Màu Sắc: DAZZLING BLUE · Size: S". undefined khi sản phẩm không có
+  // tầng nào -- UI tự ẩn dòng này thay vì bịa nhãn.
+  variantLabel?: string;
   stringOption: StringOption | null;
   tension: number;
   quantity: number;
@@ -31,6 +36,7 @@ interface CartModalProps {
 }
 
 export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, onClearCart }: CartModalProps) {
+  const products = useAppSelector(state => state.appData.products);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   const [createdOrderNumber, setCreatedOrderNumber] = useState('');
   
@@ -91,14 +97,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       const channelId = await sportApi.getOrCreateStorefrontChannelId();
 
       for (const item of cartItems) {
-        // Chặn cả SKU rỗng lẫn SKU bịa còn sót trong giỏ hàng cũ lưu ở
-        // localStorage (dạng `SKU-<id>-...` do lỗi resolveSkuCode trước đây).
-        // KHÔNG tự xoá item -- giữ hiển thị (xem dòng cảnh báo trong danh sách
-        // giỏ hàng bên dưới), chỉ chặn thanh toán tới khi khách tự xoá/chọn lại.
-        if (!item.skuCode || isFabricatedSkuCode(item.skuCode)) {
-          await popupService.alert(
-            `"${item.name}": Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.`
-          );
+        // Món hợp lệ khi skuCode khớp ĐÚNG một biến thể bán được của chính
+        // sản phẩm đó trong dữ liệu đã tải (không chỉ kiểm rỗng/mẫu chuỗi
+        // "SKU-<id>-..."). KHÔNG tự xoá item -- giữ hiển thị (xem dòng cảnh
+        // báo trong danh sách giỏ hàng bên dưới), chỉ chặn thanh toán tới khi
+        // khách tự xoá/chọn lại.
+        if (!isCartItemSkuValid(item, products)) {
+          await popupService.alert('Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.');
           setIsSubmitting(false);
           return;
         }
@@ -191,16 +196,22 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   <div className="divide-y divide-gray-100">
                     {cartItems.map((item) => {
                       const stringPrice = item.stringOption ? item.stringOption.price : 0;
+                      const skuValid = isCartItemSkuValid(item, products);
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5">
                           <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
                           <div className="flex-1 space-y-1">
                             <span className="text-[10px] font-mono font-bold text-brand-primary uppercase">{item.brand}</span>
                             <h4 className="font-bold text-xs text-gray-900 line-clamp-1 leading-normal">{item.name}</h4>
-                            
-                            {/* Selected Specs info */}
+
+                            {/* Selected Specs info -- nhãn phân loại dựng từ tên
+                                tầng thật (xem buildVariantLabel), không phải
+                                chuỗi cứng "Phiên bản: {weight} | {color}". Sản
+                                phẩm không có tầng nào -> không có gì để hiện. */}
                             <div className="text-[10px] text-gray-500 font-mono space-y-0.5">
-                              <p>• Phiên bản: <strong className="text-gray-700">{item.selectedWeight} | {item.selectedColor}</strong></p>
+                              {item.variantLabel && (
+                                <p>• Phân loại: <strong className="text-gray-700">{item.variantLabel}</strong></p>
+                              )}
                               {item.stringOption ? (
                                 <p className="text-brand-primary font-bold">• Đan cước: {item.stringOption.name} ({item.tension} Kg)</p>
                               ) : (
@@ -208,10 +219,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                               )}
                             </div>
 
-                            {/* SKU không hợp lệ (giỏ hàng cũ lưu trước khi sửa
-                                lỗi, hoặc SKU rỗng) -- giữ hiển thị món hàng,
-                                không tự xoá, chỉ báo để khách tự xoá/chọn lại. */}
-                            {(!item.skuCode || isFabricatedSkuCode(item.skuCode)) && (
+                            {/* SKU không còn khớp biến thể thật nào của sản
+                                phẩm (giỏ hàng cũ, hoặc PIM đã đổi/xoá tổ hợp)
+                                -- giữ hiển thị món hàng, không tự xoá, chỉ báo
+                                để khách tự xoá/chọn lại. */}
+                            {!skuValid && (
                               <p className="text-[10px] text-red-600 font-semibold">
                                 Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.
                               </p>

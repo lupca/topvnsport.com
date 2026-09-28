@@ -29,7 +29,6 @@ import {
 import HomePage from './features/home/HomePage';
 import MobileBottomNav from './features/navigation/MobileBottomNav';
 import CheckoutCallbackPage from './features/checkout/CheckoutCallbackPage';
-import { getProductPath } from './utils/productSlug';
 
 const CartModal = lazy(() => import('./components/CartModal'));
 const ProductDetailRoute = lazy(() => import('./features/product/ProductDetailRoute'));
@@ -76,10 +75,10 @@ export default function App() {
     if (e) e.stopPropagation();
     const item = buildDefaultCartItem(product);
     if (!item) {
-      // Sản phẩm có nhiều tầng phân loại -- không tự chọn tổ hợp đại diện,
-      // dẫn khách vào trang chi tiết để chọn đủ.
-      void popupService.alert('Vui lòng chọn đủ phân loại trước khi thêm vào giỏ.');
-      navigate(getProductPath(product));
+      // Không có đúng một SKU bán được -- ProductCard/QuickViewModal đã tự
+      // chặn và dẫn khách sang trang chi tiết trước khi gọi tới đây, nhánh
+      // này chỉ còn là chốt chặn phòng thủ, dùng đúng câu đã chốt chung.
+      void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
       return;
     }
     dispatch(addCartItem(item));

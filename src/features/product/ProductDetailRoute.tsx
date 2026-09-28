@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductDetailPage from '../../components/ProductDetailPage';
-import { addCartItem, buildConfiguredCartItem, openCart } from '../cart/cartSlice';
+import { addCartItem, buildConfiguredCartItem, describeSkuSelection, openCart } from '../cart/cartSlice';
 import { StringOption } from '../../types';
 import { findProductBySlug } from '../../utils/productSlug';
 
@@ -22,19 +22,20 @@ export default function ProductDetailRoute() {
     stringChoice: StringOption | null,
     tension: number
   ) => {
-    const result = buildConfiguredCartItem(targetProduct, weight, color, stringChoice, tension);
-    if (result.status === 'missing_selection') {
-      void popupService.alert(`Vui lòng chọn ${result.tierName}`);
-      return;
-    }
-    if (result.status === 'not_available') {
-      // Tổ hợp phân loại khách vừa chọn không khớp đúng một biến thể thật nào
-      // -- không bịa SKU, không thêm vào giỏ.
-      void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
+    const item = buildConfiguredCartItem(targetProduct, weight, color, stringChoice, tension);
+    if (!item) {
+      // Không khớp đúng một biến thể bán được -- không bịa SKU, không thêm
+      // vào giỏ. Tra riêng lý do cụ thể để báo đúng câu.
+      const description = describeSkuSelection(targetProduct, color, weight);
+      if (description.status === 'missing_selection') {
+        void popupService.alert(`Vui lòng chọn ${description.tierName}`);
+      } else {
+        void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
+      }
       return;
     }
 
-    dispatch(addCartItem(result.item));
+    dispatch(addCartItem(item));
     dispatch(openCart());
   };
 

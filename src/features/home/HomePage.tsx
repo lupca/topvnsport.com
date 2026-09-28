@@ -9,7 +9,6 @@ import RacketFinder from '../../components/RacketFinder';
 import TrustBadges from '../../components/TrustBadges';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { addCartItem, buildDefaultCartItem, openCart, setQuickViewProduct } from '../cart/cartSlice';
-import { getProductPath } from '../../utils/productSlug';
 import { categoryTileThemes, getCategoryMonogram, getCategorySubtitle } from './categoryTileThemes';
 
 
@@ -42,10 +41,10 @@ export default function HomePage() {
     if (e) e.stopPropagation();
     const item = buildDefaultCartItem(product);
     if (!item) {
-      // Sản phẩm có nhiều tầng phân loại -- không tự chọn tổ hợp đại diện,
-      // dẫn khách vào trang chi tiết để chọn đủ.
-      void popupService.alert('Vui lòng chọn đủ phân loại trước khi thêm vào giỏ.');
-      navigate(getProductPath(product));
+      // Không có đúng một SKU bán được -- ProductCard/QuickViewModal đã tự
+      // chặn và dẫn khách sang trang chi tiết trước khi gọi tới đây, nhánh
+      // này chỉ còn là chốt chặn phòng thủ, dùng đúng câu đã chốt chung.
+      void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
       return;
     }
     dispatch(addCartItem(item));

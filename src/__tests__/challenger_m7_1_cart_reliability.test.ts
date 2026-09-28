@@ -12,13 +12,6 @@ import cartReducer, {
 } from '../features/cart/cartSlice';
 import { Product, StringOption } from '../types';
 
-function expectOkItem(result: ReturnType<typeof buildConfiguredCartItem>) {
-  if (result.status !== 'ok') {
-    throw new Error(`Expected buildConfiguredCartItem to resolve, got status "${result.status}"`);
-  }
-  return result.item;
-}
-
 const mockRacket: Product = {
   id: 'PROD-RACKET-1',
   name: 'Vợt Cầu Lông Yonex Arcsaber 11 Pro',
@@ -149,8 +142,8 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
   describe('2. Adding Items with Identical vs Different Attributes', () => {
     it('merges quantities when adding items with identical attributes via buildConfiguredCartItem', () => {
       const stringChoice: StringOption = { id: 'STR-BG66', name: 'BG66 Ultimax', price: 180000 };
-      const item1 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11));
-      const item2 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11));
+      const item1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11)!;
+      const item2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11)!;
 
       expect(item1.id).toBe(item2.id);
 
@@ -166,9 +159,7 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       // công -- mockRacket có 2 biến thể nên không còn thêm nhanh được nữa.
       const defaultItem = buildDefaultCartItem(mockSimpleProduct)!;
       // Configured product with the SAME weight/color/string/tension as default
-      const configuredItem = expectOkItem(
-        buildConfiguredCartItem(mockSimpleProduct, 'Tiêu chuẩn', 'Tiêu chuẩn', null, 10.5)
-      );
+      const configuredItem = buildConfiguredCartItem(mockSimpleProduct, 'Tiêu chuẩn', 'Tiêu chuẩn', null, 10.5)!;
 
       // Default ID format: `${product.id}-${selectedWeight}-${selectedColor}`
       // Configured ID format: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`
@@ -188,23 +179,23 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       const string2: StringOption = { id: 'STR-NBG95', name: 'Nanogy 95', price: 170000 };
 
       // Different weights
-      const itemWeight1 = expectOkItem(buildConfiguredCartItem(mockRacket, '3U/G5', 'Đỏ/Đen', string1, 11));
-      const itemWeight2 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11));
+      const itemWeight1 = buildConfiguredCartItem(mockRacket, '3U/G5', 'Đỏ/Đen', string1, 11)!;
+      const itemWeight2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11)!;
       expect(itemWeight1.id).not.toBe(itemWeight2.id);
 
       // Different colors
-      const itemColor1 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11));
-      const itemColor2 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Xám', string1, 11));
+      const itemColor1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11)!;
+      const itemColor2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Xám', string1, 11)!;
       expect(itemColor1.id).not.toBe(itemColor2.id);
 
       // Different strings
-      const itemStr1 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11));
-      const itemStr2 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string2, 11));
+      const itemStr1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11)!;
+      const itemStr2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string2, 11)!;
       expect(itemStr1.id).not.toBe(itemStr2.id);
 
       // Different tension
-      const itemTension1 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 10.5));
-      const itemTension2 = expectOkItem(buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 12));
+      const itemTension1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 10.5)!;
+      const itemTension2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 12)!;
       expect(itemTension1.id).not.toBe(itemTension2.id);
 
       let state = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(itemWeight1));
