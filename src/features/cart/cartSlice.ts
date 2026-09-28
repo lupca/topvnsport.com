@@ -90,33 +90,51 @@ export const {
   setQuickViewProduct
 } = cartSlice.actions;
 
+export type SkuLookupResult =
+  | { status: 'ok'; skuCode: string }
+  | { status: 'missing_selection'; tierName: string }
+  | { status: 'not_available' };
+
 // Tra SKU thật theo đúng cặp (tier1, tier2) trong product.variants -- KHÔNG
 // còn tra qua skuByColor/skuByVariant (nguồn SKU sai cho sản phẩm hai tầng: nó
-// giữ biến thể CUỐI cùng của mỗi tier1, không phải biến thể khách đang chọn).
-// Không khớp được -> trả về undefined để caller CHẶN thêm vào giỏ, không bịa
-// SKU giả (`SKU-${id}-...` như code cũ) và không lấy đại một SKU đại diện.
-export function resolveSkuCode(product: Product, tier1: string, tier2: string): string | undefined {
+// giữ biến thể CUỐI cùng của mỗi tier1, không phân biệt tier2). Ba kết quả:
+// - 'ok': khớp ĐÚNG MỘT biến thể -> skuCode thật.
+// - 'missing_selection': tầng đó có thật (tier_variations) nhưng chưa chọn
+//   giá trị -- caller hỏi lại đúng tên tầng (vd "Vui lòng chọn Kích cỡ").
+// - 'not_available': không có biến thể nào khớp, HOẶC khớp nhiều hơn một
+//   (dữ liệu trùng tier_1_option/tier_2_option) -- không đoán đại một cái,
+//   console.error ghi lại product id + tổ hợp để dò dữ liệu nguồn.
+export function resolveSkuCode(product: Product, tier1: string, tier2: string): SkuLookupResult {
   const variants = product.variants || [];
-  if (variants.length === 0) {
-    return undefined;
+  const tier1Def = product.tier_variations?.find(tv => tv.tier_index === 1);
+  const tier2Def = product.tier_variations?.find(tv => tv.tier_index === 2);
+  const hasTier1 = Boolean(tier1Def);
+  const hasTier2 = Boolean(tier2Def);
+
+  if (hasTier1 && !tier1) {
+    console.error(`resolveSkuCode: sản phẩm ${product.id} thiếu lựa chọn tầng "${tier1Def!.name}".`);
+    return { status: 'missing_selection', tierName: tier1Def!.name };
+  }
+  if (hasTier2 && !tier2) {
+    console.error(`resolveSkuCode: sản phẩm ${product.id} thiếu lựa chọn tầng "${tier2Def!.name}".`);
+    return { status: 'missing_selection', tierName: tier2Def!.name };
   }
 
-  const hasTier1 = Boolean(product.tier_variations?.some(tv => tv.tier_index === 1));
-  const hasTier2 = Boolean(product.tier_variations?.some(tv => tv.tier_index === 2));
+  const candidates = (!hasTier1 && !hasTier2)
+    ? variants
+    : variants.filter(v =>
+        (!hasTier1 || v.tier_1_option === tier1) &&
+        (!hasTier2 || v.tier_2_option === tier2)
+      );
 
-  if (!hasTier1 && !hasTier2) {
-    // Không có tầng phân loại nào -- chỉ suy ra được SKU khi sản phẩm có ĐÚNG
-    // một biến thể. Nhiều biến thể mà không có tier_variations là dữ liệu mơ
-    // hồ, không đoán đại một cái.
-    return variants.length === 1 ? (variants[0].sku_code || undefined) : undefined;
+  if (candidates.length === 1 && candidates[0].sku_code) {
+    return { status: 'ok', skuCode: candidates[0].sku_code };
   }
 
-  const match = variants.find(v =>
-    (!hasTier1 || v.tier_1_option === tier1) &&
-    (!hasTier2 || v.tier_2_option === tier2)
+  console.error(
+    `resolveSkuCode: sản phẩm ${product.id} tổ hợp (${tier1 || '—'} / ${tier2 || '—'}) khớp ${candidates.length} biến thể -- không đoán SKU.`
   );
-
-  return match?.sku_code || undefined;
+  return { status: 'not_available' };
 }
 
 // SKU bịa dạng `SKU-<id>-...` mà bản build cũ từng ghi vào giỏ hàng khi không
@@ -127,23 +145,29 @@ export function isFabricatedSkuCode(skuCode: string | undefined): boolean {
   return Boolean(skuCode && /^SKU-\d+-/.test(skuCode));
 }
 
+// Sản phẩm có ĐÚNG một biến thể bán được (không tầng, hoặc mọi tầng chỉ có
+// một lựa chọn duy nhất) -- trường hợp DUY NHẤT được phép thêm nhanh từ thẻ
+// sản phẩm mà không cần khách vào trang chi tiết chọn phân loại. Không dùng
+// options[0]/colors[0] để đoán khi có từ hai biến thể trở lên.
+export function getSingleSellableSku(product: Product): string | null {
+  const variants = product.variants || [];
+  return variants.length === 1 && variants[0].sku_code ? variants[0].sku_code : null;
+}
+
 export function buildDefaultCartItem(product: Product): CartItem | null {
-  const hasTier2 = Boolean(product.tier_variations?.some(tv => tv.tier_index === 2));
-  if (hasTier2) {
-    // Sản phẩm hai tầng: thêm nhanh không được tự chọn tổ hợp đại diện rồi
-    // gửi SKU -- phải để khách vào trang chi tiết chọn đủ cả hai tầng.
+  const skuCode = getSingleSellableSku(product);
+  if (!skuCode) {
+    // Có từ hai biến thể trở lên (một tầng nhiều lựa chọn, hoặc hai tầng) --
+    // thêm nhanh không được tự chọn tổ hợp đại diện. Xem ProductCard/
+    // QuickViewModal: những nơi gọi hàm này phải tự chặn từ trước bằng
+    // getSingleSellableSku và dẫn khách sang trang chi tiết thay vì gọi đây.
     return null;
   }
 
-  const selectedColor = product.colors && product.colors.length > 0 ? product.colors[0] : 'Tiêu chuẩn';
+  const selectedColor = product.colors && product.colors.length === 1 ? product.colors[0] : 'Tiêu chuẩn';
   // Không bịa trọng lượng theo ngành -- lấy từ thông số thật nếu có, còn lại
   // dùng sentinel "Tiêu chuẩn" chung (giống màu sắc) khi sản phẩm chưa có dữ liệu.
   const selectedWeight = product.specs?.weight || 'Tiêu chuẩn';
-
-  const skuCode = resolveSkuCode(product, selectedColor, selectedWeight);
-  if (!skuCode) {
-    return null;
-  }
 
   return {
     id: `${product.id}-${selectedWeight}-${selectedColor}`,
@@ -161,31 +185,39 @@ export function buildDefaultCartItem(product: Product): CartItem | null {
   };
 }
 
+export type BuildCartItemResult =
+  | { status: 'ok'; item: CartItem }
+  | { status: 'missing_selection'; tierName: string }
+  | { status: 'not_available' };
+
 export function buildConfiguredCartItem(
   product: Product,
   weight: string,
   color: string,
   stringChoice: StringOption | null,
   tension: number
-): CartItem | null {
-  const skuCode = resolveSkuCode(product, color, weight);
-  if (!skuCode) {
-    return null;
+): BuildCartItemResult {
+  const lookup = resolveSkuCode(product, color, weight);
+  if (lookup.status !== 'ok') {
+    return lookup;
   }
 
   return {
-    id: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`,
-    productId: product.id,
-    skuCode,
-    name: product.name,
-    brand: product.brand,
-    image: product.image,
-    price: product.salePrice || product.price,
-    selectedWeight: weight,
-    selectedColor: color,
-    stringOption: stringChoice,
-    tension,
-    quantity: 1
+    status: 'ok',
+    item: {
+      id: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`,
+      productId: product.id,
+      skuCode: lookup.skuCode,
+      name: product.name,
+      brand: product.brand,
+      image: product.image,
+      price: product.salePrice || product.price,
+      selectedWeight: weight,
+      selectedColor: color,
+      stringOption: stringChoice,
+      tension,
+      quantity: 1
+    }
   };
 }
 

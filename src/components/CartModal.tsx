@@ -92,10 +92,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
       for (const item of cartItems) {
         // Chặn cả SKU rỗng lẫn SKU bịa còn sót trong giỏ hàng cũ lưu ở
-        // localStorage (dạng `SKU-<id>-...` do lỗi resolveSkuCode trước đây) --
-        // không bao giờ gửi những SKU này đi đặt hàng.
+        // localStorage (dạng `SKU-<id>-...` do lỗi resolveSkuCode trước đây).
+        // KHÔNG tự xoá item -- giữ hiển thị (xem dòng cảnh báo trong danh sách
+        // giỏ hàng bên dưới), chỉ chặn thanh toán tới khi khách tự xoá/chọn lại.
         if (!item.skuCode || isFabricatedSkuCode(item.skuCode)) {
-          await popupService.alert(`Sản phẩm "${item.name}" bị lỗi thiếu mã SKU từ hệ thống, không thể đặt hàng!`);
+          await popupService.alert(
+            `"${item.name}": Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.`
+          );
           setIsSubmitting(false);
           return;
         }
@@ -204,6 +207,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                                 <p className="text-gray-400">• Không đan lưới (Mua khung trơn)</p>
                               )}
                             </div>
+
+                            {/* SKU không hợp lệ (giỏ hàng cũ lưu trước khi sửa
+                                lỗi, hoặc SKU rỗng) -- giữ hiển thị món hàng,
+                                không tự xoá, chỉ báo để khách tự xoá/chọn lại. */}
+                            {(!item.skuCode || isFabricatedSkuCode(item.skuCode)) && (
+                              <p className="text-[10px] text-red-600 font-semibold">
+                                Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.
+                              </p>
+                            )}
 
                             <div className="flex justify-between items-center pt-1.5">
                               <span className="text-xs text-gray-400">Số lượng: <strong>{item.quantity}</strong></span>

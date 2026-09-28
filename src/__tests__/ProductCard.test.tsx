@@ -51,7 +51,9 @@ const mockPromotedProduct: Product = {
   },
   description: 'Giày cầu lông chuyên nghiệp.',
   reviews: [],
-  stock: 10
+  stock: 10,
+  // Đúng một biến thể -- đủ điều kiện thêm nhanh (xem getSingleSellableSku).
+  variants: [{ tier_1_option: null, tier_2_option: null, sku_code: 'SKU-65Z3-TEST', price: 2000000, stock: 10 }]
 };
 
 const mockOutOfStockProduct: Product = {

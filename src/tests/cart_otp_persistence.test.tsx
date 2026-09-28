@@ -55,8 +55,13 @@ describe('Milestone 7 - Cart Persistence & Reducer Logic', () => {
     expect(defaultItem2.id).toBe(defaultItem1.id);
     expect(defaultItem1.id).not.toContain('Date.now');
 
-    const configuredItem1 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11);
-    const configuredItem2 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11);
+    const configuredResult1 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11);
+    const configuredResult2 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11);
+    if (configuredResult1.status !== 'ok' || configuredResult2.status !== 'ok') {
+      throw new Error('expected buildConfiguredCartItem to resolve');
+    }
+    const configuredItem1 = configuredResult1.item;
+    const configuredItem2 = configuredResult2.item;
 
     expect(configuredItem1.id).toBe('PROD-100-3U/G5-Đỏ/Đen-STR-66-11');
     expect(configuredItem2.id).toBe(configuredItem1.id);

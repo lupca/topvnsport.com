@@ -1,8 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   resolveSkuCode,
   buildDefaultCartItem,
   buildConfiguredCartItem,
+  getSingleSellableSku,
   isFabricatedSkuCode
 } from '../features/cart/cartSlice';
 import { Product } from '../types';
@@ -101,7 +102,9 @@ const twoTierRacket: Product = {
   ]
 };
 
-// Sản phẩm một tầng (id 339 "Dây vợt" -- chỉ chọn loại dây, không có size).
+// Sản phẩm một tầng, NHIỀU lựa chọn (id 339 "Dây vợt" -- chỉ chọn loại dây,
+// không có size). 5 biến thể -> vẫn phải chọn ở trang chi tiết, không thêm
+// nhanh được (theo thiết kế mới: thêm nhanh CHỈ khi đúng MỘT SKU bán được).
 const oneTierProduct: Product = {
   id: '339',
   name: 'Dây vợt cầu lông Lining',
@@ -126,7 +129,8 @@ const oneTierProduct: Product = {
   ]
 };
 
-// Sản phẩm không có tầng nào -- đúng một SKU (id 338, bộ vợt).
+// Sản phẩm không có tầng nào -- đúng một SKU (id 338, bộ vợt). Trường hợp DUY
+// NHẤT được thêm nhanh từ thẻ sản phẩm.
 const noTierProduct: Product = {
   id: '338',
   name: 'Bộ vợt cầu lông Victor Auraspeed HS Plus',
@@ -144,80 +148,95 @@ const noTierProduct: Product = {
   ]
 };
 
+let errorSpy: ReturnType<typeof vi.spyOn>;
+beforeEach(() => {
+  errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+});
+afterEach(() => {
+  errorSpy.mockRestore();
+});
+
 describe('resolveSkuCode -- sản phẩm hai tầng phân loại', () => {
   it('khớp đúng SKU cho MỌI tổ hợp màu x size của id 341 (dữ liệu thật từ prod)', () => {
     for (const variant of twoTierShirt.variants!) {
-      const sku = resolveSkuCode(twoTierShirt, variant.tier_1_option!, variant.tier_2_option!);
-      expect(sku).toBe(variant.sku_code);
+      const result = resolveSkuCode(twoTierShirt, variant.tier_1_option!, variant.tier_2_option!);
+      expect(result).toEqual({ status: 'ok', skuCode: variant.sku_code });
     }
   });
 
   it('tái hiện đúng bug report: DAZZLING BLUE / S phải ra SKU của chính biến thể S, không phải 2XL', () => {
-    expect(resolveSkuCode(twoTierShirt, 'DAZZLING BLUE', 'S')).toBe(
-      'PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-S'
-    );
-    expect(resolveSkuCode(twoTierShirt, 'DAZZLING BLUE', 'S')).not.toBe(
-      'PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-2XL'
-    );
+    const result = resolveSkuCode(twoTierShirt, 'DAZZLING BLUE', 'S');
+    expect(result).toEqual({ status: 'ok', skuCode: 'PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-S' });
   });
 
   it('khớp đúng SKU cho MỌI tổ hợp màu x loại cước của id 337 (dữ liệu thật từ prod)', () => {
     for (const variant of twoTierRacket.variants!) {
-      const sku = resolveSkuCode(twoTierRacket, variant.tier_1_option!, variant.tier_2_option!);
-      expect(sku).toBe(variant.sku_code);
+      const result = resolveSkuCode(twoTierRacket, variant.tier_1_option!, variant.tier_2_option!);
+      expect(result).toEqual({ status: 'ok', skuCode: variant.sku_code });
     }
   });
 
   it('tái hiện đúng bug report: Cannon Deep Teal / BG 65TI phải ra SKU của chính BG 65TI, không phải Khung không dây', () => {
-    expect(resolveSkuCode(twoTierRacket, 'Cannon Deep Teal', 'BG 65TI')).toBe(
-      'PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-BG-65TI'
-    );
-    expect(resolveSkuCode(twoTierRacket, 'Cannon Deep Teal', 'BG 65TI')).not.toBe(
-      'PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-KHUNG-KHONG-DAY'
-    );
+    const result = resolveSkuCode(twoTierRacket, 'Cannon Deep Teal', 'BG 65TI');
+    expect(result).toEqual({ status: 'ok', skuCode: 'PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-BG-65TI' });
   });
 
   it('buildConfiguredCartItem trả đúng skuCode cho từng tổ hợp đã chọn ở trang chi tiết', () => {
-    const item = buildConfiguredCartItem(twoTierShirt, 'S', 'DAZZLING BLUE', null, 10.5);
-    expect(item).not.toBeNull();
-    expect(item!.skuCode).toBe('PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-S');
+    const result = buildConfiguredCartItem(twoTierShirt, 'S', 'DAZZLING BLUE', null, 10.5);
+    expect(result.status).toBe('ok');
+    if (result.status === 'ok') {
+      expect(result.item.skuCode).toBe('PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-S');
+    }
 
-    const item2 = buildConfiguredCartItem(twoTierShirt, '2XL', 'WHITE', null, 10.5);
-    expect(item2!.skuCode).toBe('PRD-AO-YONEX-COLLECTION-8T3G-WHITE-2XL');
+    const result2 = buildConfiguredCartItem(twoTierShirt, '2XL', 'WHITE', null, 10.5);
+    expect(result2.status).toBe('ok');
+    if (result2.status === 'ok') {
+      expect(result2.item.skuCode).toBe('PRD-AO-YONEX-COLLECTION-8T3G-WHITE-2XL');
+    }
   });
 });
 
 describe('resolveSkuCode -- sản phẩm một tầng và không tầng', () => {
-  it('sản phẩm một tầng khớp theo tier1, bỏ qua tier2', () => {
-    expect(resolveSkuCode(oneTierProduct, 'Yonex BG 65Ti', 'bất kỳ')).toBe(
-      'PRD-VOT-CAU-LONG-LINING-XZBJ-YONEX-BG-65TI'
-    );
-    expect(resolveSkuCode(oneTierProduct, 'Khung không', 'Tiêu chuẩn')).toBe(
-      'PRD-VOT-CAU-LONG-LINING-XZBJ-KHUNG-KHONG'
-    );
+  it('sản phẩm một tầng khớp theo tier1', () => {
+    expect(resolveSkuCode(oneTierProduct, 'Yonex BG 65Ti', 'Tiêu chuẩn')).toEqual({
+      status: 'ok',
+      skuCode: 'PRD-VOT-CAU-LONG-LINING-XZBJ-YONEX-BG-65TI'
+    });
+    expect(resolveSkuCode(oneTierProduct, 'Khung không', 'Tiêu chuẩn')).toEqual({
+      status: 'ok',
+      skuCode: 'PRD-VOT-CAU-LONG-LINING-XZBJ-KHUNG-KHONG'
+    });
   });
 
   it('sản phẩm không có tầng nào trả về SKU của variant duy nhất, bỏ qua tham số', () => {
-    expect(resolveSkuCode(noTierProduct, 'bất kỳ', 'bất kỳ')).toBe(
-      'PRD-BO-VOT-CAU-LONG-VICTOR-K88J-DEFAULT'
-    );
-  });
-
-  it('buildDefaultCartItem thêm nhanh được sản phẩm không tầng / một tầng với SKU thật', () => {
-    const noTierItem = buildDefaultCartItem(noTierProduct);
-    expect(noTierItem).not.toBeNull();
-    expect(noTierItem!.skuCode).toBe('PRD-BO-VOT-CAU-LONG-VICTOR-K88J-DEFAULT');
-
-    const oneTierItem = buildDefaultCartItem(oneTierProduct);
-    expect(oneTierItem).not.toBeNull();
-    // colors[0] = 'Khung không' -> phải khớp đúng SKU của chính biến thể đó,
-    // không phải SKU của biến thể cuối cùng như lỗi skuByColor cũ.
-    expect(oneTierItem!.selectedColor).toBe('Khung không');
-    expect(oneTierItem!.skuCode).toBe('PRD-VOT-CAU-LONG-LINING-XZBJ-KHUNG-KHONG');
+    expect(resolveSkuCode(noTierProduct, 'bất kỳ', 'bất kỳ')).toEqual({
+      status: 'ok',
+      skuCode: 'PRD-BO-VOT-CAU-LONG-VICTOR-K88J-DEFAULT'
+    });
   });
 });
 
-describe('resolveSkuCode -- tổ hợp không tồn tại (KHÔNG bịa SKU, KHÔNG thêm giỏ)', () => {
+describe('resolveSkuCode -- thiếu lựa chọn (chưa chọn đủ tầng)', () => {
+  it('thiếu tier1 -> báo đúng tên tầng còn thiếu, không đoán', () => {
+    const result = resolveSkuCode(twoTierShirt, '', 'S');
+    expect(result).toEqual({ status: 'missing_selection', tierName: 'Màu Sắc' });
+    expect(errorSpy).toHaveBeenCalled();
+  });
+
+  it('thiếu tier2 -> báo đúng tên tầng còn thiếu (Size), không đoán', () => {
+    const result = resolveSkuCode(twoTierShirt, 'DAZZLING BLUE', '');
+    expect(result).toEqual({ status: 'missing_selection', tierName: 'Size' });
+  });
+
+  it('sản phẩm một tầng thiếu lựa chọn -> báo đúng tên tầng "Dây vợt"', () => {
+    expect(resolveSkuCode(oneTierProduct, '', '')).toEqual({
+      status: 'missing_selection',
+      tierName: 'Dây vợt'
+    });
+  });
+});
+
+describe('resolveSkuCode -- tổ hợp không tồn tại hoặc nhiều ứng viên (KHÔNG bịa SKU, KHÔNG thêm giỏ)', () => {
   // Grid thưa: cố ý dựng để có tổ hợp màu x size không có trong catalog thật,
   // vì dữ liệu prod thật hiện tại (26/26 sản phẩm hai tầng) đều là grid đặc.
   const sparseProduct: Product = {
@@ -242,24 +261,70 @@ describe('resolveSkuCode -- tổ hợp không tồn tại (KHÔNG bịa SKU, KH�
     ]
   };
 
-  it('resolveSkuCode trả undefined khi tổ hợp không có biến thể thật', () => {
-    expect(resolveSkuCode(sparseProduct, 'Đỏ', 'L')).toBeUndefined();
-    expect(resolveSkuCode(sparseProduct, 'Xanh', 'S')).toBeUndefined();
+  // Dữ liệu nguồn lỗi: hai biến thể trùng tier_1_option của một sản phẩm MỘT
+  // tầng (không nên xảy ra, nhưng nếu xảy ra thì không được đoán đại một cái).
+  const duplicateTierProduct: Product = {
+    id: '998',
+    name: 'Sản phẩm test trùng tier_1_option',
+    brand: 'Other',
+    category: 'Test',
+    price: 50000,
+    image: 'https://example.com/998.jpg',
+    specs: {},
+    description: '',
+    reviews: [],
+    stock: 5,
+    colors: ['Đỏ'],
+    tier_variations: [{ tier_index: 1, name: 'Màu sắc', options: ['Đỏ'] }],
+    variants: [
+      { tier_1_option: 'Đỏ', tier_2_option: null, sku_code: 'SP-998-DO-A', price: 50000, stock: 5 },
+      { tier_1_option: 'Đỏ', tier_2_option: null, sku_code: 'SP-998-DO-B', price: 50000, stock: 5 }
+    ]
+  };
+
+  it('resolveSkuCode trả not_available khi tổ hợp không có biến thể thật', () => {
+    expect(resolveSkuCode(sparseProduct, 'Đỏ', 'L')).toEqual({ status: 'not_available' });
+    expect(resolveSkuCode(sparseProduct, 'Xanh', 'S')).toEqual({ status: 'not_available' });
+    expect(errorSpy).toHaveBeenCalled();
   });
 
-  it('buildConfiguredCartItem trả null (không thêm được giỏ) khi tổ hợp không tồn tại', () => {
-    expect(buildConfiguredCartItem(sparseProduct, 'L', 'Đỏ', null, 10.5)).toBeNull();
+  it('nhiều ứng viên cùng tier_1_option (một tầng) -> not_available, không đoán đại, có console.error nêu product id', () => {
+    const result = resolveSkuCode(duplicateTierProduct, 'Đỏ', 'Tiêu chuẩn');
+    expect(result).toEqual({ status: 'not_available' });
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('998'));
+  });
+
+  it('buildConfiguredCartItem trả not_available khi tổ hợp không tồn tại', () => {
+    expect(buildConfiguredCartItem(sparseProduct, 'L', 'Đỏ', null, 10.5)).toEqual({ status: 'not_available' });
   });
 
   it('resolveSkuCode/buildConfiguredCartItem vẫn hoạt động đúng cho tổ hợp CÓ tồn tại trong grid thưa', () => {
-    expect(resolveSkuCode(sparseProduct, 'Đỏ', 'S')).toBe('SP-999-DO-S');
-    expect(buildConfiguredCartItem(sparseProduct, 'S', 'Đỏ', null, 10.5)!.skuCode).toBe('SP-999-DO-S');
+    expect(resolveSkuCode(sparseProduct, 'Đỏ', 'S')).toEqual({ status: 'ok', skuCode: 'SP-999-DO-S' });
+    const result = buildConfiguredCartItem(sparseProduct, 'S', 'Đỏ', null, 10.5);
+    expect(result.status).toBe('ok');
+    if (result.status === 'ok') {
+      expect(result.item.skuCode).toBe('SP-999-DO-S');
+    }
   });
 });
 
-describe('buildDefaultCartItem -- thêm nhanh sản phẩm hai tầng KHÔNG được đoán SKU', () => {
-  it('trả về null cho sản phẩm hai tầng thay vì tự chọn tổ hợp đại diện', () => {
+describe('getSingleSellableSku / buildDefaultCartItem -- thêm nhanh CHỈ khi đúng MỘT SKU', () => {
+  it('sản phẩm không tầng (đúng 1 biến thể) -> có SKU duy nhất, thêm nhanh được', () => {
+    expect(getSingleSellableSku(noTierProduct)).toBe('PRD-BO-VOT-CAU-LONG-VICTOR-K88J-DEFAULT');
+    const item = buildDefaultCartItem(noTierProduct);
+    expect(item).not.toBeNull();
+    expect(item!.skuCode).toBe('PRD-BO-VOT-CAU-LONG-VICTOR-K88J-DEFAULT');
+  });
+
+  it('sản phẩm một tầng NHIỀU lựa chọn (5 biến thể) -> không có SKU duy nhất, KHÔNG thêm nhanh được', () => {
+    expect(getSingleSellableSku(oneTierProduct)).toBeNull();
+    expect(buildDefaultCartItem(oneTierProduct)).toBeNull();
+  });
+
+  it('sản phẩm hai tầng -> không có SKU duy nhất, KHÔNG thêm nhanh được (không đoán tổ hợp đại diện)', () => {
+    expect(getSingleSellableSku(twoTierShirt)).toBeNull();
     expect(buildDefaultCartItem(twoTierShirt)).toBeNull();
+    expect(getSingleSellableSku(twoTierRacket)).toBeNull();
     expect(buildDefaultCartItem(twoTierRacket)).toBeNull();
   });
 });

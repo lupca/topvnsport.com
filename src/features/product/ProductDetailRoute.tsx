@@ -22,15 +22,19 @@ export default function ProductDetailRoute() {
     stringChoice: StringOption | null,
     tension: number
   ) => {
-    const item = buildConfiguredCartItem(targetProduct, weight, color, stringChoice, tension);
-    if (!item) {
-      // Tổ hợp phân loại khách vừa chọn không khớp biến thể thật nào -- không
-      // bịa SKU, không thêm vào giỏ.
-      void popupService.alert('Phân loại này hiện không bán, vui lòng chọn phân loại khác.');
+    const result = buildConfiguredCartItem(targetProduct, weight, color, stringChoice, tension);
+    if (result.status === 'missing_selection') {
+      void popupService.alert(`Vui lòng chọn ${result.tierName}`);
+      return;
+    }
+    if (result.status === 'not_available') {
+      // Tổ hợp phân loại khách vừa chọn không khớp đúng một biến thể thật nào
+      // -- không bịa SKU, không thêm vào giỏ.
+      void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
       return;
     }
 
-    dispatch(addCartItem(item));
+    dispatch(addCartItem(result.item));
     dispatch(openCart());
   };
 
