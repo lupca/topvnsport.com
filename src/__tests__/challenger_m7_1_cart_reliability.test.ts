@@ -21,10 +21,18 @@ const mockRacket: Product = {
   salePrice: 4300000,
   image: 'https://example.com/arcsaber11.jpg',
   colors: ['Đỏ/Đen', 'Xám'],
-  skuByColor: { 'Đỏ/Đen': 'SKU-ARC11-RED', 'Xám': 'SKU-ARC11-GREY' },
-  defaultSku: 'SKU-ARC11-DEF'
+  defaultSku: 'SKU-ARC11-DEF',
+  // Một tầng (màu sắc) -- resolveSkuCode khớp theo tier1, bỏ skuByColor cũ.
+  tier_variations: [{ tier_index: 1, name: 'Màu sắc', options: ['Đỏ/Đen', 'Xám'] }],
+  variants: [
+    { tier_1_option: 'Đỏ/Đen', tier_2_option: null, sku_code: 'SKU-ARC11-RED', price: 4600000, stock: 5 },
+    { tier_1_option: 'Xám', tier_2_option: null, sku_code: 'SKU-ARC11-GREY', price: 4600000, stock: 5 }
+  ]
 };
 
+// Chỉ MỘT màu -- đúng một SKU bán được, dùng cho các test thêm nhanh
+// (buildDefaultCartItem). Sản phẩm nhiều lựa chọn không còn thêm nhanh được
+// theo thiết kế mới (xem cart_sku_two_tier.test.ts).
 const mockAccessory: Product = {
   id: 'PROD-ACC-1',
   name: 'Quấn Cán Vợt Yonex AC102EX',
@@ -32,8 +40,26 @@ const mockAccessory: Product = {
   category: 'Phụ kiện',
   price: 120000,
   image: 'https://example.com/grip.jpg',
-  colors: ['Trắng', 'Đen'],
-  defaultSku: 'SKU-GRIP-DEF'
+  colors: ['Trắng'],
+  defaultSku: 'SKU-GRIP-DEF',
+  variants: [
+    { tier_1_option: 'Trắng', tier_2_option: null, sku_code: 'SKU-GRIP-WHITE', price: 120000, stock: 10 }
+  ]
+};
+
+// Sản phẩm đúng MỘT SKU, dùng cho các test cơ chế reducer/localStorage --
+// không quan tâm màu/tier, chỉ cần buildDefaultCartItem luôn thành công.
+const mockSimpleProduct: Product = {
+  id: 'PROD-SIMPLE-1',
+  name: 'Ống đựng cầu lông TopVNSport',
+  brand: 'Other',
+  category: 'Phụ kiện',
+  price: 90000,
+  image: 'https://example.com/tube.jpg',
+  colors: ['Tiêu chuẩn'],
+  variants: [
+    { tier_1_option: null, tier_2_option: null, sku_code: 'SKU-TUBE-DEF', price: 90000, stock: 20 }
+  ]
 };
 
 describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
@@ -48,7 +74,7 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
 
   describe('1. Quantity Updating Edge Cases', () => {
     it('removes item when updateCartItemQuantity is called with quantity 0', () => {
-      const item = buildDefaultCartItem(mockRacket);
+      const item = buildDefaultCartItem(mockSimpleProduct)!;
       const state1 = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(item));
       expect(state1.items.length).toBe(1);
 
@@ -58,7 +84,7 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
     });
 
     it('removes item when updateCartItemQuantity is called with negative quantity', () => {
-      const item = buildDefaultCartItem(mockRacket);
+      const item = buildDefaultCartItem(mockSimpleProduct)!;
       const state1 = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(item));
       
       const state2 = cartReducer(state1, updateCartItemQuantity({ id: item.id, quantity: -5 }));
@@ -66,7 +92,7 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
     });
 
     it('EMPIRICAL BUG: updateCartItemQuantity with NaN corrupts item quantity instead of removing or failing safely', () => {
-      const item = buildDefaultCartItem(mockRacket);
+      const item = buildDefaultCartItem(mockSimpleProduct)!;
       const state1 = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(item));
       
       const state2 = cartReducer(state1, updateCartItemQuantity({ id: item.id, quantity: NaN }));
@@ -75,7 +101,7 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
     });
 
     it('EMPIRICAL BUG: addCartItem with quantity 0 on existing item increments quantity by 1 due to `quantity || 1`', () => {
-      const item = buildDefaultCartItem(mockRacket);
+      const item = buildDefaultCartItem(mockSimpleProduct)!;
       const state1 = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(item));
       expect(state1.items[0].quantity).toBe(1);
 
@@ -88,7 +114,7 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
     });
 
     it('EMPIRICAL BUG: addCartItem with negative quantity on existing item reduces quantity into negative without removing item', () => {
-      const item = buildDefaultCartItem(mockRacket);
+      const item = buildDefaultCartItem(mockSimpleProduct)!;
       const state1 = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(item));
       expect(state1.items[0].quantity).toBe(1);
 
@@ -102,8 +128,8 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
     });
 
     it('EMPIRICAL BUG: addCartItem with negative or zero quantity on NEW item pushes item with invalid quantity into cart', () => {
-      const itemWithZero = { ...buildDefaultCartItem(mockRacket), id: 'NEW-ZERO-ITEM', quantity: 0 };
-      const itemWithNeg = { ...buildDefaultCartItem(mockRacket), id: 'NEW-NEG-ITEM', quantity: -5 };
+      const itemWithZero = { ...buildDefaultCartItem(mockSimpleProduct)!, id: 'NEW-ZERO-ITEM', quantity: 0 };
+      const itemWithNeg = { ...buildDefaultCartItem(mockSimpleProduct)!, id: 'NEW-NEG-ITEM', quantity: -5 };
 
       let state = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(itemWithZero));
       expect(state.items[0].quantity).toBe(0);
@@ -116,8 +142,8 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
   describe('2. Adding Items with Identical vs Different Attributes', () => {
     it('merges quantities when adding items with identical attributes via buildConfiguredCartItem', () => {
       const stringChoice: StringOption = { id: 'STR-BG66', name: 'BG66 Ultimax', price: 180000 };
-      const item1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11);
-      const item2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11);
+      const item1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11)!;
+      const item2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', stringChoice, 11)!;
 
       expect(item1.id).toBe(item2.id);
 
@@ -129,16 +155,16 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
     });
 
     it('EMPIRICAL BUG: buildDefaultCartItem and equivalent buildConfiguredCartItem produce different IDs for identical item specs', () => {
-      // mockRacket không có specs.weight thật -> buildDefaultCartItem không bịa
-      // ra một lớp cân nặng cụ thể, mà dùng sentinel chung "Tiêu chuẩn".
-      const defaultItem = buildDefaultCartItem(mockRacket);
-      // Configured racket with the SAME weight/color/string/tension as default
-      const configuredItem = buildConfiguredCartItem(mockRacket, 'Tiêu chuẩn', 'Đỏ/Đen', null, 10.5);
+      // Dùng mockSimpleProduct (đúng một SKU) để buildDefaultCartItem thành
+      // công -- mockRacket có 2 biến thể nên không còn thêm nhanh được nữa.
+      const defaultItem = buildDefaultCartItem(mockSimpleProduct)!;
+      // Configured product with the SAME weight/color/string/tension as default
+      const configuredItem = buildConfiguredCartItem(mockSimpleProduct, 'Tiêu chuẩn', 'Tiêu chuẩn', null, 10.5)!;
 
       // Default ID format: `${product.id}-${selectedWeight}-${selectedColor}`
       // Configured ID format: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`
-      expect(defaultItem.id).toBe('PROD-RACKET-1-Tiêu chuẩn-Đỏ/Đen');
-      expect(configuredItem.id).toBe('PROD-RACKET-1-Tiêu chuẩn-Đỏ/Đen-none-10.5');
+      expect(defaultItem.id).toBe('PROD-SIMPLE-1-Tiêu chuẩn-Tiêu chuẩn');
+      expect(configuredItem.id).toBe('PROD-SIMPLE-1-Tiêu chuẩn-Tiêu chuẩn-none-10.5');
       expect(defaultItem.id).not.toBe(configuredItem.id);
 
       // Adding both to cart results in 2 separate cart items despite identical physical specifications!
@@ -153,23 +179,23 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       const string2: StringOption = { id: 'STR-NBG95', name: 'Nanogy 95', price: 170000 };
 
       // Different weights
-      const itemWeight1 = buildConfiguredCartItem(mockRacket, '3U/G5', 'Đỏ/Đen', string1, 11);
-      const itemWeight2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11);
+      const itemWeight1 = buildConfiguredCartItem(mockRacket, '3U/G5', 'Đỏ/Đen', string1, 11)!;
+      const itemWeight2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11)!;
       expect(itemWeight1.id).not.toBe(itemWeight2.id);
 
       // Different colors
-      const itemColor1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11);
-      const itemColor2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Xám', string1, 11);
+      const itemColor1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11)!;
+      const itemColor2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Xám', string1, 11)!;
       expect(itemColor1.id).not.toBe(itemColor2.id);
 
       // Different strings
-      const itemStr1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11);
-      const itemStr2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string2, 11);
+      const itemStr1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 11)!;
+      const itemStr2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string2, 11)!;
       expect(itemStr1.id).not.toBe(itemStr2.id);
 
       // Different tension
-      const itemTension1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 10.5);
-      const itemTension2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 12);
+      const itemTension1 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 10.5)!;
+      const itemTension2 = buildConfiguredCartItem(mockRacket, '4U/G5', 'Đỏ/Đen', string1, 12)!;
       expect(itemTension1.id).not.toBe(itemTension2.id);
 
       let state = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(itemWeight1));
@@ -235,7 +261,7 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
         throw new Error('QuotaExceededError: DOM Exception 22');
       });
 
-      const item = buildDefaultCartItem(mockRacket);
+      const item = buildDefaultCartItem(mockSimpleProduct)!;
       // saveCartItemsToStorage should catch error silently without rethrowing
       expect(() => saveCartItemsToStorage([item])).not.toThrow();
 

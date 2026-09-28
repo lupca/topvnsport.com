@@ -6,6 +6,7 @@
 import { lazy, MouseEvent, Suspense, useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import BlogSection from './components/BlogSection';
 import Footer from './components/Footer';
@@ -72,7 +73,15 @@ export default function App() {
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
-    dispatch(addCartItem(buildDefaultCartItem(product)));
+    const item = buildDefaultCartItem(product);
+    if (!item) {
+      // Không có đúng một SKU bán được -- ProductCard/QuickViewModal đã tự
+      // chặn và dẫn khách sang trang chi tiết trước khi gọi tới đây, nhánh
+      // này chỉ còn là chốt chặn phòng thủ, dùng đúng câu đã chốt chung.
+      void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
+      return;
+    }
+    dispatch(addCartItem(item));
     dispatch(openCart());
   };
 

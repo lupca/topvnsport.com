@@ -1,8 +1,11 @@
 import React from 'react';
 import { X, ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { isRacketCategoryCode } from '../config/storefront';
+import { getSingleSellableSku } from '../features/cart/cartSlice';
+import { getProductPath } from '../utils/productSlug';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -11,6 +14,9 @@ interface QuickViewModalProps {
 }
 
 export default function QuickViewModal({ product, onClose, onAddToCart }: QuickViewModalProps) {
+  const navigate = useNavigate();
+  // Thêm nhanh chỉ khi sản phẩm có ĐÚNG một SKU bán được -- xem ProductCard.
+  const canQuickAdd = product ? getSingleSellableSku(product) !== null : false;
   return (
     <AnimatePresence>
       {product && (
@@ -92,10 +98,14 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                   </div>
                   <button
                     onClick={() => {
-                      if (product.stock > 0) {
-                        onAddToCart(product);
+                      if (product.stock <= 0) return;
+                      if (!canQuickAdd) {
                         onClose();
+                        navigate(getProductPath(product));
+                        return;
                       }
+                      onAddToCart(product);
+                      onClose();
                     }}
                     disabled={product.stock <= 0}
                     className={`text-xs font-bold uppercase tracking-wider px-6 py-2.5 rounded-full flex items-center gap-1.5 transition shadow-sm focus:outline-hidden ${
@@ -106,7 +116,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                     id="add-to-cart-quickview"
                   >
                     <ShoppingBag className="w-4 h-4" />
-                    {product.stock <= 0 ? 'Hết hàng' : 'Thêm vào giỏ'}
+                    {product.stock <= 0 ? 'Hết hàng' : canQuickAdd ? 'Thêm vào giỏ' : 'Chọn phân loại'}
                   </button>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import { RefreshCw, SlidersHorizontal, X } from 'lucide-react';
 import { MouseEvent, useMemo } from 'react';
+import { popupService } from '@topvnsport/ui-kit';
 import ProductCard from '../../components/ProductCard';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RACKET_CATEGORY_CODES } from '../../config/storefront';
@@ -102,7 +103,15 @@ export default function CatalogPage() {
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
-    dispatch(addCartItem(buildDefaultCartItem(product)));
+    const item = buildDefaultCartItem(product);
+    if (!item) {
+      // Không có đúng một SKU bán được -- ProductCard/QuickViewModal đã tự
+      // chặn và dẫn khách sang trang chi tiết trước khi gọi tới đây, nhánh
+      // này chỉ còn là chốt chặn phòng thủ, dùng đúng câu đã chốt chung.
+      void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
+      return;
+    }
+    dispatch(addCartItem(item));
     dispatch(openCart());
   };
 

@@ -76,8 +76,6 @@ export interface Product {
   reviews: ProductReview[];
   stock: number;
   defaultSku?: string;
-  skuByColor?: Record<string, string>;
-  skuByVariant?: Record<string, string>;
   tier_variations?: TierVariation[];
   variants?: ProductVariant[];
   badge?: 'NEW' | 'HOT' | 'SALE' | 'LIMITED' | 'PRO' | 'TOUR' | 'GAME' | 'PLAY';

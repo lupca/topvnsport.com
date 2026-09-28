@@ -29,8 +29,10 @@ const mockProduct: Product = {
   salePrice: 4200000,
   image: 'https://example.com/astrox88d.jpg',
   colors: ['Đỏ/Đen'],
-  skuByColor: { 'Đỏ/Đen': 'SKU-ASTROX-RED' },
-  defaultSku: 'SKU-ASTROX-DEF'
+  defaultSku: 'SKU-ASTROX-DEF',
+  // Sản phẩm không có tier_variations -- đúng một biến thể, resolveSkuCode
+  // suy ra thẳng từ đây thay vì skuByColor (đã bỏ vì là nguồn SKU sai).
+  variants: [{ tier_1_option: 'Đỏ/Đen', tier_2_option: null, sku_code: 'SKU-ASTROX-RED', price: 4500000, stock: 5 }]
 };
 
 describe('Milestone 7 - Cart Persistence & Reducer Logic', () => {
@@ -53,8 +55,8 @@ describe('Milestone 7 - Cart Persistence & Reducer Logic', () => {
     expect(defaultItem2.id).toBe(defaultItem1.id);
     expect(defaultItem1.id).not.toContain('Date.now');
 
-    const configuredItem1 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11);
-    const configuredItem2 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11);
+    const configuredItem1 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11)!;
+    const configuredItem2 = buildConfiguredCartItem(mockProduct, '3U/G5', 'Đỏ/Đen', { id: 'STR-66', name: 'BG66 Ultimax', price: 180000 }, 11)!;
 
     expect(configuredItem1.id).toBe('PROD-100-3U/G5-Đỏ/Đen-STR-66-11');
     expect(configuredItem2.id).toBe(configuredItem1.id);

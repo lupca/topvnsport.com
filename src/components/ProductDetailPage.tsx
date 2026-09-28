@@ -28,13 +28,17 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
     product.colors && product.colors.length > 0 ? product.colors[0] : 'Tiêu chuẩn'
   );
 
+  // Chỉ tự chọn sẵn khi tầng đó có ĐÚNG một lựa chọn (không có gì để chọn
+  // thật sự) -- có từ hai lựa chọn trở lên thì để trống, bắt khách phải tự
+  // chọn (để nhánh "Vui lòng chọn {tên tầng}" có hiệu lực khi bấm thêm giỏ
+  // mà chưa chọn).
   const [selectedTier1, setSelectedTier1] = useState<string>(() => {
     const t1 = product.tier_variations?.find(tv => tv.tier_index === 1);
-    return t1 && t1.options.length > 0 ? t1.options[0] : '';
+    return t1 && t1.options.length === 1 ? t1.options[0] : '';
   });
   const [selectedTier2, setSelectedTier2] = useState<string>(() => {
     const t2 = product.tier_variations?.find(tv => tv.tier_index === 2);
-    return t2 && t2.options.length > 0 ? t2.options[0] : '';
+    return t2 && t2.options.length === 1 ? t2.options[0] : '';
   });
 
   const stringingVariation = product.tier_variations?.find(
@@ -53,10 +57,10 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
 
   useEffect(() => {
     const t1 = product.tier_variations?.find(tv => tv.tier_index === 1);
-    setSelectedTier1(t1 && t1.options.length > 0 ? t1.options[0] : '');
+    setSelectedTier1(t1 && t1.options.length === 1 ? t1.options[0] : '');
 
     const t2 = product.tier_variations?.find(tv => tv.tier_index === 2);
-    setSelectedTier2(t2 && t2.options.length > 0 ? t2.options[0] : '');
+    setSelectedTier2(t2 && t2.options.length === 1 ? t2.options[0] : '');
 
     setWithStringing(false);
     setSelectedString(null);

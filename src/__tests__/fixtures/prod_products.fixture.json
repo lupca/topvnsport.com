@@ -1,0 +1,5401 @@
+{
+  "source": "GET https://www.topvnsport.com/api/pmi/public/products?limit=100 (2026-09-28, chỉ GET, không ghi)",
+  "two_tier_products": [
+    {
+      "id": 341,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "DAZZLING BLUE",
+            "FRENCH BLUE",
+            "DARK ECLIPSE",
+            "WHITE",
+            "GOLDEN CREAM"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Size",
+          "options": [
+            "S",
+            "M",
+            "L",
+            "XL",
+            "2XL"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "DAZZLING BLUE",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-S"
+        },
+        {
+          "tier_1_option": "DAZZLING BLUE",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-M"
+        },
+        {
+          "tier_1_option": "DAZZLING BLUE",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-L"
+        },
+        {
+          "tier_1_option": "DAZZLING BLUE",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-XL"
+        },
+        {
+          "tier_1_option": "DAZZLING BLUE",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DAZZLING-BLUE-2XL"
+        },
+        {
+          "tier_1_option": "FRENCH BLUE",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-FRENCH-BLUE-S"
+        },
+        {
+          "tier_1_option": "FRENCH BLUE",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-FRENCH-BLUE-M"
+        },
+        {
+          "tier_1_option": "FRENCH BLUE",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-FRENCH-BLUE-L"
+        },
+        {
+          "tier_1_option": "FRENCH BLUE",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-FRENCH-BLUE-XL"
+        },
+        {
+          "tier_1_option": "FRENCH BLUE",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-FRENCH-BLUE-2XL"
+        },
+        {
+          "tier_1_option": "DARK ECLIPSE",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DARK-ECLIPSE-S"
+        },
+        {
+          "tier_1_option": "DARK ECLIPSE",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DARK-ECLIPSE-M"
+        },
+        {
+          "tier_1_option": "DARK ECLIPSE",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DARK-ECLIPSE-L"
+        },
+        {
+          "tier_1_option": "DARK ECLIPSE",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DARK-ECLIPSE-XL"
+        },
+        {
+          "tier_1_option": "DARK ECLIPSE",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-DARK-ECLIPSE-2XL"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-WHITE-S"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-WHITE-M"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-WHITE-L"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-WHITE-XL"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-WHITE-2XL"
+        },
+        {
+          "tier_1_option": "GOLDEN CREAM",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-GOLDEN-CREAM-S"
+        },
+        {
+          "tier_1_option": "GOLDEN CREAM",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-GOLDEN-CREAM-M"
+        },
+        {
+          "tier_1_option": "GOLDEN CREAM",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-GOLDEN-CREAM-L"
+        },
+        {
+          "tier_1_option": "GOLDEN CREAM",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-GOLDEN-CREAM-XL"
+        },
+        {
+          "tier_1_option": "GOLDEN CREAM",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-YONEX-COLLECTION-8T3G-GOLDEN-CREAM-2XL"
+        }
+      ]
+    },
+    {
+      "id": 340,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "PEACH NECTAR (Áo)",
+            "BLACK (Áo)",
+            "COCKATOO (Áo)",
+            "PALE MARIGOLD (Áo)",
+            "CITADEL (Quần)",
+            "BLACK TSM3334 (Quần)",
+            "BLACK TSM3335 (Quần)",
+            "NEUTRAL GRAY (Quần)"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Size",
+          "options": [
+            "S",
+            "M",
+            "L"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BLACK TSM3334 (Quần)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-TSM3334-QUAN-S"
+        },
+        {
+          "tier_1_option": "PALE MARIGOLD (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-PALE-MARIGOLD-AO-L"
+        },
+        {
+          "tier_1_option": "BLACK (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-AO-M"
+        },
+        {
+          "tier_1_option": "COCKATOO (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-COCKATOO-AO-M"
+        },
+        {
+          "tier_1_option": "CITADEL (Quần)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-CITADEL-QUAN-L"
+        },
+        {
+          "tier_1_option": "BLACK TSM3335 (Quần)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-TSM3335-QUAN-L"
+        },
+        {
+          "tier_1_option": "CITADEL (Quần)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-CITADEL-QUAN-M"
+        },
+        {
+          "tier_1_option": "COCKATOO (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-COCKATOO-AO-L"
+        },
+        {
+          "tier_1_option": "PEACH NECTAR (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-PEACH-NECTAR-AO-L"
+        },
+        {
+          "tier_1_option": "PEACH NECTAR (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-PEACH-NECTAR-AO-M"
+        },
+        {
+          "tier_1_option": "NEUTRAL GRAY (Quần)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-NEUTRAL-GRAY-QUAN-S"
+        },
+        {
+          "tier_1_option": "NEUTRAL GRAY (Quần)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-NEUTRAL-GRAY-QUAN-M"
+        },
+        {
+          "tier_1_option": "BLACK TSM3334 (Quần)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-TSM3334-QUAN-M"
+        },
+        {
+          "tier_1_option": "COCKATOO (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-COCKATOO-AO-S"
+        },
+        {
+          "tier_1_option": "BLACK TSM3334 (Quần)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-TSM3334-QUAN-L"
+        },
+        {
+          "tier_1_option": "PEACH NECTAR (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-PEACH-NECTAR-AO-S"
+        },
+        {
+          "tier_1_option": "BLACK (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-AO-L"
+        },
+        {
+          "tier_1_option": "BLACK TSM3335 (Quần)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-TSM3335-QUAN-S"
+        },
+        {
+          "tier_1_option": "BLACK TSM3335 (Quần)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-TSM3335-QUAN-M"
+        },
+        {
+          "tier_1_option": "NEUTRAL GRAY (Quần)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-NEUTRAL-GRAY-QUAN-L"
+        },
+        {
+          "tier_1_option": "CITADEL (Quần)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-CITADEL-QUAN-S"
+        },
+        {
+          "tier_1_option": "PALE MARIGOLD (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-PALE-MARIGOLD-AO-S"
+        },
+        {
+          "tier_1_option": "BLACK (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-BLACK-AO-S"
+        },
+        {
+          "tier_1_option": "PALE MARIGOLD (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-5GEE-PALE-MARIGOLD-AO-M"
+        }
+      ]
+    },
+    {
+      "id": 337,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "Cannon Black",
+            "Cannon Deep Teal",
+            "Cannon Ambrosia"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65TI",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "BG 65TI",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-BG-65TI"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-BG-66U"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "BG 65TI",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-BG-65TI"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-PA2055"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-BG-66U"
+        },
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "BG 65TI",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-BG-65TI"
+        },
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-PA2055"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-PA2055"
+        },
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-BG-66U"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Cannon Deep Teal",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-DEEP-TEAL-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Cannon Black",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-BLACK-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Cannon Ambrosia",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DVRY-CANNON-AMBROSIA-EXBOLT-63"
+        }
+      ]
+    },
+    {
+      "id": 336,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "BLACK (Áo)",
+            "PEACH NECTAR (Áo)",
+            "ZEPHYR GREEN (Áo)",
+            "WHITE (Áo)",
+            "WHITE-Chân Váy",
+            "LIGHT TAUQE-Chân Váy",
+            "MOOD INDIGO-Chân Váy",
+            "BLACK-Chân Váy"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Kích cỡ",
+          "options": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "WHITE-Chân Váy",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-CHAN-VAY-M"
+        },
+        {
+          "tier_1_option": "WHITE-Chân Váy",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-CHAN-VAY-L"
+        },
+        {
+          "tier_1_option": "LIGHT TAUQE-Chân Váy",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-LIGHT-TAUQE-CHAN-VAY-XL"
+        },
+        {
+          "tier_1_option": "BLACK (Áo)",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-AO-XL"
+        },
+        {
+          "tier_1_option": "ZEPHYR GREEN (Áo)",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-ZEPHYR-GREEN-AO-XL"
+        },
+        {
+          "tier_1_option": "BLACK-Chân Váy",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-CHAN-VAY-S"
+        },
+        {
+          "tier_1_option": "MOOD INDIGO-Chân Váy",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-MOOD-INDIGO-CHAN-VAY-M"
+        },
+        {
+          "tier_1_option": "PEACH NECTAR (Áo)",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-PEACH-NECTAR-AO-XL"
+        },
+        {
+          "tier_1_option": "MOOD INDIGO-Chân Váy",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-MOOD-INDIGO-CHAN-VAY-L"
+        },
+        {
+          "tier_1_option": "ZEPHYR GREEN (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-ZEPHYR-GREEN-AO-S"
+        },
+        {
+          "tier_1_option": "BLACK-Chân Váy",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-CHAN-VAY-M"
+        },
+        {
+          "tier_1_option": "MOOD INDIGO-Chân Váy",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-MOOD-INDIGO-CHAN-VAY-XL"
+        },
+        {
+          "tier_1_option": "WHITE (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-AO-L"
+        },
+        {
+          "tier_1_option": "PEACH NECTAR (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-PEACH-NECTAR-AO-M"
+        },
+        {
+          "tier_1_option": "WHITE (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-AO-M"
+        },
+        {
+          "tier_1_option": "BLACK (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-AO-M"
+        },
+        {
+          "tier_1_option": "BLACK-Chân Váy",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-CHAN-VAY-XL"
+        },
+        {
+          "tier_1_option": "ZEPHYR GREEN (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-ZEPHYR-GREEN-AO-L"
+        },
+        {
+          "tier_1_option": "LIGHT TAUQE-Chân Váy",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-LIGHT-TAUQE-CHAN-VAY-L"
+        },
+        {
+          "tier_1_option": "PEACH NECTAR (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-PEACH-NECTAR-AO-S"
+        },
+        {
+          "tier_1_option": "WHITE (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-AO-S"
+        },
+        {
+          "tier_1_option": "WHITE-Chân Váy",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-CHAN-VAY-S"
+        },
+        {
+          "tier_1_option": "LIGHT TAUQE-Chân Váy",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-LIGHT-TAUQE-CHAN-VAY-S"
+        },
+        {
+          "tier_1_option": "BLACK (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-AO-L"
+        },
+        {
+          "tier_1_option": "BLACK-Chân Váy",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-CHAN-VAY-L"
+        },
+        {
+          "tier_1_option": "LIGHT TAUQE-Chân Váy",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-LIGHT-TAUQE-CHAN-VAY-M"
+        },
+        {
+          "tier_1_option": "MOOD INDIGO-Chân Váy",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-MOOD-INDIGO-CHAN-VAY-S"
+        },
+        {
+          "tier_1_option": "PEACH NECTAR (Áo)",
+          "tier_2_option": "L",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-PEACH-NECTAR-AO-L"
+        },
+        {
+          "tier_1_option": "ZEPHYR GREEN (Áo)",
+          "tier_2_option": "M",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-ZEPHYR-GREEN-AO-M"
+        },
+        {
+          "tier_1_option": "WHITE-Chân Váy",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-CHAN-VAY-XL"
+        },
+        {
+          "tier_1_option": "WHITE (Áo)",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-WHITE-AO-XL"
+        },
+        {
+          "tier_1_option": "BLACK (Áo)",
+          "tier_2_option": "S",
+          "sku_code": "PRD-BO-QUAN-AO-CHOI-CAU-LONG-EVHK-BLACK-AO-S"
+        }
+      ]
+    },
+    {
+      "id": 334,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "Đỏ Đen",
+            "Trắng Xanh"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-BG-66U"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-BG-65TI"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-BG-65TI"
+        },
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-PA2055"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-BG-66U"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Trắng Xanh",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-TRANG-XANH-PA2055"
+        },
+        {
+          "tier_1_option": "Đỏ Đen",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-52XD-DO-DEN-KIZUNA-Z61"
+        }
+      ]
+    },
+    {
+      "id": 329,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Phân Loại",
+          "options": [
+            "Motor Pro",
+            "Motor Trắng",
+            "Motor Pink"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Dây Vợt",
+          "options": [
+            "Kizuna Z61",
+            "Khung không dây",
+            "Yonex 65Ti",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Loại khác inb shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Motor Pro",
+          "tier_2_option": "Yonex 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PRO-YONEX-65TI"
+        },
+        {
+          "tier_1_option": "Motor Trắng",
+          "tier_2_option": "Loại khác inb shop",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-TRANG-LOAI-KHAC-INB-SHOP"
+        },
+        {
+          "tier_1_option": "Motor Trắng",
+          "tier_2_option": "Yonex 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-TRANG-YONEX-65TI"
+        },
+        {
+          "tier_1_option": "Motor Trắng",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-TRANG-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Motor Pro",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PRO-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Motor Pink",
+          "tier_2_option": "Yonex 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PINK-YONEX-65TI"
+        },
+        {
+          "tier_1_option": "Motor Pro",
+          "tier_2_option": "Loại khác inb shop",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PRO-LOAI-KHAC-INB-SHOP"
+        },
+        {
+          "tier_1_option": "Motor Trắng",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-TRANG-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Motor Trắng",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-TRANG-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Motor Pro",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PRO-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Motor Pro",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PRO-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Motor Pink",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PINK-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Motor Pink",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PINK-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Motor Pink",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PINK-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Motor Pink",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PINK-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Motor Pink",
+          "tier_2_option": "Loại khác inb shop",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PINK-LOAI-KHAC-INB-SHOP"
+        },
+        {
+          "tier_1_option": "Motor Pro",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PRO-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Motor Trắng",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-TRANG-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Motor Pro",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PRO-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Motor Pink",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-PINK-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Motor Trắng",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-HALBERTEC-5XRS-MOTOR-TRANG-KIZUNA-Z61"
+        }
+      ]
+    },
+    {
+      "id": 327,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "Trắng",
+            "Đen"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-BG-66U"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-BG-66U"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-BG65TI"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-BG65TI"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-PA2055"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-PA2055"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-DEN-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5VKS-TRANG-EXBOLT-68"
+        }
+      ]
+    },
+    {
+      "id": 325,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "Hồng (5U)",
+            "Vàng (4U)"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Căng cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-BG65TI"
+        },
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-BG-66U"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-BG-66U"
+        },
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-PA2055"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-PA2055"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Hồng (5U)",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-HONG-5U-BG65TI"
+        },
+        {
+          "tier_1_option": "Vàng (4U)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-GP84-VANG-4U-EXBOLT-68"
+        }
+      ]
+    },
+    {
+      "id": 324,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "BLACK",
+            "ULTIMATE GRAY"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Size",
+          "options": [
+            "M",
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "ULTIMATE GRAY",
+          "tier_2_option": "L",
+          "sku_code": "PRD-QUAN-THE-THAO-YONEX-79DS-ULTIMATE-GRAY-L"
+        },
+        {
+          "tier_1_option": "ULTIMATE GRAY",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-QUAN-THE-THAO-YONEX-79DS-ULTIMATE-GRAY-XL"
+        },
+        {
+          "tier_1_option": "BLACK",
+          "tier_2_option": "M",
+          "sku_code": "PRD-QUAN-THE-THAO-YONEX-79DS-BLACK-M"
+        },
+        {
+          "tier_1_option": "BLACK",
+          "tier_2_option": "L",
+          "sku_code": "PRD-QUAN-THE-THAO-YONEX-79DS-BLACK-L"
+        },
+        {
+          "tier_1_option": "BLACK",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-QUAN-THE-THAO-YONEX-79DS-BLACK-XL"
+        },
+        {
+          "tier_1_option": "ULTIMATE GRAY",
+          "tier_2_option": "M",
+          "sku_code": "PRD-QUAN-THE-THAO-YONEX-79DS-ULTIMATE-GRAY-M"
+        }
+      ]
+    },
+    {
+      "id": 320,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "ULTIMATE GRAY",
+            "CYAN BLUE",
+            "TRM3403 - RW4 BLACK",
+            "WHITE",
+            "TRM3407 - RW4 BLACK",
+            "PRINCESS BLUE",
+            "TRM3517 - RW4 BLACK"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "SIZE",
+          "options": [
+            "M",
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "ULTIMATE GRAY",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-ULTIMATE-GRAY-M"
+        },
+        {
+          "tier_1_option": "TRM3517 - RW4 BLACK",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3517-RW4-BLACK-XL"
+        },
+        {
+          "tier_1_option": "TRM3403 - RW4 BLACK",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3403-RW4-BLACK-XL"
+        },
+        {
+          "tier_1_option": "TRM3403 - RW4 BLACK",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3403-RW4-BLACK-L"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-WHITE-L"
+        },
+        {
+          "tier_1_option": "TRM3403 - RW4 BLACK",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3403-RW4-BLACK-M"
+        },
+        {
+          "tier_1_option": "TRM3407 - RW4 BLACK",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3407-RW4-BLACK-XL"
+        },
+        {
+          "tier_1_option": "ULTIMATE GRAY",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-ULTIMATE-GRAY-XL"
+        },
+        {
+          "tier_1_option": "TRM3407 - RW4 BLACK",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3407-RW4-BLACK-L"
+        },
+        {
+          "tier_1_option": "PRINCESS BLUE",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-PRINCESS-BLUE-M"
+        },
+        {
+          "tier_1_option": "PRINCESS BLUE",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-PRINCESS-BLUE-XL"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-WHITE-M"
+        },
+        {
+          "tier_1_option": "CYAN BLUE",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-CYAN-BLUE-M"
+        },
+        {
+          "tier_1_option": "TRM3407 - RW4 BLACK",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3407-RW4-BLACK-M"
+        },
+        {
+          "tier_1_option": "PRINCESS BLUE",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-PRINCESS-BLUE-L"
+        },
+        {
+          "tier_1_option": "ULTIMATE GRAY",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-ULTIMATE-GRAY-L"
+        },
+        {
+          "tier_1_option": "WHITE",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-WHITE-XL"
+        },
+        {
+          "tier_1_option": "CYAN BLUE",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-CYAN-BLUE-XL"
+        },
+        {
+          "tier_1_option": "TRM3517 - RW4 BLACK",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3517-RW4-BLACK-M"
+        },
+        {
+          "tier_1_option": "CYAN BLUE",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-CYAN-BLUE-L"
+        },
+        {
+          "tier_1_option": "TRM3517 - RW4 BLACK",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-TP86-TRM3517-RW4-BLACK-L"
+        }
+      ]
+    },
+    {
+      "id": 319,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "Trắng",
+            "Hồng"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "VBS 66 nano",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-BG-65TI"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-BG-65TI"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-PA2055"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "VBS 66 nano",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-VBS-66-NANO"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "VBS 66 nano",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-VBS-66-NANO"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-PA2055"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-TRANG-BG-66U"
+        },
+        {
+          "tier_1_option": "Hồng",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PFWK-HONG-BG-66U"
+        }
+      ]
+    },
+    {
+      "id": 315,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Chủng loại",
+          "options": [
+            "ArcSaber 1 Clear",
+            "ArcSaber 1 Feel",
+            "ArcSaber 1 Ability"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Độ Căng Cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "BG 65Ti",
+            "Cước khác inbox shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "ArcSaber 1 Clear",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-CLEAR-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Clear",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-CLEAR-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Ability",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-ABILITY-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Feel",
+          "tier_2_option": "Cước khác inbox shop",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-FEEL-CUOC-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Ability",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-ABILITY-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Clear",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-CLEAR-BG-65TI"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Feel",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-FEEL-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Clear",
+          "tier_2_option": "Cước khác inbox shop",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-CLEAR-CUOC-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Feel",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-FEEL-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Ability",
+          "tier_2_option": "Cước khác inbox shop",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-ABILITY-CUOC-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Ability",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-ABILITY-BG-65TI"
+        },
+        {
+          "tier_1_option": "ArcSaber 1 Feel",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-66BF-ARCSABER-1-FEEL-BG-65TI"
+        }
+      ]
+    },
+    {
+      "id": 311,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "Đỏ",
+            "Xanh"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-BG-66U"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-PA2055"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-BG-66U"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-PA2055"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-BG65TI"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-DO-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-Y7VK-XANH-BG65TI"
+        }
+      ]
+    },
+    {
+      "id": 310,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "Blue",
+            "Yellow",
+            "Red"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Căng Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-PA2055"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-BG-66U"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-BG-65TI"
+        },
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-PA2055"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-BG-65TI"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-BG-65TI"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Yellow",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-YELLOW-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-BG-66U"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Red",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-RED-BG-66U"
+        },
+        {
+          "tier_1_option": "Blue",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-NEW-2026VOT-CAU-LONG-ACEM-BLUE-PA2055"
+        }
+      ]
+    },
+    {
+      "id": 306,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại Vợt",
+          "options": [
+            "ArcSaber 0 Feel",
+            "ArcSaber 0 Clear",
+            "ArcSaber 0 Ability"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Căng Cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "BG65Ti"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "ArcSaber 0 Ability",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-ABILITY-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Feel",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-FEEL-BG65TI"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Feel",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-FEEL-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Feel",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-FEEL-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Ability",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-ABILITY-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Ability",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-ABILITY-BG65TI"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Clear",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-CLEAR-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Clear",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-CLEAR-BG65TI"
+        },
+        {
+          "tier_1_option": "ArcSaber 0 Clear",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-M7UG-ARCSABER-0-CLEAR-KHUNG-KHONG-DAY"
+        }
+      ]
+    },
+    {
+      "id": 298,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Halbertec",
+          "options": [
+            "4000(4U)"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "BG65Ti",
+            "cước khác ib shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "4000(4U)",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-DMU7-4000-4U-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "4000(4U)",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-DMU7-4000-4U-BG65TI"
+        },
+        {
+          "tier_1_option": "4000(4U)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-DMU7-4000-4U-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "4000(4U)",
+          "tier_2_option": "cước khác ib shop",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-DMU7-4000-4U-CUOC-KHAC-IB-SHOP"
+        }
+      ]
+    },
+    {
+      "id": 297,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Căng Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Halbertec 2000",
+          "options": [
+            "3U",
+            "4U"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-EXBOLT-63-4U"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-EXBOLT-68-4U"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-BG-66U-3U"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-BG-65TI-4U"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-EXBOLT-68-3U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-KHUNG-KHONG-DAY-4U"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-KIZUNA-Z61-3U"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-PA2055-4U"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-EXBOLT-63-3U"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-EXBOLT-65-4U"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-PA2055-3U"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-KIZUNA-Z61-4U"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-EXBOLT-65-3U"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-BG-65TI-3U"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": "4U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-BG-66U-4U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": "3U",
+          "sku_code": "PRD-LINING-HALBERTEC-2000-3U-68YK-KHUNG-KHONG-DAY-3U"
+        }
+      ]
+    },
+    {
+      "id": 292,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "3D Calibar",
+          "options": [
+            "300",
+            "300C",
+            "300B"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "Kizuna Z61 (nổ to)",
+            "Cước trợ lực",
+            "65Ti",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Cước khác inbox shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "300C",
+          "tier_2_option": "65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300C-65TI"
+        },
+        {
+          "tier_1_option": "300",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "300C",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300C-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "300C",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300C-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "300B",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300B-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "300B",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300B-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "300C",
+          "tier_2_option": "Kizuna Z61 (nổ to)",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300C-KIZUNA-Z61-NO-TO"
+        },
+        {
+          "tier_1_option": "300B",
+          "tier_2_option": "Kizuna Z61 (nổ to)",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300B-KIZUNA-Z61-NO-TO"
+        },
+        {
+          "tier_1_option": "300B",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300B-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "300C",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300C-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "300",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "300",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "300C",
+          "tier_2_option": "Cước khác inbox shop",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300C-CUOC-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "300",
+          "tier_2_option": "65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300-65TI"
+        },
+        {
+          "tier_1_option": "300B",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300B-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "300",
+          "tier_2_option": "Cước khác inbox shop",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300-CUOC-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "300",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "300C",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300C-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "300B",
+          "tier_2_option": "Cước khác inbox shop",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300B-CUOC-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "300B",
+          "tier_2_option": "65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300B-65TI"
+        },
+        {
+          "tier_1_option": "300",
+          "tier_2_option": "Kizuna Z61 (nổ to)",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-3D-29EH-300-KIZUNA-Z61-NO-TO"
+        }
+      ]
+    },
+    {
+      "id": 290,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "WHITE SWAN- TRM3397",
+            "BLACK- TRM3397",
+            "POSEIDON-TRM3509",
+            "BLACK- TRM3509",
+            "WHITE- TRM3513",
+            "BLACK- TRM3513",
+            "WHITE- TRM3518",
+            "BLACK- TRM3511",
+            "BLACK- TRM3518"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Size",
+          "options": [
+            "S",
+            "M",
+            "L",
+            "XL",
+            "2XL"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "WHITE- TRM3513",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3513-2XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3509",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3509-XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3513",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3513-M"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3511",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3511-L"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3397",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3397-S"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3509",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3509-2XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3397",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3397-M"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3518",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3518-XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3513",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3513-XL"
+        },
+        {
+          "tier_1_option": "WHITE SWAN- TRM3397",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-SWAN-TRM3397-S"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3518",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3518-M"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3513",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3513-S"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3518",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3518-2XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3509",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3509-M"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3511",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3511-2XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3397",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3397-2XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3513",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3513-2XL"
+        },
+        {
+          "tier_1_option": "POSEIDON-TRM3509",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-POSEIDON-TRM3509-XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3509",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3509-S"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3518",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3518-XL"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3518",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3518-L"
+        },
+        {
+          "tier_1_option": "POSEIDON-TRM3509",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-POSEIDON-TRM3509-L"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3513",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3513-L"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3513",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3513-S"
+        },
+        {
+          "tier_1_option": "POSEIDON-TRM3509",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-POSEIDON-TRM3509-2XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3509",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3509-L"
+        },
+        {
+          "tier_1_option": "WHITE SWAN- TRM3397",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-SWAN-TRM3397-M"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3511",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3511-M"
+        },
+        {
+          "tier_1_option": "WHITE SWAN- TRM3397",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-SWAN-TRM3397-2XL"
+        },
+        {
+          "tier_1_option": "POSEIDON-TRM3509",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-POSEIDON-TRM3509-S"
+        },
+        {
+          "tier_1_option": "WHITE SWAN- TRM3397",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-SWAN-TRM3397-L"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3513",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3513-L"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3511",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3511-S"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3518",
+          "tier_2_option": "2XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3518-2XL"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3518",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3518-S"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3513",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3513-XL"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3397",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3397-L"
+        },
+        {
+          "tier_1_option": "WHITE SWAN- TRM3397",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-SWAN-TRM3397-XL"
+        },
+        {
+          "tier_1_option": "POSEIDON-TRM3509",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-POSEIDON-TRM3509-M"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3397",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3397-XL"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3513",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3513-M"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3511",
+          "tier_2_option": "XL",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3511-XL"
+        },
+        {
+          "tier_1_option": "WHITE- TRM3518",
+          "tier_2_option": "M",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-WHITE-TRM3518-M"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3518",
+          "tier_2_option": "S",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3518-S"
+        },
+        {
+          "tier_1_option": "BLACK- TRM3518",
+          "tier_2_option": "L",
+          "sku_code": "PRD-AO-THUN-THE-THAO-YONEX-K2WK-BLACK-TRM3518-L"
+        }
+      ]
+    },
+    {
+      "id": 288,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "Đen",
+            "Xám Đậm",
+            "Xám Bạc"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65T",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-BG-66U"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-BG-66U"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-PA2055"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-PA2055"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "BG 65T",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-BG-65T"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-PA2055"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "BG 65T",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-BG-65T"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-BG-66U"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "BG 65T",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-BG-65T"
+        },
+        {
+          "tier_1_option": "Xám Đậm",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-DAM-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-DEN-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Xám Bạc",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-BFXV-XAM-BAC-EXBOLT-68"
+        }
+      ]
+    },
+    {
+      "id": 282,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "Trắng",
+            "Đen",
+            "Be"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-BG65TI"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-PA2055"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-BG65TI"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-PA2055"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-BG65TI"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-BG-66U"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-BG-66U"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-DEN-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-BG-66U"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-PA2055"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Be",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-BE-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-AJ7C-TRANG-EXBOLT-63"
+        }
+      ]
+    },
+    {
+      "id": 280,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "Ryura CLS/C (Đen)",
+            "Ryura CLS/D (Đỏ)"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-BG-66U"
+        },
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-PA2055"
+        },
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-PA2055"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-BG-66U"
+        },
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-BG-65TI"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Ryura CLS/C (Đen)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-C-DEN-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-BG-65TI"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Ryura CLS/D (Đỏ)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-GQ3V-RYURA-CLS-D-DO-EXBOLT-63"
+        }
+      ]
+    },
+    {
+      "id": 279,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại Vợt",
+          "options": [
+            "6000",
+            "6000C (Combat)",
+            "6000D (Drive)",
+            "6000I (Instinct)"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Căng Cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "Yonex BG65Ti",
+            "Kizuna Z61",
+            "Cước khác (inbox)"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "6000",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "6000D (Drive)",
+          "tier_2_option": "Yonex BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000D-DRIVE-YONEX-BG65TI"
+        },
+        {
+          "tier_1_option": "6000",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "6000",
+          "tier_2_option": "Cước khác (inbox)",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000-CUOC-KHAC-INBOX"
+        },
+        {
+          "tier_1_option": "6000D (Drive)",
+          "tier_2_option": "Cước khác (inbox)",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000D-DRIVE-CUOC-KHAC-INBOX"
+        },
+        {
+          "tier_1_option": "6000I (Instinct)",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000I-INSTINCT-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "6000I (Instinct)",
+          "tier_2_option": "Yonex BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000I-INSTINCT-YONEX-BG65TI"
+        },
+        {
+          "tier_1_option": "6000C (Combat)",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000C-COMBAT-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "6000C (Combat)",
+          "tier_2_option": "Yonex BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000C-COMBAT-YONEX-BG65TI"
+        },
+        {
+          "tier_1_option": "6000D (Drive)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000D-DRIVE-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "6000I (Instinct)",
+          "tier_2_option": "Cước khác (inbox)",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000I-INSTINCT-CUOC-KHAC-INBOX"
+        },
+        {
+          "tier_1_option": "6000",
+          "tier_2_option": "Yonex BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000-YONEX-BG65TI"
+        },
+        {
+          "tier_1_option": "6000C (Combat)",
+          "tier_2_option": "Cước khác (inbox)",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000C-COMBAT-CUOC-KHAC-INBOX"
+        },
+        {
+          "tier_1_option": "6000I (Instinct)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000I-INSTINCT-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "6000I (Instinct)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000I-INSTINCT-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "6000C (Combat)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000C-COMBAT-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "6000",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "6000D (Drive)",
+          "tier_2_option": "Cước trợ lực",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000D-DRIVE-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "6000C (Combat)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000C-COMBAT-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "6000D (Drive)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-THE-THAO-LI-TQ4B-6000D-DRIVE-KIZUNA-Z61"
+        }
+      ]
+    },
+    {
+      "id": 278,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "Trắng (Trẻ trung)",
+            "Đen (Mạnh mẽ)"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Dây Căng",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61",
+            "Khác Inbox Shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Đen (Mạnh mẽ)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-DEN-MANH-ME-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Trắng (Trẻ trung)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-TRANG-TRE-TRUNG-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Trắng (Trẻ trung)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-TRANG-TRE-TRUNG-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Trắng (Trẻ trung)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-TRANG-TRE-TRUNG-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Trắng (Trẻ trung)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-TRANG-TRE-TRUNG-BG-65TI"
+        },
+        {
+          "tier_1_option": "Trắng (Trẻ trung)",
+          "tier_2_option": "Khác Inbox Shop",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-TRANG-TRE-TRUNG-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "Đen (Mạnh mẽ)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-DEN-MANH-ME-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Đen (Mạnh mẽ)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-DEN-MANH-ME-PA2055"
+        },
+        {
+          "tier_1_option": "Đen (Mạnh mẽ)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-DEN-MANH-ME-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đen (Mạnh mẽ)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-DEN-MANH-ME-BG-65TI"
+        },
+        {
+          "tier_1_option": "Trắng (Trẻ trung)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-TRANG-TRE-TRUNG-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đen (Mạnh mẽ)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-DEN-MANH-ME-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Trắng (Trẻ trung)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-TRANG-TRE-TRUNG-PA2055"
+        },
+        {
+          "tier_1_option": "Đen (Mạnh mẽ)",
+          "tier_2_option": "Khác Inbox Shop",
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-HC-DHUY-DEN-MANH-ME-KHAC-INBOX-SHOP"
+        }
+      ]
+    },
+    {
+      "id": 273,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu",
+          "options": [
+            "Đỏ",
+            "Tím",
+            "Xanh"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Dây Vợt",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-BG65TI"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-BG-66U"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-BG65TI"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-BG-66U"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-BG-66U"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-PA2055"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-PA2055"
+        },
+        {
+          "tier_1_option": "Tím",
+          "tier_2_option": "BG65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-TIM-BG65TI"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-PA2055"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-DO-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Xanh",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-ATROX-XHKN-XANH-EXBOLT-63"
+        }
+      ]
+    },
+    {
+      "id": 269,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Mã Vợt",
+          "options": [
+            "Feel (Tím Nhạt)",
+            "Feel (Đen)",
+            "Clear ( Đen Trắng)",
+            "Clear ( Trắng Xanh)",
+            "Ability (Đen Đỏ)",
+            "Ability (Xanh Đen)"
+          ]
+        },
+        {
+          "tier_index": 2,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-BG-65TI"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-BG-66U"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-BG-65TI"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-BG-66U"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-PA2055"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-PA2055"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-BG-66U"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-BG-66U"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-BG-65TI"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-BG-65TI"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Feel (Tím Nhạt)",
+          "tier_2_option": "Khung không dây",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-TIM-NHAT-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "Exbolt 65",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Feel (Đen)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-FEEL-DEN-PA2055"
+        },
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-BG-65TI"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-PA2055"
+        },
+        {
+          "tier_1_option": "Clear ( Đen Trắng)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-DEN-TRANG-BG-66U"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "BG 65Ti",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-BG-65TI"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "Exbolt 63",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-PA2055"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "BG 66U",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-BG-66U"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "Kizuna Z61",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Ability (Đen Đỏ)",
+          "tier_2_option": "PA2055",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-DEN-DO-PA2055"
+        },
+        {
+          "tier_1_option": "Clear ( Trắng Xanh)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-CLEAR-TRANG-XANH-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Ability (Xanh Đen)",
+          "tier_2_option": "Exbolt 68",
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-K8RD-ABILITY-XANH-DEN-EXBOLT-68"
+        }
+      ]
+    }
+  ],
+  "one_tier_products": [
+    {
+      "id": 339,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Dây vợt",
+          "options": [
+            "Khung không",
+            "Yonex BG 65Ti",
+            "Yonex BG 66U",
+            "Yonex EXBOLT 65",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Yonex BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XZBJ-YONEX-BG-65TI"
+        },
+        {
+          "tier_1_option": "Yonex BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XZBJ-YONEX-BG-66U"
+        },
+        {
+          "tier_1_option": "Yonex EXBOLT 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XZBJ-YONEX-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XZBJ-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Khung không",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XZBJ-KHUNG-KHONG"
+        }
+      ]
+    },
+    {
+      "id": 335,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "khung không dây",
+            "PA2055",
+            "BG 65T",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-BG-66U"
+        },
+        {
+          "tier_1_option": "khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-PA2055"
+        },
+        {
+          "tier_1_option": "BG 65T",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-BG-65T"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4FAM-EXBOLT-68"
+        }
+      ]
+    },
+    {
+      "id": 333,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-PA2055"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-BG-65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-COMBO-3-QUA-TANG-VOT-CAU-8A9B-BG-66U"
+        }
+      ]
+    },
+    {
+      "id": 332,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65T",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-BG-66U"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-PA2055"
+        },
+        {
+          "tier_1_option": "BG 65T",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-96SF-BG-65T"
+        }
+      ]
+    },
+    {
+      "id": 331,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-BG-65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-PA2055"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-J2YD-EXBOLT-63"
+        }
+      ]
+    },
+    {
+      "id": 330,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "CĂNG CƯỚC",
+          "options": [
+            "KHUNG KHÔNG DÂY",
+            "CƯỚC TRỢ LỰC",
+            "YONEX BG65Ti",
+            "YONEX EX63-65-68",
+            "YONEX BG66U",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "YONEX BG66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-88D-VYN7-YONEX-BG66U"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-88D-VYN7-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "KHUNG KHÔNG DÂY",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-88D-VYN7-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "CƯỚC TRỢ LỰC",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-88D-VYN7-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "YONEX BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-88D-VYN7-YONEX-BG65TI"
+        },
+        {
+          "tier_1_option": "YONEX EX63-65-68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-88D-VYN7-YONEX-EX63-65-68"
+        }
+      ]
+    },
+    {
+      "id": 328,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "White/Cobalt Blue",
+            "Gray",
+            "Black/Yellow"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "White/Cobalt Blue",
+          "tier_2_option": null,
+          "sku_code": "PRD-TAT-NAM-YONEX-CHINH-HANG-WHNE-WHITE-COBALT-BLUE"
+        },
+        {
+          "tier_1_option": "Gray",
+          "tier_2_option": null,
+          "sku_code": "PRD-TAT-NAM-YONEX-CHINH-HANG-WHNE-GRAY"
+        },
+        {
+          "tier_1_option": "Black/Yellow",
+          "tier_2_option": null,
+          "sku_code": "PRD-TAT-NAM-YONEX-CHINH-HANG-WHNE-BLACK-YELLOW"
+        }
+      ]
+    },
+    {
+      "id": 326,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Căng cước",
+          "options": [
+            "Khung không dây",
+            "Inbox shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Inbox shop",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-VICTOR-CBJW-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-VICTOR-CBJW-KHUNG-KHONG-DAY"
+        }
+      ]
+    },
+    {
+      "id": 323,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cầu",
+          "options": [
+            "Thành Công 76",
+            "Thành Công 77"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Thành Công 76",
+          "tier_2_option": null,
+          "sku_code": "PRD-CAU-THANH-CONG-76-VA-77-XAXS-THANH-CONG-76"
+        },
+        {
+          "tier_1_option": "Thành Công 77",
+          "tier_2_option": null,
+          "sku_code": "PRD-CAU-THANH-CONG-76-VA-77-XAXS-THANH-CONG-77"
+        }
+      ]
+    },
+    {
+      "id": 322,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65T",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-PA2055"
+        },
+        {
+          "tier_1_option": "BG 65T",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-BG-65T"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-5YBM-EXBOLT-68"
+        }
+      ]
+    },
+    {
+      "id": 321,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-PA2055"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-BG-65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-BG-66U"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-CTXX-EXBOLT-68"
+        }
+      ]
+    },
+    {
+      "id": 318,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Căng cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-PA2055"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-BG-65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-BG-66U"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-ZKTY-KIZUNA-Z61"
+        }
+      ]
+    },
+    {
+      "id": 317,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-PA2055"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-BG65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-BG-66U"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-PBH3-KIZUNA-Z61"
+        }
+      ]
+    },
+    {
+      "id": 316,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu cước",
+          "options": [
+            "BG80 Trắng",
+            "BG80 Vàng",
+            "BG66 Ultimax Hồng",
+            "BG65 Titanium (Đỏ)",
+            "BG5 Match Vàng",
+            "BG5 Match Hồng",
+            "BG5 Match Xanh"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG66 Ultimax Hồng",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUOC-YONEX-BG80-BG66-478T-BG66-ULTIMAX-HONG"
+        },
+        {
+          "tier_1_option": "BG80 Trắng",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUOC-YONEX-BG80-BG66-478T-BG80-TRANG"
+        },
+        {
+          "tier_1_option": "BG80 Vàng",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUOC-YONEX-BG80-BG66-478T-BG80-VANG"
+        },
+        {
+          "tier_1_option": "BG65 Titanium (Đỏ)",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUOC-YONEX-BG80-BG66-478T-BG65-TITANIUM-DO"
+        },
+        {
+          "tier_1_option": "BG5 Match Vàng",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUOC-YONEX-BG80-BG66-478T-BG5-MATCH-VANG"
+        },
+        {
+          "tier_1_option": "BG5 Match Hồng",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUOC-YONEX-BG80-BG66-478T-BG5-MATCH-HONG"
+        },
+        {
+          "tier_1_option": "BG5 Match Xanh",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUOC-YONEX-BG80-BG66-478T-BG5-MATCH-XANH"
+        }
+      ]
+    },
+    {
+      "id": 314,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Phân Loại",
+          "options": [
+            "Lining",
+            "Yonex"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Lining",
+          "tier_2_option": null,
+          "sku_code": "PRD-BAO-VOT-CAU-LONG-DON-9TRB-LINING"
+        },
+        {
+          "tier_1_option": "Yonex",
+          "tier_2_option": null,
+          "sku_code": "PRD-BAO-VOT-CAU-LONG-DON-9TRB-YONEX"
+        }
+      ]
+    },
+    {
+      "id": 313,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-PA2055"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-BG65TI"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-89ND-KIZUNA-Z61"
+        }
+      ]
+    },
+    {
+      "id": 312,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Căng Cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "BG 65Ti",
+            "Ex63-65-68-66U-Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-9B9Q-BG-65TI"
+        },
+        {
+          "tier_1_option": "Ex63-65-68-66U-Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-9B9Q-EX63-65-68-66U-Z61"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-9B9Q-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Cước trợ lực",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-9B9Q-CUOC-TRO-LUC"
+        }
+      ]
+    },
+    {
+      "id": 309,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "BG65Ti",
+            "Cước khác ib shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Cước trợ lực",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NQBG-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NQBG-BG65TI"
+        },
+        {
+          "tier_1_option": "Cước khác ib shop",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NQBG-CUOC-KHAC-IB-SHOP"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NQBG-KHUNG-KHONG-DAY"
+        }
+      ]
+    },
+    {
+      "id": 308,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Kích Cỡ",
+          "options": [
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "XL",
+          "tier_2_option": null,
+          "sku_code": "PRD-AO-CO-TRON-YONEX-UNISEX-PUK4-XL"
+        },
+        {
+          "tier_1_option": "L",
+          "tier_2_option": null,
+          "sku_code": "PRD-AO-CO-TRON-YONEX-UNISEX-PUK4-L"
+        }
+      ]
+    },
+    {
+      "id": 307,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "CĂNG CƯỚC",
+          "options": [
+            "KHUNG KHÔNG DÂY",
+            "CƯỚC TRỢ LỰC",
+            "YONEX BG65Ti",
+            "YONEX EX63-65-68",
+            "YONEX BG66U",
+            "KIZUNA Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "YONEX BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-RTDS-YONEX-BG65TI"
+        },
+        {
+          "tier_1_option": "YONEX EX63-65-68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-RTDS-YONEX-EX63-65-68"
+        },
+        {
+          "tier_1_option": "YONEX BG66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-RTDS-YONEX-BG66U"
+        },
+        {
+          "tier_1_option": "KIZUNA Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-RTDS-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "KHUNG KHÔNG DÂY",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-RTDS-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "CƯỚC TRỢ LỰC",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-RTDS-CUOC-TRO-LUC"
+        }
+      ]
+    },
+    {
+      "id": 305,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu Sắc",
+          "options": [
+            "Trắng",
+            "Xanh Chuối",
+            "Xanh Cyan",
+            "Đỏ"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Xanh Chuối",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-6XP9-XANH-CHUOI"
+        },
+        {
+          "tier_1_option": "Xanh Cyan",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-6XP9-XANH-CYAN"
+        },
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-6XP9-DO"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-6XP9-TRANG"
+        }
+      ]
+    },
+    {
+      "id": 304,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65TI",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-PA2055"
+        },
+        {
+          "tier_1_option": "BG65TI",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-4AF8-BG65TI"
+        }
+      ]
+    },
+    {
+      "id": 303,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65T",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG 65T",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-BG-65T"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-7FDQ-PA2055"
+        }
+      ]
+    },
+    {
+      "id": 302,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại Bóng",
+          "options": [
+            "Facolos (3 quả)",
+            "GOWIN (6 quả)",
+            "Franklin (1 quả)",
+            "Franklin (3 quả)",
+            "Franklin (5 quả)"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Franklin (5 quả)",
+          "tier_2_option": null,
+          "sku_code": "PRD-CHINH-HANG-BO-BONG-DPC4-FRANKLIN-5-QUA"
+        },
+        {
+          "tier_1_option": "Facolos (3 quả)",
+          "tier_2_option": null,
+          "sku_code": "PRD-CHINH-HANG-BO-BONG-DPC4-FACOLOS-3-QUA"
+        },
+        {
+          "tier_1_option": "GOWIN (6 quả)",
+          "tier_2_option": null,
+          "sku_code": "PRD-CHINH-HANG-BO-BONG-DPC4-GOWIN-6-QUA"
+        },
+        {
+          "tier_1_option": "Franklin (1 quả)",
+          "tier_2_option": null,
+          "sku_code": "PRD-CHINH-HANG-BO-BONG-DPC4-FRANKLIN-1-QUA"
+        },
+        {
+          "tier_1_option": "Franklin (3 quả)",
+          "tier_2_option": null,
+          "sku_code": "PRD-CHINH-HANG-BO-BONG-DPC4-FRANKLIN-3-QUA"
+        }
+      ]
+    },
+    {
+      "id": 301,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "CĂNG CƯỚC",
+          "options": [
+            "KHUNG KHÔNG DÂY",
+            "CƯỚC TRỢ LỰC",
+            "YONEX BG65Ti",
+            "YONEX EX63-65-68",
+            "YONEX BG66U",
+            "KIZUNA Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "KIZUNA Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-WXTA-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "KHUNG KHÔNG DÂY",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-WXTA-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "CƯỚC TRỢ LỰC",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-WXTA-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "YONEX BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-WXTA-YONEX-BG65TI"
+        },
+        {
+          "tier_1_option": "YONEX EX63-65-68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-WXTA-YONEX-EX63-65-68"
+        },
+        {
+          "tier_1_option": "YONEX BG66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-WXTA-YONEX-BG66U"
+        }
+      ]
+    },
+    {
+      "id": 300,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "BG 65Ti",
+            "Cước khác inbox Shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Cước trợ lực",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NN5S-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NN5S-BG-65TI"
+        },
+        {
+          "tier_1_option": "Cước khác inbox Shop",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NN5S-CUOC-KHAC-INBOX-SHOP"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-NN5S-KHUNG-KHONG-DAY"
+        }
+      ]
+    },
+    {
+      "id": 299,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "White/Dark Gray",
+            "White/Cobalt Blue",
+            "White"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "White",
+          "tier_2_option": null,
+          "sku_code": "PRD-TAT-NU-YONEX-CHINH-HANG-KD8V-WHITE"
+        },
+        {
+          "tier_1_option": "White/Dark Gray",
+          "tier_2_option": null,
+          "sku_code": "PRD-TAT-NU-YONEX-CHINH-HANG-KD8V-WHITE-DARK-GRAY"
+        },
+        {
+          "tier_1_option": "White/Cobalt Blue",
+          "tier_2_option": null,
+          "sku_code": "PRD-TAT-NU-YONEX-CHINH-HANG-KD8V-WHITE-COBALT-BLUE"
+        }
+      ]
+    },
+    {
+      "id": 296,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu cước",
+          "options": [
+            "Trắng",
+            "Xanh Chuối",
+            "Đỏ"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Đỏ",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-PEDY-DO"
+        },
+        {
+          "tier_1_option": "Trắng",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-PEDY-TRANG"
+        },
+        {
+          "tier_1_option": "Xanh Chuối",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-PEDY-XANH-CHUOI"
+        }
+      ]
+    },
+    {
+      "id": 295,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-PA2055"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-BG65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-XYPC-BG-66U"
+        }
+      ]
+    },
+    {
+      "id": 294,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-BG-66U"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-PA2055"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-LINING-KH3P-BG65TI"
+        }
+      ]
+    },
+    {
+      "id": 293,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-PA2055"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-BG65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-BG-66U"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-C469-KIZUNA-Z61"
+        }
+      ]
+    },
+    {
+      "id": 291,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65T",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG 65T",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-BG-65T"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-PA2055"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-ZPTJ-EXBOLT-65"
+        }
+      ]
+    },
+    {
+      "id": 289,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Căng Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-PA2055"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-BG-66U"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-BG65TI"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-SF2C-EXBOLT-65"
+        }
+      ]
+    },
+    {
+      "id": 286,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "Z61 Xanh chuối",
+            "Z61 Trắng",
+            "Z61 Hồng(Thanh Long)"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Z61 Xanh chuối",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-MJ9C-Z61-XANH-CHUOI"
+        },
+        {
+          "tier_1_option": "Z61 Trắng",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-MJ9C-Z61-TRANG"
+        },
+        {
+          "tier_1_option": "Z61 Hồng(Thanh Long)",
+          "tier_2_option": null,
+          "sku_code": "PRD-DAY-CUOC-CANG-VOT-KIZUNA-MJ9C-Z61-HONG-THANH-LONG"
+        }
+      ]
+    },
+    {
+      "id": 285,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "1 cái màu ngẫu nhiên"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "1 cái màu ngẫu nhiên",
+          "tier_2_option": null,
+          "sku_code": "PRD-CUON-CAN-VOT-CAU-LONG-VS-CPW4-1-CAI-MAU-NGAU-NHIEN"
+        }
+      ]
+    },
+    {
+      "id": 284,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Phân loại",
+          "options": [
+            "1 đoạn (cuốn 1 lần)",
+            "Cả cuộn"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "1 đoạn (cuốn 1 lần)",
+          "tier_2_option": null,
+          "sku_code": "PRD-MOT-DOAN-CUON-CAN-VOT-5ZGT-1-DOAN-CUON-1-LAN"
+        },
+        {
+          "tier_1_option": "Cả cuộn",
+          "tier_2_option": null,
+          "sku_code": "PRD-MOT-DOAN-CUON-CAN-VOT-5ZGT-CA-CUON"
+        }
+      ]
+    },
+    {
+      "id": 281,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Căng Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-BG65TI"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-5DVK-PA2055"
+        }
+      ]
+    },
+    {
+      "id": 277,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Kích cỡ",
+          "options": [
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "XL",
+          "tier_2_option": null,
+          "sku_code": "PRD-AO-CO-TRON-YONEX-UNISEX-3NKB-XL"
+        },
+        {
+          "tier_1_option": "L",
+          "tier_2_option": null,
+          "sku_code": "PRD-AO-CO-TRON-YONEX-UNISEX-3NKB-L"
+        }
+      ]
+    },
+    {
+      "id": 274,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Màu sắc",
+          "options": [
+            "Đen",
+            "Xám",
+            "Xanh Navy",
+            "Xanh Dương"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Đen",
+          "tier_2_option": null,
+          "sku_code": "PRD-BALO-YONEX-ACE-SERIES-2-PN2H-DEN"
+        },
+        {
+          "tier_1_option": "Xám",
+          "tier_2_option": null,
+          "sku_code": "PRD-BALO-YONEX-ACE-SERIES-2-PN2H-XAM"
+        },
+        {
+          "tier_1_option": "Xanh Navy",
+          "tier_2_option": null,
+          "sku_code": "PRD-BALO-YONEX-ACE-SERIES-2-PN2H-XANH-NAVY"
+        },
+        {
+          "tier_1_option": "Xanh Dương",
+          "tier_2_option": null,
+          "sku_code": "PRD-BALO-YONEX-ACE-SERIES-2-PN2H-XANH-DUONG"
+        }
+      ]
+    },
+    {
+      "id": 272,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại cước",
+          "options": [
+            "Khung không dây",
+            "Cước trợ lực",
+            "BG65Ti",
+            "cước khác ib shop"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DYHH-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Cước trợ lực",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DYHH-CUOC-TRO-LUC"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DYHH-BG65TI"
+        },
+        {
+          "tier_1_option": "cước khác ib shop",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-DYHH-CUOC-KHAC-IB-SHOP"
+        }
+      ]
+    },
+    {
+      "id": 271,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Căng cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG 65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-PA2055"
+        },
+        {
+          "tier_1_option": "BG 65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-BG-65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-BG-66U"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-VOT-CAU-LONG-YONEX-BSRR-EXBOLT-65"
+        }
+      ]
+    },
+    {
+      "id": 270,
+      "tier_variations": [
+        {
+          "tier_index": 1,
+          "name": "Loại Cước",
+          "options": [
+            "Khung không dây",
+            "PA2055",
+            "BG65Ti",
+            "BG 66U",
+            "Exbolt 63",
+            "Exbolt 65",
+            "Exbolt 68",
+            "Kizuna Z61"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "tier_1_option": "Exbolt 63",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-EXBOLT-63"
+        },
+        {
+          "tier_1_option": "Exbolt 65",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-EXBOLT-65"
+        },
+        {
+          "tier_1_option": "Exbolt 68",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-EXBOLT-68"
+        },
+        {
+          "tier_1_option": "Kizuna Z61",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-KIZUNA-Z61"
+        },
+        {
+          "tier_1_option": "Khung không dây",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-KHUNG-KHONG-DAY"
+        },
+        {
+          "tier_1_option": "PA2055",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-PA2055"
+        },
+        {
+          "tier_1_option": "BG65Ti",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-BG65TI"
+        },
+        {
+          "tier_1_option": "BG 66U",
+          "tier_2_option": null,
+          "sku_code": "PRD-HOA-TOC-VOT-CAU-LONG-WHNS-BG-66U"
+        }
+      ]
+    }
+  ]
+}

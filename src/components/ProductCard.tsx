@@ -4,17 +4,22 @@ import { Product } from '../types';
 import { Eye, ShoppingCart, Star, Zap, Activity } from 'lucide-react';
 import { getProductPath } from '../utils/productSlug';
 import { isRacketCategoryCode } from '../config/storefront';
+import { getSingleSellableSku } from '../features/cart/cartSlice';
 
 interface ProductCardProps {
   key?: string;
   product: Product;
-  
+
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product, e: React.MouseEvent) => void;
 }
 
 export default function ProductCard({ product, onQuickView, onAddToCart }: ProductCardProps) {
   const navigate = useNavigate();
+  // Thêm nhanh chỉ khi sản phẩm có ĐÚNG một SKU bán được -- một tầng nhiều
+  // lựa chọn hoặc hai tầng phải dẫn khách sang trang chi tiết để chọn đủ,
+  // không tự chọn tổ hợp đại diện (options[0]) rồi gửi SKU.
+  const canQuickAdd = getSingleSellableSku(product) !== null;
   const hasActivePromotion = Boolean(
     product.hasActivePromotion ||
     (product.computedPrice !== undefined && product.originalPrice !== undefined && product.computedPrice < product.originalPrice) ||
@@ -89,14 +94,22 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
             <Eye className="w-5 h-5" />
           </button>
           <button
-            onClick={(e) => product.stock > 0 && onAddToCart(product, e)}
+            onClick={(e) => {
+              if (product.stock <= 0) return;
+              if (!canQuickAdd) {
+                e.stopPropagation();
+                navigate(getProductPath(product));
+                return;
+              }
+              onAddToCart(product, e);
+            }}
             disabled={product.stock <= 0}
             className={`p-2 rounded-full shadow-md transition duration-200 ${
               product.stock <= 0
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-white text-gray-800 hover:bg-brand-primary hover:text-white hover:scale-110'
             }`}
-            title={product.stock <= 0 ? 'Sản phẩm hết hàng' : 'Thêm nhanh vào giỏ'}
+            title={product.stock <= 0 ? 'Sản phẩm hết hàng' : canQuickAdd ? 'Thêm nhanh vào giỏ' : 'Chọn phân loại'}
           >
             <ShoppingCart className="w-5 h-5" />
           </button>

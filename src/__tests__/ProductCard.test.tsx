@@ -2,9 +2,10 @@
 import React from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
+import { getProductPath } from '../utils/productSlug';
 
 const mockUnpromotedProduct: Product = {
   id: 'prod-1',
@@ -51,7 +52,9 @@ const mockPromotedProduct: Product = {
   },
   description: 'Giày cầu lông chuyên nghiệp.',
   reviews: [],
-  stock: 10
+  stock: 10,
+  // Đúng một biến thể -- đủ điều kiện thêm nhanh (xem getSingleSellableSku).
+  variants: [{ tier_1_option: null, tier_2_option: null, sku_code: 'SKU-65Z3-TEST', price: 2000000, stock: 10 }]
 };
 
 const mockOutOfStockProduct: Product = {
@@ -235,5 +238,33 @@ describe('ProductCard component', () => {
 
     const detailBtn = screen.getByText('Chi tiết →');
     fireEvent.click(detailBtn);
+  });
+
+  it('F6: nút thêm nhanh hiển thị "Chọn phân loại" và điều hướng sang trang chi tiết khi sản phẩm có nhiều hơn một SKU', () => {
+    const multiVariantProduct: Product = {
+      ...mockUnpromotedProduct,
+      variants: [
+        { tier_1_option: 'Đỏ', tier_2_option: null, sku_code: 'SKU-A', price: 1, stock: 1 },
+        { tier_1_option: 'Xanh', tier_2_option: null, sku_code: 'SKU-B', price: 1, stock: 1 }
+      ]
+    };
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route
+            path="/"
+            element={<ProductCard product={multiVariantProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />}
+          />
+          <Route path={getProductPath(multiVariantProduct)} element={<div>DETAIL PAGE MARKER</div>} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const btn = screen.getByTitle('Chọn phân loại');
+    fireEvent.click(btn);
+
+    expect(onAddToCartMock).not.toHaveBeenCalled();
+    expect(screen.getByText('DETAIL PAGE MARKER')).toBeInTheDocument();
   });
 });
