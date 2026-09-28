@@ -3,7 +3,7 @@ import { X, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
-import { isCartItemSkuValid } from '../features/cart/cartSlice';
+import { describeCartItemSkuStatus, isCartItemSkuValid, CartItemSkuStatus } from '../features/cart/cartSlice';
 import { useAppSelector } from '../app/hooks';
 import OtpModal from './OtpModal';
 
@@ -35,8 +35,20 @@ interface CartModalProps {
   onClearCart: () => void;
 }
 
+// Lời người bán cho từng lý do món hàng không hợp lệ -- KHÔNG dùng chung một
+// câu cho cả hai ca (sản phẩm bị gỡ khỏi cửa hàng khác với PIM đổi/xoá tổ hợp).
+function cartItemWarningMessage(status: CartItemSkuStatus): string | null {
+  if (status === 'product_not_found') return 'Sản phẩm này hiện không còn trên cửa hàng. Vui lòng xoá khỏi giỏ.';
+  if (status === 'sku_changed') return 'Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.';
+  return null;
+}
+
 export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, onClearCart }: CartModalProps) {
   const products = useAppSelector(state => state.appData.products);
+  // Dữ liệu sản phẩm đang tải (danh sách appData.products có thể còn rỗng/
+  // thiếu) -- KHÔNG được kết luận "sản phẩm không còn"/"phân loại đã đổi" lúc
+  // này, chỉ coi là chưa biết. Nút thanh toán khoá lại tới khi tải xong.
+  const isLoadingProducts = useAppSelector(state => state.appData.isLoading);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   const [createdOrderNumber, setCreatedOrderNumber] = useState('');
   
@@ -62,8 +74,31 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const shippingCost = shippingMethod === 'standard' ? 30000 : 50000;
   const orderTotal = itemsTotal + shippingCost;
 
+  // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
+  // thanh toán/OTP, thay vì để lọt tới sau sendOtp/findOrCreateCustomer rồi
+  // mới báo. Đang tải dữ liệu sản phẩm -> cũng khoá (chưa kết luận được gì).
+  // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
+  // thanh toán/OTP, thay vì để lọt tới sau sendOtp/findOrCreateCustomer rồi
+  // mới báo. Đang tải dữ liệu sản phẩm -> cũng khoá (chưa kết luận được gì).
+  const canCheckout = !isLoadingProducts && cartItems.every(item => isCartItemSkuValid(item, products));
+
   const handleCheckoutSubmit = async (e?: React.FormEvent, tokenOverride?: string) => {
     if (e) e.preventDefault();
+
+    // Kiểm SKU của MỌI món hàng TRƯỚC bất kỳ lời gọi API nào (kể cả sendOtp)
+    // -- khách không nhận OTP/không bị tạo hồ sơ khách hàng rồi mới bị chặn.
+    // Dữ liệu sản phẩm đang tải -> chưa kết luận được gì, không cho thanh
+    // toán tiếp (nút "Tiến hành thanh toán" cũng đã khoá ở bước 1).
+    if (isLoadingProducts) {
+      return;
+    }
+    const invalidItem = cartItems.find(item => describeCartItemSkuStatus(item, products) !== 'ok');
+    if (invalidItem) {
+      const message = cartItemWarningMessage(describeCartItemSkuStatus(invalidItem, products));
+      if (message) await popupService.alert(message);
+      return;
+    }
+
     if (!fullName || !phone || !address) {
       await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại và địa chỉ nhận hàng.');
       return;
@@ -96,19 +131,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       });
       const channelId = await sportApi.getOrCreateStorefrontChannelId();
 
-      for (const item of cartItems) {
-        // Món hợp lệ khi skuCode khớp ĐÚNG một biến thể bán được của chính
-        // sản phẩm đó trong dữ liệu đã tải (không chỉ kiểm rỗng/mẫu chuỗi
-        // "SKU-<id>-..."). KHÔNG tự xoá item -- giữ hiển thị (xem dòng cảnh
-        // báo trong danh sách giỏ hàng bên dưới), chỉ chặn thanh toán tới khi
-        // khách tự xoá/chọn lại.
-        if (!isCartItemSkuValid(item, products)) {
-          await popupService.alert('Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.');
-          setIsSubmitting(false);
-          return;
-        }
-      }
-
+      // Đã kiểm MỌI SKU ngay đầu handleCheckoutSubmit (trước cả sendOtp) --
+      // không lặp lại kiểm ở đây.
       const items = cartItems.map(item => {
         return {
           sku_code: item.skuCode!,
@@ -196,7 +220,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   <div className="divide-y divide-gray-100">
                     {cartItems.map((item) => {
                       const stringPrice = item.stringOption ? item.stringOption.price : 0;
-                      const skuValid = isCartItemSkuValid(item, products);
+                      // Dữ liệu sản phẩm đang tải -> chưa kết luận được gì,
+                      // không hiện cảnh báo sai lúc danh sách còn rỗng/thiếu.
+                      const warningMessage = isLoadingProducts
+                        ? null
+                        : cartItemWarningMessage(describeCartItemSkuStatus(item, products));
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5">
                           <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
@@ -220,13 +248,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                             </div>
 
                             {/* SKU không còn khớp biến thể thật nào của sản
-                                phẩm (giỏ hàng cũ, hoặc PIM đã đổi/xoá tổ hợp)
-                                -- giữ hiển thị món hàng, không tự xoá, chỉ báo
-                                để khách tự xoá/chọn lại. */}
-                            {!skuValid && (
-                              <p className="text-[10px] text-red-600 font-semibold">
-                                Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.
-                              </p>
+                                phẩm (giỏ hàng cũ, PIM đã đổi/xoá tổ hợp, hoặc
+                                sản phẩm không còn trên cửa hàng) -- giữ hiển
+                                thị món hàng, không tự xoá, chỉ báo để khách
+                                tự xoá/chọn lại. */}
+                            {warningMessage && (
+                              <p className="text-[10px] text-red-600 font-semibold">{warningMessage}</p>
                             )}
 
                             <div className="flex justify-between items-center pt-1.5">
@@ -431,10 +458,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
             {step === 1 ? (
               <button
-                onClick={() => setStep(2)}
-                className="w-full btn-primary text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5"
+                onClick={() => canCheckout && setStep(2)}
+                disabled={!canCheckout}
+                className={`w-full text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${
+                  canCheckout ? 'btn-primary' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
-                Tiến hành thanh toán &rarr;
+                {isLoadingProducts ? 'Đang tải...' : <>Tiến hành thanh toán &rarr;</>}
               </button>
             ) : (
               <div className="flex gap-2.5">

@@ -43,7 +43,7 @@ const mockAccessory: Product = {
   colors: ['Trắng'],
   defaultSku: 'SKU-GRIP-DEF',
   variants: [
-    { tier_1_option: null, tier_2_option: null, sku_code: 'SKU-GRIP-WHITE', price: 120000, stock: 10 }
+    { tier_1_option: 'Trắng', tier_2_option: null, sku_code: 'SKU-GRIP-WHITE', price: 120000, stock: 10 }
   ]
 };
 

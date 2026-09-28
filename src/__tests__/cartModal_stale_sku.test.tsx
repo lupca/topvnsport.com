@@ -72,11 +72,11 @@ function makeItem(overrides: Partial<CartItem>): CartItem {
   };
 }
 
-function renderCartModal(cartItems: CartItem[], products: Product[] = [product341]) {
+function renderCartModal(cartItems: CartItem[], products: Product[] = [product341], isLoading = false) {
   const store = configureStore({
     reducer: { appData: appDataReducer },
     preloadedState: {
-      appData: { products, blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false }
+      appData: { products, blogs: [], branches: [], stringOptions: [], categories: [], isLoading }
     } as any
   });
 
@@ -87,8 +87,12 @@ function renderCartModal(cartItems: CartItem[], products: Product[] = [product34
   );
 }
 
+function getCheckoutButton() {
+  return screen.getByRole('button', { name: /Tiến hành thanh toán|Đang tải/ });
+}
+
 async function fillCheckoutForm() {
-  fireEvent.click(screen.getByRole('button', { name: /Tiến hành thanh toán/ }));
+  fireEvent.click(getCheckoutButton());
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Test' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1 Test' } });
@@ -135,13 +139,6 @@ describe('CartModal -- món hàng SKU không hợp lệ (F3: khớp theo biến 
     expect(screen.getByText('Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.')).toBeInTheDocument();
   });
 
-  it('sản phẩm của món hàng không còn trong dữ liệu đã tải -- không hợp lệ, không đoán', () => {
-    const orphanItem = makeItem({ productId: 'khong-ton-tai' });
-    renderCartModal([orphanItem], [product341]);
-
-    expect(screen.getByText('Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.')).toBeInTheDocument();
-  });
-
   it('SKU thật khớp đúng biến thể của sản phẩm -- không cảnh báo', () => {
     renderCartModal([makeItem({})]);
     expect(
@@ -149,24 +146,86 @@ describe('CartModal -- món hàng SKU không hợp lệ (F3: khớp theo biến 
     ).not.toBeInTheDocument();
   });
 
-  it('F3 + F8: PRD-AO-DELETED-VARIANT của sp 341 -- chặn thanh toán, câu báo NGUYÊN VĂN không ghép tên sản phẩm, createOrder không được gọi', async () => {
-    const deletedVariantItem = makeItem({ skuCode: 'PRD-AO-DELETED-VARIANT' });
-    renderCartModal([deletedVariantItem]);
-
-    await driveToOtpSuccess();
-
-    await waitFor(() =>
-      expect(alertMock).toHaveBeenCalledWith('Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.')
-    );
-    expect(createOrderMock).not.toHaveBeenCalled();
-  });
-
-  it('không chặn/không gọi sai khi SKU là SKU thật hợp lệ', async () => {
+  it('không chặn/không gọi sai khi SKU là SKU thật hợp lệ -- luồng OTP đầy đủ vẫn tạo đơn', async () => {
     renderCartModal([makeItem({})]);
 
     await driveToOtpSuccess();
 
     await waitFor(() => expect(createOrderMock).toHaveBeenCalled());
     expect(alertMock).not.toHaveBeenCalledWith(expect.stringContaining('đã thay đổi'));
+  });
+});
+
+describe('F_LATE (medium) -- chặn SKU không hợp lệ TRƯỚC sendOtp/findOrCreateCustomer, không chỉ trước createOrder', () => {
+  beforeEach(() => {
+    alertMock.mockClear();
+    sendOtpMock.mockClear();
+    findOrCreateCustomerMock.mockClear();
+    createOrderMock.mockClear();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('nút "Tiến hành thanh toán" bị vô hiệu khi có món SKU không hợp lệ', () => {
+    const deletedVariantItem = makeItem({ skuCode: 'PRD-AO-DELETED-VARIANT' });
+    renderCartModal([deletedVariantItem]);
+
+    expect(getCheckoutButton()).toBeDisabled();
+  });
+
+  it('có món không hợp lệ -> bấm "Tiến hành thanh toán" KHÔNG mở bước OTP: sendOtp, findOrCreateCustomer, createOrder đều không được gọi', () => {
+    const deletedVariantItem = makeItem({ skuCode: 'PRD-AO-DELETED-VARIANT' });
+    renderCartModal([deletedVariantItem]);
+
+    fireEvent.click(getCheckoutButton());
+
+    // Nút bị vô hiệu -> vẫn ở bước 1 (không có form nhập họ tên/điện thoại)
+    expect(screen.queryByPlaceholderText('Ví dụ: Nguyễn Văn A')).not.toBeInTheDocument();
+    expect(sendOtpMock).not.toHaveBeenCalled();
+    expect(findOrCreateCustomerMock).not.toHaveBeenCalled();
+    expect(createOrderMock).not.toHaveBeenCalled();
+  });
+
+  it('nút "Tiến hành thanh toán" hoạt động bình thường khi mọi món đều hợp lệ', () => {
+    renderCartModal([makeItem({})]);
+    expect(getCheckoutButton()).not.toBeDisabled();
+  });
+});
+
+describe('F_EMPTY (low) -- dữ liệu sản phẩm đang tải / sản phẩm không còn trên cửa hàng', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('đang tải (isLoading) -- KHÔNG hiện câu "đã thay đổi phân loại" cho bất kỳ món nào, nút thanh toán ở trạng thái khoá/đang tải', () => {
+    // Danh sách sản phẩm còn rỗng vì đang tải -- nếu không loại trừ isLoading
+    // thì mọi món sẽ bị coi nhầm là "product_not_found".
+    renderCartModal([makeItem({})], [], true);
+
+    expect(
+      screen.queryByText('Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Sản phẩm này hiện không còn trên cửa hàng. Vui lòng xoá khỏi giỏ.')
+    ).not.toBeInTheDocument();
+
+    const button = getCheckoutButton();
+    expect(button).toBeDisabled();
+    expect(button).toHaveTextContent('Đang tải...');
+  });
+
+  it('đã tải xong, sản phẩm của món không có trong danh sách -- câu riêng "Sản phẩm này hiện không còn trên cửa hàng", KHÔNG dùng câu "đã thay đổi phân loại", chặn thanh toán', () => {
+    const orphanItem = makeItem({ productId: 'khong-ton-tai' });
+    renderCartModal([orphanItem], [product341], false);
+
+    expect(
+      screen.getByText('Sản phẩm này hiện không còn trên cửa hàng. Vui lòng xoá khỏi giỏ.')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.')
+    ).not.toBeInTheDocument();
+    expect(getCheckoutButton()).toBeDisabled();
   });
 });

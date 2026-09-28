@@ -324,6 +324,38 @@ describe('F2 -- "SKU bán được" = biến thể có sku_code khác rỗng', (
   });
 });
 
+describe('F_TEST -- sản phẩm không tầng có 2 biến thể ĐỀU có sku_code -> không đoán, không lấy defaultSku', () => {
+  const ambiguousNoTier: Product = {
+    id: '996',
+    name: 'Sản phẩm test 2 biến thể không tầng đều bán được',
+    brand: 'Other',
+    category: 'Test',
+    price: 100000,
+    image: 'https://example.com/996.jpg',
+    specs: {},
+    description: '',
+    reviews: [],
+    stock: 5,
+    defaultSku: 'A',
+    variants: [
+      { tier_1_option: null, tier_2_option: null, sku_code: 'A', price: 100000, stock: 5 },
+      { tier_1_option: null, tier_2_option: null, sku_code: 'B', price: 100000, stock: 5 }
+    ]
+  };
+
+  it('resolveSkuCode trả null (không đoán ứng viên đầu, không lấy product.defaultSku)', () => {
+    expect(resolveSkuCode(ambiguousNoTier, 'bất kỳ', 'bất kỳ')).toBeNull();
+  });
+
+  it('getSingleSellableSku cũng trả null (có 2 biến thể bán được, không phải 1)', () => {
+    expect(getSingleSellableSku(ambiguousNoTier)).toBeNull();
+  });
+
+  it('buildDefaultCartItem không thêm nhanh được', () => {
+    expect(buildDefaultCartItem(ambiguousNoTier)).toBeNull();
+  });
+});
+
 describe('getSingleSellableSku / buildDefaultCartItem -- thêm nhanh CHỈ khi đúng MỘT SKU bán được', () => {
   it('sản phẩm không tầng (đúng 1 biến thể) -> có SKU duy nhất, thêm nhanh được', () => {
     expect(getSingleSellableSku(noTierProduct)).toBe('PRD-BO-VOT-CAU-LONG-VICTOR-K88J-DEFAULT');
@@ -356,6 +388,60 @@ describe('buildVariantLabel (F5) -- nhãn dựng từ TÊN TẦNG THẬT, không
 
   it('không có tầng nào -> undefined, không bịa nhãn', () => {
     expect(buildVariantLabel(noTierProduct, 'Tiêu chuẩn', 'Tiêu chuẩn')).toBeUndefined();
+  });
+
+  it('F_LABEL: buildDefaultCartItem (thêm nhanh) hai tầng, một biến thể bán được Đỏ/M -> nhãn "Màu sắc: Đỏ · Size: M", KHÔNG lấy từ selectedColor/selectedWeight kiểu "Tiêu chuẩn"', () => {
+    const twoTierSingleVariant: Product = {
+      id: '995',
+      name: 'Sản phẩm hai tầng chỉ còn một biến thể bán được',
+      brand: 'Other',
+      category: 'Test',
+      price: 100000,
+      image: 'https://example.com/995.jpg',
+      specs: {},
+      description: '',
+      reviews: [],
+      stock: 5,
+      tier_variations: [
+        { tier_index: 1, name: 'Màu sắc', options: ['Đỏ', 'Xanh'] },
+        { tier_index: 2, name: 'Size', options: ['S', 'M'] }
+      ],
+      variants: [
+        { tier_1_option: 'Đỏ', tier_2_option: 'M', sku_code: 'P-DO-M', price: 100000, stock: 5 }
+        // Cố ý chỉ còn đúng một biến thể bán được -- 3 tổ hợp còn lại không bán.
+      ]
+    };
+
+    const item = buildDefaultCartItem(twoTierSingleVariant);
+    expect(item).not.toBeNull();
+    expect(item!.selectedColor).toBe('Đỏ');
+    expect(item!.selectedWeight).toBe('M');
+    expect(item!.variantLabel).toBe('Màu sắc: Đỏ · Size: M');
+  });
+
+  it('F_LABEL: buildDefaultCartItem một tầng [Đỏ sku P-DO, Xanh sku rỗng] -> nhãn "Màu sắc: Đỏ" (bỏ qua biến thể sku_code rỗng)', () => {
+    const oneTierWithEmptySku: Product = {
+      id: '994',
+      name: 'Sản phẩm một tầng có biến thể sku_code rỗng',
+      brand: 'Other',
+      category: 'Test',
+      price: 100000,
+      image: 'https://example.com/994.jpg',
+      specs: {},
+      description: '',
+      reviews: [],
+      stock: 5,
+      tier_variations: [{ tier_index: 1, name: 'Màu sắc', options: ['Đỏ', 'Xanh'] }],
+      variants: [
+        { tier_1_option: 'Đỏ', tier_2_option: null, sku_code: 'P-DO', price: 100000, stock: 5 },
+        { tier_1_option: 'Xanh', tier_2_option: null, sku_code: '', price: 100000, stock: 5 }
+      ]
+    };
+
+    const item = buildDefaultCartItem(oneTierWithEmptySku);
+    expect(item).not.toBeNull();
+    expect(item!.selectedColor).toBe('Đỏ');
+    expect(item!.variantLabel).toBe('Màu sắc: Đỏ');
   });
 
   it('buildConfiguredCartItem/buildDefaultCartItem lưu đúng variantLabel vào CartItem', () => {

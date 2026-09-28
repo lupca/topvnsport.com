@@ -32,7 +32,7 @@ const mockProduct: Product = {
   defaultSku: 'SKU-ASTROX-DEF',
   // Sản phẩm không có tier_variations -- đúng một biến thể, resolveSkuCode
   // suy ra thẳng từ đây thay vì skuByColor (đã bỏ vì là nguồn SKU sai).
-  variants: [{ tier_1_option: null, tier_2_option: null, sku_code: 'SKU-ASTROX-RED', price: 4500000, stock: 5 }]
+  variants: [{ tier_1_option: 'Đỏ/Đen', tier_2_option: null, sku_code: 'SKU-ASTROX-RED', price: 4500000, stock: 5 }]
 };
 
 describe('Milestone 7 - Cart Persistence & Reducer Logic', () => {

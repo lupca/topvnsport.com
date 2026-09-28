@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product, StringOption } from '../../types';
+import { Product, ProductVariant, StringOption } from '../../types';
 import { CartItem } from '../../components/CartModal';
 
 interface CartState {
@@ -152,13 +152,17 @@ export function resolveSkuCode(product: Product, tier1: string, tier2: string): 
   return result.status === 'ok' ? result.skuCode : null;
 }
 
-// Sản phẩm có ĐÚNG một biến thể bán được (không tầng, hoặc mọi tầng chỉ có
+// Biến thể bán được DUY NHẤT của sản phẩm (không tầng, hoặc mọi tầng chỉ có
 // một lựa chọn duy nhất) -- trường hợp DUY NHẤT được phép thêm nhanh từ thẻ
 // sản phẩm mà không cần khách vào trang chi tiết chọn phân loại. Không dùng
 // options[0]/colors[0] để đoán khi có từ hai biến thể bán được trở lên.
-export function getSingleSellableSku(product: Product): string | null {
+export function getSingleSellableVariant(product: Product): ProductVariant | null {
   const sellable = sellableVariantsOf(product);
-  return sellable.length === 1 ? sellable[0].sku_code : null;
+  return sellable.length === 1 ? sellable[0] : null;
+}
+
+export function getSingleSellableSku(product: Product): string | null {
+  return getSingleSellableVariant(product)?.sku_code ?? null;
 }
 
 // Nhãn phân loại hiển thị trong giỏ hàng, dựng từ TÊN TẦNG THẬT (tier_variations)
@@ -176,21 +180,35 @@ export function buildVariantLabel(product: Product, tier1: string, tier2: string
   return parts.length > 0 ? parts.join(' · ') : undefined;
 }
 
+export type CartItemSkuStatus = 'ok' | 'product_not_found' | 'sku_changed';
+
+// Phân biệt RÕ hai lý do khiến món hàng không còn hợp lệ, để UI báo đúng câu
+// (lời người bán) cho từng ca thay vì gộp chung:
+// - 'product_not_found': sản phẩm không còn trong dữ liệu đã tải (bị gỡ khỏi
+//   cửa hàng, hoặc ngoài trang đầu danh sách) -- KHÔNG đoán, không suy diễn.
+// - 'sku_changed': sản phẩm vẫn còn, nhưng skuCode không khớp ĐÚNG một biến
+//   thể bán được nào của chính sản phẩm đó (PIM đã đổi/xoá tổ hợp).
+export function describeCartItemSkuStatus(item: CartItem, products: Product[]): CartItemSkuStatus {
+  const product = products.find(p => p.id === item.productId);
+  if (!product) return 'product_not_found';
+  if (item.skuCode && sellableVariantsOf(product).some(v => v.sku_code === item.skuCode)) {
+    return 'ok';
+  }
+  return 'sku_changed';
+}
+
 // Món hàng trong giỏ hợp lệ khi (1) sản phẩm của nó vẫn còn trong dữ liệu đã
 // tải (theo productId) và (2) skuCode khớp ĐÚNG một biến thể bán được của
 // chính sản phẩm đó -- không chỉ kiểm rỗng/khớp mẫu chuỗi "SKU-<id>-...".
 // Sản phẩm không tìm thấy hoặc biến thể đã đổi/xoá (PIM cập nhật lại tổ hợp)
 // đều bị coi là không hợp lệ, không đoán.
 export function isCartItemSkuValid(item: CartItem, products: Product[]): boolean {
-  if (!item.skuCode) return false;
-  const product = products.find(p => p.id === item.productId);
-  if (!product) return false;
-  return sellableVariantsOf(product).some(v => v.sku_code === item.skuCode);
+  return describeCartItemSkuStatus(item, products) === 'ok';
 }
 
 export function buildDefaultCartItem(product: Product): CartItem | null {
-  const skuCode = getSingleSellableSku(product);
-  if (!skuCode) {
+  const variant = getSingleSellableVariant(product);
+  if (!variant) {
     // Có từ hai biến thể bán được trở lên (một tầng nhiều lựa chọn, hoặc hai
     // tầng) -- thêm nhanh không được tự chọn tổ hợp đại diện. Xem ProductCard/
     // QuickViewModal: những nơi gọi hàm này phải tự chặn từ trước bằng
@@ -198,15 +216,17 @@ export function buildDefaultCartItem(product: Product): CartItem | null {
     return null;
   }
 
-  const selectedColor = product.colors && product.colors.length === 1 ? product.colors[0] : 'Tiêu chuẩn';
-  // Không bịa trọng lượng theo ngành -- lấy từ thông số thật nếu có, còn lại
-  // dùng sentinel "Tiêu chuẩn" chung (giống màu sắc) khi sản phẩm chưa có dữ liệu.
-  const selectedWeight = product.specs?.weight || 'Tiêu chuẩn';
+  // Dùng ĐÚNG tier_1_option/tier_2_option của chính biến thể bán được duy
+  // nhất -- không suy đoán qua colors[]/specs.weight. "Tiêu chuẩn" chỉ là
+  // sentinel hiển thị khi biến thể thật sự KHÔNG có tầng đó, không bao giờ
+  // được coi là một lựa chọn thật trong buildVariantLabel.
+  const selectedColor = variant.tier_1_option || 'Tiêu chuẩn';
+  const selectedWeight = variant.tier_2_option || product.specs?.weight || 'Tiêu chuẩn';
 
   return {
     id: `${product.id}-${selectedWeight}-${selectedColor}`,
     productId: product.id,
-    skuCode,
+    skuCode: variant.sku_code,
     name: product.name,
     brand: product.brand,
     image: product.image,
