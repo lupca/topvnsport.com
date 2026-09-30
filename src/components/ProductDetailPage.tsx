@@ -85,8 +85,11 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   const currentStock = matchedVariant?.stock ?? product.stock ?? 0;
   const isOutOfStock = currentStock <= 0;
 
-  const baseOriginalPrice = product.originalPrice ?? product.price;
-  const baseSalePrice = product.computedPrice ?? product.salePrice ?? product.price;
+  // Giá thật quyết định theo biến thể đang chọn (giá 0 = chưa có giá); chưa chọn
+  // được biến thể thì theo giá thật của sản phẩm.
+  const hasPrice = matchedVariant ? matchedVariant.price > 0 : product.price !== undefined;
+  const baseOriginalPrice = product.originalPrice ?? product.price ?? 0;
+  const baseSalePrice = product.computedPrice ?? product.salePrice ?? product.price ?? 0;
 
   const originalPriceToUse = matchedVariant?.originalPrice ?? matchedVariant?.price ?? baseOriginalPrice;
   const salePriceToUse = matchedVariant?.computedPrice ?? matchedVariant?.price ?? baseSalePrice;
@@ -117,7 +120,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
     ? (isDynamicStringingActive ? {
         id: activeStringValue,
         name: activeStringValue,
-        brand: product.brand as any,
+        brand: product.brand,
         // Không bịa loại/độ dày -- chỉ điền khi khớp được sản phẩm cước thật
         // trong catalog (stringOptions), còn lại để undefined.
         ...inferStringMeta(activeStringValue, stringOptions),
@@ -166,6 +169,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   }, [mediaByTier1, mediaByTier2]);
 
   const handleAddToCart = () => {
+    if (!hasPrice) return;
     onAddToCartWithSpecs(product, resolvedWeight, resolvedColor, resolvedStringChoice, tension);
   };
 
@@ -189,6 +193,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
             product={product}
             isRacket={isRacket}
             totalDisplayPrice={totalDisplayPrice}
+            hasPrice={hasPrice}
             displayOriginalPrice={displayOriginalPrice}
             hasDiscount={hasDiscount}
             discountPercent={discountPercent}
@@ -229,6 +234,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
         productName={product.name}
         productImage={product.image}
         totalDisplayPrice={totalDisplayPrice}
+        hasPrice={hasPrice}
         isOutOfStock={isOutOfStock}
         onBuyNow={handleAddToCart}
       />
