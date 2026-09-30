@@ -266,7 +266,7 @@ export default function RacketFinder({ products }: RacketFinderProps) {
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-gray-800 flex items-center justify-between">
-                      <span className="text-sm font-extrabold text-brand-primary font-display">{(p.salePrice || p.price).toLocaleString('vi-VN')}đ</span>
+                      <span className="text-sm font-extrabold text-brand-primary font-display">{p.price === undefined ? 'Liên hệ để biết giá' : `${(p.salePrice || p.price).toLocaleString('vi-VN')}đ`}</span>
                       <span className="text-[10px] bg-brand-primary/20 text-brand-primary font-bold px-2 py-0.5 rounded-full uppercase">Xem ngay &rarr;</span>
                     </div>
                   </div>
