@@ -2,8 +2,8 @@ import { Blog, Branch, Category, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
 import { delay, OMS_API_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { findManualChannel, findStorefrontChannel, getChannels } from './omsHelpers';
-import { extractItems, mapPmiProduct } from './productMappers';
-import { CreateOrderPayload, OmsChannel, OmsCustomer, OmsCustomerInput, PmiProduct, SendOtpResponse, VerifyOtpResponse } from './types';
+import { mapPmiProduct } from './productMappers';
+import { ApiListResponse, CreateOrderPayload, OmsChannel, OmsCustomer, OmsCustomerInput, PmiProduct, SendOtpResponse, VerifyOtpResponse } from './types';
 
 async function fetchWmsStock(skuCodes: string[]): Promise<Record<string, number>> {
   const uniqueSkus = Array.from(new Set(skuCodes.filter((sku) => Boolean(sku && sku.trim()))));
@@ -103,43 +103,67 @@ async function mergeWmsStock(products: Product[]): Promise<Product[]> {
 
 async function getCategories(): Promise<Category[]> {
   const url = `${PMI_PROXY_URL}/public/voma-categories`;
+  let response: Response;
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      // Không fallback im lặng: lỗi phải thấy được (status + URL), nhưng
-      // trang vẫn chạy tiếp với danh mục rỗng thay vì crash.
-      console.error(`Failed to fetch categories: ${url} returned status ${response.status}`);
-      return [];
-    }
-
-    const data = await response.json();
-    return Array.isArray(data) ? data : [];
+    response = await fetch(url);
   } catch (error) {
     console.error(`Failed to fetch categories from ${url}:`, error);
-    return [];
+    throw error;
   }
+  if (!response.ok) {
+    console.error(`Failed to fetch categories: ${url} returned status ${response.status}`);
+    throw new Error(`PMI getCategories failed with status ${response.status}`);
+  }
+  const data = await response.json();
+  if (!Array.isArray(data)) {
+    console.error(`Failed to fetch categories: ${url} returned a non-array body`);
+    throw new Error('PMI getCategories returned an unexpected body');
+  }
+  return data;
+}
+
+const PRODUCTS_PAGE_SIZE = 100;
+
+// Lấy HẾT mọi trang /public/products (hợp đồng PIM: page>=1, limit<=100, trả
+// {items,total,page,limit,pages}). Lỗi/thiếu món -> ném, không trả danh sách cụt.
+async function fetchAllPmiProducts(): Promise<PmiProduct[]> {
+  const all: PmiProduct[] = [];
+  let pages = 1;
+  let total = 0;
+  for (let page = 1; page <= pages; page += 1) {
+    const url = `${PMI_PROXY_URL}/public/products?page=${page}&limit=${PRODUCTS_PAGE_SIZE}`;
+    let response: Response;
+    try {
+      response = await fetch(url);
+    } catch (error) {
+      console.error(`Failed to fetch products from ${url}:`, error);
+      throw error;
+    }
+    if (!response.ok) {
+      console.error(`Failed to fetch products: ${url} returned status ${response.status}`);
+      throw new Error(`PMI getProducts failed with status ${response.status}`);
+    }
+    const data = (await response.json()) as ApiListResponse<PmiProduct>;
+    if (!data || !Array.isArray(data.items) || typeof data.total !== 'number' || typeof data.pages !== 'number') {
+      console.error(`Failed to fetch products: ${url} returned a body without items/total/pages`);
+      throw new Error('PMI getProducts returned an unexpected body');
+    }
+    all.push(...data.items);
+    pages = data.pages;
+    total = data.total;
+  }
+  if (all.length !== total) {
+    console.error(`Failed to fetch products: collected ${all.length} items but PIM reports total=${total}`);
+    throw new Error(`PMI getProducts collected ${all.length} of ${total} products`);
+  }
+  return all;
 }
 
 async function getProducts(): Promise<Product[]> {
   await delay(SIMULATED_LATENCY);
-  try {
-    const [response, categories] = await Promise.all([
-      fetch(`${PMI_PROXY_URL}/public/products?limit=100`),
-      getCategories()
-    ]);
-
-    if (!response.ok) {
-      throw new Error(`PMI getProducts failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-    const pmiProducts = extractItems<PmiProduct>(data);
-    const products = pmiProducts.map((product) => mapPmiProduct(product, categories));
-    return await mergeWmsStock(products);
-  } catch (error) {
-    console.warn('Failed to fetch products:', error);
-    return [];
-  }
+  const [pmiProducts, categories] = await Promise.all([fetchAllPmiProducts(), getCategories()]);
+  const products = pmiProducts.map((product) => mapPmiProduct(product, categories));
+  return mergeWmsStock(products);
 }
 
 async function getProductById(id: string): Promise<Product | null> {
@@ -164,6 +188,7 @@ async function getProductById(id: string): Promise<Product | null> {
     console.error(error);
   }
 
+  // Lỗi tải danh sách ở đây được ném lên caller (không còn trả null giả).
   const products = await getProducts();
   return products.find((product) => product.id === id) || null;
 }

@@ -1,13 +1,14 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { sportApi } from '../services/sport-api/index';
 
-function mockFetch(productsResponse: unknown) {
+function mockFetch(productsResponse: { items: unknown[] }) {
+  const page = { ...productsResponse, total: productsResponse.items.length, page: 1, limit: 100, pages: 1 };
   global.fetch = vi.fn().mockImplementation((url: string) => {
     if (url.includes('/public/stock')) {
       return Promise.resolve({ ok: true, json: () => Promise.resolve({ stock: {} }) });
     }
     if (url.includes('/public/products')) {
-      return Promise.resolve({ ok: true, json: () => Promise.resolve(productsResponse) });
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(page) });
     }
     if (url.includes('/public/voma-categories')) {
       return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
