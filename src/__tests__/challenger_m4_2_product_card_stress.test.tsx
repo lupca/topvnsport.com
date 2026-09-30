@@ -365,7 +365,7 @@ describe('Challenger 2 - ProductCard & productMappers Adversarial Stress Tests',
 
       const mappedEmpty = mapPmiProduct(emptyProduct, []);
       expect(mappedEmpty.hasActivePromotion).toBe(false);
-      expect(mappedEmpty.price).toBe(100000); // Default fallback price
+      expect(mappedEmpty.price).toBeUndefined();
       expect(mappedEmpty.computedPrice).toBeUndefined();
       expect(mappedEmpty.originalPrice).toBeUndefined();
       expect(mappedEmpty.percentageDiscount).toBeUndefined();

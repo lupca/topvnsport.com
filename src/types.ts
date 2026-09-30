@@ -52,15 +52,17 @@ export interface Product {
   id: string;
   slug?: string;
   name: string;
-  brand: 'Yonex' | 'Lining' | 'Victor' | 'Kumpoo' | 'Other';
+  // Nguyên chuỗi người bán nhập (đã trim); undefined = không có thương hiệu.
+  brand?: string;
   image: string;
   gallery?: string[];
   media?: ProductMedia[];
-  category: string;
+  category?: string;
   // Mã ngành VOMA (vd "VC001491"). Dùng mã để so khớp/lọc theo ngành vì tên
   // hiển thị (category) có thể đổi hoặc trùng giữa các nhánh cây khác nhau.
   categoryCode?: string;
-  price: number;
+  // undefined = chưa có giá thật (hiện 'Liên hệ để biết giá', không cho thêm giỏ).
+  price?: number;
   salePrice?: number;
   computedPrice?: number;
   originalPrice?: number;
@@ -132,7 +134,7 @@ export interface Branch {
 export interface StringOption {
   id: string;
   name: string;
-  brand: 'Yonex' | 'Lining' | 'Victor';
+  brand?: string;
   // Chỉ có khi khớp được với một sản phẩm cước thật trong catalog -- không
   // bịa giá trị khi không có dữ liệu (xem product-detail/helpers.ts#inferStringMeta).
   type?: 'Trợ lực / Âm thanh' | 'Độ bền' | 'Kiểm soát';

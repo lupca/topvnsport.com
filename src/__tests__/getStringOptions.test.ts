@@ -23,8 +23,8 @@ describe('sportApi.getStringOptions', () => {
   });
 
   test('nhận diện sản phẩm cước qua thuộc tính thật `thickness`, không qua tên/ngành', async () => {
-    // Sản phẩm này KHÔNG có voma_category_id khớp ngành nào (category sẽ là
-    // "Chưa phân loại", không phải "Cước") -- nếu logic cũ so category === 'Cước'
+    // Sản phẩm này KHÔNG có voma_category_id khớp ngành nào (category là
+    // undefined, không phải "Cước") -- nếu logic cũ so category === 'Cước'
     // thì test này sẽ trả rỗng và ĐỎ.
     mockFetch({
       items: [

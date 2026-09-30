@@ -207,6 +207,8 @@ export function isCartItemSkuValid(item: CartItem, products: Product[]): boolean
 }
 
 export function buildDefaultCartItem(product: Product): CartItem | null {
+  // Không có giá thật thì không bao giờ tạo món hàng (không gửi giá bịa đi).
+  if (product.price === undefined) return null;
   const variant = getSingleSellableVariant(product);
   if (!variant) {
     // Có từ hai biến thể bán được trở lên (một tầng nhiều lựa chọn, hoặc hai
@@ -230,7 +232,7 @@ export function buildDefaultCartItem(product: Product): CartItem | null {
     name: product.name,
     brand: product.brand,
     image: product.image,
-    price: product.salePrice || product.price,
+    price: product.salePrice || (product.price as number),
     selectedWeight,
     selectedColor,
     variantLabel: buildVariantLabel(product, selectedColor, selectedWeight),
@@ -247,6 +249,7 @@ export function buildConfiguredCartItem(
   stringChoice: StringOption | null,
   tension: number
 ): CartItem | null {
+  if (product.price === undefined) return null;
   const skuCode = resolveSkuCode(product, color, weight);
   if (!skuCode) {
     return null;
@@ -259,7 +262,7 @@ export function buildConfiguredCartItem(
     name: product.name,
     brand: product.brand,
     image: product.image,
-    price: product.salePrice || product.price,
+    price: product.salePrice || (product.price as number),
     selectedWeight: weight,
     selectedColor: color,
     variantLabel: buildVariantLabel(product, color, weight),

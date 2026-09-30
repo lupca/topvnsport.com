@@ -20,10 +20,12 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
   // lựa chọn hoặc hai tầng phải dẫn khách sang trang chi tiết để chọn đủ,
   // không tự chọn tổ hợp đại diện (options[0]) rồi gửi SKU.
   const canQuickAdd = getSingleSellableSku(product) !== null;
-  const hasActivePromotion = Boolean(
+  // Không có giá thật -> 'Liên hệ để biết giá', không cho thêm giỏ.
+  const hasPrice = product.price !== undefined;
+  const hasActivePromotion = hasPrice && Boolean(
     product.hasActivePromotion ||
     (product.computedPrice !== undefined && product.originalPrice !== undefined && product.computedPrice < product.originalPrice) ||
-    (product.salePrice !== undefined && product.salePrice < product.price)
+    (product.salePrice !== undefined && product.salePrice < (product.price as number))
   );
 
   const originalPrice = product.originalPrice ?? product.price;
@@ -95,7 +97,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           </button>
           <button
             onClick={(e) => {
-              if (product.stock <= 0) return;
+              if (product.stock <= 0 || !hasPrice) return;
               if (!canQuickAdd) {
                 e.stopPropagation();
                 navigate(getProductPath(product));
@@ -103,13 +105,13 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
               }
               onAddToCart(product, e);
             }}
-            disabled={product.stock <= 0}
+            disabled={product.stock <= 0 || !hasPrice}
             className={`p-2 rounded-full shadow-md transition duration-200 ${
-              product.stock <= 0
+              product.stock <= 0 || !hasPrice
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-white text-gray-800 hover:bg-brand-primary hover:text-white hover:scale-110'
             }`}
-            title={product.stock <= 0 ? 'Sản phẩm hết hàng' : canQuickAdd ? 'Thêm nhanh vào giỏ' : 'Chọn phân loại'}
+            title={product.stock <= 0 ? 'Sản phẩm hết hàng' : !hasPrice ? 'Liên hệ để biết giá' : canQuickAdd ? 'Thêm nhanh vào giỏ' : 'Chọn phân loại'}
           >
             <ShoppingCart className="w-5 h-5" />
           </button>
@@ -121,8 +123,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
         <div className="space-y-1.5 cursor-pointer">
           {/* Brand & category */}
           <div className="flex items-center justify-between text-[11px] font-mono font-bold text-gray-400">
-            <span className="text-brand-primary uppercase tracking-wider">{product.brand}</span>
-            <span>{product.category}</span>
+            {product.brand && <span className="text-brand-primary uppercase tracking-wider" data-testid="brand-label">{product.brand}</span>}
+            {product.category && <span data-testid="category-label">{product.category}</span>}
           </div>
 
           {/* Product Name */}
@@ -177,7 +179,11 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
         {/* Pricing Block */}
         <div className="mt-4 flex items-end justify-between pt-2 border-t border-gray-50">
           <div>
-            {hasActivePromotion ? (
+            {!hasPrice ? (
+              <span className="text-sm font-bold text-gray-600 font-display" data-testid="no-price">
+                Liên hệ để biết giá
+              </span>
+            ) : hasActivePromotion ? (
               <>
                 <span className="text-base font-bold text-red-600 font-display block leading-tight" data-testid="sale-price">
                   {(salePrice ?? 0).toLocaleString('vi-VN')}đ

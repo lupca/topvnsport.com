@@ -30,7 +30,7 @@ function toProduct(entry: FixtureProduct): Product {
   return {
     id: String(entry.id),
     name: `Fixture product ${entry.id}`,
-    brand: 'Other',
+    brand: 'Kizuna',
     category: 'Test',
     price: 100000,
     image: 'https://example.com/x.jpg',

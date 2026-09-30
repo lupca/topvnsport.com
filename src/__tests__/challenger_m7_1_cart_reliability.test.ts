@@ -52,7 +52,7 @@ const mockAccessory: Product = {
 const mockSimpleProduct: Product = {
   id: 'PROD-SIMPLE-1',
   name: 'Ống đựng cầu lông TopVNSport',
-  brand: 'Other',
+  brand: 'Kizuna',
   category: 'Phụ kiện',
   price: 90000,
   image: 'https://example.com/tube.jpg',

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
 import { getProductPath } from '../utils/productSlug';
+import { getBrands } from '../utils/brands';
 
 export const normalizeSearchText = (value: string) =>
   value
@@ -17,9 +18,9 @@ export const normalizeSearchText = (value: string) =>
 export const buildSearchIndex = (product: Product) =>
   normalizeSearchText([
     product.name,
-    product.brand,
+    product.brand || '',
     product.series || '',
-    product.category,
+    product.category || '',
     product.description || '',
     ...(product.features || [])
   ].join(' '));
@@ -202,13 +203,13 @@ export default function Header({ cartCount, openCart, products, categories }: He
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-sm font-mono font-bold uppercase">{p.brand}</span>
+                        {p.brand && <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-sm font-mono font-bold uppercase">{p.brand}</span>}
                         {p.specs.weight && <span className="text-[10px] text-gray-400">{p.specs.weight}</span>}
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs font-bold text-brand-primary">{(p.salePrice || p.price).toLocaleString('vi-VN')}đ</p>
-                      {p.salePrice && (
+                      <p className="text-xs font-bold text-brand-primary">{p.price === undefined ? 'Liên hệ để biết giá' : `${(p.salePrice || p.price).toLocaleString('vi-VN')}đ`}</p>
+                      {p.price !== undefined && p.salePrice && (
                         <p className="text-[10px] text-gray-400 line-through">{p.price.toLocaleString('vi-VN')}đ</p>
                       )}
                     </div>
@@ -367,10 +368,10 @@ export default function Header({ cartCount, openCart, products, categories }: He
                   <div className="space-y-2">
                     <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Thương Hiệu Hot</h4>
                     <div className="flex flex-wrap gap-1.5">
-                      {['Yonex', 'Lining', 'Victor', 'Kumpoo', 'Mizuno', 'Joola'].map(brand => (
+                      {getBrands(products).map(brand => (
                         <button
                           key={brand}
-                          onClick={() => { navigate(`/catalog?brand=${brand}`); setIsMobileMenuOpen(false); }}
+                          onClick={() => { navigate(`/catalog?brand=${encodeURIComponent(brand)}`); setIsMobileMenuOpen(false); }}
                           className="text-[11px] font-bold px-2.5 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-gray-700 hover:bg-brand-light hover:text-brand-primary transition"
                         >
                           {brand}

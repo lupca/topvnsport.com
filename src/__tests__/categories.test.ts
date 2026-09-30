@@ -13,7 +13,7 @@ function makeProduct(overrides: Partial<Product>): Product {
     name: overrides.name || 'Sản phẩm',
     brand: 'Yonex',
     image: '',
-    category: overrides.category || 'Chưa phân loại',
+    category: overrides.category || 'Vợt cầu lông',
     categoryCode: overrides.categoryCode,
     price: 100000,
     specs: {},

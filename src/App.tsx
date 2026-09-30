@@ -16,7 +16,7 @@ import ScrollToTop from './components/ScrollToTop';
 import StoreLocator from './components/StoreLocator';
 import { fetchAppData } from './features/appData/appDataSlice';
 import CatalogPage from './features/catalog/CatalogPage';
-import { setSearchQuery, setSelectedCategory } from './features/catalog/catalogSlice';
+import { setSearchQuery, setSelectedBrand, setSelectedCategory } from './features/catalog/catalogSlice';
 import {
   addCartItem,
   buildDefaultCartItem,
@@ -67,7 +67,9 @@ export default function App() {
 
     const categoryParam = searchParams.get('category');
     const searchParam = searchParams.get('search');
+    const brandParam = searchParams.get('brand');
     dispatch(setSelectedCategory(categoryParam ? decodeURIComponent(categoryParam) : 'Tất cả'));
+    dispatch(setSelectedBrand(brandParam ? [brandParam] : []));
     dispatch(setSearchQuery(searchParam ? decodeURIComponent(searchParam) : ''));
   }, [dispatch, location.pathname, searchParams]);
 
