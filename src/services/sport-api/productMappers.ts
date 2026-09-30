@@ -23,17 +23,13 @@ function normalizeText(value: string): string {
     .trim();
 }
 
-function mapBrandValue(rawBrand: string | undefined): Product['brand'] | null {
-  if (!rawBrand) {
-    return null;
+// Nguyên chuỗi người bán nhập (đã trim). 'No Brand'/'NoBrand' = không thương hiệu.
+function mapBrandValue(rawBrand: string | undefined): string | undefined {
+  const brand = rawBrand?.trim();
+  if (!brand || /^no\s*brand$/i.test(brand)) {
+    return undefined;
   }
-
-  const normalized = normalizeText(rawBrand);
-  if (normalized.includes('yonex')) return 'Yonex';
-  if (normalized.includes('li-ning') || normalized.includes('lining')) return 'Lining';
-  if (normalized.includes('victor')) return 'Victor';
-  if (normalized.includes('kumpoo')) return 'Kumpoo';
-  return 'Other';
+  return brand;
 }
 
 function mapPmiAttributes(values: PmiAttributeValue[]): ProductAttribute[] {
@@ -139,14 +135,14 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
   const name = (pmiProduct.name || 'Sản phẩm').trim();
   const attributes = mapPmiAttributes(pmiProduct.attribute_values || []);
   const attrByCode = buildAttrByCode(attributes);
-  const brand = mapBrandValue(attrByCode.brand) || 'Other';
+  const brand = mapBrandValue(attrByCode.brand);
   const matchedCategory = categories.find((item) => item.id === pmiProduct.voma_category_id);
-  const category = matchedCategory?.name || 'Chưa phân loại';
+  const category = matchedCategory?.name;
   const categoryCode = matchedCategory?.code;
 
   const parsedBalance = Number(attrByCode.balance);
   const parsedMaxTension = Number(attrByCode.maxTension);
-  const resolvedPrice = minPrice > 0 ? minPrice : 100000;
+  const resolvedPrice = minPrice > 0 ? minPrice : undefined;
 
   const hasActivePromotion = Boolean(
     pmiProduct.has_active_promotion || mappedVariants.some((v) => v.hasActivePromotion)

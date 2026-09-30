@@ -189,12 +189,6 @@ function resolveStringType(stiffness: string | undefined): StringOption['type'] 
   return 'Trợ lực / Âm thanh';
 }
 
-function resolveStringBrand(brand: Product['brand']): StringOption['brand'] {
-  if (brand === 'Lining') return 'Lining';
-  if (brand === 'Victor') return 'Victor';
-  return 'Yonex';
-}
-
 async function getStringOptions(): Promise<StringOption[]> {
   await delay(SIMULATED_LATENCY);
   try {
@@ -205,15 +199,22 @@ async function getStringOptions(): Promise<StringOption[]> {
       product.attributes?.some((attribute) => attribute.code === 'thickness')
     );
 
-    return stringProducts.map((product) => ({
-      id: product.id,
-      name: product.name,
-      brand: resolveStringBrand(product.brand),
-      type: resolveStringType(product.specs.stiffness),
-      thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value,
-      price: product.price,
-      colors: product.colors || []
-    }));
+    // Cước không có giá thật không thể thêm giỏ -> bỏ khỏi bộ chọn, nói rõ id.
+    return stringProducts.flatMap((product): StringOption[] => {
+      if (product.price === undefined) {
+        console.warn(`Bỏ cước ${product.id} khỏi bộ chọn cước: chưa có giá thật`);
+        return [];
+      }
+      return [{
+        id: product.id,
+        name: product.name,
+        brand: product.brand,
+        type: resolveStringType(product.specs.stiffness),
+        thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value,
+        price: product.price,
+        colors: product.colors || []
+      }];
+    });
   } catch (error) {
     console.warn('Failed to fetch dynamic string options from API:', error);
     return [];
