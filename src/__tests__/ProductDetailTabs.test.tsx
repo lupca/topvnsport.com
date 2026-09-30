@@ -17,9 +17,11 @@ const racketProduct: Product = {
   // cân/độ cứng/cân bằng/sức căng.
   specs: {},
   description: 'Mô tả sản phẩm.',
-  attributes: [
-    { id: '1', code: 'brand', name: 'Thương hiệu', value: 'Yonex' },
-    { id: '2', code: 'origin', name: 'Xuất xứ', value: 'Việt Nam' }
+  // Nguồn hiển thị là thuộc tính VOMA; attributes cũ chứa mã sàn KHÔNG được hiện.
+  attributes: [{ id: '9', code: 'origin', name: 'Quốc gia xuất xứ', value: '1000850' }],
+  vomaAttributes: [
+    { code: 'brand', name: 'Thương hiệu', value: 'Yonex' },
+    { code: 'origin', name: 'Xuất xứ', value: 'Trung Quốc' }
   ],
   reviews: [],
   stock: 10
@@ -56,5 +58,25 @@ describe('ProductDetailTabs', () => {
 
     expect(screen.queryByText(/Đánh giá tay vợt \(\d+\)/)).toBeNull();
     expect(screen.getByText('Đánh giá tay vợt')).toBeTruthy();
+  });
+
+  it.each(['details', 'tech'] as const)('tab %s hiện tên giá trị VOMA, không hiện mã 1000850 của attributes cũ', (tab) => {
+    const { container } = render(
+      <ProductDetailTabs product={racketProduct} isRacket={true} activeTab={tab} onTabChange={vi.fn()} />
+    );
+    expect(screen.getByText('Trung Quốc')).toBeTruthy();
+    expect(container.textContent).not.toContain('1000850');
+  });
+
+  it.each(['details', 'tech'] as const)('tab %s: không có vomaAttributes và không có spec vợt -> câu trống hiện có', (tab) => {
+    render(
+      <ProductDetailTabs
+        product={{ ...racketProduct, vomaAttributes: undefined }}
+        isRacket={false}
+        activeTab={tab}
+        onTabChange={vi.fn()}
+      />
+    );
+    expect(screen.getByText('Sản phẩm chưa có thông số kỹ thuật chi tiết.')).toBeTruthy();
   });
 });

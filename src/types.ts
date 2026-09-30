@@ -24,6 +24,12 @@ export interface ProductAttribute {
   value: string;
 }
 
+export interface ProductVomaAttribute {
+  code: string;
+  name: string;
+  value: string;
+}
+
 export interface ProductTechnology {
   name: string;
   description: string;
@@ -71,6 +77,7 @@ export interface Product {
   characteristics?: 'Tấn Công' | 'Phòng Thủ' | 'Toàn Diện' | 'Người Mới'; // For rackets/paddles
   description: string;
   attributes?: ProductAttribute[];
+  vomaAttributes?: ProductVomaAttribute[];
   features?: string[];
   technologies?: ProductTechnology[];
   reviews: ProductReview[];

@@ -37,6 +37,14 @@ export type PmiAttributeValue = {
   attribute?: PmiAttribute | null;
 };
 
+export type PmiVomaAttributeValue = {
+  code: string;
+  name: string;
+  value: string | null;
+  value_code?: string | null;
+  unit?: string | null;
+};
+
 export type PmiTierVariation = {
   id?: number;
   product_id?: number;
@@ -54,6 +62,7 @@ export type PmiProduct = {
   voma_category_id?: number | null;
   family_id?: number;
   attribute_values?: PmiAttributeValue[];
+  voma_attribute_values?: PmiVomaAttributeValue[];
   variants?: PmiVariant[];
   media?: PmiMedia[];
   tier_variations?: PmiTierVariation[];

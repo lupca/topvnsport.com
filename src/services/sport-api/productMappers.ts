@@ -1,7 +1,7 @@
-import { Category, Product, ProductAttribute, ProductVariant } from '../../types';
+import { Category, Product, ProductAttribute, ProductVariant, ProductVomaAttribute } from '../../types';
 import { slugifyProductName } from '../../utils/productSlug';
 import { NO_IMAGE_URL } from './constants';
-import { ApiListResponse, PmiAttributeValue, PmiProduct, PmiVariant } from './types';
+import { ApiListResponse, PmiAttributeValue, PmiProduct, PmiVariant, PmiVomaAttributeValue } from './types';
 
 export function extractItems<T>(data: unknown): T[] {
   if (Array.isArray(data)) {
@@ -56,6 +56,26 @@ function mapPmiAttributes(values: PmiAttributeValue[]): ProductAttribute[] {
       };
     })
     .filter((item): item is ProductAttribute => Boolean(item));
+}
+
+const compact = (text: string) => text.replace(/\s+/g, '').toLowerCase();
+
+// Hiển thị thuộc tính VOMA: chỉ dùng `value` (tên đã giải). Không bao giờ dùng
+// value_code. value null = PIM không tra được tên -> bỏ dòng và báo rõ.
+export function mapVomaAttributes(rows: PmiVomaAttributeValue[], productId: number | string): ProductVomaAttribute[] {
+  const result: ProductVomaAttribute[] = [];
+  for (const row of rows) {
+    if (!row.name) continue;
+    const value = row.value?.trim();
+    if (!value) {
+      console.warn(`[voma_attribute_values] product ${productId}: thuộc tính ${row.code} không có tên giá trị, bỏ qua`);
+      continue;
+    }
+    const unit = row.unit?.trim();
+    const text = unit && !compact(value).endsWith(compact(unit)) ? `${value} ${unit}` : value;
+    result.push({ code: row.code, name: row.name, value: text });
+  }
+  return result;
 }
 
 function buildAttrByCode(attributes: ProductAttribute[]): Record<string, string> {
@@ -195,6 +215,7 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     },
     description: pmiProduct.description || 'Sản phẩm chính hãng.',
     attributes,
+    vomaAttributes: mapVomaAttributes(pmiProduct.voma_attribute_values || [], pmiProduct.id),
     reviews: [],
     stock: stock > 0 ? stock : 0,
     defaultSku: variants.find((variant) => Boolean(variant.sku_code))?.sku_code,
