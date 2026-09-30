@@ -228,7 +228,7 @@ describe('describeSkuSelection -- tổ hợp không tồn tại hoặc nhiều �
   const sparseProduct: Product = {
     id: '999',
     name: 'Sản phẩm test grid thưa',
-    brand: 'Other',
+    brand: 'Kizuna',
     category: 'Test',
     price: 100000,
     image: 'https://example.com/999.jpg',
@@ -252,7 +252,7 @@ describe('describeSkuSelection -- tổ hợp không tồn tại hoặc nhiều �
   const duplicateTierProduct: Product = {
     id: '998',
     name: 'Sản phẩm test trùng tier_1_option',
-    brand: 'Other',
+    brand: 'Kizuna',
     category: 'Test',
     price: 50000,
     image: 'https://example.com/998.jpg',
@@ -295,7 +295,7 @@ describe('F2 -- "SKU bán được" = biến thể có sku_code khác rỗng', (
   const productWithEmptySku: Product = {
     id: '997',
     name: 'Sản phẩm test biến thể sku_code rỗng',
-    brand: 'Other',
+    brand: 'Kizuna',
     category: 'Test',
     price: 100000,
     image: 'https://example.com/997.jpg',
@@ -328,7 +328,7 @@ describe('F_TEST -- sản phẩm không tầng có 2 biến thể ĐỀU có sku
   const ambiguousNoTier: Product = {
     id: '996',
     name: 'Sản phẩm test 2 biến thể không tầng đều bán được',
-    brand: 'Other',
+    brand: 'Kizuna',
     category: 'Test',
     price: 100000,
     image: 'https://example.com/996.jpg',
@@ -394,7 +394,7 @@ describe('buildVariantLabel (F5) -- nhãn dựng từ TÊN TẦNG THẬT, không
     const twoTierSingleVariant: Product = {
       id: '995',
       name: 'Sản phẩm hai tầng chỉ còn một biến thể bán được',
-      brand: 'Other',
+      brand: 'Kizuna',
       category: 'Test',
       price: 100000,
       image: 'https://example.com/995.jpg',
@@ -423,7 +423,7 @@ describe('buildVariantLabel (F5) -- nhãn dựng từ TÊN TẦNG THẬT, không
     const oneTierWithEmptySku: Product = {
       id: '994',
       name: 'Sản phẩm một tầng có biến thể sku_code rỗng',
-      brand: 'Other',
+      brand: 'Kizuna',
       category: 'Test',
       price: 100000,
       image: 'https://example.com/994.jpg',
