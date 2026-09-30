@@ -27,4 +27,23 @@ describe('App banner lỗi tải', () => {
     await waitFor(() => expect(screen.getByText('Không tải được danh mục sản phẩm. Vui lòng tải lại trang.')).toBeInTheDocument());
     expect(screen.getByText('Không tải được danh sách sản phẩm. Vui lòng tải lại trang.')).toBeInTheDocument();
   });
+
+  const CAT = 'Không tải được danh mục sản phẩm. Vui lòng tải lại trang.';
+  const PROD = 'Không tải được danh sách sản phẩm. Vui lòng tải lại trang.';
+
+  it('F-2: chỉ danh mục lỗi -> chỉ hiện câu danh mục', async () => {
+    api.getProducts.mockResolvedValue([]);
+    api.getCategories.mockRejectedValue(new Error('x'));
+    render(<Provider store={store}><MemoryRouter><App /></MemoryRouter></Provider>);
+    await waitFor(() => expect(screen.getByText(CAT)).toBeInTheDocument());
+    expect(screen.queryByText(PROD)).toBeNull();
+  });
+
+  it('F-2: chỉ sản phẩm lỗi -> chỉ hiện câu sản phẩm', async () => {
+    api.getProducts.mockRejectedValue(new Error('x'));
+    api.getCategories.mockResolvedValue([]);
+    render(<Provider store={store}><MemoryRouter><App /></MemoryRouter></Provider>);
+    await waitFor(() => expect(screen.getByText(PROD)).toBeInTheDocument());
+    expect(screen.queryByText(CAT)).toBeNull();
+  });
 });
