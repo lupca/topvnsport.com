@@ -53,9 +53,12 @@ export default function StringingAssistant({
 
   const isEnabled = hasStringingVariation ? isDynamicStringingActive : withStringing;
 
-  const resolveVariantPrice = (targetOption: string): number => {
+  // Giá thật > 0; không có thì undefined (không bịa 0 đồng).
+  const realPrice = (value: number | undefined): number | undefined => (value !== undefined && value > 0 ? value : undefined);
+
+  const resolveVariantPrice = (targetOption: string): number | undefined => {
     if (!stringingVariation || !stringingTierIndex) {
-      return product.salePrice || product.price || 0;
+      return realPrice(product.salePrice || product.price);
     }
 
     const matched = product.variants?.find((variant) => {
@@ -74,7 +77,7 @@ export default function StringingAssistant({
       return tier1Match && tier2Match && otherMatch;
     });
 
-    return matched ? matched.price : product.salePrice || product.price || 0;
+    return realPrice(matched ? matched.price : product.salePrice || product.price);
   };
 
   return (
@@ -142,9 +145,10 @@ export default function StringingAssistant({
                     const noStringOption = stringingVariation.options.find((option) => isNoStringOption(option));
                     const noStringPrice = noStringOption
                       ? resolveVariantPrice(noStringOption)
-                      : product.salePrice || product.price || 0;
+                      : realPrice(product.salePrice || product.price);
                     const optionPrice = resolveVariantPrice(optionName);
-                    const diffPrice = optionPrice - noStringPrice;
+                    // Thiếu giá thật ở một trong hai bên -> không hiện chữ giá.
+                    const diffPrice = optionPrice !== undefined && noStringPrice !== undefined ? optionPrice - noStringPrice : undefined;
                     const metadata = formatStringMeta(inferStringMeta(optionName, stringOptions));
                     const isSelected = activeStringValue === optionName;
 
@@ -172,7 +176,7 @@ export default function StringingAssistant({
                           )}
                         </div>
                         <span className="text-xs font-extrabold text-brand-primary">
-                          {diffPrice > 0 ? `+${diffPrice.toLocaleString('vi-VN')}đ` : 'Miễn phí'}
+                          {diffPrice === undefined ? '' : diffPrice > 0 ? `+${diffPrice.toLocaleString('vi-VN')}đ` : 'Miễn phí'}
                         </span>
                       </div>
                     );

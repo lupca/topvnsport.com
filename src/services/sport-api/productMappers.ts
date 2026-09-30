@@ -89,7 +89,7 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
   const variants = pmiProduct.variants || [];
   const mappedVariants = variants.map((v) => mapProductVariant(v, Number(pmiProduct.id)));
 
-  const prices = variants.map((variant) => Number(variant.price ?? 0)).filter((price) => !isNaN(price) && price >= 0);
+  const prices = variants.map((variant) => Number(variant.price ?? 0)).filter((price) => !isNaN(price) && price > 0);
   const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
   const stock = variants.reduce((sum, variant) => sum + Number(variant.stock || 0), 0);
   const colors = [...new Set(variants.map((variant) => variant.tier_1_option || 'Tiêu chuẩn'))] as string[];
