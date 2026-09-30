@@ -49,11 +49,13 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                   <h3 className="font-display font-black text-lg text-gray-900 leading-snug">{product.name}</h3>
                 </div>
 
-                <div className="max-h-56 overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
-                  <p className="text-xs text-gray-600 leading-relaxed font-light whitespace-pre-line break-words">
-                    {product.description}
-                  </p>
-                </div>
+                {product.description && (
+                  <div className="max-h-56 overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
+                    <p className="text-xs text-gray-600 leading-relaxed font-light whitespace-pre-line break-words">
+                      {product.description}
+                    </p>
+                  </div>
+                )}
 
                 {/* Spec Sheet block -- chỉ hiện khi sản phẩm thuộc ngành vợt
                     VÀ có ít nhất một thông số thật, không bịa dữ liệu */}

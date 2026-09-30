@@ -71,7 +71,7 @@ export interface Product {
   specs: ProductSpecs;
   series?: string; // e.g., "ASTROX", "Axforce", "Exbolt"
   characteristics?: 'Tấn Công' | 'Phòng Thủ' | 'Toàn Diện' | 'Người Mới'; // For rackets/paddles
-  description: string;
+  description?: string;
   attributes?: ProductAttribute[];
   features?: string[];
   technologies?: ProductTechnology[];
