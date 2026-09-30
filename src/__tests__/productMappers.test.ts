@@ -208,6 +208,16 @@ describe('productMappers', () => {
       warn.mockRestore();
     });
 
+    it('dòng thiếu name bị bỏ kèm console.warn nêu product id + code', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const p = map([{ code: 'origin', name: '', value: 'Trung Quoc' }]);
+      expect(p.vomaAttributes).toEqual([]);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain('77');
+      expect(String(warn.mock.calls[0][0])).toContain('origin');
+      warn.mockRestore();
+    });
+
     it('thiếu trường -> danh sách rỗng dù attribute_values có dòng', () => {
       const p = map(undefined, {
         attribute_values: [{ id: 1, value_string: '1000850', attribute: { id: 1, code: 'origin', name: 'Xuat xu' } as never }]
@@ -220,6 +230,8 @@ describe('productMappers', () => {
       ['85', null, '85'],
       ['85 g', 'g', '85 g'],
       ['85G', ' g ', '85G'],
+      ['85g', 'g', '85g'],
+      ['Strong', 'g', 'Strong g'],
     ])('value %s unit %s -> %s', (value, unit, expected) => {
       const p = map([{ code: 'w', name: 'Nang', value, unit }]);
       expect(p.vomaAttributes?.[0].value).toBe(expected);

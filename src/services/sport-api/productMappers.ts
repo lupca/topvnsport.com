@@ -46,21 +46,29 @@ function mapPmiAttributes(values: PmiAttributeValue[]): ProductAttribute[] {
     .filter((item): item is ProductAttribute => Boolean(item));
 }
 
-const compact = (text: string) => text.replace(/\s+/g, '').toLowerCase();
+// value đã mang đơn vị khi tận cùng bằng unit NGAY SAU chữ số/khoảng trắng ('85g', '85 g'), không phải 'Strong'.
+const hasUnit = (value: string, unit: string) => {
+  const v = value.toLowerCase();
+  const u = unit.toLowerCase();
+  return v.endsWith(u) && (v.length === u.length || /[\d\s]/.test(v[v.length - u.length - 1]));
+};
 
 // Hiển thị thuộc tính VOMA: chỉ dùng `value` (tên đã giải). Không bao giờ dùng
 // value_code. value null = PIM không tra được tên -> bỏ dòng và báo rõ.
 export function mapVomaAttributes(rows: PmiVomaAttributeValue[], productId: number | string): ProductVomaAttribute[] {
   const result: ProductVomaAttribute[] = [];
   for (const row of rows) {
-    if (!row.name) continue;
+    if (!row.name) {
+      console.warn(`[voma_attribute_values] product ${productId}: thuộc tính ${row.code} không có tên, bỏ qua`);
+      continue;
+    }
     const value = row.value?.trim();
     if (!value) {
       console.warn(`[voma_attribute_values] product ${productId}: thuộc tính ${row.code} không có tên giá trị, bỏ qua`);
       continue;
     }
     const unit = row.unit?.trim();
-    const text = unit && !compact(value).endsWith(compact(unit)) ? `${value} ${unit}` : value;
+    const text = unit && !hasUnit(value, unit) ? `${value} ${unit}` : value;
     result.push({ code: row.code, name: row.name, value: text });
   }
   return result;
