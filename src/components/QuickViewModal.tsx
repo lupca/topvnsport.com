@@ -16,6 +16,7 @@ interface QuickViewModalProps {
 export default function QuickViewModal({ product, onClose, onAddToCart }: QuickViewModalProps) {
   const navigate = useNavigate();
   // Thêm nhanh chỉ khi sản phẩm có ĐÚNG một SKU bán được -- xem ProductCard.
+  const hasPrice = product?.price !== undefined;
   const canQuickAdd = product ? getSingleSellableSku(product) !== null : false;
   return (
     <AnimatePresence>
@@ -44,15 +45,17 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
               
               <div className="space-y-4 min-h-0 overflow-y-auto pr-1">
                 <div className="space-y-1">
-                  <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">{product.brand}</span>
+                  {product.brand && <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">{product.brand}</span>}
                   <h3 className="font-display font-black text-lg text-gray-900 leading-snug">{product.name}</h3>
                 </div>
 
-                <div className="max-h-56 overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
-                  <p className="text-xs text-gray-600 leading-relaxed font-light whitespace-pre-line break-words">
-                    {product.description}
-                  </p>
-                </div>
+                {product.description && (
+                  <div className="max-h-56 overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
+                    <p className="text-xs text-gray-600 leading-relaxed font-light whitespace-pre-line break-words">
+                      {product.description}
+                    </p>
+                  </div>
+                )}
 
                 {/* Spec Sheet block -- chỉ hiện khi sản phẩm thuộc ngành vợt
                     VÀ có ít nhất một thông số thật, không bịa dữ liệu */}
@@ -91,14 +94,18 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-lg font-extrabold text-brand-primary font-display">{(product.salePrice || product.price).toLocaleString('vi-VN')}đ</span>
+                    {hasPrice ? (
+                      <span className="text-lg font-extrabold text-brand-primary font-display">{((product.salePrice || product.price) as number).toLocaleString('vi-VN')}đ</span>
+                    ) : (
+                      <span className="text-sm font-bold text-gray-600 font-display" data-testid="no-price">Liên hệ để biết giá</span>
+                    )}
                     {product.stock <= 0 && (
                       <p className="text-xs text-red-500 font-semibold mt-1">Tạm hết hàng</p>
                     )}
                   </div>
                   <button
                     onClick={() => {
-                      if (product.stock <= 0) return;
+                      if (product.stock <= 0 || !hasPrice) return;
                       if (!canQuickAdd) {
                         onClose();
                         navigate(getProductPath(product));
@@ -107,9 +114,9 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                       onAddToCart(product);
                       onClose();
                     }}
-                    disabled={product.stock <= 0}
+                    disabled={product.stock <= 0 || !hasPrice}
                     className={`text-xs font-bold uppercase tracking-wider px-6 py-2.5 rounded-full flex items-center gap-1.5 transition shadow-sm focus:outline-hidden ${
-                      product.stock <= 0
+                      product.stock <= 0 || !hasPrice
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         : 'bg-brand-primary hover:bg-brand-secondary text-white hover:shadow-md focus:ring-2 focus:ring-brand-primary/30'
                     }`}

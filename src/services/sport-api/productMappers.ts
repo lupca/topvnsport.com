@@ -15,25 +15,13 @@ export function extractItems<T>(data: unknown): T[] {
   return [];
 }
 
-function normalizeText(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim();
-}
-
-function mapBrandValue(rawBrand: string | undefined): Product['brand'] | null {
-  if (!rawBrand) {
-    return null;
+// Nguyên chuỗi người bán nhập (đã trim). 'No Brand'/'NoBrand' = không thương hiệu.
+function mapBrandValue(rawBrand: string | undefined): string | undefined {
+  const brand = rawBrand?.trim();
+  if (!brand || /^no\s*brand$/i.test(brand)) {
+    return undefined;
   }
-
-  const normalized = normalizeText(rawBrand);
-  if (normalized.includes('yonex')) return 'Yonex';
-  if (normalized.includes('li-ning') || normalized.includes('lining')) return 'Lining';
-  if (normalized.includes('victor')) return 'Victor';
-  if (normalized.includes('kumpoo')) return 'Kumpoo';
-  return 'Other';
+  return brand;
 }
 
 function mapPmiAttributes(values: PmiAttributeValue[]): ProductAttribute[] {
@@ -117,14 +105,20 @@ export function mapProductVariant(variant: PmiVariant, productId: number): Produ
   };
 }
 
-export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): Product {
+// Sản phẩm không tên thì không có gì để hiện cho khách -> null + báo rõ id.
+export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): Product | null {
+  const name = (pmiProduct.name ?? '').trim();
+  if (!name) {
+    console.error(`Bỏ sản phẩm ${pmiProduct.id}: thiếu tên`);
+    return null;
+  }
   const variants = pmiProduct.variants || [];
   const mappedVariants = variants.map((v) => mapProductVariant(v, Number(pmiProduct.id)));
 
-  const prices = variants.map((variant) => Number(variant.price ?? 0)).filter((price) => !isNaN(price) && price >= 0);
+  const prices = variants.map((variant) => Number(variant.price ?? 0)).filter((price) => !isNaN(price) && price > 0);
   const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
   const stock = variants.reduce((sum, variant) => sum + Number(variant.stock || 0), 0);
-  const colors = [...new Set(variants.map((variant) => variant.tier_1_option || 'Tiêu chuẩn'))] as string[];
+  const colors = [...new Set(variants.map((variant) => variant.tier_1_option).filter((option): option is string => Boolean(option)))];
 
   const variantById = variants.reduce<Record<number, PmiVariant>>((accumulator, variant) => {
     if (variant.id !== undefined && variant.id !== null) {
@@ -156,17 +150,19 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
   const coverImage = mappedMedia.find((item) => item.isCover)?.imageUrl;
   const image = coverImage || gallery[0] || NO_IMAGE_URL;
 
-  const name = (pmiProduct.name || 'Sản phẩm').trim();
   const attributes = mapPmiAttributes(pmiProduct.attribute_values || []);
   const attrByCode = buildAttrByCode(attributes);
-  const brand = mapBrandValue(attrByCode.brand) || 'Other';
+  const brand = mapBrandValue(attrByCode.brand);
   const matchedCategory = categories.find((item) => item.id === pmiProduct.voma_category_id);
-  const category = matchedCategory?.name || 'Chưa phân loại';
+  const category = matchedCategory?.name;
   const categoryCode = matchedCategory?.code;
 
-  const parsedBalance = Number(attrByCode.balance);
-  const parsedMaxTension = Number(attrByCode.maxTension);
-  const resolvedPrice = minPrice > 0 ? minPrice : 100000;
+  // Chỉ nhận số hữu hạn > 0; 0/rỗng/không số = không có thông số thật.
+  const positiveNumber = (raw: string | undefined): number | undefined => {
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+  };
+  const resolvedPrice = minPrice > 0 ? minPrice : undefined;
 
   const hasActivePromotion = Boolean(
     pmiProduct.has_active_promotion || mappedVariants.some((v) => v.hasActivePromotion)
@@ -210,16 +206,16 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
       // fallback. Chỉ lấy từ thuộc tính vợt thật `weightClass`.
       weight: attrByCode.weightClass || undefined,
       stiffness: attrByCode.stiffness || undefined,
-      balance: Number.isFinite(parsedBalance) ? parsedBalance : undefined,
-      maxTension: Number.isFinite(parsedMaxTension) ? parsedMaxTension : undefined
+      balance: positiveNumber(attrByCode.balance),
+      maxTension: positiveNumber(attrByCode.maxTension)
     },
-    description: pmiProduct.description || 'Sản phẩm chính hãng.',
+    description: pmiProduct.description || undefined,
     attributes,
     vomaAttributes: mapVomaAttributes(pmiProduct.voma_attribute_values || [], pmiProduct.id),
     reviews: [],
     stock: stock > 0 ? stock : 0,
     defaultSku: variants.find((variant) => Boolean(variant.sku_code))?.sku_code,
-    colors: colors.length > 0 ? colors : ['Tiêu chuẩn'],
+    colors,
     tier_variations: pmiProduct.tier_variations || [],
     variants: mappedVariants
   };

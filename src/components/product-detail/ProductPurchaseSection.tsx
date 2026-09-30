@@ -9,6 +9,7 @@ interface ProductPurchaseSectionProps {
   product: Product;
   isRacket: boolean;
   totalDisplayPrice: number;
+  hasPrice: boolean;
   displayOriginalPrice: number;
   hasDiscount: boolean;
   discountPercent: number;
@@ -40,6 +41,7 @@ export default function ProductPurchaseSection({
   product,
   isRacket,
   totalDisplayPrice,
+  hasPrice,
   displayOriginalPrice,
   hasDiscount,
   discountPercent,
@@ -80,9 +82,11 @@ export default function ProductPurchaseSection({
       <div className="space-y-6">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm shadow-xs">
-              {product.brand}
-            </span>
+            {product.brand && (
+              <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm shadow-xs">
+                {product.brand}
+              </span>
+            )}
             {product.badge && (
               <span className="text-[10px] bg-purple-600 text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">
                 {product.badge}
@@ -116,17 +120,17 @@ export default function ProductPurchaseSection({
           <div>
             <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Giá bán hiện tại</p>
             <div className="flex items-end gap-2.5 mt-1">
-              <span className="text-2xl md:text-3xl font-extrabold text-brand-primary font-display">
-                {totalDisplayPrice.toLocaleString('vi-VN')}đ
+              <span className="text-2xl md:text-3xl font-extrabold text-brand-primary font-display" data-testid="purchase-price">
+                {hasPrice ? `${totalDisplayPrice.toLocaleString('vi-VN')}đ` : 'Liên hệ để biết giá'}
               </span>
-              {hasDiscount && (
+              {hasPrice && hasDiscount && (
                 <span className="text-sm text-gray-400 line-through mb-1.5 font-medium">
                   {(displayOriginalPrice + stringPrice).toLocaleString('vi-VN')}đ
                 </span>
               )}
             </div>
           </div>
-          {hasDiscount && discountPercent > 0 && (
+          {hasPrice && hasDiscount && discountPercent > 0 && (
             <span className="bg-brand-primary text-white text-[11px] font-black px-3 py-1.5 rounded-full">
               TIẾT KIỆM {discountPercent}%
             </span>
@@ -240,9 +244,9 @@ export default function ProductPurchaseSection({
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <button
             onClick={onAddToCart}
-            disabled={isOutOfStock}
+            disabled={isOutOfStock || !hasPrice}
             className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition ${
-              isOutOfStock
+              isOutOfStock || !hasPrice
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'btn-primary'
             }`}

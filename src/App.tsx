@@ -16,7 +16,7 @@ import ScrollToTop from './components/ScrollToTop';
 import StoreLocator from './components/StoreLocator';
 import { fetchAppData } from './features/appData/appDataSlice';
 import CatalogPage from './features/catalog/CatalogPage';
-import { setSearchQuery, setSelectedCategory } from './features/catalog/catalogSlice';
+import { setSearchQuery, setSelectedBrand, setSelectedCategory } from './features/catalog/catalogSlice';
 import {
   addCartItem,
   buildDefaultCartItem,
@@ -47,7 +47,7 @@ export default function App() {
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
 
-  const { products, blogs, branches, categories, isLoading } = useAppSelector(state => state.appData);
+  const { products, blogs, branches, categories, isLoading, categoriesError, productsError } = useAppSelector(state => state.appData);
   const { items: cartItems, isOpen: isCartOpen, quickViewProduct } = useAppSelector(state => state.cart);
   const [hasOpenedCart, setHasOpenedCart] = useState(isCartOpen);
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
@@ -67,7 +67,9 @@ export default function App() {
 
     const categoryParam = searchParams.get('category');
     const searchParam = searchParams.get('search');
+    const brandParam = searchParams.get('brand');
     dispatch(setSelectedCategory(categoryParam ? decodeURIComponent(categoryParam) : 'Tất cả'));
+    dispatch(setSelectedBrand(brandParam ? [brandParam] : []));
     dispatch(setSearchQuery(searchParam ? decodeURIComponent(searchParam) : ''));
   }, [dispatch, location.pathname, searchParams]);
 
@@ -112,6 +114,13 @@ export default function App() {
         products={products}
         categories={categories}
       />
+
+      {(categoriesError || productsError) && (
+        <div role="alert" id="load-error-banner" className="bg-red-50 border-b border-red-200 text-red-700 text-sm font-medium px-4 py-2.5 text-center space-y-0.5">
+          {categoriesError && <p>Không tải được danh mục sản phẩm. Vui lòng tải lại trang.</p>}
+          {productsError && <p>Không tải được danh sách sản phẩm. Vui lòng tải lại trang.</p>}
+        </div>
+      )}
 
       <main className="flex-1">
         <ScrollToTop />

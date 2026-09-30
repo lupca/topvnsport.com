@@ -131,6 +131,10 @@ export type OmsPaginatedChannels = {
 
 export type ApiListResponse<T> = {
   items?: T[];
+  total?: number;
+  page?: number;
+  limit?: number;
+  pages?: number;
 };
 
 export type PmiProductMapper = (product: PmiProduct, categories: Category[]) => any;

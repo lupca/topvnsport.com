@@ -125,7 +125,7 @@ describe('productMappers', () => {
     expect(product.price).toBe(1800000);
   });
 
-  it('mapPmiProduct gán "Chưa phân loại" và không có categoryCode khi voma_category_id không khớp ngành nào', () => {
+  it('mapPmiProduct để category undefined và không có categoryCode khi voma_category_id không khớp ngành nào', () => {
     const pmiProduct: PmiProduct = {
       id: '3',
       name: 'Sản phẩm chưa gắn ngành',
@@ -135,11 +135,11 @@ describe('productMappers', () => {
 
     const product = mapPmiProduct(pmiProduct, mockCategories);
 
-    expect(product.category).toBe('Chưa phân loại');
+    expect(product.category).toBeUndefined();
     expect(product.categoryCode).toBeUndefined();
   });
 
-  it('mapPmiProduct gán "Chưa phân loại" khi sản phẩm không có voma_category_id', () => {
+  it('mapPmiProduct để category undefined khi sản phẩm không có voma_category_id', () => {
     const pmiProduct: PmiProduct = {
       id: '4',
       name: 'Sản phẩm không gắn ngành',
@@ -148,7 +148,7 @@ describe('productMappers', () => {
 
     const product = mapPmiProduct(pmiProduct, mockCategories);
 
-    expect(product.category).toBe('Chưa phân loại');
+    expect(product.category).toBeUndefined();
     expect(product.categoryCode).toBeUndefined();
   });
 

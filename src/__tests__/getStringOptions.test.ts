@@ -1,13 +1,14 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { sportApi } from '../services/sport-api/index';
 
-function mockFetch(productsResponse: unknown) {
+function mockFetch(productsResponse: { items: unknown[] }) {
+  const page = { ...productsResponse, total: productsResponse.items.length, page: 1, limit: 100, pages: 1 };
   global.fetch = vi.fn().mockImplementation((url: string) => {
     if (url.includes('/public/stock')) {
       return Promise.resolve({ ok: true, json: () => Promise.resolve({ stock: {} }) });
     }
     if (url.includes('/public/products')) {
-      return Promise.resolve({ ok: true, json: () => Promise.resolve(productsResponse) });
+      return Promise.resolve({ ok: true, json: () => Promise.resolve(page) });
     }
     if (url.includes('/public/voma-categories')) {
       return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
@@ -22,8 +23,8 @@ describe('sportApi.getStringOptions', () => {
   });
 
   test('nhận diện sản phẩm cước qua thuộc tính thật `thickness`, không qua tên/ngành', async () => {
-    // Sản phẩm này KHÔNG có voma_category_id khớp ngành nào (category sẽ là
-    // "Chưa phân loại", không phải "Cước") -- nếu logic cũ so category === 'Cước'
+    // Sản phẩm này KHÔNG có voma_category_id khớp ngành nào (category là
+    // undefined, không phải "Cước") -- nếu logic cũ so category === 'Cước'
     // thì test này sẽ trả rỗng và ĐỎ.
     mockFetch({
       items: [

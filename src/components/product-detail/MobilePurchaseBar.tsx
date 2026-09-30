@@ -5,6 +5,7 @@ interface MobilePurchaseBarProps {
   productName: string;
   productImage: string;
   totalDisplayPrice: number;
+  hasPrice: boolean;
   isOutOfStock?: boolean;
   onBuyNow: () => void;
 }
@@ -13,6 +14,7 @@ export default function MobilePurchaseBar({
   productName,
   productImage,
   totalDisplayPrice,
+  hasPrice,
   isOutOfStock = false,
   onBuyNow
 }: MobilePurchaseBarProps) {
@@ -27,14 +29,14 @@ export default function MobilePurchaseBar({
         />
         <div className="min-w-0">
           <h4 className="font-bold text-xs text-gray-900 truncate">{productName}</h4>
-          <p className="text-brand-primary font-bold text-xs font-mono">{totalDisplayPrice.toLocaleString('vi-VN')}đ</p>
+          <p className="text-brand-primary font-bold text-xs font-mono">{hasPrice ? `${totalDisplayPrice.toLocaleString('vi-VN')}đ` : 'Liên hệ để biết giá'}</p>
         </div>
       </div>
       <button
         onClick={onBuyNow}
-        disabled={isOutOfStock}
+        disabled={isOutOfStock || !hasPrice}
         className={`text-xs px-4 py-2.5 rounded-sm flex items-center gap-1.5 shrink-0 shadow-sm transition ${
-          isOutOfStock
+          isOutOfStock || !hasPrice
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'btn-primary'
         }`}

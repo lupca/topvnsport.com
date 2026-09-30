@@ -388,7 +388,6 @@
       "fast": 50000
     },
     "cities": ["Hà Nội"],
-    "defaultWeight": "4U/G5",
     "defaultTension": 10.5,
     "maxPrice": 6000000
   }

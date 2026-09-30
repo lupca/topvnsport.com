@@ -55,8 +55,12 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
         {activeTab === 'details' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-8 space-y-4 text-sm text-gray-700 leading-relaxed">
-              <p className="font-semibold text-gray-900 text-base">Cảm giác đánh thực tế & Phân tích chuyên sâu:</p>
-              <div className="whitespace-pre-line leading-relaxed">{product.description}</div>
+              {product.description && (
+                <>
+                  <p className="font-semibold text-gray-900 text-base">Cảm giác đánh thực tế & Phân tích chuyên sâu:</p>
+                  <div className="whitespace-pre-line leading-relaxed">{product.description}</div>
+                </>
+              )}
               <div className="space-y-2 mt-4">
                 <p className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Điểm nổi bật:</p>
                 <ul className="list-disc pl-5 space-y-1.5">
@@ -171,13 +175,11 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                       <div className="absolute font-mono text-sm font-bold text-white">{product.specs.balance}mm</div>
                     </div>
                     <p className="text-xs text-gray-400">
-                      {product.specs.balance === 0
-                        ? 'Tiêu chuẩn'
-                        : product.specs.balance > 295
-                          ? 'Nặng đầu (Tấn Công)'
-                          : product.specs.balance < 285
-                            ? 'Nhẹ đầu (Tốc độ)'
-                            : 'Cân bằng (Toàn diện)'}
+                      {product.specs.balance > 295
+                        ? 'Nặng đầu (Tấn Công)'
+                        : product.specs.balance < 285
+                          ? 'Nhẹ đầu (Tốc độ)'
+                          : 'Cân bằng (Toàn diện)'}
                     </p>
                   </div>
                 )}
@@ -227,9 +229,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                       <div className="absolute font-mono text-sm font-bold text-white">{product.specs.maxTension} Lbs</div>
                     </div>
                     <p className="text-xs text-gray-400">
-                      {product.specs.maxTension === 0
-                        ? 'Tiêu chuẩn'
-                        : `Lên tới ~ ${Math.round((product.specs.maxTension / 2.20462) * 10) / 10} Kg`}
+                      {`Lên tới ~ ${Math.round((product.specs.maxTension / 2.20462) * 10) / 10} Kg`}
                     </p>
                   </div>
                 )}
