@@ -218,6 +218,19 @@ describe('productMappers', () => {
       warn.mockRestore();
     });
 
+    it('name chỉ gồm khoảng trắng -> bỏ dòng kèm warn; name giữ lại được trim', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const p = map([
+        { code: 'origin', name: '   ', value: 'Trung Quoc' },
+        { code: 'w', name: ' Nang ', value: '85' },
+      ]);
+      expect(p.vomaAttributes).toEqual([{ code: 'w', name: 'Nang', value: '85' }]);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain('77');
+      expect(String(warn.mock.calls[0][0])).toContain('origin');
+      warn.mockRestore();
+    });
+
     it('thiếu trường -> danh sách rỗng dù attribute_values có dòng', () => {
       const p = map(undefined, {
         attribute_values: [{ id: 1, value_string: '1000850', attribute: { id: 1, code: 'origin', name: 'Xuat xu' } as never }]

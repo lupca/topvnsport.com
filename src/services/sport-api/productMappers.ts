@@ -58,7 +58,8 @@ const hasUnit = (value: string, unit: string) => {
 export function mapVomaAttributes(rows: PmiVomaAttributeValue[], productId: number | string): ProductVomaAttribute[] {
   const result: ProductVomaAttribute[] = [];
   for (const row of rows) {
-    if (!row.name) {
+    const name = row.name?.trim();
+    if (!name) {
       console.warn(`[voma_attribute_values] product ${productId}: thuộc tính ${row.code} không có tên, bỏ qua`);
       continue;
     }
@@ -69,7 +70,7 @@ export function mapVomaAttributes(rows: PmiVomaAttributeValue[], productId: numb
     }
     const unit = row.unit?.trim();
     const text = unit && !hasUnit(value, unit) ? `${value} ${unit}` : value;
-    result.push({ code: row.code, name: row.name, value: text });
+    result.push({ code: row.code, name, value: text });
   }
   return result;
 }
