@@ -35,6 +35,8 @@ interface CartModalProps {
   onClearCart: () => void;
 }
 
+const PRODUCTS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách sản phẩm. Vui lòng tải lại trang.';
+
 // Lời người bán cho từng lý do món hàng không hợp lệ -- KHÔNG dùng chung một
 // câu cho cả hai ca (sản phẩm bị gỡ khỏi cửa hàng khác với PIM đổi/xoá tổ hợp).
 function cartItemWarningMessage(status: CartItemSkuStatus): string | null {
@@ -49,6 +51,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   // thiếu) -- KHÔNG được kết luận "sản phẩm không còn"/"phân loại đã đổi" lúc
   // này, chỉ coi là chưa biết. Nút thanh toán khoá lại tới khi tải xong.
   const isLoadingProducts = useAppSelector(state => state.appData.isLoading);
+  // Tải sản phẩm lỗi -> không biết món nào còn bán: báo lỗi tải, khoá thanh toán.
+  const productsError = useAppSelector(state => state.appData.productsError);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   const [createdOrderNumber, setCreatedOrderNumber] = useState('');
   
@@ -77,10 +81,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
   // thanh toán/OTP, thay vì để lọt tới sau sendOtp/findOrCreateCustomer rồi
   // mới báo. Đang tải dữ liệu sản phẩm -> cũng khoá (chưa kết luận được gì).
-  // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
-  // thanh toán/OTP, thay vì để lọt tới sau sendOtp/findOrCreateCustomer rồi
-  // mới báo. Đang tải dữ liệu sản phẩm -> cũng khoá (chưa kết luận được gì).
-  const canCheckout = !isLoadingProducts && cartItems.every(item => isCartItemSkuValid(item, products));
+  const canCheckout = !isLoadingProducts && !productsError && cartItems.every(item => isCartItemSkuValid(item, products));
 
   const handleCheckoutSubmit = async (e?: React.FormEvent, tokenOverride?: string) => {
     if (e) e.preventDefault();
@@ -89,7 +90,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     // -- khách không nhận OTP/không bị tạo hồ sơ khách hàng rồi mới bị chặn.
     // Dữ liệu sản phẩm đang tải -> chưa kết luận được gì, không cho thanh
     // toán tiếp (nút "Tiến hành thanh toán" cũng đã khoá ở bước 1).
-    if (isLoadingProducts) {
+    if (isLoadingProducts || productsError) {
       return;
     }
     const invalidItem = cartItems.find(item => describeCartItemSkuStatus(item, products) !== 'ok');
@@ -224,6 +225,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                       // không hiện cảnh báo sai lúc danh sách còn rỗng/thiếu.
                       const warningMessage = isLoadingProducts
                         ? null
+                        : productsError
+                        ? PRODUCTS_LOAD_ERROR_MESSAGE
                         : cartItemWarningMessage(describeCartItemSkuStatus(item, products));
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5">

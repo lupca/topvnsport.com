@@ -39,6 +39,7 @@ describe('Forensic Integrity Audit M2-1 for Requirement R2', () => {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve({
+            total: 1, pages: 1,
             items: [
               {
                 id: 8888,
