@@ -34,11 +34,11 @@ export default function RacketFinder({ products }: RacketFinderProps) {
 
     // Filter by budget
     if (answers.budget === 'low') {
-      matches = matches.filter(p => p.price <= 1500000);
+      matches = matches.filter(p => p.price !== undefined && p.price <= 1500000);
     } else if (answers.budget === 'medium') {
-      matches = matches.filter(p => p.price > 1000000 && p.price <= 3000000);
+      matches = matches.filter(p => p.price !== undefined && p.price > 1000000 && p.price <= 3000000);
     } else if (answers.budget === 'high') {
-      matches = matches.filter(p => p.price > 3000000);
+      matches = matches.filter(p => p.price !== undefined && p.price > 3000000);
     }
 
     // Filter by style

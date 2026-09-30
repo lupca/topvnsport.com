@@ -55,7 +55,7 @@ export default function StringingAssistant({
 
   const resolveVariantPrice = (targetOption: string): number => {
     if (!stringingVariation || !stringingTierIndex) {
-      return product.salePrice || product.price;
+      return product.salePrice || product.price || 0;
     }
 
     const matched = product.variants?.find((variant) => {
@@ -74,7 +74,7 @@ export default function StringingAssistant({
       return tier1Match && tier2Match && otherMatch;
     });
 
-    return matched ? matched.price : product.salePrice || product.price;
+    return matched ? matched.price : product.salePrice || product.price || 0;
   };
 
   return (
@@ -142,7 +142,7 @@ export default function StringingAssistant({
                     const noStringOption = stringingVariation.options.find((option) => isNoStringOption(option));
                     const noStringPrice = noStringOption
                       ? resolveVariantPrice(noStringOption)
-                      : product.salePrice || product.price;
+                      : product.salePrice || product.price || 0;
                     const optionPrice = resolveVariantPrice(optionName);
                     const diffPrice = optionPrice - noStringPrice;
                     const metadata = formatStringMeta(inferStringMeta(optionName, stringOptions));

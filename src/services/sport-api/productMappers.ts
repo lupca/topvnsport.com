@@ -15,14 +15,6 @@ export function extractItems<T>(data: unknown): T[] {
   return [];
 }
 
-function normalizeText(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim();
-}
-
 // Nguyên chuỗi người bán nhập (đã trim). 'No Brand'/'NoBrand' = không thương hiệu.
 function mapBrandValue(rawBrand: string | undefined): string | undefined {
   const brand = rawBrand?.trim();

@@ -5,6 +5,7 @@ import ProductCard from '../../components/ProductCard';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RACKET_CATEGORY_CODES } from '../../config/storefront';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../../utils/categories';
+import { getBrands } from '../../utils/brands';
 import {
   resetCatalogFilters,
   setMaxPrice,
@@ -64,10 +65,10 @@ export default function CatalogPage() {
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
       if (selectedCategory !== ALL_CATEGORIES_OPTION && p.categoryCode !== selectedCategory) return false;
-      if (selectedBrand.length > 0 && !selectedBrand.includes(p.brand)) return false;
+      if (selectedBrand.length > 0 && !selectedBrand.includes(p.brand ?? '')) return false;
 
-      const displayPrice = p.salePrice || p.price;
-      if (displayPrice > maxPrice) return false;
+      // Chưa có giá thật thì không lọc theo giá (không coi là số).
+      if (p.price !== undefined && (p.salePrice || p.price) > maxPrice) return false;
 
       if (selectedWeight.length > 0 && RACKET_CATEGORY_CODES.includes(p.categoryCode || '')) {
         const match = selectedWeight.some(wt => p.specs.weight?.includes(wt));
@@ -92,7 +93,7 @@ export default function CatalogPage() {
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchName = p.name.toLowerCase().includes(q);
-        const matchBrand = p.brand.toLowerCase().includes(q);
+        const matchBrand = (p.brand ?? '').toLowerCase().includes(q);
         const matchSeries = p.series && p.series.toLowerCase().includes(q);
         if (!matchName && !matchBrand && !matchSeries) return false;
       }
@@ -145,7 +146,7 @@ export default function CatalogPage() {
             <div className="space-y-2">
               <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Thương hiệu quốc tế</h4>
               <div className="space-y-1.5">
-                {['Yonex', 'Lining', 'Victor', 'Kumpoo'].map(brand => (
+                {getBrands(products).map(brand => (
                   <label key={brand} className="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
                     <input
                       type="checkbox"
