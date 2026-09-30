@@ -176,7 +176,7 @@ describe('getStringOptions', () => {
     });
     global.fetch = vi.fn().mockImplementation((url: string) => {
       const body = url.includes('/public/stock') ? { stock: {} }
-        : url.includes('/public/products') ? { items: [mk(1, 'VICTORY', 100), mk(2, undefined, 100), mk(3, 'Kizuna', 0)] }
+        : url.includes('/public/products') ? { items: [mk(1, 'VICTORY', 100), mk(2, undefined, 100), mk(3, 'Kizuna', 0)], total: 3, page: 1, limit: 100, pages: 1 }
         : [];
       return Promise.resolve({ ok: true, json: () => Promise.resolve(body) });
     }) as any;
