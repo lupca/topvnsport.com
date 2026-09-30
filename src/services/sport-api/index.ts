@@ -162,7 +162,7 @@ async function fetchAllPmiProducts(): Promise<PmiProduct[]> {
 async function getProducts(): Promise<Product[]> {
   await delay(SIMULATED_LATENCY);
   const [pmiProducts, categories] = await Promise.all([fetchAllPmiProducts(), getCategories()]);
-  const products = pmiProducts.map((product) => mapPmiProduct(product, categories));
+  const products = pmiProducts.flatMap((product) => mapPmiProduct(product, categories) ?? []);
   return mergeWmsStock(products);
 }
 
@@ -177,6 +177,9 @@ async function getProductById(id: string): Promise<Product | null> {
     if (response.ok) {
       const pmiProduct = (await response.json()) as PmiProduct;
       const product = mapPmiProduct(pmiProduct, categories);
+      if (!product) {
+        return null;
+      }
       const [updatedProduct] = await mergeWmsStock([product]);
       return updatedProduct || product;
     }
