@@ -100,6 +100,7 @@ describe('Empirical Challenge R2: Stock Mapper & UI Integration Verification', (
           return Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
+              total: 1, pages: 1,
               items: [
                 {
                   id: 2001,

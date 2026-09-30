@@ -48,6 +48,7 @@ describe('WMS Stock Integration & Product Mappers Tests (Requirement R2)', () =>
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve({
+            total: 1, pages: 1,
             items: [
               {
                 id: 200,

@@ -231,11 +231,11 @@ describe('Milestone 7 Challenger 2 - Empirical Verification Suite', () => {
     it('verifies sportApi methods perform zero simulated delay', async () => {
       vi.useRealTimers();
       // Mock global fetch to return instantaneous responses
-      const mockFetch = vi.fn().mockResolvedValue({
+      const mockFetch = vi.fn().mockImplementation(async (url: string) => ({
         ok: true,
         status: 200,
-        json: async () => ([])
-      });
+        json: async () => (url.includes('/public/products') ? { items: [], total: 0, page: 1, limit: 100, pages: 1 } : [])
+      }));
       global.fetch = mockFetch;
 
       const start = performance.now();
