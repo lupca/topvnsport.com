@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { mapPmiProduct, mapProductVariant, extractItems } from '../services/sport-api/productMappers';
 import { PmiProduct, PmiVariant } from '../services/sport-api/types';
 import { Category } from '../types';
@@ -186,5 +186,75 @@ describe('productMappers', () => {
     const product = mapPmiProduct(pmiProduct, mockCategories);
 
     expect(product.specs.weight).toBeUndefined();
+  });
+
+  describe('voma_attribute_values', () => {
+    const map = (rows?: PmiProduct['voma_attribute_values'], extra: Partial<PmiProduct> = {}) =>
+      mapPmiProduct({ id: 77, name: 'SP', voma_attribute_values: rows, ...extra } as PmiProduct, mockCategories);
+
+    it('hiện tên giá trị đã giải, không dùng value_code', () => {
+      const p = map([{ code: 'origin', name: 'Quoc gia xuat xu', value: 'Trung Quoc', value_code: '1000850' }]);
+      expect(p.vomaAttributes).toEqual([{ code: 'origin', name: 'Quoc gia xuat xu', value: 'Trung Quoc' }]);
+    });
+
+    it('value null: bỏ dòng (không lộ 1000850) và console.warn một lần với product id + code', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const p = map([{ code: 'origin', name: 'Xuat xu', value: null, value_code: '1000850' }]);
+      expect(JSON.stringify(p.vomaAttributes)).not.toContain('1000850');
+      expect(p.vomaAttributes).toEqual([]);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain('77');
+      expect(String(warn.mock.calls[0][0])).toContain('origin');
+      warn.mockRestore();
+    });
+
+    it('dòng thiếu name bị bỏ kèm console.warn nêu product id + code', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const p = map([{ code: 'origin', name: '', value: 'Trung Quoc' }]);
+      expect(p.vomaAttributes).toEqual([]);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain('77');
+      expect(String(warn.mock.calls[0][0])).toContain('origin');
+      warn.mockRestore();
+    });
+
+    it('name chỉ gồm khoảng trắng -> bỏ dòng kèm warn; name giữ lại được trim', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const p = map([
+        { code: 'origin', name: '   ', value: 'Trung Quoc' },
+        { code: 'w', name: ' Nang ', value: '85' },
+      ]);
+      expect(p.vomaAttributes).toEqual([{ code: 'w', name: 'Nang', value: '85' }]);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain('77');
+      expect(String(warn.mock.calls[0][0])).toContain('origin');
+      warn.mockRestore();
+    });
+
+    it('thiếu trường -> danh sách rỗng dù attribute_values có dòng', () => {
+      const p = map(undefined, {
+        attribute_values: [{ id: 1, value_string: '1000850', attribute: { id: 1, code: 'origin', name: 'Xuat xu' } as never }]
+      });
+      expect(p.vomaAttributes).toEqual([]);
+    });
+
+    it.each([
+      ['85', 'g', '85 g'],
+      ['85', null, '85'],
+      ['85 g', 'g', '85 g'],
+      ['85G', ' g ', '85G'],
+      ['85g', 'g', '85g'],
+      ['Strong', 'g', 'Strong g'],
+    ])('value %s unit %s -> %s', (value, unit, expected) => {
+      const p = map([{ code: 'w', name: 'Nang', value, unit }]);
+      expect(p.vomaAttributes?.[0].value).toBe(expected);
+    });
+
+    it('brand vẫn đọc từ attribute_values cũ', () => {
+      const p = map([{ code: 'brand', name: 'TH', value: 'Khac' }], {
+        attribute_values: [{ id: 1, value_string: 'Yonex', attribute: { id: 1, code: 'brand', name: 'TH' } as never }]
+      });
+      expect(p.brand).toBe('Yonex');
+    });
   });
 });

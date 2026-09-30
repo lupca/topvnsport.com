@@ -12,7 +12,7 @@ interface ProductDetailTabsProps {
 }
 
 export default function ProductDetailTabs({ product, isRacket, activeTab, onTabChange }: ProductDetailTabsProps) {
-  const technicalAttributes = product.attributes || [];
+  const technicalAttributes = product.vomaAttributes || [];
   // Thông số lớp cân/độ cứng/cân bằng/sức căng CHỈ áp dụng cho sản phẩm
   // ngành vợt, và chỉ khi PIM thật sự có dữ liệu -- đây là phần THÊM VÀO bên
   // cạnh attributes thật (Thương hiệu, Xuất xứ...), không thay thế chúng.
@@ -111,8 +111,8 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                 {/* Attributes thật từ PIM (Thương hiệu, Xuất xứ, Tổ chức chịu
                     trách nhiệm...) -- luôn hiện khi có, không riêng cho sản
                     phẩm không phải vợt */}
-                {technicalAttributes.map((attribute) => (
-                  <div key={attribute.id} className="flex justify-between border-b border-gray-100 pb-1.5 gap-3">
+                {technicalAttributes.map((attribute, index) => (
+                  <div key={`${attribute.code}-${index}`} className="flex justify-between border-b border-gray-100 pb-1.5 gap-3">
                     <span>{attribute.name}:</span>
                     <strong className="text-gray-900 text-right">{attribute.value}</strong>
                   </div>
@@ -251,8 +251,8 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                       </tr>
                     </thead>
                     <tbody>
-                      {technicalAttributes.map((attribute) => (
-                        <tr key={attribute.id} className="border-b border-gray-50">
+                      {technicalAttributes.map((attribute, index) => (
+                        <tr key={`${attribute.code}-${index}`} className="border-b border-gray-50">
                           <td className="py-2 pr-3 text-gray-600">{attribute.name}</td>
                           <td className="py-2 font-semibold text-gray-900">{attribute.value}</td>
                         </tr>
