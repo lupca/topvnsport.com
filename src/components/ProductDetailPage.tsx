@@ -11,12 +11,13 @@ import { isRacketCategoryCode } from '../config/storefront';
 interface ProductDetailPageProps {
   product: Product;
   stringOptions: StringOption[];
+  stringOptionsError: boolean;
   onAddToCartWithSpecs: (product: Product, selectedWeight: string, selectedColor: string, stringChoice: StringOption | null, tension: number) => void;
   onBackToCatalog: () => void;
   
 }
 
-export default function ProductDetailPage({ product, stringOptions, onAddToCartWithSpecs }: Omit<ProductDetailPageProps, 'onBackToCatalog'|'onBookTestAtStore'>) {
+export default function ProductDetailPage({ product, stringOptions, stringOptionsError, onAddToCartWithSpecs }: Omit<ProductDetailPageProps, 'onBackToCatalog'|'onBookTestAtStore'>) {
   const [activeTab, setActiveTab] = useState<DetailTab>('details');
   // Không bịa trọng lượng theo ngành -- lấy từ thông số thật của sản phẩm nếu
   // có, còn lại dùng sentinel "Tiêu chuẩn" chung của hệ thống (giống màu sắc).
@@ -205,6 +206,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
             selectedString={selectedString}
             tension={tension}
             stringOptions={stringOptions}
+            stringOptionsError={stringOptionsError}
             hasStringingVariation={hasStringingVariation}
             stringingVariation={stringingVariation}
             stringingTierIndex={stringingTierIndex}

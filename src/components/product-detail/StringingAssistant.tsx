@@ -16,6 +16,7 @@ interface StringingAssistantProps {
   withStringing: boolean;
   selectedString: StringOption | null;
   stringOptions: StringOption[];
+  stringOptionsError: boolean;
   tension: number;
   onSetSelectedTier1: (value: string) => void;
   onSetSelectedTier2: (value: string) => void;
@@ -37,6 +38,7 @@ export default function StringingAssistant({
   withStringing,
   selectedString,
   stringOptions,
+  stringOptionsError,
   tension,
   onSetSelectedTier1,
   onSetSelectedTier2,
@@ -47,6 +49,11 @@ export default function StringingAssistant({
   // Nếu sản phẩm không có sẵn biến thể cước riêng (hasStringingVariation),
   // trợ lý chỉ đề xuất dựa trên danh mục cước chung (stringOptions) -- không
   // có dữ liệu cước thật nào thì ẩn hẳn phần này thay vì hiện một khung chọn rỗng.
+  // Tải cước lỗi: báo rõ thay vì ẩn như danh sách rỗng.
+  if (!hasStringingVariation && isRacket && stringOptionsError) {
+    return <div role="alert">Không tải được danh sách cước. Vui lòng tải lại trang.</div>;
+  }
+
   if (!hasStringingVariation && (!isRacket || stringOptions.length === 0)) {
     return null;
   }

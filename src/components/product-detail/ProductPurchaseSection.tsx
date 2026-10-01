@@ -21,6 +21,7 @@ interface ProductPurchaseSectionProps {
   selectedString: StringOption | null;
   tension: number;
   stringOptions: StringOption[];
+  stringOptionsError: boolean;
   hasStringingVariation: boolean;
   stringingVariation?: TierVariation;
   stringingTierIndex?: number;
@@ -53,6 +54,7 @@ export default function ProductPurchaseSection({
   selectedString,
   tension,
   stringOptions,
+  stringOptionsError,
   hasStringingVariation,
   stringingVariation,
   stringingTierIndex,
@@ -225,6 +227,7 @@ export default function ProductPurchaseSection({
           withStringing={withStringing}
           selectedString={selectedString}
           stringOptions={stringOptions}
+          stringOptionsError={stringOptionsError}
           tension={tension}
           onSetSelectedTier1={onSetSelectedTier1}
           onSetSelectedTier2={onSetSelectedTier2}

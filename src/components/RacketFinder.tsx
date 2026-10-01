@@ -48,11 +48,6 @@ export default function RacketFinder({ products }: RacketFinderProps) {
       matches = matches.sort((a, b) => (a.specs.balance || 0) - (b.specs.balance || 0)); // Nhẹ đầu lên trước
     }
 
-    // Default Fallbacks if list is too narrow
-    if (matches.length === 0) {
-      matches = products.filter(p => isRacketCategoryCode(p.categoryCode)).slice(0, 3);
-    }
-
     setRecommendations(matches.slice(0, 3));
     setStep(4);
   };
@@ -239,6 +234,13 @@ export default function RacketFinder({ products }: RacketFinderProps) {
               exit={{ opacity: 0, scale: 0.95 }}
               className="space-y-6"
             >
+              {recommendations.length === 0 ? (
+                // Không vợt nào khớp: nói rõ, không gợi ý vợt ngoài tiêu chí.
+                <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 text-center">
+                  <p className="text-gray-300 font-bold text-sm">Chưa có vợt phù hợp với tiêu chí và ngân sách bạn đã chọn. Vui lòng đổi lựa chọn và thử lại.</p>
+                </div>
+              ) : (
+              <>
               <div className="bg-emerald-500/15 border border-emerald-500/20 rounded-xl p-4 text-center">
                 <p className="text-emerald-400 font-bold text-sm">✓ Phân tích hoàn tất! Dưới đây là 3 cây vợt tối ưu nhất dành cho bạn:</p>
               </div>
@@ -272,6 +274,8 @@ export default function RacketFinder({ products }: RacketFinderProps) {
                   </div>
                 ))}
               </div>
+              </>
+              )}
 
               <div className="flex justify-center pt-4">
                 <button

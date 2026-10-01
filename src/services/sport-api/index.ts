@@ -219,34 +219,30 @@ function resolveStringType(stiffness: string | undefined): StringOption['type'] 
 
 async function getStringOptions(): Promise<StringOption[]> {
   await delay(SIMULATED_LATENCY);
-  try {
-    const products = await getProducts();
-    // Cước chưa có ngành VOMA riêng (nằm lẫn trong nhóm "Khác"), nên nhận diện
-    // sản phẩm cước qua thuộc tính `thickness` thật của PIM thay vì theo ngành.
-    const stringProducts = products.filter((product) =>
-      product.attributes?.some((attribute) => attribute.code === 'thickness')
-    );
+  // Lỗi getProducts ném thẳng lên (không trả [] -- khách không được tưởng shop không có cước).
+  const products = await getProducts();
+  // Cước chưa có ngành VOMA riêng (nằm lẫn trong nhóm "Khác"), nên nhận diện
+  // sản phẩm cước qua thuộc tính `thickness` thật của PIM thay vì theo ngành.
+  const stringProducts = products.filter((product) =>
+    product.attributes?.some((attribute) => attribute.code === 'thickness')
+  );
 
-    // Cước không có giá thật không thể thêm giỏ -> bỏ khỏi bộ chọn, nói rõ id.
-    return stringProducts.flatMap((product): StringOption[] => {
-      if (product.price === undefined) {
-        console.warn(`Bỏ cước ${product.id} khỏi bộ chọn cước: chưa có giá thật`);
-        return [];
-      }
-      return [{
-        id: product.id,
-        name: product.name,
-        brand: product.brand,
-        type: resolveStringType(product.specs.stiffness),
-        thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value,
-        price: product.price,
-        colors: product.colors || []
-      }];
-    });
-  } catch (error) {
-    console.warn('Failed to fetch dynamic string options from API:', error);
-    return [];
-  }
+  // Cước không có giá thật không thể thêm giỏ -> bỏ khỏi bộ chọn, nói rõ id.
+  return stringProducts.flatMap((product): StringOption[] => {
+    if (product.price === undefined) {
+      console.warn(`Bỏ cước ${product.id} khỏi bộ chọn cước: chưa có giá thật`);
+      return [];
+    }
+    return [{
+      id: product.id,
+      name: product.name,
+      brand: product.brand,
+      type: resolveStringType(product.specs.stiffness),
+      thickness: product.attributes?.find((attribute) => attribute.code === 'thickness')?.value,
+      price: product.price,
+      colors: product.colors || []
+    }];
+  });
 }
 
 async function getConstants() {
