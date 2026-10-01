@@ -180,7 +180,15 @@ export function buildVariantLabel(product: Product, tier1: string, tier2: string
   return parts.length > 0 ? parts.join(' · ') : undefined;
 }
 
-export type CartItemSkuStatus = 'ok' | 'product_not_found' | 'sku_changed';
+// Giá thật của MỘT biến thể -- cùng luật với trang chi tiết (computedPrice ??
+// price). price không phải số > 0 -> null (chưa có giá, không bịa, không lấy
+// giá cấp sản phẩm thay).
+export function variantUnitPrice(variant: ProductVariant): number | null {
+  if (!(variant.price > 0)) return null;
+  return variant.computedPrice ?? variant.price;
+}
+
+export type CartItemSkuStatus = 'ok' | 'product_not_found' | 'sku_changed' | 'no_price';
 
 // Phân biệt RÕ hai lý do khiến món hàng không còn hợp lệ, để UI báo đúng câu
 // (lời người bán) cho từng ca thay vì gộp chung:
@@ -188,13 +196,30 @@ export type CartItemSkuStatus = 'ok' | 'product_not_found' | 'sku_changed';
 //   cửa hàng, hoặc ngoài trang đầu danh sách) -- KHÔNG đoán, không suy diễn.
 // - 'sku_changed': sản phẩm vẫn còn, nhưng skuCode không khớp ĐÚNG một biến
 //   thể bán được nào của chính sản phẩm đó (PIM đã đổi/xoá tổ hợp).
+// - 'no_price': skuCode khớp biến thể bán được nhưng biến thể chưa có giá thật.
 export function describeCartItemSkuStatus(item: CartItem, products: Product[]): CartItemSkuStatus {
   const product = products.find(p => p.id === item.productId);
   if (!product) return 'product_not_found';
-  if (item.skuCode && sellableVariantsOf(product).some(v => v.sku_code === item.skuCode)) {
-    return 'ok';
+  const variant = item.skuCode ? sellableVariantsOf(product).find(v => v.sku_code === item.skuCode) : undefined;
+  if (!variant) return 'sku_changed';
+  return variantUnitPrice(variant) === null ? 'no_price' : 'ok';
+}
+
+// Đơn giá của món theo biến thể ĐÃ TẢI (không tin CartItem.price lưu
+// localStorage). Không tìm được sản phẩm/biến thể/giá thật -> null.
+export function getCartItemUnitPrice(item: CartItem, products: Product[]): number | null {
+  const product = products.find(p => p.id === item.productId);
+  const variant = item.skuCode ? product && sellableVariantsOf(product).find(v => v.sku_code === item.skuCode) : undefined;
+  return variant ? variantUnitPrice(variant) : null;
+}
+
+// Biến thể đã chọn không có giá thật -> không tạo món, báo rõ product id + sku.
+function priceOrReport(product: Product, variant: ProductVariant): number | null {
+  const price = variantUnitPrice(variant);
+  if (price === null) {
+    console.error(`cartSlice: sản phẩm ${product.id} biến thể ${variant.sku_code} chưa có giá thật -- không tạo món hàng.`);
   }
-  return 'sku_changed';
+  return price;
 }
 
 // Món hàng trong giỏ hợp lệ khi (1) sản phẩm của nó vẫn còn trong dữ liệu đã
@@ -222,6 +247,9 @@ export function buildDefaultCartItem(product: Product): CartItem | null {
   // nhất -- không suy đoán qua colors[]/specs.weight. "Tiêu chuẩn" chỉ là
   // sentinel hiển thị khi biến thể thật sự KHÔNG có tầng đó, không bao giờ
   // được coi là một lựa chọn thật trong buildVariantLabel.
+  const price = priceOrReport(product, variant);
+  if (price === null) return null;
+
   const selectedColor = variant.tier_1_option || 'Tiêu chuẩn';
   const selectedWeight = variant.tier_2_option || product.specs?.weight || 'Tiêu chuẩn';
 
@@ -232,7 +260,7 @@ export function buildDefaultCartItem(product: Product): CartItem | null {
     name: product.name,
     brand: product.brand,
     image: product.image,
-    price: product.salePrice || (product.price as number),
+    price,
     selectedWeight,
     selectedColor,
     variantLabel: buildVariantLabel(product, selectedColor, selectedWeight),
@@ -254,6 +282,9 @@ export function buildConfiguredCartItem(
   if (!skuCode) {
     return null;
   }
+  const variant = sellableVariantsOf(product).find(v => v.sku_code === skuCode)!;
+  const price = priceOrReport(product, variant);
+  if (price === null) return null;
 
   return {
     id: `${product.id}-${weight}-${color}-${stringChoice?.id || 'none'}-${tension}`,
@@ -262,7 +293,7 @@ export function buildConfiguredCartItem(
     name: product.name,
     brand: product.brand,
     image: product.image,
-    price: product.salePrice || (product.price as number),
+    price,
     selectedWeight: weight,
     selectedColor: color,
     variantLabel: buildVariantLabel(product, color, weight),

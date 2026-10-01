@@ -58,7 +58,7 @@ export default function StringingAssistant({
 
   const resolveVariantPrice = (targetOption: string): number | undefined => {
     if (!stringingVariation || !stringingTierIndex) {
-      return realPrice(product.salePrice || product.price);
+      return undefined;
     }
 
     const matched = product.variants?.find((variant) => {
@@ -77,7 +77,7 @@ export default function StringingAssistant({
       return tier1Match && tier2Match && otherMatch;
     });
 
-    return realPrice(matched ? matched.price : product.salePrice || product.price);
+    return realPrice(matched?.price);
   };
 
   return (
@@ -145,7 +145,7 @@ export default function StringingAssistant({
                     const noStringOption = stringingVariation.options.find((option) => isNoStringOption(option));
                     const noStringPrice = noStringOption
                       ? resolveVariantPrice(noStringOption)
-                      : realPrice(product.salePrice || product.price);
+                      : undefined;
                     const optionPrice = resolveVariantPrice(optionName);
                     // Thiếu giá thật ở một trong hai bên -> không hiện chữ giá.
                     const diffPrice = optionPrice !== undefined && noStringPrice !== undefined ? optionPrice - noStringPrice : undefined;
