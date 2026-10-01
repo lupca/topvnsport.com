@@ -43,4 +43,31 @@ describe('appData lỗi từng nguồn', () => {
     const s = await run();
     expect(s.productsError || s.categoriesError).toBe(false);
   });
+
+  test('cước lỗi: stringOptionsError=true, stringOptions=[]', async () => {
+    api.getProducts.mockResolvedValue([]);
+    api.getCategories.mockResolvedValue([]);
+    api.getStringOptions.mockRejectedValueOnce(new Error('x'));
+    const s = await run();
+    expect(s.stringOptionsError).toBe(true);
+    expect(s.stringOptions).toEqual([]);
+  });
+
+  test('cước lỗi: sản phẩm vẫn lưu và isLoading=false', async () => {
+    api.getProducts.mockResolvedValue([{ id: 'p' }]);
+    api.getCategories.mockResolvedValue([]);
+    api.getStringOptions.mockRejectedValueOnce(new Error('x'));
+    const s = await run();
+    expect(s.products).toHaveLength(1);
+    expect(s.isLoading).toBe(false);
+  });
+
+  test('cước tải được: stringOptionsError=false', async () => {
+    api.getProducts.mockResolvedValue([]);
+    api.getCategories.mockResolvedValue([]);
+    api.getStringOptions.mockResolvedValueOnce([{ id: 's' }]);
+    const s = await run();
+    expect(s.stringOptionsError).toBe(false);
+    expect(s.stringOptions).toHaveLength(1);
+  });
 });

@@ -22,6 +22,18 @@ describe('sportApi.getStringOptions', () => {
     vi.restoreAllMocks();
   });
 
+  test('getStringOptions ném lỗi khi /public/products trả ok:false', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      if (url.includes('/public/products')) {
+        return Promise.resolve({ ok: false, status: 500, json: () => Promise.resolve({}) });
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+    }) as any;
+
+    await expect(sportApi.getStringOptions()).rejects.toThrow();
+  });
+
   test('nhận diện sản phẩm cước qua thuộc tính thật `thickness`, không qua tên/ngành', async () => {
     // Sản phẩm này KHÔNG có voma_category_id khớp ngành nào (category là
     // undefined, không phải "Cước") -- nếu logic cũ so category === 'Cước'

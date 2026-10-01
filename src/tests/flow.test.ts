@@ -23,10 +23,6 @@ function calculateRecommendations(answers: { skill: string; style: string; budge
     matches = matches.sort((a, b) => (a.specs.balance || 0) - (b.specs.balance || 0));
   }
 
-  if (matches.length === 0) {
-    matches = products.filter(p => isRacketCategoryCode(p.categoryCode)).slice(0, 3);
-  }
-
   return matches.slice(0, 3);
 }
 

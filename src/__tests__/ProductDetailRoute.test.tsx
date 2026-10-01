@@ -68,7 +68,7 @@ function renderProductDetailRoute(product: Product) {
   const store = configureStore({
     reducer: { appData: appDataReducer, cart: cartReducer },
     preloadedState: {
-      appData: { products: [product], blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false },
+      appData: { products: [product], blogs: [], branches: [], stringOptions: [], stringOptionsError: false, categories: [], isLoading: false },
       cart: { items: [], isOpen: false, quickViewProduct: null }
     } as any
   });

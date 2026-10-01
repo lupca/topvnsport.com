@@ -13,6 +13,8 @@ export interface AppDataState {
   // KHÔNG có nghĩa là cửa hàng trống).
   categoriesError: boolean;
   productsError: boolean;
+  // Lỗi tải cước (stringOptions=[] khi true KHÔNG có nghĩa là shop không có cước).
+  stringOptionsError: boolean;
 }
 
 const initialState: AppDataState = {
@@ -23,7 +25,8 @@ const initialState: AppDataState = {
   categories: [],
   isLoading: true,
   categoriesError: false,
-  productsError: false
+  productsError: false,
+  stringOptionsError: false
 };
 
 export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () => {
@@ -34,8 +37,8 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
     sportApi.getStringOptions(),
     sportApi.getCategories()
   ]);
-  // blogs/branches/stringOptions không gọi mạng ném lỗi (stringOptions tự bắt) -- lỗi ở đó vẫn nổi lên.
-  for (const other of [blogs, branches, stringOptions]) {
+  // blogs/branches không gọi mạng ném lỗi -- lỗi ở đó vẫn nổi lên.
+  for (const other of [blogs, branches]) {
     if (other.status === 'rejected') throw other.reason;
   }
 
@@ -46,7 +49,8 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
     categoriesError: categories.status === 'rejected',
     blogs: (blogs as PromiseFulfilledResult<Blog[]>).value,
     branches: (branches as PromiseFulfilledResult<Branch[]>).value,
-    stringOptions: (stringOptions as PromiseFulfilledResult<StringOption[]>).value
+    stringOptions: stringOptions.status === 'fulfilled' ? stringOptions.value : [],
+    stringOptionsError: stringOptions.status === 'rejected'
   };
 });
 
@@ -67,6 +71,7 @@ const appDataSlice = createSlice({
         state.categories = action.payload.categories;
         state.productsError = action.payload.productsError;
         state.categoriesError = action.payload.categoriesError;
+        state.stringOptionsError = action.payload.stringOptionsError;
         state.isLoading = false;
       })
       .addCase(fetchAppData.rejected, state => {
