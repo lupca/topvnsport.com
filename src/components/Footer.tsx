@@ -16,13 +16,11 @@ export default function Footer({ categories, products }: FooterProps) {
   // STOR-011: mọi lời của người bán lấy từ hồ sơ; thiếu trường nào thì không hiện mục đó.
   const profile = getSellerProfile();
   const hasContact = Boolean(profile.address || profile.hotline || profile.email);
-  const showPillars = Boolean(profile.authenticityPolicy || profile.warrantyPolicy || profile.headquartersNote);
 
   return (
     <footer className="bg-gray-950 text-gray-400 text-xs md:text-sm border-t border-gray-900 mt-20" id="topvnsport-footer">
       
       {/* Top Banner: core trust value pillars */}
-      {showPillars && (
       <div className="bg-gray-900 border-b border-gray-950 py-8 px-4 md:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {profile.authenticityPolicy && (
@@ -72,7 +70,6 @@ export default function Footer({ categories, products }: FooterProps) {
           )}
         </div>
       </div>
-      )}
 
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">

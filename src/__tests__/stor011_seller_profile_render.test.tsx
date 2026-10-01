@@ -125,6 +125,13 @@ describe('Footer', () => {
   });
 });
 
+describe('Footer trụ cột không thuộc hồ sơ', () => {
+  it('Footer still shows the support pillar when the profile is empty', () => {
+    setProfile({}); renderFooter();
+    expect(screen.getByText('HỖ TRỢ KỸ THUẬT')).toBeInTheDocument();
+  });
+});
+
 describe('Header', () => {
   it('Header shows the hotline when hotline is set', () => {
     setProfile(FULL); renderHeader();
