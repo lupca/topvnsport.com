@@ -3,7 +3,7 @@ import { X, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
-import { describeCartItemSkuStatus, isCartItemSkuValid, CartItemSkuStatus } from '../features/cart/cartSlice';
+import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, CartItemSkuStatus } from '../features/cart/cartSlice';
 import { useAppSelector } from '../app/hooks';
 import OtpModal from './OtpModal';
 
@@ -42,6 +42,7 @@ const PRODUCTS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách sản ph�
 function cartItemWarningMessage(status: CartItemSkuStatus): string | null {
   if (status === 'product_not_found') return 'Sản phẩm này hiện không còn trên cửa hàng. Vui lòng xoá khỏi giỏ.';
   if (status === 'sku_changed') return 'Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.';
+  if (status === 'no_price') return 'Phân loại này hiện chưa có giá. Vui lòng xoá và chọn lại.';
   return null;
 }
 
@@ -69,14 +70,19 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
   if (!isOpen) return null;
 
-  // Calculate prices
-  const itemsTotal = cartItems.reduce((acc, item) => {
-    const stringCost = item.stringOption ? item.stringOption.price : 0;
-    return acc + (item.price + stringCost) * item.quantity;
-  }, 0);
+  // Giá TÍNH LẠI từ biến thể đã tải (không tin item.price lưu localStorage).
+  // Đang tải/tải lỗi hoặc biến thể không có giá -> null: không hiện số.
+  const lineAmount = (item: CartItem): number | null => {
+    if (isLoadingProducts || productsError) return null;
+    const unit = getCartItemUnitPrice(item, products);
+    return unit === null ? null : (unit + (item.stringOption ? item.stringOption.price : 0)) * item.quantity;
+  };
+  const lineAmounts = cartItems.map(lineAmount);
+  const itemsTotal = lineAmounts.some(a => a === null) ? null : (lineAmounts as number[]).reduce((acc, a) => acc + a, 0);
 
   const shippingCost = shippingMethod === 'standard' ? 30000 : 50000;
-  const orderTotal = itemsTotal + shippingCost;
+  const orderTotal = itemsTotal === null ? null : itemsTotal + shippingCost;
+  const formatMoney = (value: number | null) => (value === null ? '' : `${value.toLocaleString('vi-VN')}đ`);
 
   // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
   // thanh toán/OTP, thay vì để lọt tới sau sendOtp/findOrCreateCustomer rồi
@@ -219,8 +225,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               {cartItems.length > 0 ? (
                 <>
                   <div className="divide-y divide-gray-100">
-                    {cartItems.map((item) => {
-                      const stringPrice = item.stringOption ? item.stringOption.price : 0;
+                    {cartItems.map((item, index) => {
                       // Dữ liệu sản phẩm đang tải -> chưa kết luận được gì,
                       // không hiện cảnh báo sai lúc danh sách còn rỗng/thiếu.
                       const warningMessage = isLoadingProducts
@@ -262,7 +267,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                             <div className="flex justify-between items-center pt-1.5">
                               <span className="text-xs text-gray-400">Số lượng: <strong>{item.quantity}</strong></span>
                               <span className="text-sm font-bold text-brand-primary font-mono">
-                                {((item.price + stringPrice) * item.quantity).toLocaleString('vi-VN')}đ
+                                {formatMoney(lineAmounts[index])}
                               </span>
                             </div>
                           </div>
@@ -427,7 +432,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <p>• <strong>Địa chỉ giao:</strong> {address}, {city}</p>
                 <p>• <strong>Phương thức giao:</strong> {shippingMethod === 'standard' ? 'Giao hàng chuẩn (COD)' : 'Giao hàng hỏa tốc'}</p>
                 <p className="text-sm font-bold text-brand-primary border-t border-gray-200 pt-2 mt-2">
-                  Tổng hóa đơn thanh toán: {orderTotal.toLocaleString('vi-VN')}đ
+                  Tổng hóa đơn thanh toán: {formatMoney(orderTotal)}
                 </p>
               </div>
 
@@ -447,7 +452,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
             <div className="space-y-1.5 text-xs text-gray-600 font-mono">
               <div className="flex justify-between">
                 <span>Tổng tiền hàng:</span>
-                <strong className="text-gray-900">{itemsTotal.toLocaleString('vi-VN')}đ</strong>
+                <strong className="text-gray-900">{formatMoney(itemsTotal)}</strong>
               </div>
               <div className="flex justify-between">
                 <span>Phí vận chuyển:</span>
@@ -455,7 +460,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               </div>
               <div className="flex justify-between text-sm border-t border-gray-200 pt-1.5 mt-1.5 font-bold">
                 <span className="text-gray-900">Tổng cộng thanh toán:</span>
-                <span className="text-brand-primary font-display text-base">{orderTotal.toLocaleString('vi-VN')}đ</span>
+                <span className="text-brand-primary font-display text-base">{formatMoney(orderTotal)}</span>
               </div>
             </div>
 
