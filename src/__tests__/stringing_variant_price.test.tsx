@@ -18,12 +18,12 @@ const product: Product = {
   ]
 };
 
-function mount(p: Product, tier1: string, options: string[]) {
+function mount(p: Product, tier1: string, options: string[], tierIndex: number | undefined = 2) {
   const noop = () => {};
   return render(
     <StringingAssistant
       product={p} isRacket hasStringingVariation
-      stringingVariation={{ tier_index: 2, name: 'Loại Cước', options }} stringingTierIndex={2}
+      stringingVariation={{ tier_index: 2, name: 'Loại Cước', options }} stringingTierIndex={tierIndex}
       isDynamicStringingActive activeStringValue="" selectedTier1={tier1} selectedTier2=""
       withStringing selectedString={null} stringOptions={[]} tension={10.5}
       onSetSelectedTier1={noop} onSetSelectedTier2={noop} onSetWithStringing={noop} onSetSelectedString={noop} onSetTension={noop}
@@ -47,6 +47,13 @@ describe('StringingAssistant giá theo biến thể', () => {
 
   it('không có lựa chọn "không đan" để so -> không hiện giá (không lấy giá sản phẩm)', () => {
     const { container } = mount(product, 'Đỏ', ['BG65']);
+    expect(container.textContent).not.toContain('Miễn phí');
+    expect(container.textContent).not.toMatch(/\d\.\d{3}đ/);
+  });
+
+  it('có stringingVariation nhưng stringingTierIndex = 0 -> không hiện giá (không lấy giá sản phẩm)', () => {
+    const { container } = mount(product, 'Đỏ', ['Khung trơn', 'BG65'], 0);
+    expect(container.textContent).toContain('BG65');
     expect(container.textContent).not.toContain('Miễn phí');
     expect(container.textContent).not.toMatch(/\d\.\d{3}đ/);
   });
