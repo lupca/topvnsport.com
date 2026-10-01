@@ -37,6 +37,7 @@ docker compose -f docker-compose.prod.yml up  # Prod (nginx serving static)
 | `VITE_PMI_API_URL` | PMI API base URL |
 | `VITE_OMS_API_URL` | OMS API base URL |
 | `VITE_WMS_API_URL` | WMS API for stock check |
+| `VITE_SELLER_PROFILE` | JSON hồ sơ người bán (ĐKKD, liên hệ, cam kết, chi nhánh); thiếu trường thì không hiện, JSON hỏng thì build hỏng. Xem `.env.example` |
 
 ## API Integration
 

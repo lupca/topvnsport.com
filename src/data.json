@@ -371,17 +371,6 @@
       "tags": ["Kỹ thuật cầu lông", "Tránh chấn thương", "Cổ tay"]
     }
   ],
-  "branches": [
-    {
-      "id": "branch-bac-tu-liem",
-      "name": "TopVNSport Bắc Từ Liêm (Premium Hub)",
-      "address": "Số 1, ngõ 141/3, phố Lê Văn Hiến, Phường Đức Thắng, Quận Bắc Từ Liêm, Hà Nội",
-      "phone": "0981.234.567",
-      "schedule": "08:00 - 22:00 (Cả tuần)",
-      "city": "Hà Nội",
-      "mapEmbedUrl": "https://maps.google.com/maps?q=S%E1%BB%91%201,%20ng%C3%B5%20141/3,%20ph%E1%BB%91%20L%C3%AA%20V%C4%83n%20Hi%E1%BA%BFn,%20Ph%C6%B0%E1%BB%9Dng%20%C4%90%E1%BB%A9c%20Th%E1%BA%AFng,%20Qu%E1%BA%ADn%20B%E1%BA%AFc%20T%E1%BB%AB%20Li%C3%AAm,%20H%C3%A0%20N%E1%BB%99i&t=&z=15&ie=UTF8&iwloc=&output=embed"
-    }
-  ],
   "constants": {
     "shipping": {
       "standard": 30000,

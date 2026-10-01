@@ -132,9 +132,9 @@ export interface Branch {
   id: string;
   name: string;
   address: string;
-  phone: string;
-  schedule: string;
-  city: 'Hà Nội' | 'TP. Hồ Chí Minh' | 'Đà Nẵng' | 'Hải Dương' | 'Cần Thơ';
+  phone?: string;
+  schedule?: string;
+  city?: string;
   mapEmbedUrl?: string;
 }
 

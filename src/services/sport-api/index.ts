@@ -1,5 +1,6 @@
 import { Blog, Branch, Category, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
+import { getSellerProfile } from '../../config/sellerProfile';
 import { delay, OMS_API_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { findManualChannel, findStorefrontChannel, getChannels } from './omsHelpers';
 import { mapPmiProduct } from './productMappers';
@@ -207,7 +208,8 @@ async function getBlogById(id: string): Promise<Blog | null> {
 }
 
 async function getBranches(): Promise<Branch[]> {
-  return JSON.parse(JSON.stringify(rawData.branches)) as Branch[];
+  // STOR-011: chi nhánh là lời người bán -- lấy từ hồ sơ, thiếu thì danh sách rỗng.
+  return getSellerProfile().branches ?? [];
 }
 
 function resolveStringType(stiffness: string | undefined): StringOption['type'] {

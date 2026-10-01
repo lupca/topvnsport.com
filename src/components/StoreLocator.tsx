@@ -3,6 +3,7 @@ import { MapPin, Phone, Clock, Calendar, ShieldCheck, CheckCircle2, User, Chevro
 import { Branch, Product } from '../types';
 import { popupService } from '@topvnsport/ui-kit';
 import { isRacketCategoryCode } from '../config/storefront';
+import { getSellerProfile } from '../config/sellerProfile';
 
 interface StoreLocatorProps {
   branches: Branch[];
@@ -12,6 +13,9 @@ interface StoreLocatorProps {
 }
 
 export default function StoreLocator({ branches, products, initialBranchId, onClose }: StoreLocatorProps) {
+  // STOR-011: hotline và khu vực phục vụ lấy từ hồ sơ/chi nhánh của người bán; thiếu thì không hiện.
+  const { hotline } = getSellerProfile();
+  const cities = Array.from(new Set(branches.map(b => b.city).filter((c): c is string => Boolean(c))));
   const [selectedCity, setSelectedCity] = useState<'Tất cả' | 'Hà Nội' | 'TP. Hồ Chí Minh' | 'Đà Nẵng' | 'Hải Dương'>('Tất cả');
   const [activeBranch, setActiveBranch] = useState<Branch>(
     branches.find(b => b.id === initialBranchId) || branches[0]
@@ -54,6 +58,14 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
     setIsBooked(false);
   };
 
+  if (branches.length === 0) {
+    return (
+      <div className="flex items-center justify-center p-12 min-h-[400px] text-sm text-gray-500" id="store-locator-empty">
+        Hiện chưa có thông tin cửa hàng.
+      </div>
+    );
+  }
+
   if (!activeBranch) {
     return (
       <div className="flex items-center justify-center p-12 min-h-[400px]" id="store-locator-loading">
@@ -81,15 +93,19 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left column: List of stores with filters */}
         <div className="lg:col-span-1 space-y-4">
+          {cities.length > 0 && (
           <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-xs">
             <h3 className="font-bold text-gray-900 text-sm mb-1">Khu vực phục vụ:</h3>
             <p className="text-xs text-gray-400 mb-3 font-medium">Bản doanh căng cước và thử vợt</p>
             <div className="flex flex-wrap gap-1.5">
-              <span className="text-xs px-3 py-1.5 rounded-full border bg-brand-primary text-white border-brand-primary font-bold">
-                Hà Nội
-              </span>
+              {cities.map(c => (
+                <span key={c} className="text-xs px-3 py-1.5 rounded-full border bg-brand-primary text-white border-brand-primary font-bold">
+                  {c}
+                </span>
+              ))}
             </div>
           </div>
+          )}
 
           {/* Store Cards */}
           <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 scrollbar-hide">
@@ -106,12 +122,16 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                     <p className="text-xs text-gray-500 mt-1">{branch.address}</p>
                     
                     <div className="flex flex-wrap items-center gap-3 mt-2.5 text-[11px] text-gray-400 font-mono">
+                      {branch.phone && (
                       <span className="flex items-center gap-1">
                         <Phone className="w-3 h-3 text-brand-primary" /> {branch.phone}
                       </span>
+                      )}
+                      {branch.schedule && (
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3 text-brand-primary" /> {branch.schedule}
                       </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -129,12 +149,14 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                 <span className="text-[10px] bg-brand-primary text-white px-2 py-0.5 rounded-sm font-bold uppercase tracking-wider">ĐANG CHỌN TRẢI NGHIỆM</span>
                 <h3 className="font-display font-bold text-base mt-1">{activeBranch.name}</h3>
               </div>
+              {activeBranch.phone && (
               <a
                 href={`tel:${activeBranch.phone}`}
                 className="bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5 transition"
               >
                 <Phone className="w-3.5 h-3.5" /> Gọi điện: {activeBranch.phone}
               </a>
+              )}
             </div>
 
             {/* Embedded maps iframe or beautiful graphics */}
@@ -154,7 +176,7 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-brand-light/30">
                   <MapPin className="w-12 h-12 text-brand-primary mb-2 " />
                   <p className="font-bold text-gray-800 text-sm">Bản đồ số đang đồng bộ định vị...</p>
-                  <p className="text-xs text-gray-500 mt-1">Đường dây nóng hỗ trợ khách hàng: 097 6007006</p>
+                  {hotline && <p className="text-xs text-gray-500 mt-1">Đường dây nóng hỗ trợ khách hàng: {hotline}</p>}
                 </div>
               )}
             </div>

@@ -6,6 +6,7 @@ import { Category, Product } from '../types';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
+import { getSellerProfile } from '../config/sellerProfile';
 
 export const normalizeSearchText = (value: string) =>
   value
@@ -34,6 +35,8 @@ interface HeaderProps {
 
 export default function Header({ cartCount, openCart, products, categories }: HeaderProps) {
   const navigate = useNavigate();
+  // STOR-011: hotline/cam kết lấy từ hồ sơ người bán; thiếu thì không hiện.
+  const profile = getSellerProfile();
   const location = useLocation();
   const currentView = location.pathname.includes('catalog') ? 'catalog' : location.pathname.includes('blog') ? 'blog-list' : location.pathname.includes('store') ? 'store-locator' : location.pathname === '/' ? 'home' : '';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -87,14 +90,18 @@ export default function Header({ cartCount, openCart, products, categories }: He
       {/* Top Bar */}
       <div className="hidden md:flex bg-gray-900 text-gray-300 text-xs py-2 px-8 flex-row justify-between items-center gap-2">
         <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
+          {profile.hotline && (
+          <span data-testid="topbar-hotline" className="flex items-center gap-1">
             <Phone className="w-3 h-3 text-brand-primary" />
-            Hotline: <strong className="text-white">097 6007006</strong> (08:00 - 22:00)
+            Hotline: <strong className="text-white">{profile.hotline}</strong>{profile.hotlineHours ? ` (${profile.hotlineHours})` : ''}
           </span>
-          <span className="hidden md:inline text-gray-500">|</span>
-          <span className="hidden md:flex items-center gap-1 text-brand-primary">
-            <ShieldCheck className="w-3 h-3" /> Cam kết 100% chính hãng - Đền gấp 10 nếu giả
+          )}
+          {profile.hotline && profile.authenticityPolicy && <span className="hidden md:inline text-gray-500">|</span>}
+          {profile.authenticityPolicy && (
+          <span data-testid="topbar-authenticity" className="hidden md:flex items-center gap-1 text-brand-primary">
+            <ShieldCheck className="w-3 h-3" /> {profile.authenticityPolicy}
           </span>
+          )}
         </div>
         <div className="flex items-center gap-4">
           <button 
@@ -394,7 +401,7 @@ export default function Header({ cartCount, openCart, products, categories }: He
                       className="w-full text-left py-2.5 px-2 hover:bg-gray-50 rounded-lg flex items-center gap-2"
                     >
                       <MapPin className="w-4 h-4 text-brand-primary" />
-                      Cửa hàng Trải Nghiệm Hà Nội
+                      Cửa hàng Trải Nghiệm
                     </button>
                   </div>
                 </div>
@@ -402,7 +409,7 @@ export default function Header({ cartCount, openCart, products, categories }: He
 
               {/* Drawer Footer info */}
               <div className="p-4 border-t border-gray-100 bg-gray-50 text-[10px] text-gray-400 font-medium space-y-1">
-                <p>Hotline: 097 6007006</p>
+                {profile.hotline && <p data-testid="drawer-hotline">Hotline: {profile.hotline}</p>}
                 <p>© TopVNSport • O2O Badminton Hub</p>
               </div>
             </motion.div>

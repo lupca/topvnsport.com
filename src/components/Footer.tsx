@@ -4,6 +4,7 @@ import { Trophy, Phone, MapPin, Mail, ShieldCheck, Heart, Sparkles, Facebook, Yo
 import { Link } from 'react-router-dom';
 import { Category, Product } from '../types';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
+import { getSellerProfile } from '../config/sellerProfile';
 
 interface FooterProps {
   categories: Category[];
@@ -12,32 +13,41 @@ interface FooterProps {
 
 export default function Footer({ categories, products }: FooterProps) {
   const sortedCategories = getCategoriesSortedByCount(categories, products);
+  // STOR-011: mọi lời của người bán lấy từ hồ sơ; thiếu trường nào thì không hiện mục đó.
+  const profile = getSellerProfile();
+  const hasContact = Boolean(profile.address || profile.hotline || profile.email);
+  const showPillars = Boolean(profile.authenticityPolicy || profile.warrantyPolicy || profile.headquartersNote);
 
   return (
     <footer className="bg-gray-950 text-gray-400 text-xs md:text-sm border-t border-gray-900 mt-20" id="topvnsport-footer">
       
       {/* Top Banner: core trust value pillars */}
+      {showPillars && (
       <div className="bg-gray-900 border-b border-gray-950 py-8 px-4 md:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {profile.authenticityPolicy && (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-xs uppercase tracking-wider">100% CHÍNH HÃNG</h4>
-              <p className="text-[11px] text-gray-400 mt-0.5">Phát hiện hàng giả đền bù gấp 10 lần giá trị.</p>
+              <h4 className="font-bold text-white text-xs uppercase tracking-wider">CAM KẾT CHÍNH HÃNG</h4>
+              <p className="text-[11px] text-gray-400 mt-0.5">{profile.authenticityPolicy}</p>
             </div>
           </div>
+          )}
           
+          {profile.warrantyPolicy && (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary shrink-0">
               <Trophy className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-xs uppercase tracking-wider">BẢO HÀNH CHU ĐÁO</h4>
-              <p className="text-[11px] text-gray-400 mt-0.5">Bảo hành chính hãng 1 đổi 1 trong 90 ngày.</p>
+              <h4 className="font-bold text-white text-xs uppercase tracking-wider">BẢO HÀNH</h4>
+              <p className="text-[11px] text-gray-400 mt-0.5">{profile.warrantyPolicy}</p>
             </div>
           </div>
+          )}
 
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary shrink-0">
@@ -49,17 +59,20 @@ export default function Footer({ categories, products }: FooterProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          {profile.headquartersNote && (
+          <div data-testid="footer-store-pillar" className="flex items-center gap-3">
             <div className="w-10 h-10 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary shrink-0">
               <MapPin className="w-5 h-5" />
             </div>
             <div>
               <h4 className="font-bold text-white text-xs uppercase tracking-wider">CỬA HÀNG TRẢI NGHIỆM</h4>
-              <p className="text-[11px] text-gray-400 mt-0.5">Trụ sở chính tại Hà Nội hỗ trợ chu đáo nhất.</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">{profile.headquartersNote}</p>
             </div>
           </div>
+          )}
         </div>
       </div>
+      )}
 
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -77,9 +90,9 @@ export default function Footer({ categories, products }: FooterProps) {
             </div>
             <span className="font-display font-black text-xl text-white tracking-tight">TOPVN<span className="text-brand-primary">SPORT</span></span>
           </div>
-          <p className="text-xs text-gray-500 leading-relaxed">
-            Hệ thống siêu thị thể thao cầu lông số 1 Việt Nam. Chuyên cung cấp các sản phẩm vợt, giày, cước đan Yonex, Lining, Victor tiêu chuẩn thi đấu quốc tế.
-          </p>
+          {profile.tagline && (
+            <p className="text-xs text-gray-500 leading-relaxed">{profile.tagline}</p>
+          )}
           <div className="flex items-center gap-3 text-gray-500">
             <Facebook className="w-4 h-4 hover:text-white transition cursor-pointer" />
             <Youtube className="w-4 h-4 hover:text-white transition cursor-pointer" />
@@ -106,7 +119,7 @@ export default function Footer({ categories, products }: FooterProps) {
           <h4 className="font-bold text-white text-xs uppercase tracking-wider">Dịch vụ & Hậu mãi</h4>
           <ul className="space-y-1.5 text-xs">
             <li><Link to="/stores" className="hover:text-white transition">Cửa hàng trải nghiệm trực tiếp</Link></li>
-            <li><button className="hover:text-white transition">Chính sách bảo hành 90 ngày</button></li>
+            {profile.warrantyPolicy && <li><button className="hover:text-white transition">Chính sách bảo hành</button></li>}
             <li><button className="hover:text-white transition">Đặt lịch đan cước lấy ngay</button></li>
             <li><Link to="/blog" className="hover:text-white transition">Đánh giá chất lượng sân đấu</Link></li>
             <li><button className="hover:text-white transition">Hướng dẫn chọn vợt theo lực cổ tay</button></li>
@@ -114,30 +127,38 @@ export default function Footer({ categories, products }: FooterProps) {
         </div>
 
         {/* Contact address */}
+        {hasContact && (
         <div className="space-y-3 text-xs">
           <h4 className="font-bold text-white text-xs uppercase tracking-wider">Trụ sở & Liên hệ</h4>
           <ul className="space-y-2 text-gray-500">
+            {profile.address && (
             <li className="flex items-start gap-2">
               <MapPin className="w-4 h-4 text-brand-primary shrink-0" />
-              <span>Số 1, ngõ 141/3, phố Lê Văn Hiến, Phường Đức Thắng, Quận Bắc Từ Liêm, Hà Nội</span>
+              <span>{profile.address}</span>
             </li>
+            )}
+            {profile.hotline && (
             <li className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-brand-primary shrink-0" />
-              <span>097 6007006 (08:00 - 22:00)</span>
+              <span>{profile.hotline}{profile.hotlineHours ? ` (${profile.hotlineHours})` : ''}</span>
             </li>
+            )}
+            {profile.email && (
             <li className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-brand-primary shrink-0" />
-              <span>support@topvnsport.com.vn</span>
+              <span>{profile.email}</span>
             </li>
+            )}
           </ul>
         </div>
+        )}
 
       </div>
 
       {/* Bottom Copyright */}
       <div className="bg-gray-985 border-t border-gray-900/60 py-5 text-center text-xs text-gray-600 px-4">
-        <p>© 2026 TopVNSport. Hệ thống phân phối thiết bị cầu lông quốc tế hàng đầu Việt Nam.</p>
-        <p className="mt-1 text-[10px] text-gray-700">Giấy phép ĐKKD số 0102030405 cấp bởi Sở Kế Hoạch và Đầu Tư Hà Nội.</p>
+        <p>© 2026 TopVNSport.{profile.footerSlogan ? ` ${profile.footerSlogan}` : ''}</p>
+        {profile.businessLicense && <p data-testid="footer-licence" className="mt-1 text-[10px] text-gray-700">{profile.businessLicense}</p>}
       </div>
 
     </footer>

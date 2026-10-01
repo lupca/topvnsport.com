@@ -6,6 +6,7 @@ import { popupService } from '@topvnsport/ui-kit';
 import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, CartItemSkuStatus } from '../features/cart/cartSlice';
 import { useAppSelector } from '../app/hooks';
 import OtpModal from './OtpModal';
+import { getSellerProfile } from '../config/sellerProfile';
 
 
 export interface CartItem {
@@ -54,6 +55,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const isLoadingProducts = useAppSelector(state => state.appData.isLoading);
   // Tải sản phẩm lỗi -> không biết món nào còn bán: báo lỗi tải, khoá thanh toán.
   const productsError = useAppSelector(state => state.appData.productsError);
+  // STOR-011: ghi chú bảo hành là lời người bán, lấy từ hồ sơ; thiếu thì không hiện.
+  const profile = getSellerProfile();
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   const [createdOrderNumber, setCreatedOrderNumber] = useState('');
   
@@ -285,10 +288,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   </div>
 
                   {/* Trust warning */}
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-start gap-2 text-[11px] text-gray-500 leading-normal">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <span>Hóa đơn bán vợt kèm thẻ bảo hành chống gãy sập khung chính hãng.</span>
-                  </div>
+                  {profile.frameWarrantyPolicy && (
+                    <div data-testid="frame-warranty-note" className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-start gap-2 text-[11px] text-gray-500 leading-normal">
+                      <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span>{profile.frameWarrantyPolicy}</span>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="text-center py-16 space-y-3">
@@ -436,12 +441,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 </p>
               </div>
 
-              <div className="bg-brand-light p-3 rounded-lg border border-blue-100 text-left text-[11px] text-brand-secondary flex items-start gap-2 leading-relaxed">
-                <ShieldCheck className="w-4.5 h-4.5 shrink-0 mt-0.5" />
-                <span>
-                  Đơn hàng của bạn sẽ được bảo hành trực tiếp thông qua số điện thoại mua hàng tại tất cả hơn 80 chi nhánh TopVNSport toàn quốc.
-                </span>
-              </div>
+              {profile.orderWarrantyNote && (
+                <div data-testid="order-warranty-note" className="bg-brand-light p-3 rounded-lg border border-blue-100 text-left text-[11px] text-brand-secondary flex items-start gap-2 leading-relaxed">
+                  <ShieldCheck className="w-4.5 h-4.5 shrink-0 mt-0.5" />
+                  <span>{profile.orderWarrantyNote}</span>
+                </div>
+              )}
             </div>
           )}
         </div>
