@@ -6,6 +6,11 @@ import { Product } from '../types';
 import { getProductPath } from '../utils/productSlug';
 import { isRacketCategoryCode } from '../config/storefront';
 
+// Mốc giá cấu hình giao diện: nhãn ngân sách và bộ lọc cùng đọc hai hằng này.
+const BUDGET_LOW_MAX = 1500000;
+const BUDGET_HIGH_MIN = 3000000;
+const trieu = (n: number) => (n / 1e6).toLocaleString('vi-VN');
+
 interface RacketFinderProps {
   products: Product[];
   
@@ -34,11 +39,11 @@ export default function RacketFinder({ products }: RacketFinderProps) {
 
     // Filter by budget
     if (answers.budget === 'low') {
-      matches = matches.filter(p => p.price !== undefined && p.price <= 1500000);
+      matches = matches.filter(p => p.price !== undefined && p.price < BUDGET_LOW_MAX);
     } else if (answers.budget === 'medium') {
-      matches = matches.filter(p => p.price !== undefined && p.price > 1000000 && p.price <= 3000000);
+      matches = matches.filter(p => p.price !== undefined && p.price >= BUDGET_LOW_MAX && p.price <= BUDGET_HIGH_MIN);
     } else if (answers.budget === 'high') {
-      matches = matches.filter(p => p.price !== undefined && p.price > 3000000);
+      matches = matches.filter(p => p.price !== undefined && p.price > BUDGET_HIGH_MIN);
     }
 
     // Filter by style
@@ -190,9 +195,9 @@ export default function RacketFinder({ products }: RacketFinderProps) {
               <h3 className="text-sm font-semibold uppercase text-brand-primary tracking-wider text-center mb-4">Câu hỏi 3: Khoảng ngân sách đầu tư cho vợt?</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { id: 'low', title: 'Dưới 1,5 Triệu VNĐ', desc: 'Tối ưu ngân sách, các dòng vợt bền dẻo dai trợ lực tốt của Kumpoo, VNB, Apacs.' },
-                  { id: 'medium', title: 'Từ 1,5 - 3 Triệu VNĐ', desc: 'Sở hữu các dòng vợt trung cấp có vật liệu carbon tốt hơn, độ đầm tay cao.' },
-                  { id: 'high', title: 'Trên 3 Triệu VNĐ (Cao Cấp)', desc: 'Các dòng vợt flagship Yonex JP, Lining cao cấp với công nghệ carbon hàng không.' }
+                  { id: 'low', title: `Dưới ${trieu(BUDGET_LOW_MAX)} Triệu VNĐ`, desc: 'Tối ưu ngân sách, các dòng vợt bền dẻo dai trợ lực tốt.' },
+                  { id: 'medium', title: `Từ ${trieu(BUDGET_LOW_MAX)} - ${trieu(BUDGET_HIGH_MIN)} Triệu VNĐ`, desc: 'Sở hữu các dòng vợt trung cấp có vật liệu carbon tốt hơn, độ đầm tay cao.' },
+                  { id: 'high', title: `Trên ${trieu(BUDGET_HIGH_MIN)} Triệu VNĐ (Cao Cấp)`, desc: 'Các dòng vợt flagship cao cấp với công nghệ carbon hàng không.' }
                 ].map((opt) => (
                   <div
                     key={opt.id}
@@ -245,17 +250,18 @@ export default function RacketFinder({ products }: RacketFinderProps) {
                 <p className="text-emerald-400 font-bold text-sm">✓ Phân tích hoàn tất! Dưới đây là 3 cây vợt tối ưu nhất dành cho bạn:</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
                 {recommendations.map((p) => (
                   <div
                     key={p.id}
                     onClick={() => navigate(getProductPath(p))}
-                    className="bg-gray-850 border border-gray-800 hover:border-brand-primary/50 rounded-xl p-4 cursor-pointer transition-all duration-300 group flex flex-col justify-between"
+                    className="bg-gray-850 border border-gray-800 hover:border-brand-primary/50 rounded-xl cursor-pointer transition-all duration-300 group flex flex-row md:flex-col gap-3 p-3 md:p-4 md:justify-between"
                   >
+                    <div className="w-20 h-20 shrink-0 md:w-auto md:h-auto md:aspect-square bg-gray-900 rounded-lg p-2 flex items-center justify-center overflow-hidden md:mb-3">
+                      <img src={p.image} alt={p.name} className="max-h-full object-contain group-hover:scale-105 transition duration-300" referrerPolicy="no-referrer" />
+                    </div>
+                    <div className="min-w-0 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="aspect-square bg-gray-900 rounded-lg p-2 flex items-center justify-center overflow-hidden mb-3">
-                        <img src={p.image} alt={p.name} className="max-h-full object-contain group-hover:scale-105 transition duration-300" referrerPolicy="no-referrer" />
-                      </div>
                       <span className="text-[10px] font-mono font-bold text-brand-primary block mb-1 uppercase tracking-wider">{p.brand}</span>
                       <h4 className="font-bold text-sm text-white group-hover:text-brand-primary transition line-clamp-2 leading-snug">{p.name}</h4>
                       
@@ -267,9 +273,10 @@ export default function RacketFinder({ products }: RacketFinderProps) {
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-gray-800 flex items-center justify-between">
+                    <div className="mt-2 pt-2 md:mt-4 md:pt-3 border-t border-gray-800 flex items-center justify-between">
                       <span className="text-sm font-extrabold text-brand-primary font-display">{p.price === undefined ? 'Liên hệ để biết giá' : `${(p.salePrice || p.price).toLocaleString('vi-VN')}đ`}</span>
                       <span className="text-[10px] bg-brand-primary/20 text-brand-primary font-bold px-2 py-0.5 rounded-full uppercase">Xem ngay &rarr;</span>
+                    </div>
                     </div>
                   </div>
                 ))}
