@@ -24,7 +24,7 @@ function mount(p: Product, tier1 = 'Deep Teal') {
   const noop = () => {};
   return render(
     <StringingAssistant
-      product={p} isRacket hasStringingVariation
+      product={p} hasStringingVariation
       stringingVariation={{ tier_index: 2, name: 'Loại Cước', options: ['Khung không dây', 'Exbolt 65'] }} stringingTierIndex={2}
       isDynamicStringingActive activeStringValue="" selectedTier1={tier1} selectedTier2="" stringOptions={[]} tension={10.5}
       onSetSelectedTier1={noop} onSetSelectedTier2={noop} onSetTension={noop}

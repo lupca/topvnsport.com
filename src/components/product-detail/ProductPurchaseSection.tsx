@@ -7,7 +7,6 @@ import { isStringingTierName } from './helpers';
 
 interface ProductPurchaseSectionProps {
   product: Product;
-  isRacket: boolean;
   totalDisplayPrice: number;
   hasPrice: boolean;
   displayOriginalPrice: number;
@@ -35,7 +34,6 @@ interface ProductPurchaseSectionProps {
 
 export default function ProductPurchaseSection({
   product,
-  isRacket,
   totalDisplayPrice,
   hasPrice,
   displayOriginalPrice,
@@ -206,7 +204,6 @@ export default function ProductPurchaseSection({
 
         <StringingAssistant
           product={product}
-          isRacket={isRacket}
           hasStringingVariation={hasStringingVariation}
           stringingVariation={stringingVariation}
           stringingTierIndex={stringingTierIndex}

@@ -31,7 +31,7 @@ const racket: Product = {
 
 const noop = () => {};
 const assistantProps = {
-  product: racket, isRacket: true, hasStringingVariation: false, isDynamicStringingActive: false,
+  product: racket, hasStringingVariation: false, isDynamicStringingActive: false,
   activeStringValue: '', selectedTier1: '', selectedTier2: '', stringOptions: [kizuna], tension: 10.5,
   onSetSelectedTier1: noop, onSetSelectedTier2: noop, onSetTension: noop
 };
