@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Sparkles, Trophy, BookOpen, ChevronDown, Check, Trash, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Sparkles, Trophy, BookOpen, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
+import { getPriceDisplay } from '../utils/priceDisplay';
 
 export const normalizeSearchText = (value: string) =>
   value
@@ -52,6 +53,21 @@ export default function Header({ cartCount, openCart, products, categories }: He
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Khoá cuộn trang nền khi drawer mở; đóng hoặc unmount thì trả lại.
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [isMobileMenuOpen]);
+
+  const submitSearch = () => {
+    const q = searchQuery.trim();
+    if (!q) return;
+    navigate(`/catalog?search=${encodeURIComponent(q)}`);
+    setShowSearchDropdown(false);
+  };
 
   // AJAX search emulation
   useEffect(() => {
@@ -166,9 +182,20 @@ export default function Header({ cartCount, openCart, products, categories }: He
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.trim().length >= 2 && setShowSearchDropdown(true)}
-              className="w-full pl-10 pr-4 py-1.5 md:py-2 bg-gray-50 border border-gray-200 rounded-full text-xs md:text-sm text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
+              onKeyDown={(e) => { if (e.key === 'Enter') submitSearch(); }}
+              className="w-full pl-10 pr-9 py-1.5 md:py-2 bg-gray-50 border border-gray-200 rounded-full text-xs md:text-sm text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
             />
             <Search className="absolute left-3.5 top-2 md:top-2.5 w-4 h-4 md:w-4.5 md:h-4.5 text-gray-400" />
+            {searchQuery !== '' && (
+              <button
+                type="button"
+                aria-label="Xoá từ khoá"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1.5 md:top-2 p-0.5 text-gray-400 hover:text-gray-700"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
           {/* Quick Trends under Search Bar */}
@@ -208,9 +235,9 @@ export default function Header({ cartCount, openCart, products, categories }: He
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs font-bold text-brand-primary">{p.price === undefined ? 'Liên hệ để biết giá' : `${(p.salePrice || p.price).toLocaleString('vi-VN')}đ`}</p>
-                      {p.price !== undefined && p.salePrice && (
-                        <p className="text-[10px] text-gray-400 line-through">{p.price.toLocaleString('vi-VN')}đ</p>
+                      <p className="text-xs font-bold text-brand-primary">{p.price === undefined ? 'Liên hệ để biết giá' : `${getPriceDisplay(p).salePrice.toLocaleString('vi-VN')}đ`}</p>
+                      {p.price !== undefined && getPriceDisplay(p).hasActivePromotion && (
+                        <p className="text-[10px] text-gray-400 line-through">{getPriceDisplay(p).originalPrice.toLocaleString('vi-VN')}đ</p>
                       )}
                     </div>
                   </div>
@@ -315,54 +342,19 @@ export default function Header({ cartCount, openCart, products, categories }: He
                     <div className="space-y-2">
                       <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Danh Mục Sản Phẩm</h4>
                       <div className="grid grid-cols-1 gap-1">
-                        {sortedCategories.map((category, index) => (
+                        {sortedCategories.map((category) => (
                           <button
                             key={category.id}
                             onClick={() => { navigate(`/catalog?category=${encodeURIComponent(category.code)}`); setIsMobileMenuOpen(false); }}
-                            className={`w-full text-left py-2 px-3 rounded-lg text-xs font-semibold flex items-center gap-2 ${currentView === 'catalog' ? 'bg-brand-light text-brand-primary' : 'text-gray-700 hover:bg-gray-50'}`}
+                            className={`w-full text-left py-2 px-3 rounded-lg text-xs font-semibold flex items-center gap-2 ${currentView === 'catalog' && new URLSearchParams(location.search).get('category') === category.code ? 'bg-brand-light text-brand-primary' : 'text-gray-700 hover:bg-gray-50'}`}
                           >
-                            {index === 0 ? (
-                              <Trophy className="w-4 h-4 text-brand-primary" />
-                            ) : (
-                              <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
-                            )}
+                            <ChevronRight className="w-4 h-4 text-gray-400 shrink-0" />
                             {getCategoryLabel(category, categories)}
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
-
-                  {/* Playstyle Section */}
-                  <div className="space-y-2">
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Lối Chơi (Playstyle)</h4>
-                    <div className="grid grid-cols-2 gap-2 text-[11px]">
-                      <button 
-                        onClick={() => { navigate(`/catalog?characteristics=Tấn Công`); setIsMobileMenuOpen(false); }}
-                        className="p-2 border border-gray-100 rounded-lg text-center hover:border-brand-primary font-semibold text-gray-700"
-                      >
-                        💥 Thiên Công
-                      </button>
-                      <button 
-                        onClick={() => { navigate(`/catalog?characteristics=Phòng Thủ`); setIsMobileMenuOpen(false); }}
-                        className="p-2 border border-gray-100 rounded-lg text-center hover:border-brand-primary font-semibold text-gray-700"
-                      >
-                        ⚡ Phản Tạt
-                      </button>
-                      <button 
-                        onClick={() => { navigate(`/catalog?characteristics=Toàn Diện`); setIsMobileMenuOpen(false); }}
-                        className="p-2 border border-gray-100 rounded-lg text-center hover:border-brand-primary font-semibold text-gray-700"
-                      >
-                        🛡️ Toàn Diện
-                      </button>
-                      <button 
-                        onClick={() => { navigate(`/catalog?characteristics=Người Mới`); setIsMobileMenuOpen(false); }}
-                        className="p-2 border border-gray-100 rounded-lg text-center hover:border-brand-primary font-semibold text-gray-700"
-                      >
-                        🔰 Người Mới
-                      </button>
-                    </div>
-                  </div>
 
                   {/* Hot Brands Section */}
                   <div className="space-y-2">
