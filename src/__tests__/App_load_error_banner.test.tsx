@@ -8,6 +8,7 @@ import { store } from '../app/store';
 
 const api = vi.hoisted(() => ({
   getProducts: vi.fn(),
+  getAllStock: vi.fn().mockResolvedValue({}),
   getCategories: vi.fn(),
   getBlogs: vi.fn().mockResolvedValue([]),
   getBranches: vi.fn().mockResolvedValue([]),

@@ -83,7 +83,8 @@ export interface Product {
   features?: string[];
   technologies?: ProductTechnology[];
   reviews: ProductReview[];
-  stock: number;
+  // undefined = tồn kho không tải được (không biết), khác 0 = hết hàng.
+  stock?: number;
   defaultSku?: string;
   tier_variations?: TierVariation[];
   variants?: ProductVariant[];
@@ -108,7 +109,7 @@ export interface ProductVariant {
   sku_code: string;
   price: number;
   barcode?: string | null;
-  stock: number;
+  stock?: number;
   computedPrice?: number;
   originalPrice?: number;
   percentageDiscount?: number;

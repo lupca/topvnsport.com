@@ -23,20 +23,22 @@ function parseWmsStock(data: any): Record<string, number> {
 }
 
 // STOR-012: MỘT request /public/stock không sku_codes = toàn bộ tồn của seller
-// theo grant (WMS sku_stock(db, None): chỉ SKU có dòng tồn). Lỗi giữ cách cũ:
-// console.warn rồi trả null (caller dùng variant.stock của PIM).
-async function fetchAllWmsStock(): Promise<Record<string, number> | null> {
+// theo grant (WMS sku_stock(db, None): chỉ SKU có dòng tồn). STOR-015: lỗi ->
+// console.error nêu URL rồi NÉM (tồn chỉ lấy từ WMS, không dùng tồn PIM thay).
+async function fetchAllWmsStock(): Promise<Record<string, number>> {
+  const url = `${WMS_PROXY_URL}/public/stock`;
+  let response: Response;
   try {
-    const response = await fetch(`${WMS_PROXY_URL}/public/stock`);
-    if (!response.ok) {
-      console.warn(`WMS public stock endpoint returned status ${response.status}`);
-      return null;
-    }
-    return parseWmsStock(await response.json());
+    response = await fetch(url);
   } catch (error) {
-    console.warn('Failed to fetch stock from WMS:', error);
-    return null;
+    console.error(`Failed to fetch stock from ${url}:`, error);
+    throw error;
   }
+  if (!response.ok) {
+    console.error(`Failed to fetch stock: ${url} returned status ${response.status}`);
+    throw new Error(`WMS stock failed with status ${response.status}`);
+  }
+  return parseWmsStock(await response.json());
 }
 
 async function fetchWmsStock(skuCodes: string[]): Promise<Record<string, number>> {
@@ -54,17 +56,19 @@ async function fetchWmsStock(skuCodes: string[]): Promise<Record<string, number>
   const result: Record<string, number> = {};
 
   const fetchChunk = async (chunk: string[]) => {
+    const url = `${WMS_PROXY_URL}/public/stock?sku_codes=${encodeURIComponent(chunk.join(','))}`;
+    let response: Response;
     try {
-      const url = `${WMS_PROXY_URL}/public/stock?sku_codes=${encodeURIComponent(chunk.join(','))}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.warn(`WMS public stock endpoint returned status ${response.status}`);
-        return;
-      }
-      Object.assign(result, parseWmsStock(await response.json()));
+      response = await fetch(url);
     } catch (error) {
-      console.warn('Failed to fetch stock from WMS chunk:', error);
+      console.error(`Failed to fetch stock from ${url}:`, error);
+      throw error;
     }
+    if (!response.ok) {
+      console.error(`Failed to fetch stock: ${url} returned status ${response.status}`);
+      throw new Error(`WMS stock failed with status ${response.status}`);
+    }
+    Object.assign(result, parseWmsStock(await response.json()));
   };
 
   await Promise.all(chunks.map((chunk) => fetchChunk(chunk)));
@@ -93,36 +97,36 @@ async function mergeWmsStock(products: Product[]): Promise<Product[]> {
   if (allSkus.length === 0) {
     return products;
   }
-  return applyWmsStock(products, await fetchWmsStock(allSkus));
+  try {
+    return applyWmsStock(products, await fetchWmsStock(allSkus));
+  } catch {
+    // Đã console.error ở fetchWmsStock; tồn không rõ, không giữ tồn PIM.
+    return applyWmsStock(products, null);
+  }
 }
 
-// absentIsZero: stockMap là TOÀN BỘ tồn (fetchAllWmsStock) nên SKU vắng = WMS
-// không có dòng tồn = 0 (giống WMS trả 0 khi hỏi đích danh). Map theo lô thì SKU
-// vắng = lô lỗi -> giữ variant.stock của PIM.
-function applyWmsStock(products: Product[], stockMap: Record<string, number> | null, absentIsZero = false): Product[] {
-  const has = (sku: string) =>
-    stockMap !== null && (absentIsZero || Object.prototype.hasOwnProperty.call(stockMap, sku));
-  const read = (sku: string) => stockMap?.[sku] ?? 0;
+// stockMap = TOÀN BỘ tồn WMS nên SKU vắng = WMS không có dòng tồn = 0.
+// stockMap null = tồn không tải được -> stock undefined (không biết), không giữ
+// variant.stock của PIM (PIM không có trường tồn).
+function applyWmsStock(products: Product[], stockMap: Record<string, number> | null): Product[] {
+  const read = (sku: string) => (stockMap ? stockMap[sku] ?? 0 : undefined);
 
   return products.map((product) => {
-    let aggregateStock = 0;
+    let aggregateStock: number | undefined = stockMap ? 0 : undefined;
 
     const updatedVariants = product.variants?.map((variant) => {
-      let variantStock = variant.stock || 0;
-      if (variant.sku_code && has(variant.sku_code)) {
-        variantStock = read(variant.sku_code);
-      }
-      aggregateStock += variantStock;
+      const variantStock = variant.sku_code ? read(variant.sku_code) : stockMap ? 0 : undefined;
+      if (variantStock !== undefined && aggregateStock !== undefined) aggregateStock += variantStock;
       return {
         ...variant,
         stock: variantStock
       };
     });
 
-    let finalProductStock = product.stock;
+    let finalProductStock: number | undefined = stockMap ? product.stock : undefined;
     if (updatedVariants && updatedVariants.length > 0) {
       finalProductStock = aggregateStock;
-    } else if (product.defaultSku && has(product.defaultSku)) {
+    } else if (product.defaultSku) {
       finalProductStock = read(product.defaultSku);
     }
 
@@ -195,15 +199,24 @@ async function fetchAllPmiProducts(): Promise<PmiProduct[]> {
 // STOR-012: danh mục, products và toàn bộ tồn bắn SONG SONG đúng 1 lần.
 // `categories` (đã tải bởi fetchAppData) dùng lại, không gọi lại getCategories;
 // danh mục lỗi vẫn làm lỗi cả sản phẩm (spec a4f6975e).
-async function getProducts(categories?: Promise<Category[]>): Promise<Product[]> {
+// STOR-015: `stock` (promise tồn của fetchAppData) lỗi KHÔNG làm lỗi sản phẩm:
+// sản phẩm trả về với stock=undefined.
+// Cùng độ trễ mô phỏng với getProducts để tồn và sản phẩm bắn song song (STOR-012).
+async function getAllStock(): Promise<Record<string, number>> {
   await delay(SIMULATED_LATENCY);
+  return fetchAllWmsStock();
+}
+
+async function getProducts(categories?: Promise<Category[]>, stock?: Promise<Record<string, number>>): Promise<Product[]> {
+  await delay(SIMULATED_LATENCY);
+  const stockP = (stock ?? fetchAllWmsStock()).catch(() => null);
   const [pmiProducts, loadedCategories, stockMap] = await Promise.all([
     fetchAllPmiProducts(),
     categories ?? getCategories(),
-    fetchAllWmsStock()
+    stockP
   ]);
   const products = pmiProducts.flatMap((product) => mapPmiProduct(product, loadedCategories) ?? []);
-  return collectSkus(products).length === 0 ? products : applyWmsStock(products, stockMap, true);
+  return stockMap && collectSkus(products).length === 0 ? products : applyWmsStock(products, stockMap);
 }
 
 async function getProductById(id: string): Promise<Product | null> {
@@ -457,6 +470,7 @@ export const sportApi = {
   getProducts,
   getProductById,
   getWmsStock: fetchWmsStock,
+  getAllStock,
   getBlogs,
   getCategories,
   getBlogById,
