@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Product } from '../../types';
 
 export type DetailTab = 'details' | 'tech' | 'reviews';
@@ -292,29 +292,18 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
 
         {activeTab === 'reviews' && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-100 pb-4 gap-4">
-              <div>
-                <h4 className="font-bold text-gray-900 text-base">Phản hồi từ khách hàng thực tế</h4>
-                <p className="text-xs text-gray-500">Được kiểm chứng mua hàng bởi hóa đơn hệ thống cửa hàng</p>
-              </div>
-              <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-100 text-xs font-semibold">
-                <Check className="w-4 h-4 text-emerald-500" /> 100% Đánh giá chính xác từ người dùng thật
-              </div>
-            </div>
-
             {product.reviews && product.reviews.length > 0 ? (
               <div className="divide-y divide-gray-100">
                 {product.reviews.map((review, index) => (
                   <div key={index} className="py-5 flex gap-4">
-                    <img
-                      src={
-                        review.avatar ||
-                        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80'
-                      }
-                      alt={review.author}
-                      className="w-10 h-10 object-cover rounded-full bg-gray-100"
-                      referrerPolicy="no-referrer"
-                    />
+                    {review.avatar && (
+                      <img
+                        src={review.avatar}
+                        alt={review.author}
+                        className="w-10 h-10 object-cover rounded-full bg-gray-100"
+                        referrerPolicy="no-referrer"
+                      />
+                    )}
                     <div className="space-y-1.5 flex-1">
                       <div className="flex items-center justify-between">
                         <strong className="text-sm text-gray-900">{review.author}</strong>
@@ -340,7 +329,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
               </div>
             ) : (
               <div className="text-center py-10 bg-gray-50 rounded-xl">
-                <p className="text-gray-500 text-sm">Chưa có đánh giá nào cho cây vợt này. Hãy là người đầu tiên trải nghiệm!</p>
+                <p className="text-gray-500 text-sm">Chưa có đánh giá nào cho cây vợt này.</p>
               </div>
             )}
           </div>
