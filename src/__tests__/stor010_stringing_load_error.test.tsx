@@ -18,7 +18,7 @@ const racket: Product = {
 
 const noop = () => {};
 const baseProps = {
-  product: racket, isRacket: true, hasStringingVariation: false, isDynamicStringingActive: false,
+  product: racket, hasStringingVariation: false, isDynamicStringingActive: false,
   activeStringValue: '', selectedTier1: '', selectedTier2: '',
   stringOptions: [], tension: 0, onSetSelectedTier1: noop, onSetSelectedTier2: noop,
   onSetTension: noop

@@ -132,7 +132,7 @@ describe('STOR-006 render', () => {
 
   it('ProductPurchaseSection không có nút "Tiêu chuẩn" cho sản phẩm không tầng', () => {
     const props: any = {
-      product: { ...base, colors: [], tier_variations: [], variants: [] }, isRacket: true, totalDisplayPrice: 1, hasPrice: true,
+      product: { ...base, colors: [], tier_variations: [], variants: [] }, totalDisplayPrice: 1, hasPrice: true,
       displayOriginalPrice: 1, hasDiscount: false, discountPercent: 0, stringPrice: 0, selectedTier1: '', selectedTier2: '',
       selectedColor: 'Tiêu chuẩn', withStringing: false, selectedString: null, tension: 0, stringOptions: [],
       hasStringingVariation: false, isDynamicStringingActive: false, activeStringValue: '', isOutOfStock: false,

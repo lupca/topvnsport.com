@@ -6,7 +6,6 @@ import { formatStringMeta, getTensionTooltip, inferStringMeta, isNoStringOption 
 
 interface StringingAssistantProps {
   product: Product;
-  isRacket: boolean;
   hasStringingVariation: boolean;
   stringingVariation?: TierVariation;
   stringingTierIndex?: number;

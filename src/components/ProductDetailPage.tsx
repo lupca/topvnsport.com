@@ -103,7 +103,6 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   const discountPercent = matchedVariant?.percentageDiscount ?? product.percentageDiscount ?? 
     (hasDiscount && displayOriginalPrice > 0 ? Math.round(((displayOriginalPrice - displayBasePrice) / displayOriginalPrice) * 100) : 0);
 
-  const totalDisplayPrice = displayBasePrice;
 
   const resolvedColor = product.tier_variations && product.tier_variations.length > 0
     ? selectedTier1
@@ -188,8 +187,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
         <div className="lg:col-span-7">
           <ProductPurchaseSection
             product={product}
-            isRacket={isRacket}
-            totalDisplayPrice={totalDisplayPrice}
+            totalDisplayPrice={displayBasePrice}
             hasPrice={hasPrice}
             displayOriginalPrice={displayOriginalPrice}
             hasDiscount={hasDiscount}
@@ -226,7 +224,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
       <MobilePurchaseBar
         productName={product.name}
         productImage={product.image}
-        totalDisplayPrice={totalDisplayPrice}
+        totalDisplayPrice={displayBasePrice}
         hasPrice={hasPrice}
         isOutOfStock={isOutOfStock}
         stockUnknown={stockUnknown}

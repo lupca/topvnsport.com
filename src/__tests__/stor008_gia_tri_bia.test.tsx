@@ -44,7 +44,7 @@ function pmi(attrBrand?: string, extra: Partial<PmiProduct> = {}): PmiProduct {
 
 function purchaseProps(over: Record<string, unknown> = {}) {
   return {
-    product: brandedNoPrice, isRacket: false, totalDisplayPrice: 0, hasPrice: false,
+    product: brandedNoPrice, totalDisplayPrice: 0, hasPrice: false,
     displayOriginalPrice: 0, hasDiscount: false, discountPercent: 0, stringPrice: 0,
     selectedTier1: '', selectedTier2: '', selectedColor: '', withStringing: false,
     selectedString: null, tension: 10.5, stringOptions: [], hasStringingVariation: false,

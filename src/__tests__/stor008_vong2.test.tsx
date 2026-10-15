@@ -88,7 +88,7 @@ describe('F2: StringingAssistant không ghi "Miễn phí" khi không có giá th
   });
   const renderSA = (p: Product) => render(
     <StringingAssistant
-      product={p} isRacket hasStringingVariation stringingVariation={p.tier_variations![0]} stringingTierIndex={1}
+      product={p} hasStringingVariation stringingVariation={p.tier_variations![0]} stringingTierIndex={1}
       isDynamicStringingActive activeStringValue="Cước A" selectedTier1="" selectedTier2="" stringOptions={[]} tension={10.5}
       onSetSelectedTier1={vi.fn()} onSetSelectedTier2={vi.fn()} onSetTension={vi.fn()} />
   );
