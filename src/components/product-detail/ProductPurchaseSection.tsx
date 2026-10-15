@@ -13,15 +13,11 @@ interface ProductPurchaseSectionProps {
   displayOriginalPrice: number;
   hasDiscount: boolean;
   discountPercent: number;
-  stringPrice: number;
   selectedTier1: string;
   selectedTier2: string;
   selectedColor: string;
-  withStringing: boolean;
-  selectedString: StringOption | null;
   tension: number;
   stringOptions: StringOption[];
-  stringOptionsError: boolean;
   hasStringingVariation: boolean;
   stringingVariation?: TierVariation;
   stringingTierIndex?: number;
@@ -32,8 +28,6 @@ interface ProductPurchaseSectionProps {
   onSetSelectedTier1: (value: string) => void;
   onSetSelectedTier2: (value: string) => void;
   onSetSelectedColor: (value: string) => void;
-  onSetWithStringing: (value: boolean) => void;
-  onSetSelectedString: (value: StringOption | null) => void;
   onSetTension: (value: number) => void;
   onAddToCart: () => void;
   getVariantStock: (tier1: string, tier2: string) => number | undefined;
@@ -47,15 +41,11 @@ export default function ProductPurchaseSection({
   displayOriginalPrice,
   hasDiscount,
   discountPercent,
-  stringPrice,
   selectedTier1,
   selectedTier2,
   selectedColor,
-  withStringing,
-  selectedString,
   tension,
   stringOptions,
-  stringOptionsError,
   hasStringingVariation,
   stringingVariation,
   stringingTierIndex,
@@ -66,8 +56,6 @@ export default function ProductPurchaseSection({
   onSetSelectedTier1,
   onSetSelectedTier2,
   onSetSelectedColor,
-  onSetWithStringing,
-  onSetSelectedString,
   onSetTension,
   onAddToCart,
   getVariantStock
@@ -129,7 +117,7 @@ export default function ProductPurchaseSection({
               </span>
               {hasPrice && hasDiscount && (
                 <span className="text-sm text-gray-400 line-through mb-1.5 font-medium">
-                  {(displayOriginalPrice + stringPrice).toLocaleString('vi-VN')}đ
+                  {displayOriginalPrice.toLocaleString('vi-VN')}đ
                 </span>
               )}
             </div>
@@ -226,15 +214,10 @@ export default function ProductPurchaseSection({
           activeStringValue={activeStringValue}
           selectedTier1={selectedTier1}
           selectedTier2={selectedTier2}
-          withStringing={withStringing}
-          selectedString={selectedString}
           stringOptions={stringOptions}
-          stringOptionsError={stringOptionsError}
           tension={tension}
           onSetSelectedTier1={onSetSelectedTier1}
           onSetSelectedTier2={onSetSelectedTier2}
-          onSetWithStringing={onSetWithStringing}
-          onSetSelectedString={onSetSelectedString}
           onSetTension={onSetTension}
         />
 

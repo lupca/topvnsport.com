@@ -11,7 +11,6 @@ export default function ProductDetailRoute() {
   const { slug } = useParams<{ slug: string }>();
   const products = useAppSelector(state => state.appData.products);
   const stringOptions = useAppSelector(state => state.appData.stringOptions);
-  const stringOptionsError = useAppSelector(state => state.appData.stringOptionsError);
   const product = findProductBySlug(products, slug);
 
   if (!product) return <div>Not Found</div>;
@@ -44,7 +43,6 @@ export default function ProductDetailRoute() {
     <ProductDetailPage
       product={product}
       stringOptions={stringOptions}
-      stringOptionsError={stringOptionsError}
       onAddToCartWithSpecs={handleAddToCartWithSpecs}
     />
   );

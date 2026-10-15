@@ -11,13 +11,12 @@ import { isRacketCategoryCode } from '../config/storefront';
 interface ProductDetailPageProps {
   product: Product;
   stringOptions: StringOption[];
-  stringOptionsError: boolean;
   onAddToCartWithSpecs: (product: Product, selectedWeight: string, selectedColor: string, stringChoice: StringOption | null, tension: number) => void;
   onBackToCatalog: () => void;
   
 }
 
-export default function ProductDetailPage({ product, stringOptions, stringOptionsError, onAddToCartWithSpecs }: Omit<ProductDetailPageProps, 'onBackToCatalog'|'onBookTestAtStore'>) {
+export default function ProductDetailPage({ product, stringOptions, onAddToCartWithSpecs }: Omit<ProductDetailPageProps, 'onBackToCatalog'|'onBookTestAtStore'>) {
   const [activeTab, setActiveTab] = useState<DetailTab>('details');
   // Không bịa trọng lượng theo ngành -- lấy từ thông số thật của sản phẩm nếu
   // có, còn lại dùng sentinel "Tiêu chuẩn" chung của hệ thống (giống màu sắc).
@@ -51,8 +50,6 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
   const activeStringValue = stringingTierIndex === 1 ? selectedTier1 : selectedTier2;
   const isDynamicStringingActive = hasStringingVariation && !isNoStringOption(activeStringValue);
 
-  const [withStringing, setWithStringing] = useState(false);
-  const [selectedString, setSelectedString] = useState<StringOption | null>(null);
   const [tension, setTension] = useState(10.5);
   const isRacket = isRacketCategoryCode(product.categoryCode);
 
@@ -63,8 +60,6 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
     const t2 = product.tier_variations?.find(tv => tv.tier_index === 2);
     setSelectedTier2(t2 && t2.options.length === 1 ? t2.options[0] : '');
 
-    setWithStringing(false);
-    setSelectedString(null);
     setTension(10.5);
   }, [product]);
 
@@ -108,8 +103,7 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
   const discountPercent = matchedVariant?.percentageDiscount ?? product.percentageDiscount ?? 
     (hasDiscount && displayOriginalPrice > 0 ? Math.round(((displayOriginalPrice - displayBasePrice) / displayOriginalPrice) * 100) : 0);
 
-  const stringPrice = (!hasStringingVariation && withStringing && selectedString) ? selectedString.price : 0;
-  const totalDisplayPrice = displayBasePrice + stringPrice;
+  const totalDisplayPrice = displayBasePrice;
 
   const resolvedColor = product.tier_variations && product.tier_variations.length > 0
     ? selectedTier1
@@ -130,7 +124,7 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
         price: 0,
         colors: []
       } : null)
-    : (withStringing ? selectedString : null);
+    : null;
 
   const mediaByTier1 = useMemo(
     () => (product.media || []).filter((item) => Boolean(item.tier1Option && item.imageUrl)),
@@ -200,15 +194,11 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
             displayOriginalPrice={displayOriginalPrice}
             hasDiscount={hasDiscount}
             discountPercent={discountPercent}
-            stringPrice={stringPrice}
             selectedTier1={selectedTier1}
             selectedTier2={selectedTier2}
             selectedColor={selectedColor}
-            withStringing={withStringing}
-            selectedString={selectedString}
             tension={tension}
             stringOptions={stringOptions}
-            stringOptionsError={stringOptionsError}
             hasStringingVariation={hasStringingVariation}
             stringingVariation={stringingVariation}
             stringingTierIndex={stringingTierIndex}
@@ -219,8 +209,6 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
             onSetSelectedTier1={setSelectedTier1}
             onSetSelectedTier2={setSelectedTier2}
             onSetSelectedColor={setSelectedColor}
-            onSetWithStringing={setWithStringing}
-            onSetSelectedString={setSelectedString}
             onSetTension={setTension}
             onAddToCart={handleAddToCart}
             getVariantStock={getVariantStock}

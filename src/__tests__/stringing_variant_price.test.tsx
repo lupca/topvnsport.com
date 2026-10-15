@@ -24,9 +24,8 @@ function mount(p: Product, tier1: string, options: string[], tierIndex: number |
     <StringingAssistant
       product={p} isRacket hasStringingVariation
       stringingVariation={{ tier_index: 2, name: 'Loại Cước', options }} stringingTierIndex={tierIndex}
-      isDynamicStringingActive activeStringValue="" selectedTier1={tier1} selectedTier2=""
-      withStringing selectedString={null} stringOptions={[]} tension={10.5}
-      onSetSelectedTier1={noop} onSetSelectedTier2={noop} onSetWithStringing={noop} onSetSelectedString={noop} onSetTension={noop}
+      isDynamicStringingActive activeStringValue="" selectedTier1={tier1} selectedTier2="" stringOptions={[]} tension={10.5}
+      onSetSelectedTier1={noop} onSetSelectedTier2={noop} onSetTension={noop}
     />
   );
 }
