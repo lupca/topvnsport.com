@@ -3,7 +3,6 @@ import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import HeroSlider from '../../components/HeroSlider';
 import ProductCard from '../../components/ProductCard';
 import RacketFinder from '../../components/RacketFinder';
 import TrustBadges from '../../components/TrustBadges';
@@ -43,7 +42,6 @@ export default function HomePage() {
 
   return (
     <div className="space-y-12 animate-in fade-in duration-300">
-      <HeroSlider />
       <TrustBadges />
 
       {sortedCategories.length > 0 && (
