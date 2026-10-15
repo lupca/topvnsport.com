@@ -75,7 +75,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const lineAmount = (item: CartItem): number | null => {
     if (isLoadingProducts || productsError) return null;
     const unit = getCartItemUnitPrice(item, products);
-    return unit === null ? null : (unit + (item.stringOption ? item.stringOption.price : 0)) * item.quantity;
+    return unit === null ? null : unit * item.quantity;
   };
   const lineAmounts = cartItems.map(lineAmount);
   const itemsTotal = lineAmounts.some(a => a === null) ? null : (lineAmounts as number[]).reduce((acc, a) => acc + a, 0);

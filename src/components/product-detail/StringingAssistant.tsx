@@ -14,21 +14,15 @@ interface StringingAssistantProps {
   activeStringValue: string;
   selectedTier1: string;
   selectedTier2: string;
-  withStringing: boolean;
-  selectedString: StringOption | null;
   stringOptions: StringOption[];
-  stringOptionsError: boolean;
   tension: number;
   onSetSelectedTier1: (value: string) => void;
   onSetSelectedTier2: (value: string) => void;
-  onSetWithStringing: (value: boolean) => void;
-  onSetSelectedString: (value: StringOption | null) => void;
   onSetTension: (value: number) => void;
 }
 
 export default function StringingAssistant({
   product,
-  isRacket,
   hasStringingVariation,
   stringingVariation,
   stringingTierIndex,
@@ -36,30 +30,19 @@ export default function StringingAssistant({
   activeStringValue,
   selectedTier1,
   selectedTier2,
-  withStringing,
-  selectedString,
   stringOptions,
-  stringOptionsError,
   tension,
   onSetSelectedTier1,
   onSetSelectedTier2,
-  onSetWithStringing,
-  onSetSelectedString,
   onSetTension
 }: StringingAssistantProps) {
-  // Nếu sản phẩm không có sẵn biến thể cước riêng (hasStringingVariation),
-  // trợ lý chỉ đề xuất dựa trên danh mục cước chung (stringOptions) -- không
-  // có dữ liệu cước thật nào thì ẩn hẳn phần này thay vì hiện một khung chọn rỗng.
-  // Tải cước lỗi: báo rõ thay vì ẩn như danh sách rỗng.
-  if (!hasStringingVariation && isRacket && stringOptionsError) {
-    return <div role="alert">Không tải được danh sách cước. Vui lòng tải lại trang.</div>;
-  }
-
-  if (!hasStringingVariation && (!isRacket || stringOptions.length === 0)) {
+  // Đan cước chỉ bán qua phân loại 'Loại Cước' (giá nằm trong giá biến thể).
+  // Không có phân loại này thì không có dịch vụ đan cước rời (STOR-016).
+  if (!hasStringingVariation) {
     return null;
   }
 
-  const isEnabled = hasStringingVariation ? isDynamicStringingActive : withStringing;
+  const isEnabled = isDynamicStringingActive;
 
   const resolveVariantPrice = (targetOption: string): number | undefined => {
     if (!stringingVariation || !stringingTierIndex) {
@@ -103,14 +86,6 @@ export default function StringingAssistant({
             onChange={(event) => {
               const checked = event.target.checked;
 
-              if (!hasStringingVariation) {
-                onSetWithStringing(checked);
-                if (checked && !selectedString) {
-                  onSetSelectedString(stringOptions[0] || null);
-                }
-                return;
-              }
-
               if (!stringingVariation || !stringingTierIndex) {
                 return;
               }
@@ -144,7 +119,7 @@ export default function StringingAssistant({
           <div className="space-y-1.5">
             <label className="block text-xs font-bold uppercase text-gray-500">Bước 1: Chọn mẫu dây cước</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[160px] overflow-y-auto pr-1">
-              {hasStringingVariation && stringingVariation ? (
+              {stringingVariation && (
                 stringingVariation.options
                   .filter((option) => !isNoStringOption(option))
                   .map((optionName) => {
@@ -187,28 +162,6 @@ export default function StringingAssistant({
                       </div>
                     );
                   })
-              ) : (
-                stringOptions.map((option) => (
-                  <div
-                    key={option.id}
-                    onClick={() => onSetSelectedString(option)}
-                    className={`p-2.5 rounded-lg border cursor-pointer transition flex justify-between items-center ${
-                      selectedString?.id === option.id
-                        ? 'bg-brand-light/50 border-brand-primary'
-                        : 'bg-white border-gray-100 hover:border-gray-200'
-                    }`}
-                  >
-                    <div>
-                      <p className="font-bold text-xs text-gray-900">{option.name}</p>
-                      {formatStringMeta(option) && (
-                        <p className="text-[10px] text-gray-400 font-mono">{formatStringMeta(option)}</p>
-                      )}
-                    </div>
-                    <span className="text-xs font-extrabold text-brand-primary">
-                      +{option.price.toLocaleString('vi-VN')}đ
-                    </span>
-                  </div>
-                ))
               )}
             </div>
           </div>
