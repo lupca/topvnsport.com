@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { Product, StringOption, TierVariation } from '../../types';
+import { variantUnitPrice } from '../../features/cart/cartSlice';
 import { formatStringMeta, getTensionTooltip, inferStringMeta, isNoStringOption } from './helpers';
 
 interface StringingAssistantProps {
@@ -60,9 +61,6 @@ export default function StringingAssistant({
 
   const isEnabled = hasStringingVariation ? isDynamicStringingActive : withStringing;
 
-  // Giá thật > 0; không có thì undefined (không bịa 0 đồng).
-  const realPrice = (value: number | undefined): number | undefined => (value !== undefined && value > 0 ? value : undefined);
-
   const resolveVariantPrice = (targetOption: string): number | undefined => {
     if (!stringingVariation || !stringingTierIndex) {
       return undefined;
@@ -84,7 +82,8 @@ export default function StringingAssistant({
       return tier1Match && tier2Match && otherMatch;
     });
 
-    return realPrice(matched?.price);
+    // Cùng luật giá với giỏ/trang chi tiết: computedPrice ?? price, chỉ khi price > 0.
+    return matched ? variantUnitPrice(matched) ?? undefined : undefined;
   };
 
   return (
