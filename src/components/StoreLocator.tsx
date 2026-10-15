@@ -40,7 +40,7 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 animate-in fade-in duration-300" id="store-locator-page">
       {/* Page Title */}
       <div className="text-center mb-10">
-        <span className="text-xs bg-brand-light text-brand-primary font-bold px-3 py-1 rounded-full border border-blue-100 uppercase tracking-widest">
+        <span className="inline-block text-xs bg-brand-light text-brand-primary font-bold px-3 py-1 rounded-full border border-blue-100 uppercase tracking-widest">
           Địa điểm Trải Nghiệm Offline To Online (O2O)
         </span>
         <h1 className="font-display font-black text-2xl md:text-4xl text-gray-900 tracking-tight mt-3">
@@ -103,12 +103,24 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                 <span className="text-[10px] bg-brand-primary text-white px-2 py-0.5 rounded-sm font-bold uppercase tracking-wider">ĐANG CHỌN TRẢI NGHIỆM</span>
                 <h3 className="font-display font-bold text-base mt-1">{activeBranch.name}</h3>
               </div>
-              <a
-                href={`tel:${activeBranch.phone}`}
-                className="bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5 transition"
-              >
-                <Phone className="w-3.5 h-3.5" /> Gọi điện: {activeBranch.phone}
-              </a>
+              <div className="flex flex-wrap items-center gap-2">
+                {activeBranch.address?.trim() && (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeBranch.address)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border border-white/40 hover:bg-white/10 text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5 transition"
+                  >
+                    <MapPin className="w-3.5 h-3.5" /> Chỉ đường
+                  </a>
+                )}
+                <a
+                  href={`tel:${activeBranch.phone}`}
+                  className="bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5 transition"
+                >
+                  <Phone className="w-3.5 h-3.5" /> Gọi điện: {activeBranch.phone}
+                </a>
+              </div>
             </div>
 
             {/* Embedded maps iframe or beautiful graphics */}
@@ -138,7 +150,7 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
           {activeBranch.phone?.trim() && (
             <div id="store-locator-contact" className="bg-gray-900 text-white rounded-2xl p-6 md:p-8 border border-gray-800">
               <div className="flex items-center gap-2 mb-4">
-                <Calendar className="w-5 h-5 text-brand-primary" />
+                <Calendar className="w-5 h-5 shrink-0 text-brand-primary" />
                 <h3 className="font-display font-extrabold text-lg text-white">TRẢI NGHIỆM VỢT VÀ ĐAN CƯỚC TẠI {activeBranch.name}</h3>
               </div>
               <p className="text-xs text-gray-400 mb-4">Gọi điện cho chi nhánh để hẹn thời gian vung thử vợt và đan cước.</p>
