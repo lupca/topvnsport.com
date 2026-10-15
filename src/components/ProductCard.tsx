@@ -4,6 +4,7 @@ import { Product } from '../types';
 import { Eye, ShoppingCart, Star, Zap, Activity } from 'lucide-react';
 import { getProductPath } from '../utils/productSlug';
 import { isRacketCategoryCode } from '../config/storefront';
+import { getPriceDisplay } from '../utils/priceDisplay';
 import { getSingleSellableSku } from '../features/cart/cartSlice';
 
 interface ProductCardProps {
@@ -22,15 +23,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
   const canQuickAdd = getSingleSellableSku(product) !== null;
   // Không có giá thật -> 'Liên hệ để biết giá', không cho thêm giỏ.
   const hasPrice = product.price !== undefined;
-  const hasActivePromotion = hasPrice && Boolean(
-    product.hasActivePromotion ||
-    (product.computedPrice !== undefined && product.originalPrice !== undefined && product.computedPrice < product.originalPrice) ||
-    (product.salePrice !== undefined && product.salePrice < (product.price as number))
-  );
-
-  const originalPrice = product.originalPrice ?? product.price;
-  const salePrice = product.computedPrice ?? product.salePrice ?? product.price;
-  const discountPercent = product.percentageDiscount ?? (hasActivePromotion && originalPrice > 0 ? Math.round(((originalPrice - salePrice) / originalPrice) * 100) : 0);
+  const { hasActivePromotion, salePrice, originalPrice, discountPercent } = getPriceDisplay(product);
 
   // Visual helper for racket playstyles
   const characteristicStyles = {
