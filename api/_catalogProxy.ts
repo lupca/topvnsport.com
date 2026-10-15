@@ -37,12 +37,19 @@ function resolveCatalogGrantToken(): string | undefined {
   return typeof token === 'string' && token.length > 0 ? token : undefined;
 }
 
+// STOR-012: CDN Vercel cache phản hồi 200 (Vercel-CDN-Cache-Control), trình
+// duyệt vẫn max-age=0. Độ cũ tối đa giá/tồn khách thấy ≈ 360s (60s tươi + 300s
+// stale-while-revalidate) cộng thời gian revalidate; OMS vẫn tính tiền theo giá
+// PIM lúc đặt. Mọi nhánh khác 200 gắn no-store (không cache lỗi).
+const CDN_CACHE_CONTROL = 'max-age=60, stale-while-revalidate=300';
+
 export async function proxyToVoma(req: any, res: any, baseUrl: string | undefined) {
   // This proxy exists only to attach a read-scoped catalog-grant token to
   // public catalog/stock reads -- it must never forward a write. Reject
   // before resolving the token so a non-GET request never even confirms
   // whether a seller/token is configured.
   if (req.method !== 'GET') {
+    res.setHeader('Cache-Control', 'no-store');
     res.status(405).json({ detail: 'method_not_allowed' });
     return;
   }
@@ -50,6 +57,7 @@ export async function proxyToVoma(req: any, res: any, baseUrl: string | undefine
   const token = resolveCatalogGrantToken();
   if (!baseUrl || !token) {
     console.error('Catalog proxy misconfigured: missing upstream URL, or no valid CATALOG_GRANT_TOKENS entry for STOREFRONT_SELLER_ID');
+    res.setHeader('Cache-Control', 'no-store');
     res.status(500).json({ detail: 'proxy_misconfigured' });
     return;
   }
@@ -72,9 +80,16 @@ export async function proxyToVoma(req: any, res: any, baseUrl: string | undefine
     const body = await upstreamResponse.text();
     res.status(upstreamResponse.status);
     res.setHeader('content-type', upstreamResponse.headers.get('content-type') || 'application/json');
+    if (upstreamResponse.status === 200) {
+      res.setHeader('Vercel-CDN-Cache-Control', CDN_CACHE_CONTROL);
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    } else {
+      res.setHeader('Cache-Control', 'no-store');
+    }
     res.send(body);
   } catch (error) {
     console.error('Catalog proxy request to VOMA failed:', error);
+    res.setHeader('Cache-Control', 'no-store');
     res.status(502).json({ detail: 'upstream_unreachable' });
   }
 }
