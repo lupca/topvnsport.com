@@ -28,6 +28,7 @@ interface ProductPurchaseSectionProps {
   isDynamicStringingActive: boolean;
   activeStringValue: string;
   isOutOfStock: boolean;
+  stockUnknown: boolean;
   onSetSelectedTier1: (value: string) => void;
   onSetSelectedTier2: (value: string) => void;
   onSetSelectedColor: (value: string) => void;
@@ -35,7 +36,7 @@ interface ProductPurchaseSectionProps {
   onSetSelectedString: (value: StringOption | null) => void;
   onSetTension: (value: number) => void;
   onAddToCart: () => void;
-  getVariantStock: (tier1: string, tier2: string) => number;
+  getVariantStock: (tier1: string, tier2: string) => number | undefined;
 }
 
 export default function ProductPurchaseSection({
@@ -61,6 +62,7 @@ export default function ProductPurchaseSection({
   isDynamicStringingActive,
   activeStringValue,
   isOutOfStock,
+  stockUnknown,
   onSetSelectedTier1,
   onSetSelectedTier2,
   onSetSelectedColor,
@@ -156,7 +158,7 @@ export default function ProductPurchaseSection({
                         const stockForOption = tier.tier_index === 1
                           ? getVariantStock(option, otherTierValue)
                           : getVariantStock(otherTierValue, option);
-                        const optionOutOfStock = stockForOption <= 0;
+                        const optionOutOfStock = stockForOption !== undefined && stockForOption <= 0;
 
                         return (
                           <button
@@ -247,15 +249,15 @@ export default function ProductPurchaseSection({
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <button
             onClick={onAddToCart}
-            disabled={isOutOfStock || !hasPrice}
+            disabled={isOutOfStock || stockUnknown || !hasPrice}
             className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition ${
-              isOutOfStock || !hasPrice
+              isOutOfStock || stockUnknown || !hasPrice
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'btn-primary'
             }`}
           >
             <ShoppingCart className="w-4.5 h-4.5" />
-            {isOutOfStock ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
+            {isOutOfStock ? 'Hết hàng' : stockUnknown ? 'Chưa rõ tồn kho' : 'Thêm vào giỏ hàng'}
           </button>
 
           <button

@@ -47,7 +47,7 @@ export default function App() {
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
 
-  const { products, blogs, branches, categories, isLoading, categoriesError, productsError } = useAppSelector(state => state.appData);
+  const { products, blogs, branches, categories, isLoading, categoriesError, productsError, stockError } = useAppSelector(state => state.appData);
   const { items: cartItems, isOpen: isCartOpen, quickViewProduct } = useAppSelector(state => state.cart);
   const [hasOpenedCart, setHasOpenedCart] = useState(isCartOpen);
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
@@ -115,10 +115,11 @@ export default function App() {
         categories={categories}
       />
 
-      {(categoriesError || productsError) && (
+      {(categoriesError || productsError || stockError) && (
         <div role="alert" id="load-error-banner" className="bg-red-50 border-b border-red-200 text-red-700 text-sm font-medium px-4 py-2.5 text-center space-y-0.5">
           {categoriesError && <p>Không tải được danh mục sản phẩm. Vui lòng tải lại trang.</p>}
           {productsError && <p>Không tải được danh sách sản phẩm. Vui lòng tải lại trang.</p>}
+          {stockError && <p>Không tải được tồn kho. Vui lòng tải lại trang.</p>}
         </div>
       )}
 

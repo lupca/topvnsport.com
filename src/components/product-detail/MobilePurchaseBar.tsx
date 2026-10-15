@@ -7,6 +7,7 @@ interface MobilePurchaseBarProps {
   totalDisplayPrice: number;
   hasPrice: boolean;
   isOutOfStock?: boolean;
+  stockUnknown?: boolean;
   onBuyNow: () => void;
 }
 
@@ -16,6 +17,7 @@ export default function MobilePurchaseBar({
   totalDisplayPrice,
   hasPrice,
   isOutOfStock = false,
+  stockUnknown = false,
   onBuyNow
 }: MobilePurchaseBarProps) {
   return (
@@ -34,15 +36,15 @@ export default function MobilePurchaseBar({
       </div>
       <button
         onClick={onBuyNow}
-        disabled={isOutOfStock || !hasPrice}
+        disabled={isOutOfStock || stockUnknown || !hasPrice}
         className={`text-xs px-4 py-2.5 rounded-sm flex items-center gap-1.5 shrink-0 shadow-sm transition ${
-          isOutOfStock || !hasPrice
+          isOutOfStock || stockUnknown || !hasPrice
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'btn-primary'
         }`}
       >
         <ShoppingCart className="w-4 h-4" />
-        {isOutOfStock ? 'Hết hàng' : 'Mua ngay'}
+        {isOutOfStock ? 'Hết hàng' : stockUnknown ? 'Chưa rõ tồn kho' : 'Mua ngay'}
       </button>
     </div>
   );

@@ -18,6 +18,8 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
   // Thêm nhanh chỉ khi sản phẩm có ĐÚNG một SKU bán được -- xem ProductCard.
   const hasPrice = product?.price !== undefined;
   const canQuickAdd = product ? getSingleSellableSku(product) !== null : false;
+  const stockUnknown = product?.stock === undefined;
+  const outOfStock = product?.stock !== undefined && product.stock <= 0;
   return (
     <AnimatePresence>
       {product && (
@@ -99,13 +101,13 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                     ) : (
                       <span className="text-sm font-bold text-gray-600 font-display" data-testid="no-price">Liên hệ để biết giá</span>
                     )}
-                    {product.stock <= 0 && (
+                    {outOfStock && (
                       <p className="text-xs text-red-500 font-semibold mt-1">Tạm hết hàng</p>
                     )}
                   </div>
                   <button
                     onClick={() => {
-                      if (product.stock <= 0 || !hasPrice) return;
+                      if (outOfStock || stockUnknown || !hasPrice) return;
                       if (!canQuickAdd) {
                         onClose();
                         navigate(getProductPath(product));
@@ -114,16 +116,16 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                       onAddToCart(product);
                       onClose();
                     }}
-                    disabled={product.stock <= 0 || !hasPrice}
+                    disabled={outOfStock || stockUnknown || !hasPrice}
                     className={`text-xs font-bold uppercase tracking-wider px-6 py-2.5 rounded-full flex items-center gap-1.5 transition shadow-sm focus:outline-hidden ${
-                      product.stock <= 0 || !hasPrice
+                      outOfStock || stockUnknown || !hasPrice
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         : 'bg-brand-primary hover:bg-brand-secondary text-white hover:shadow-md focus:ring-2 focus:ring-brand-primary/30'
                     }`}
                     id="add-to-cart-quickview"
                   >
                     <ShoppingBag className="w-4 h-4" />
-                    {product.stock <= 0 ? 'Hết hàng' : canQuickAdd ? 'Thêm vào giỏ' : 'Chọn phân loại'}
+                    {outOfStock ? 'Hết hàng' : stockUnknown ? 'Chưa rõ tồn kho' : canQuickAdd ? 'Thêm vào giỏ' : 'Chọn phân loại'}
                   </button>
                 </div>
               </div>

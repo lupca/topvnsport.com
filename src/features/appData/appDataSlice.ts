@@ -15,6 +15,8 @@ export interface AppDataState {
   productsError: boolean;
   // Lỗi tải cước (stringOptions=[] khi true KHÔNG có nghĩa là shop không có cước).
   stringOptionsError: boolean;
+  // Lỗi tải tồn WMS: tồn không biết (stock undefined), không phải hết hàng.
+  stockError: boolean;
 }
 
 const initialState: AppDataState = {
@@ -26,20 +28,23 @@ const initialState: AppDataState = {
   isLoading: true,
   categoriesError: false,
   productsError: false,
-  stringOptionsError: false
+  stringOptionsError: false,
+  stockError: false
 };
 
 export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () => {
   // STOR-012: mỗi nguồn tải đúng 1 lần, truyền promise cho nơi cần dùng lại.
   const categoriesP = sportApi.getCategories();
-  const productsP = sportApi.getProducts(categoriesP);
+  const stockP = sportApi.getAllStock();
+  const productsP = sportApi.getProducts(categoriesP, stockP);
   const stringOptionsP = sportApi.getStringOptions(productsP);
-  const [products, blogs, branches, stringOptions, categories] = await Promise.allSettled([
+  const [products, blogs, branches, stringOptions, categories, stock] = await Promise.allSettled([
     productsP,
     sportApi.getBlogs(),
     sportApi.getBranches(),
     stringOptionsP,
-    categoriesP
+    categoriesP,
+    stockP
   ]);
   // blogs/branches không gọi mạng ném lỗi -- lỗi ở đó vẫn nổi lên.
   for (const other of [blogs, branches]) {
@@ -54,7 +59,8 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
     blogs: (blogs as PromiseFulfilledResult<Blog[]>).value,
     branches: (branches as PromiseFulfilledResult<Branch[]>).value,
     stringOptions: stringOptions.status === 'fulfilled' ? stringOptions.value : [],
-    stringOptionsError: stringOptions.status === 'rejected'
+    stringOptionsError: stringOptions.status === 'rejected',
+    stockError: stock.status === 'rejected'
   };
 });
 
@@ -76,6 +82,7 @@ const appDataSlice = createSlice({
         state.productsError = action.payload.productsError;
         state.categoriesError = action.payload.categoriesError;
         state.stringOptionsError = action.payload.stringOptionsError;
+        state.stockError = action.payload.stockError;
         state.isLoading = false;
       })
       .addCase(fetchAppData.rejected, state => {

@@ -51,6 +51,10 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
     'PLAY': 'bg-gray-500 text-white'
   };
 
+  // stock undefined = tồn kho không tải được: không phải hết hàng, nhưng chặn mua.
+  const stockUnknown = product.stock === undefined;
+  const outOfStock = product.stock !== undefined && product.stock <= 0;
+
   return (
     <div 
       className="group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-xs hover:shadow-sm transition-all duration-300 flex flex-col justify-between h-full relative"
@@ -58,17 +62,17 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
     >
       {/* Product Badges */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-        {product.stock <= 0 && (
+        {outOfStock && (
           <span className="text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-sm shadow-xs bg-gray-600 text-white">
             Hết hàng
           </span>
         )}
-        {product.badge && product.stock > 0 && (
+        {product.badge && !outOfStock && (
           <span className={`text-[9px] font-extrabold uppercase px-2.5 py-1 rounded-sm shadow-xs ${badgeStyles[product.badge] || 'bg-gray-500 text-white'}`}>
             {product.badge}
           </span>
         )}
-        {hasActivePromotion && discountPercent > 0 && product.stock > 0 && (
+        {hasActivePromotion && discountPercent > 0 && !outOfStock && (
           <span
             className="text-[10px] font-extrabold bg-red-600 text-white px-2 py-0.5 rounded-sm shadow-xs"
             data-testid="discount-badge"
@@ -97,7 +101,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           </button>
           <button
             onClick={(e) => {
-              if (product.stock <= 0 || !hasPrice) return;
+              if (outOfStock || stockUnknown || !hasPrice) return;
               if (!canQuickAdd) {
                 e.stopPropagation();
                 navigate(getProductPath(product));
@@ -105,13 +109,13 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
               }
               onAddToCart(product, e);
             }}
-            disabled={product.stock <= 0 || !hasPrice}
+            disabled={outOfStock || stockUnknown || !hasPrice}
             className={`p-2 rounded-full shadow-md transition duration-200 ${
-              product.stock <= 0 || !hasPrice
+              outOfStock || stockUnknown || !hasPrice
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-white text-gray-800 hover:bg-brand-primary hover:text-white hover:scale-110'
             }`}
-            title={product.stock <= 0 ? 'Sản phẩm hết hàng' : !hasPrice ? 'Liên hệ để biết giá' : canQuickAdd ? 'Thêm nhanh vào giỏ' : 'Chọn phân loại'}
+            title={outOfStock ? 'Sản phẩm hết hàng' : stockUnknown ? 'Chưa rõ tồn kho' : !hasPrice ? 'Liên hệ để biết giá' : canQuickAdd ? 'Thêm nhanh vào giỏ' : 'Chọn phân loại'}
           >
             <ShoppingCart className="w-5 h-5" />
           </button>

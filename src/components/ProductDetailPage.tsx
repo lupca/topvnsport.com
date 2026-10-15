@@ -74,17 +74,19 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
     return t1Match && t2Match;
   });
 
-  const getVariantStock = (tier1: string, tier2: string): number => {
+  const getVariantStock = (tier1: string, tier2: string): number | undefined => {
     const variant = product.variants?.find((v) => {
       const t1Match = !product.tier_variations?.some(tv => tv.tier_index === 1) || v.tier_1_option === tier1;
       const t2Match = !product.tier_variations?.some(tv => tv.tier_index === 2) || v.tier_2_option === tier2;
       return t1Match && t2Match;
     });
-    return variant?.stock ?? product.stock ?? 0;
+    return variant?.stock ?? product.stock;
   };
 
-  const currentStock = matchedVariant?.stock ?? product.stock ?? 0;
-  const isOutOfStock = currentStock <= 0;
+  // Tồn undefined = không tải được tồn kho: không phải hết hàng, nhưng chặn mua.
+  const currentStock = matchedVariant?.stock ?? product.stock;
+  const stockUnknown = currentStock === undefined;
+  const isOutOfStock = currentStock !== undefined && currentStock <= 0;
 
   // Giá thật quyết định theo biến thể đang chọn (giá 0 = chưa có giá); chưa chọn
   // được biến thể thì theo giá thật của sản phẩm.
@@ -213,6 +215,7 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
             isDynamicStringingActive={isDynamicStringingActive}
             activeStringValue={activeStringValue}
             isOutOfStock={isOutOfStock}
+            stockUnknown={stockUnknown}
             onSetSelectedTier1={setSelectedTier1}
             onSetSelectedTier2={setSelectedTier2}
             onSetSelectedColor={setSelectedColor}
@@ -238,6 +241,7 @@ export default function ProductDetailPage({ product, stringOptions, stringOption
         totalDisplayPrice={totalDisplayPrice}
         hasPrice={hasPrice}
         isOutOfStock={isOutOfStock}
+        stockUnknown={stockUnknown}
         onBuyNow={handleAddToCart}
       />
 
