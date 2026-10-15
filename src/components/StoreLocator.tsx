@@ -24,35 +24,9 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
     }
   }, [branches, initialBranchId]);
 
-  // Booking Form States
-  const [bookingName, setBookingName] = useState('');
-  const [bookingPhone, setBookingPhone] = useState('');
-  const [bookingDate, setBookingDate] = useState('');
-  const [bookingTime, setBookingTime] = useState('09:00');
-  const [bookingRacket, setBookingRacket] = useState('');
-  const [isBooked, setIsBooked] = useState(false);
-
   const filteredBranches = selectedCity === 'Tất cả' 
     ? branches 
     : branches.filter(b => b.city === selectedCity);
-
-  const handleBookDemo = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!bookingName || !bookingPhone || !bookingDate) {
-      await popupService.alert('Vui lòng điền đầy đủ họ tên, số điện thoại và ngày trải nghiệm.');
-      return;
-    }
-    setIsBooked(true);
-  };
-
-  const resetBookingForm = () => {
-    setBookingName('');
-    setBookingPhone('');
-    setBookingDate('');
-    setBookingTime('09:00');
-    setBookingRacket('');
-    setIsBooked(false);
-  };
 
   if (!activeBranch) {
     return (
@@ -73,7 +47,7 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
           CỬA HÀNG TRẢI NGHIỆM <span className="text-brand-primary">TOPVNSPORT</span>
         </h1>
         <p className="text-sm text-gray-500 max-w-xl mx-auto mt-2">
-          Đến trực tiếp cửa hàng để vung thử, đo đạc thông số tay vợt và sử dụng dịch vụ đan lưới đẳng cấp thế giới. Đặt lịch trải nghiệm miễn phí bên dưới.
+          Đến trực tiếp cửa hàng để vung thử, đo đạc thông số tay vợt và sử dụng dịch vụ đan lưới đẳng cấp thế giới.
         </p>
       </div>
 
@@ -160,126 +134,22 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
             </div>
           </div>
 
-          {/* O2O Booking Slot Form */}
-          <div className="bg-gray-900 text-white rounded-2xl p-6 md:p-8 border border-gray-800 relative overflow-hidden">
-            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl" />
-            
-            {!isBooked ? (
-              <form onSubmit={handleBookDemo} className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <Calendar className="w-5 h-5 text-brand-primary" />
-                  <div>
-                    <h3 className="font-display font-extrabold text-lg text-white">ĐĂNG KÝ TRẢI NGHIỆM VỢT VÀ ĐAN CƯỚC TẠI SHOP</h3>
-                    <p className="text-xs text-gray-400">Chọn mẫu vợt bạn muốn vung thử miễn phí, đội ngũ chuyên gia của chúng tôi sẽ chuẩn bị sẵn sàng.</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-gray-400 mb-1">Họ và tên khách hàng *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ví dụ: Nguyễn Văn A"
-                      value={bookingName}
-                      onChange={e => setBookingName(e.target.value)}
-                      className="w-full bg-gray-850 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:border-brand-primary transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-gray-400 mb-1">Số điện thoại liên hệ *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="Ví dụ: 0912345678"
-                      value={bookingPhone}
-                      onChange={e => setBookingPhone(e.target.value)}
-                      className="w-full bg-gray-850 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:border-brand-primary transition"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-gray-400 mb-1">Ngày trải nghiệm *</label>
-                    <input
-                      type="date"
-                      required
-                      value={bookingDate}
-                      onChange={e => setBookingDate(e.target.value)}
-                      className="w-full bg-gray-850 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:border-brand-primary transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-gray-400 mb-1">Khung giờ vàng</label>
-                    <select
-                      value={bookingTime}
-                      onChange={e => setBookingTime(e.target.value)}
-                      className="w-full bg-gray-850 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:border-brand-primary transition"
-                    >
-                      <option value="09:00">09:00 - Sáng sớm</option>
-                      <option value="11:00">11:00 - Trưa</option>
-                      <option value="15:00">15:00 - Chiều mát</option>
-                      <option value="18:30">18:30 - Tối tan ca</option>
-                      <option value="20:00">20:00 - Tối muộn</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-gray-400 mb-1">Chọn sản phẩm muốn thử</label>
-                    <select
-                      value={bookingRacket}
-                      onChange={e => setBookingRacket(e.target.value)}
-                      className="w-full bg-gray-850 border border-gray-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-hidden focus:border-brand-primary transition"
-                    >
-                      <option value="">-- Click để lựa chọn --</option>
-                      {products.filter(p => isRacketCategoryCode(p.categoryCode)).map(p => (
-                        <option key={p.id} value={p.name}>{p.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="bg-gray-850/50 p-3 rounded-lg border border-gray-800 flex items-start gap-2 text-xs text-gray-400 leading-normal">
-                  <ShieldCheck className="w-4 h-4 text-brand-primary shrink-0 mt-0.5" />
-                  <span>
-                    TopVNSport cam kết bảo mật thông tin cá nhân của bạn. Chuyên viên sẽ gọi điện xác nhận lịch hẹn của bạn trong vòng 10 phút.
-                  </span>
-                </div>
-
-                <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    className="bg-brand-primary hover:bg-brand-secondary text-white font-bold text-xs uppercase tracking-wider px-8 py-3 rounded-full flex items-center gap-1.5 transition "
-                  >
-                    Xác nhận đặt lịch &rarr;
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="text-center py-8 space-y-4 animate-in zoom-in-95 duration-200">
-                <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto" />
-                <h3 className="font-display font-extrabold text-2xl text-white uppercase">ĐẶT LỊCH TRẢI NGHIỆM THÀNH CÔNG!</h3>
-                <div className="max-w-md mx-auto bg-gray-850 p-4 rounded-xl text-left border border-gray-800 text-xs text-gray-300 space-y-2">
-                  <p>• <strong>Khách hàng:</strong> {bookingName}</p>
-                  <p>• <strong>Số điện thoại:</strong> {bookingPhone}</p>
-                  <p>• <strong>Địa điểm:</strong> {activeBranch.name}</p>
-                  <p>• <strong>Thời gian hẹn:</strong> {bookingDate} lúc {bookingTime}</p>
-                  {bookingRacket && <p>• <strong>Sản phẩm đăng ký vung thử:</strong> {bookingRacket}</p>}
-                </div>
-                <p className="text-xs text-gray-400">
-                  Lịch hẹn của bạn đã được ghi nhận vào hệ thống quản lý chi nhánh. Đội ngũ kỹ thuật viên đan vợt TopVNSport đã nhận thông tin và sẽ liên hệ xác nhận trong giây lát.
-                </p>
-                <div className="pt-2">
-                  <button
-                    onClick={resetBookingForm}
-                    className="border border-gray-700 hover:bg-gray-800 text-gray-300 font-bold text-xs uppercase tracking-wider px-6 py-2 rounded-full transition"
-                  >
-                    Đặt lịch khác
-                  </button>
-                </div>
+          {/* Liên hệ chi nhánh: không có API nhận lịch hẹn nên không dựng form; chỉ hiện khi dữ liệu có số điện thoại */}
+          {activeBranch.phone?.trim() && (
+            <div id="store-locator-contact" className="bg-gray-900 text-white rounded-2xl p-6 md:p-8 border border-gray-800">
+              <div className="flex items-center gap-2 mb-4">
+                <Calendar className="w-5 h-5 text-brand-primary" />
+                <h3 className="font-display font-extrabold text-lg text-white">TRẢI NGHIỆM VỢT VÀ ĐAN CƯỚC TẠI {activeBranch.name}</h3>
               </div>
-            )}
-          </div>
+              <p className="text-xs text-gray-400 mb-4">Gọi điện cho chi nhánh để hẹn thời gian vung thử vợt và đan cước.</p>
+              <a
+                href={`tel:${activeBranch.phone}`}
+                className="inline-flex bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold px-6 py-3 rounded-full items-center gap-1.5 transition"
+              >
+                <Phone className="w-3.5 h-3.5" /> {activeBranch.phone}
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
