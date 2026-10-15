@@ -50,7 +50,7 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
     }).not.toThrow();
 
     expect(screen.getByText(/Trình cố vấn ảo chọn vợt thông minh/i)).toBeTruthy();
-    expect(screen.getByText(/GIỜ VÀNG SĂN DEAL CHẤT/i)).toBeTruthy();
+    expect(screen.queryByTestId('promo-banner')).toBeNull();
   });
 
   it('2. Renders HomePage cleanly when products, blogs, and categories are all null', () => {
@@ -109,7 +109,7 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
       );
     }).not.toThrow();
 
-    expect(screen.getByText(/GIỜ VÀNG SĂN DEAL CHẤT/i)).toBeTruthy();
+    expect(screen.queryByTestId('promo-banner')).toBeNull();
   });
 
   it('5. Renders HomePage with empty arrays [] without error', () => {

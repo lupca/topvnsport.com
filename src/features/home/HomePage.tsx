@@ -1,5 +1,5 @@
 import { ChevronRight, Sparkles } from 'lucide-react';
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -22,20 +22,10 @@ export default function HomePage() {
   const sortedCategories = getCategoriesSortedByCount(categories, products);
   const categoryCounts = getProductCategoryCounts(products);
 
-  const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 45, seconds: 30 });
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { hours: prev.hours, minutes: prev.minutes - 1, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return { hours: 12, minutes: 45, seconds: 30 };
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
+  // Chỉ sản phẩm có khuyến mãi thật (mapper đặt hasActivePromotion); không có thì không hiện khối nào.
+  const promoProducts = products.filter(p => p.hasActivePromotion);
+  const discounts = promoProducts.map(p => p.percentageDiscount).filter((d): d is number => Number.isFinite(d) && (d as number) > 0);
+  const maxDiscount = discounts.length > 0 ? Math.max(...discounts) : undefined;
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
@@ -117,47 +107,25 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="bg-brand-accent rounded-2xl p-6 text-white flex flex-col lg:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden">
-          <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+      {promoProducts.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 md:px-8">
+          <div data-testid="promo-banner" className="bg-brand-accent rounded-2xl p-6 text-white flex flex-col lg:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden">
+            <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
 
-          <div className="space-y-2 text-center lg:text-left">
-            <span className="bg-white/10 text-white border border-white/20 text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
-              GIỜ VÀNG SĂN DEAL CHẤT
-            </span>
-            <h3 className="font-display font-black text-2xl md:text-3xl tracking-tight uppercase leading-none">
-              XẢ KHO CỰC HẠN - GIẢM GIÁ 30%
-            </h3>
-            <p className="text-xs text-red-100 font-medium">
-              Bảo hành chính hãng đầy đủ, đổi trả thuận tiện tại hơn 80 chi nhánh.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 font-mono">
-            <span className="text-xs text-red-100 uppercase tracking-widest mr-2 hidden md:inline font-bold">Kết thúc sau:</span>
-            <div className="bg-black/35 px-4 py-2.5 rounded-lg text-center min-w-[50px]">
-              <span className="text-base md:text-xl font-extrabold text-white block">{timeLeft.hours.toString().padStart(2, '0')}</span>
-              <span className="text-[8px] text-gray-400 uppercase">Giờ</span>
-            </div>
-            <span className="text-xl font-bold ">:</span>
-            <div className="bg-black/35 px-4 py-2.5 rounded-lg text-center min-w-[50px]">
-              <span className="text-base md:text-xl font-extrabold text-white block">{timeLeft.minutes.toString().padStart(2, '0')}</span>
-              <span className="text-[8px] text-gray-400 uppercase">Phút</span>
-            </div>
-            <span className="text-xl font-bold ">:</span>
-            <div className="bg-black/35 px-4 py-2.5 rounded-lg text-center min-w-[50px]">
-              <span className="text-base md:text-xl font-extrabold text-brand-primary block">{timeLeft.seconds.toString().padStart(2, '0')}</span>
-              <span className="text-[8px] text-gray-400 uppercase">Giây</span>
+            <div className="space-y-2 text-center lg:text-left">
+              <span className="bg-white/10 text-white border border-white/20 text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
+                Đang khuyến mãi
+              </span>
+              {maxDiscount !== undefined && (
+                <h3 className="font-display font-black text-2xl md:text-3xl tracking-tight uppercase leading-none">
+                  Giảm đến {maxDiscount}%
+                </h3>
+              )}
             </div>
           </div>
-        </div>
 
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-          {products
-            .filter(p => p.salePrice)
-            .slice(0, 4)
-            .map(p => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            {promoProducts.slice(0, 4).map(p => (
               <ProductCard
                 key={p.id}
                 product={p}
@@ -165,8 +133,9 @@ export default function HomePage() {
                 onAddToCart={(prod, e) => handleAddToCart(prod, e)}
               />
             ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       <section className="max-w-7xl mx-auto px-4 md:px-8">
         <RacketFinder products={products} />
