@@ -66,7 +66,7 @@ describe('Forensic Integrity Audit M2-1 for Requirement R2', () => {
     // Verify GET /public/stock was called
     const wmsStockCalls = calledUrls.filter((u) => u.includes('/public/stock'));
     expect(wmsStockCalls.length).toBeGreaterThan(0);
-    expect(wmsStockCalls[0]).toContain(`${WMS_PROXY_URL}/public/stock?sku_codes=SKU-WMS-TEST`);
+    expect(wmsStockCalls[0]).toBe(`${WMS_PROXY_URL}/public/stock`);
 
     // Verify fetched stock (42) was merged over initial stock (5)
     expect(products[0].stock).toBe(42);

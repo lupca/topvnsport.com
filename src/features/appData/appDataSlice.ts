@@ -30,12 +30,16 @@ const initialState: AppDataState = {
 };
 
 export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () => {
+  // STOR-012: mỗi nguồn tải đúng 1 lần, truyền promise cho nơi cần dùng lại.
+  const categoriesP = sportApi.getCategories();
+  const productsP = sportApi.getProducts(categoriesP);
+  const stringOptionsP = sportApi.getStringOptions(productsP);
   const [products, blogs, branches, stringOptions, categories] = await Promise.allSettled([
-    sportApi.getProducts(),
+    productsP,
     sportApi.getBlogs(),
     sportApi.getBranches(),
-    sportApi.getStringOptions(),
-    sportApi.getCategories()
+    stringOptionsP,
+    categoriesP
   ]);
   // blogs/branches không gọi mạng ném lỗi -- lỗi ở đó vẫn nổi lên.
   for (const other of [blogs, branches]) {
