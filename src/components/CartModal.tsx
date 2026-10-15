@@ -147,13 +147,19 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         };
       });
 
+      // OMS không có trường độ căng riêng -> ghi vào note, mỗi món đan cước một đoạn.
+      const stringingNote = cartItems
+        .filter(item => item.stringOption)
+        .map(item => ` | Đan cước ${item.skuCode}: ${item.stringOption!.name} ${item.tension} Kg`)
+        .join('');
+
       const order = await sportApi.createOrder({
         customer_id: customerId,
         channel_id: channelId,
         items,
         shipping_fee: shippingCost,
         shipping_address: shippingAddress,
-        note: `${shippingMethod === 'fast' ? 'Đơn web - Giao hỏa tốc' : 'Đơn web - Giao tiêu chuẩn'} | ${paymentMethod === 'sepay' ? 'SePay QR Code' : 'COD'}`,
+        note: `${shippingMethod === 'fast' ? 'Đơn web - Giao hỏa tốc' : 'Đơn web - Giao tiêu chuẩn'} | ${paymentMethod === 'sepay' ? 'SePay QR Code' : 'COD'}${stringingNote}`,
         verification_token: activeToken,
       });
 
