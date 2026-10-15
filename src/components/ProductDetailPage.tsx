@@ -5,7 +5,7 @@ import TrustSealsPanel from './TrustSealsPanel';
 import ProductPurchaseSection from './product-detail/ProductPurchaseSection';
 import ProductDetailTabs, { DetailTab } from './product-detail/ProductDetailTabs';
 import MobilePurchaseBar from './product-detail/MobilePurchaseBar';
-import { inferStringMeta, isNoStringOption, isStringingTierName } from './product-detail/helpers';
+import { StockState, aggregateStock, initialTierValue, inferStringMeta, isNoStringOption, isStringingTierName } from './product-detail/helpers';
 import { isRacketCategoryCode } from '../config/storefront';
 
 interface ProductDetailPageProps {
@@ -32,14 +32,8 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   // thật sự) -- có từ hai lựa chọn trở lên thì để trống, bắt khách phải tự
   // chọn (để nhánh "Vui lòng chọn {tên tầng}" có hiệu lực khi bấm thêm giỏ
   // mà chưa chọn).
-  const [selectedTier1, setSelectedTier1] = useState<string>(() => {
-    const t1 = product.tier_variations?.find(tv => tv.tier_index === 1);
-    return t1 && t1.options.length === 1 ? t1.options[0] : '';
-  });
-  const [selectedTier2, setSelectedTier2] = useState<string>(() => {
-    const t2 = product.tier_variations?.find(tv => tv.tier_index === 2);
-    return t2 && t2.options.length === 1 ? t2.options[0] : '';
-  });
+  const [selectedTier1, setSelectedTier1] = useState<string>(() => initialTierValue(product, 1));
+  const [selectedTier2, setSelectedTier2] = useState<string>(() => initialTierValue(product, 2));
 
   const stringingVariation = product.tier_variations?.find(
     (tv) => isStringingTierName(tv.name)
@@ -54,11 +48,8 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   const isRacket = isRacketCategoryCode(product.categoryCode);
 
   useEffect(() => {
-    const t1 = product.tier_variations?.find(tv => tv.tier_index === 1);
-    setSelectedTier1(t1 && t1.options.length === 1 ? t1.options[0] : '');
-
-    const t2 = product.tier_variations?.find(tv => tv.tier_index === 2);
-    setSelectedTier2(t2 && t2.options.length === 1 ? t2.options[0] : '');
+    setSelectedTier1(initialTierValue(product, 1));
+    setSelectedTier2(initialTierValue(product, 2));
 
     setTension(10.5);
   }, [product]);
@@ -69,19 +60,14 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
     return t1Match && t2Match;
   });
 
-  const getVariantStock = (tier1: string, tier2: string): number | undefined => {
-    const variant = product.variants?.find((v) => {
-      const t1Match = !product.tier_variations?.some(tv => tv.tier_index === 1) || v.tier_1_option === tier1;
-      const t2Match = !product.tier_variations?.some(tv => tv.tier_index === 2) || v.tier_2_option === tier2;
-      return t1Match && t2Match;
-    });
-    return variant?.stock ?? product.stock;
-  };
+  const getVariantStock = (tier1: string, tier2: string): StockState =>
+    aggregateStock(product, tier1, tier2);
 
-  // Tồn undefined = không tải được tồn kho: không phải hết hàng, nhưng chặn mua.
-  const currentStock = matchedVariant?.stock ?? product.stock;
-  const stockUnknown = currentStock === undefined;
-  const isOutOfStock = currentStock !== undefined && currentStock <= 0;
+  // Tồn unknown = không tải được tồn kho: không phải hết hàng, nhưng chặn mua.
+  // none = tổ hợp chưa chọn đủ/không tồn tại: nút thêm giỏ để popup sẵn có báo.
+  const currentStockState = aggregateStock(product, selectedTier1, selectedTier2);
+  const stockUnknown = currentStockState.kind === 'unknown';
+  const isOutOfStock = currentStockState.kind === 'known' && currentStockState.stock <= 0;
 
   // Giá thật quyết định theo biến thể đang chọn (giá 0 = chưa có giá); chưa chọn
   // được biến thể thì theo giá thật của sản phẩm.

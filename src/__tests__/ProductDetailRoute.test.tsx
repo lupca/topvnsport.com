@@ -112,13 +112,14 @@ describe('ProductDetailRoute -- F6: thiếu tầng / không khớp -> đúng câ
     expect(store.getState().cart.items[0].skuCode).toBe('PRD-TEST-DO-S');
   });
 
-  it('chọn tổ hợp không tồn tại (Đỏ/L) -> báo "Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.", không thêm vào giỏ', () => {
+  it('chọn tổ hợp không tồn tại (Đỏ/L) -> nút L disabled, bấm L rồi thêm giỏ thì giỏ vẫn rỗng', () => {
     const store = renderProductDetailRoute(productSparseGrid);
 
-    fireEvent.click(screen.getByRole('button', { name: 'L' }));
+    const lButton = screen.getByRole('button', { name: 'L' }) as HTMLButtonElement;
+    expect(lButton.disabled).toBe(true);
+    fireEvent.click(lButton);
     fireEvent.click(screen.getByRole('button', { name: 'Thêm vào giỏ hàng' }));
 
-    expect(alertMock).toHaveBeenCalledWith('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
     expect(store.getState().cart.items.length).toBe(0);
   });
 });

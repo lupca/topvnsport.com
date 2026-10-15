@@ -2,7 +2,7 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { Product, StringOption, TierVariation } from '../../types';
 import { variantUnitPrice } from '../../features/cart/cartSlice';
-import { formatStringMeta, getTensionTooltip, inferStringMeta, isNoStringOption } from './helpers';
+import { aggregateStock, formatStringMeta, getTensionTooltip, inferStringMeta, isNoStringOption } from './helpers';
 
 interface StringingAssistantProps {
   product: Product;
@@ -43,7 +43,11 @@ export default function StringingAssistant({
 
   const isEnabled = isDynamicStringingActive;
 
-  const resolveVariantPrice = (targetOption: string): number | undefined => {
+  const otherTierIndex = stringingTierIndex === 1 ? 2 : 1;
+  const otherSelectedValue = otherTierIndex === 1 ? selectedTier1 : selectedTier2;
+  const otherTier = product.tier_variations?.find((tier) => tier.tier_index === otherTierIndex);
+
+  const resolveVariantPrice = (targetOption: string, otherSelected: string = otherSelectedValue): number | undefined => {
     if (!stringingVariation || !stringingTierIndex) {
       return undefined;
     }
@@ -52,9 +56,7 @@ export default function StringingAssistant({
       const tier1Match = stringingTierIndex !== 1 || variant.tier_1_option === targetOption;
       const tier2Match = stringingTierIndex !== 2 || variant.tier_2_option === targetOption;
 
-      const otherTierIndex = stringingTierIndex === 1 ? 2 : 1;
-      const otherSelected = otherTierIndex === 1 ? selectedTier1 : selectedTier2;
-      const hasOtherTier = product.tier_variations?.some((tier) => tier.tier_index === otherTierIndex);
+      const hasOtherTier = !!otherTier;
       const otherMatch =
         !hasOtherTier ||
         (otherTierIndex === 1
@@ -67,6 +69,22 @@ export default function StringingAssistant({
     // Cùng luật giá với giỏ/trang chi tiết: computedPrice ?? price, chỉ khi price > 0.
     return matched ? variantUnitPrice(matched) ?? undefined : undefined;
   };
+
+  // Chênh giá của một mã cước so với giá trị không-đan, theo từng màu. Chưa
+  // chọn màu: chỉ trả số khi MỌI màu đều có chênh xác định và bằng nhau.
+  const diffFor = (optionName: string, noStringOption: string | undefined): number | undefined => {
+    if (!noStringOption) return undefined;
+    const colors = otherTier && !otherSelectedValue ? otherTier.options : [otherSelectedValue];
+    const diffs = colors.map((color) => {
+      const withString = resolveVariantPrice(optionName, color);
+      const without = resolveVariantPrice(noStringOption, color);
+      return withString !== undefined && without !== undefined ? withString - without : undefined;
+    });
+    return diffs.length > 0 && diffs[0] !== undefined && diffs.every((d) => d === diffs[0]) ? diffs[0] : undefined;
+  };
+
+  const selectString = (value: string) =>
+    stringingTierIndex === 1 ? onSetSelectedTier1(value) : onSetSelectedTier2(value);
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-xs space-y-4">
@@ -89,23 +107,18 @@ export default function StringingAssistant({
                 return;
               }
 
-              const validOption =
-                stringingVariation.options.find((option) => !isNoStringOption(option)) ||
-                stringingVariation.options[0];
+              // Bật -> tầng cước về rỗng, khách tự chọn mã cước. Tắt -> giá trị
+              // không-đan (tầng không có giá trị này thì lấy lựa chọn đầu).
               const noStringOption =
                 stringingVariation.options.find((option) => isNoStringOption(option)) ||
                 stringingVariation.options[0];
-              const targetOption = checked ? validOption : noStringOption;
+              const targetOption = checked ? '' : noStringOption;
 
-              if (!targetOption) {
+              if (targetOption === undefined) {
                 return;
               }
 
-              if (stringingTierIndex === 1) {
-                onSetSelectedTier1(targetOption);
-              } else {
-                onSetSelectedTier2(targetOption);
-              }
+              selectString(targetOption);
             }}
             className="sr-only peer"
           />
@@ -123,29 +136,29 @@ export default function StringingAssistant({
                   .filter((option) => !isNoStringOption(option))
                   .map((optionName) => {
                     const noStringOption = stringingVariation.options.find((option) => isNoStringOption(option));
-                    const noStringPrice = noStringOption
-                      ? resolveVariantPrice(noStringOption)
-                      : undefined;
-                    const optionPrice = resolveVariantPrice(optionName);
-                    // Thiếu giá thật ở một trong hai bên -> không hiện chữ giá.
-                    const diffPrice = optionPrice !== undefined && noStringPrice !== undefined ? optionPrice - noStringPrice : undefined;
+                    const diffPrice = diffFor(optionName, noStringOption);
+                    const stock = stringingTierIndex === 1
+                      ? aggregateStock(product, optionName, selectedTier2)
+                      : aggregateStock(product, selectedTier1, optionName);
+                    const isHet = stock.kind === 'known' && stock.stock <= 0;
+                    const isBlocked = isHet || stock.kind === 'none';
                     const metadata = formatStringMeta(inferStringMeta(optionName, stringOptions));
                     const isSelected = activeStringValue === optionName;
 
                     return (
                       <div
                         key={optionName}
+                        aria-disabled={isBlocked ? 'true' : undefined}
                         onClick={() => {
-                          if (stringingTierIndex === 1) {
-                            onSetSelectedTier1(optionName);
-                          } else {
-                            onSetSelectedTier2(optionName);
-                          }
+                          if (isBlocked) return;
+                          selectString(optionName);
                         }}
-                        className={`p-2.5 rounded-lg border cursor-pointer transition flex justify-between items-center ${
-                          isSelected
-                            ? 'bg-brand-light/50 border-brand-primary'
-                            : 'bg-white border-gray-100 hover:border-gray-200'
+                        className={`p-2.5 rounded-lg border transition flex justify-between items-center ${
+                          isBlocked
+                            ? 'bg-gray-100 border-gray-200 opacity-60 cursor-not-allowed'
+                            : isSelected
+                            ? 'bg-brand-light/50 border-brand-primary cursor-pointer'
+                            : 'bg-white border-gray-100 hover:border-gray-200 cursor-pointer'
                         }`}
                       >
                         <div>
@@ -156,7 +169,7 @@ export default function StringingAssistant({
                           )}
                         </div>
                         <span className="text-xs font-extrabold text-brand-primary">
-                          {diffPrice === undefined ? '' : diffPrice > 0 ? `+${diffPrice.toLocaleString('vi-VN')}đ` : 'Miễn phí'}
+                          {isHet ? 'Hết' : diffPrice === undefined ? '' : diffPrice > 0 ? `+${diffPrice.toLocaleString('vi-VN')}đ` : 'Miễn phí'}
                         </span>
                       </div>
                     );
