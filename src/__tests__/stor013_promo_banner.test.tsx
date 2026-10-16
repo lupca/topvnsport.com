@@ -2,7 +2,7 @@
 // STOR-013: banner khuyến mãi trang chủ chỉ hiện khi có khuyến mãi thật, nội dung từ dữ liệu.
 import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
@@ -36,7 +36,7 @@ describe('STOR-013 banner khuyến mãi', () => {
 
   it('không khuyến mãi thì không thẻ sản phẩm khuyến mãi', () => {
     renderHome([prod('1', { salePrice: 90000 })]);
-    expect(screen.queryByText('SP 1')).toBeNull();
+    expect(screen.queryByTestId('promo-section')).toBeNull();
   });
 
   it('banner hiện mức giảm lớn nhất', () => {
@@ -56,8 +56,9 @@ describe('STOR-013 banner khuyến mãi', () => {
 
   it('lưới chỉ có sản phẩm khuyến mãi', () => {
     renderHome([prod('1', { salePrice: 90000 }), prod('2', { hasActivePromotion: true, percentageDiscount: 5 })]);
-    expect(screen.getByText('SP 2')).toBeTruthy();
-    expect(screen.queryByText('SP 1')).toBeNull();
+    const promo = within(screen.getByTestId('promo-section'));
+    expect(promo.getByText('SP 2')).toBeTruthy();
+    expect(promo.queryByText('SP 1')).toBeNull();
   });
 
   it('mã nguồn không còn chuỗi viết cứng và đồng hồ đếm ngược', () => {
