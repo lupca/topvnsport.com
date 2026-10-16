@@ -1,11 +1,13 @@
 import { RefreshCw, SlidersHorizontal, X } from 'lucide-react';
-import { MouseEvent, useMemo } from 'react';
+import { MouseEvent, useMemo, useState } from 'react';
 import { popupService } from '@topvnsport/ui-kit';
 import ProductCard from '../../components/ProductCard';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { RACKET_CATEGORY_CODES } from '../../config/storefront';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../../utils/categories';
 import { getBrands } from '../../utils/brands';
+import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
+import CatalogFilterDrawer from './CatalogFilterDrawer';
 import {
   resetCatalogFilters,
   setMaxPrice,
@@ -33,6 +35,9 @@ export default function CatalogPage() {
     selectedStiffness,
     searchQuery
   } = useAppSelector(state => state.catalog);
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [sortMode, setSortMode] = useState<SortMode>('in-stock-first');
 
   const isRacketCategorySelected = RACKET_CATEGORY_CODES.includes(selectedCategory);
 
@@ -116,6 +121,148 @@ export default function CatalogPage() {
     dispatch(openCart());
   };
 
+  const sortedProducts = useMemo(() => sortProducts(filteredProducts, sortMode), [filteredProducts, sortMode]);
+  const activeFilterCount =
+    selectedBrand.length + selectedWeight.length +
+    (selectedCategory !== ALL_CATEGORIES_OPTION ? 1 : 0) +
+    (maxPrice < 6000000 ? 1 : 0) +
+    (selectedBalance !== 'Tất cả' ? 1 : 0) +
+    (selectedStiffness !== 'Tất cả' ? 1 : 0);
+
+  const filterPanel = (
+    <>
+      <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+        <span className="font-bold text-xs uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
+          <SlidersHorizontal className="w-4 h-4 text-brand-primary" /> Bộ lọc sản phẩm
+        </span>
+        <button
+          onClick={() => dispatch(resetCatalogFilters())}
+          className="text-[11px] text-gray-400 hover:text-brand-primary font-bold flex items-center gap-1 transition"
+        >
+          <RefreshCw className="w-3 h-3" /> Xóa bộ lọc
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Thương hiệu quốc tế</h4>
+        <div className="space-y-1.5">
+          {getBrands(products).map(brand => (
+            <label key={brand} className="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selectedBrand.includes(brand)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    dispatch(setSelectedBrand([...selectedBrand, brand]));
+                  } else {
+                    dispatch(setSelectedBrand(selectedBrand.filter(b => b !== brand)));
+                  }
+                }}
+                className="rounded border-gray-300 text-brand-primary focus:ring-brand-primary/40"
+              />
+              <span>{brand}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Phân loại sản phẩm</h4>
+        <div className="space-y-1.5 flex flex-col">
+          {categoryFilterOptions.map(option => (
+            <button
+              key={option.code}
+              onClick={() => dispatch(setSelectedCategory(option.code))}
+              className={`text-xs text-left py-1.5 px-2.5 rounded-lg font-bold transition flex items-center justify-between ${selectedCategory === option.code ? 'bg-brand-light text-brand-primary font-black' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <span>{option.label}</span>
+              <span className="text-[10px] text-gray-400 font-mono">({option.count})</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex justify-between text-[11px] uppercase tracking-wider text-gray-500 font-bold">
+          <span>Ngân sách tối đa</span>
+          <span className="text-brand-primary font-mono">{maxPrice.toLocaleString('vi-VN')}đ</span>
+        </div>
+        <input
+          type="range"
+          min="100000"
+          max="6000000"
+          step="100000"
+          value={maxPrice}
+          onChange={(e) => dispatch(setMaxPrice(parseInt(e.target.value, 10)))}
+          className="w-full accent-brand-primary h-1 bg-gray-100 rounded-lg cursor-pointer"
+        />
+        <div className="flex justify-between text-[10px] text-gray-400 font-mono">
+          <span>100Kđ</span>
+          <span>6.0Mđ</span>
+        </div>
+      </div>
+
+      {isRacketCategorySelected && (
+        <>
+          {hasWeightData && (
+            <div className="space-y-2 pt-3 border-t border-gray-100">
+              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Trọng lượng (U)</h4>
+              <div className="flex flex-wrap gap-1.5">
+                {['3U', '4U', '5U'].map(wt => (
+                  <button
+                    key={wt}
+                    onClick={() => {
+                      if (selectedWeight.includes(wt)) {
+                        dispatch(setSelectedWeight(selectedWeight.filter(w => w !== wt)));
+                      } else {
+                        dispatch(setSelectedWeight([...selectedWeight, wt]));
+                      }
+                    }}
+                    className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-md border transition ${selectedWeight.includes(wt) ? 'bg-brand-primary text-white border-brand-primary shadow-xs' : 'bg-white border-gray-150 text-gray-700 hover:bg-gray-50'}`}
+                  >
+                    {wt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasBalanceData && (
+            <div className="space-y-2 pt-3 border-t border-gray-100">
+              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Điểm Cân Bằng</h4>
+              <select
+                value={selectedBalance}
+                onChange={(e) => dispatch(setSelectedBalance(e.target.value))}
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
+              >
+                <option value="Tất cả">Mọi điểm cân bằng</option>
+                <option value="nặng">Nặng Đầu (&gt; 298mm - Công)</option>
+                <option value="nhẹ">Nhẹ Đầu (&lt; 288mm - Thủ)</option>
+                <option value="cân bằng">Cân Bằng (288 - 298mm - Công Thủ)</option>
+              </select>
+            </div>
+          )}
+
+          {hasStiffnessData && (
+            <div className="space-y-2 pt-3 border-t border-gray-100">
+              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Độ Cứng Thân (Stiffness)</h4>
+              <select
+                value={selectedStiffness}
+                onChange={(e) => dispatch(setSelectedStiffness(e.target.value))}
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
+              >
+                <option value="Tất cả">Mọi độ cứng</option>
+                <option value="cứng">Siêu Cứng / Cứng (Extra Stiff/Stiff)</option>
+                <option value="trung bình">Trung Bình (Medium)</option>
+                <option value="dẻo">Thân Dẻo Trợ Lực (Flexible)</option>
+              </select>
+            </div>
+          )}
+        </>
+      )}
+    </>
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 animate-in fade-in duration-300">
       <div className="text-center mb-10">
@@ -129,137 +276,9 @@ export default function CatalogPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1 space-y-5">
+        <div className="hidden lg:block lg:col-span-1 space-y-5">
           <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-xs space-y-5 sticky top-24">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <span className="font-bold text-xs uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
-                <SlidersHorizontal className="w-4 h-4 text-brand-primary" /> Bộ lọc sản phẩm
-              </span>
-              <button
-                onClick={() => dispatch(resetCatalogFilters())}
-                className="text-[11px] text-gray-400 hover:text-brand-primary font-bold flex items-center gap-1 transition"
-              >
-                <RefreshCw className="w-3 h-3" /> Xóa bộ lọc
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Thương hiệu quốc tế</h4>
-              <div className="space-y-1.5">
-                {getBrands(products).map(brand => (
-                  <label key={brand} className="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedBrand.includes(brand)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          dispatch(setSelectedBrand([...selectedBrand, brand]));
-                        } else {
-                          dispatch(setSelectedBrand(selectedBrand.filter(b => b !== brand)));
-                        }
-                      }}
-                      className="rounded border-gray-300 text-brand-primary focus:ring-brand-primary/40"
-                    />
-                    <span>{brand}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Phân loại sản phẩm</h4>
-              <div className="space-y-1.5 flex flex-col">
-                {categoryFilterOptions.map(option => (
-                  <button
-                    key={option.code}
-                    onClick={() => dispatch(setSelectedCategory(option.code))}
-                    className={`text-xs text-left py-1.5 px-2.5 rounded-lg font-bold transition flex items-center justify-between ${selectedCategory === option.code ? 'bg-brand-light text-brand-primary font-black' : 'text-gray-600 hover:bg-gray-50'}`}
-                  >
-                    <span>{option.label}</span>
-                    <span className="text-[10px] text-gray-400 font-mono">({option.count})</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between text-[11px] uppercase tracking-wider text-gray-500 font-bold">
-                <span>Ngân sách tối đa</span>
-                <span className="text-brand-primary font-mono">{maxPrice.toLocaleString('vi-VN')}đ</span>
-              </div>
-              <input
-                type="range"
-                min="100000"
-                max="6000000"
-                step="100000"
-                value={maxPrice}
-                onChange={(e) => dispatch(setMaxPrice(parseInt(e.target.value, 10)))}
-                className="w-full accent-brand-primary h-1 bg-gray-100 rounded-lg cursor-pointer"
-              />
-              <div className="flex justify-between text-[10px] text-gray-400 font-mono">
-                <span>100Kđ</span>
-                <span>6.0Mđ</span>
-              </div>
-            </div>
-
-            {isRacketCategorySelected && (
-              <>
-                {hasWeightData && (
-                  <div className="space-y-2 pt-3 border-t border-gray-100">
-                    <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Trọng lượng (U)</h4>
-                    <div className="flex flex-wrap gap-1.5">
-                      {['3U', '4U', '5U'].map(wt => (
-                        <button
-                          key={wt}
-                          onClick={() => {
-                            if (selectedWeight.includes(wt)) {
-                              dispatch(setSelectedWeight(selectedWeight.filter(w => w !== wt)));
-                            } else {
-                              dispatch(setSelectedWeight([...selectedWeight, wt]));
-                            }
-                          }}
-                          className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-md border transition ${selectedWeight.includes(wt) ? 'bg-brand-primary text-white border-brand-primary shadow-xs' : 'bg-white border-gray-150 text-gray-700 hover:bg-gray-50'}`}
-                        >
-                          {wt}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {hasBalanceData && (
-                  <div className="space-y-2 pt-3 border-t border-gray-100">
-                    <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Điểm Cân Bằng</h4>
-                    <select
-                      value={selectedBalance}
-                      onChange={(e) => dispatch(setSelectedBalance(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
-                    >
-                      <option value="Tất cả">Mọi điểm cân bằng</option>
-                      <option value="nặng">Nặng Đầu (&gt; 298mm - Công)</option>
-                      <option value="nhẹ">Nhẹ Đầu (&lt; 288mm - Thủ)</option>
-                      <option value="cân bằng">Cân Bằng (288 - 298mm - Công Thủ)</option>
-                    </select>
-                  </div>
-                )}
-
-                {hasStiffnessData && (
-                  <div className="space-y-2 pt-3 border-t border-gray-100">
-                    <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Độ Cứng Thân (Stiffness)</h4>
-                    <select
-                      value={selectedStiffness}
-                      onChange={(e) => dispatch(setSelectedStiffness(e.target.value))}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
-                    >
-                      <option value="Tất cả">Mọi độ cứng</option>
-                      <option value="cứng">Siêu Cứng / Cứng (Extra Stiff/Stiff)</option>
-                      <option value="trung bình">Trung Bình (Medium)</option>
-                      <option value="dẻo">Thân Dẻo Trợ Lực (Flexible)</option>
-                    </select>
-                  </div>
-                )}
-              </>
-            )}
+            {filterPanel}
           </div>
         </div>
 
@@ -271,9 +290,32 @@ export default function CatalogPage() {
             </div>
           )}
 
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs font-bold text-gray-700">{filteredProducts.length} sản phẩm</p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setDrawerOpen(true)}
+                className="lg:hidden flex items-center gap-1.5 text-xs font-bold border border-gray-200 rounded-lg px-3 py-1.5 bg-white"
+              >
+                <SlidersHorizontal className="w-4 h-4 text-brand-primary" /> Bộ lọc
+                {activeFilterCount > 0 && (
+                  <span className="bg-brand-primary text-white rounded-full text-[10px] min-w-4 h-4 px-1 flex items-center justify-center">{activeFilterCount}</span>
+                )}
+              </button>
+              <select
+                aria-label="Sắp xếp"
+                value={sortMode}
+                onChange={(e) => setSortMode(e.target.value as SortMode)}
+                className="text-xs font-bold border border-gray-200 rounded-lg px-2 py-1.5 bg-white"
+              >
+                {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </select>
+            </div>
+          </div>
+
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map(p => (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+              {sortedProducts.map(p => (
                 <ProductCard
                   key={p.id}
                   product={p}
@@ -292,6 +334,11 @@ export default function CatalogPage() {
           )}
         </div>
       </div>
+      {drawerOpen && (
+        <CatalogFilterDrawer resultCount={filteredProducts.length} onClose={() => setDrawerOpen(false)}>
+          {filterPanel}
+        </CatalogFilterDrawer>
+      )}
     </div>
   );
 }
