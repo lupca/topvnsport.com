@@ -1,4 +1,5 @@
 import { ChevronRight, Sparkles } from 'lucide-react';
+import BlogImage from '../../components/BlogImage';
 import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
@@ -163,7 +164,7 @@ export default function HomePage() {
               className="bg-white rounded-xl border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition flex flex-col justify-between"
             >
               <div>
-                <img src={blog.image} alt={blog.title} className="aspect-[16/10] w-full object-cover" />
+                <BlogImage src={blog.image} alt={blog.title} className="aspect-[16/10] w-full object-cover" />
                 <div className="p-4 space-y-1.5">
                   <span className="text-[9px] bg-brand-light text-brand-secondary font-bold px-2 py-0.5 rounded-sm uppercase">{blog.category}</span>
                   <h4 className="font-bold text-sm text-gray-900 line-clamp-2 hover:text-brand-primary transition leading-snug">{blog.title}</h4>

@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Blog } from '../types';
+import BlogImage from './BlogImage';
 import { ArrowLeft, BookOpen, Calendar, User, Tag, ChevronRight, Activity, MapPin, Trophy } from 'lucide-react';
-
-interface BlogSectionProps {
-  blogs: Blog[];
-  selectedBlogId?: string;
-  onBlogClick: (blogId: string) => void;
-  onBackToBlogs: () => void;
-}
 
 export default function BlogSection({ blogs }: { blogs: Blog[] }) {
   const navigate = useNavigate();
@@ -29,6 +23,20 @@ export default function BlogSection({ blogs }: { blogs: Blog[] }) {
     'Tin tức': <BookOpen className="w-3.5 h-3.5" />
   };
 
+  if (selectedBlogId && !selectedBlog) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4" id="blog-not-found">
+        <p className="font-bold text-gray-900">Không tìm thấy bài viết</p>
+        <button
+          onClick={() => navigate('/blog')}
+          className="inline-flex items-center gap-2 text-sm text-brand-primary font-medium"
+        >
+          <ArrowLeft className="w-4 h-4" /> Quay lại danh mục tin tức
+        </button>
+      </div>
+    );
+  }
+
   if (selectedBlog) {
     // Elegant Editorial Reader View
     return (
@@ -43,7 +51,7 @@ export default function BlogSection({ blogs }: { blogs: Blog[] }) {
         <article className="space-y-6">
           {/* Cover image */}
           <div className="aspect-[21/9] w-full overflow-hidden rounded-2xl bg-gray-100 shadow-md">
-            <img src={selectedBlog.image} alt={selectedBlog.title} className="w-full h-full object-cover" />
+            <BlogImage src={selectedBlog.image} alt={selectedBlog.title} className="w-full h-full object-cover" />
           </div>
 
           <div className="space-y-3">
@@ -102,7 +110,7 @@ export default function BlogSection({ blogs }: { blogs: Blog[] }) {
       </div>
 
       {/* Categories select tabs */}
-      <div className="flex justify-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="flex md:justify-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
         {(['Tất cả', 'Đánh giá thiết bị', 'Hướng dẫn kỹ thuật', 'Đánh giá sân bãi', 'Tin tức'] as const).map(cat => (
           <button
             key={cat}
@@ -125,7 +133,7 @@ export default function BlogSection({ blogs }: { blogs: Blog[] }) {
           >
             <div>
               <div className="aspect-[16/10] overflow-hidden bg-gray-100">
-                <img
+                <BlogImage
                   src={blog.image}
                   alt={blog.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-500"

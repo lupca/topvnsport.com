@@ -130,7 +130,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/product/:slug" element={<ProductDetailRoute />} />
-            <Route path="/blog/*" element={<BlogSection blogs={blogs} />} />
+            <Route path="/blog/:id?" element={<BlogSection blogs={blogs} />} />
             <Route path="/stores" element={<StoreLocator branches={branches} products={products} />} />
             <Route path="/checkout/success" element={<CheckoutCallbackPage status="success" />} />
             <Route path="/checkout/error" element={<CheckoutCallbackPage status="error" />} />
