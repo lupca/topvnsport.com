@@ -3,7 +3,7 @@ import { ArrowLeft, Phone, ShoppingCart, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product, StringOption, TierVariation } from '../../types';
 import StringingAssistant from './StringingAssistant';
-import { isStringingTierName } from './helpers';
+import { StockState, isStringingTierName } from './helpers';
 
 interface ProductPurchaseSectionProps {
   product: Product;
@@ -29,7 +29,7 @@ interface ProductPurchaseSectionProps {
   onSetSelectedColor: (value: string) => void;
   onSetTension: (value: number) => void;
   onAddToCart: () => void;
-  getVariantStock: (tier1: string, tier2: string) => number | undefined;
+  getVariantStock: (tier1: string, tier2: string) => StockState;
 }
 
 export default function ProductPurchaseSection({
@@ -141,10 +141,16 @@ export default function ProductPurchaseSection({
                     <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">{tier.name}</label>
                     <div className="flex flex-wrap gap-2">
                       {tier.options.map((option) => {
+                        // Tầng kia là tầng cước: gộp mọi cước (không khoá màu còn bản có cước).
+                        const otherIsStringing = product.tier_variations?.some(
+                          (tv) => tv.tier_index !== tier.tier_index && isStringingTierName(tv.name)
+                        );
+                        const other = otherIsStringing ? '' : otherTierValue;
                         const stockForOption = tier.tier_index === 1
-                          ? getVariantStock(option, otherTierValue)
-                          : getVariantStock(otherTierValue, option);
-                        const optionOutOfStock = stockForOption !== undefined && stockForOption <= 0;
+                          ? getVariantStock(option, other)
+                          : getVariantStock(other, option);
+                        const optionHet = stockForOption.kind === 'known' && stockForOption.stock <= 0;
+                        const optionOutOfStock = optionHet || stockForOption.kind === 'none';
 
                         return (
                           <button
@@ -160,7 +166,7 @@ export default function ProductPurchaseSection({
                             }`}
                           >
                             {option}
-                            {optionOutOfStock && (
+                            {optionHet && (
                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold">
                                 Hết
                               </span>
