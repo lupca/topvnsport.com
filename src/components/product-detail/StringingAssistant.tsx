@@ -87,7 +87,7 @@ export default function StringingAssistant({
     stringingTierIndex === 1 ? onSetSelectedTier1(value) : onSetSelectedTier2(value);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-xs space-y-4">
+    <div id={stringingTierIndex ? `tier-select-${stringingTierIndex}` : undefined} className="bg-white border border-gray-200 rounded-2xl p-5 shadow-xs space-y-4">
       <div className="flex items-center justify-between border-b border-gray-100 pb-3">
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-brand-primary" />

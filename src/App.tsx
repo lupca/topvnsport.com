@@ -46,6 +46,8 @@ export default function App() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
+  // PDP có MobilePurchaseBar sticky là thanh đáy duy nhất: không nav đáy, không pb-16.
+  const isPdp = location.pathname.startsWith('/product/');
 
   const { products, blogs, branches, categories, isLoading, categoriesError, productsError, stockError } = useAppSelector(state => state.appData);
   const { items: cartItems, isOpen: isCartOpen, quickViewProduct } = useAppSelector(state => state.cart);
@@ -107,7 +109,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans selection:bg-brand-primary selection:text-white antialiased pb-16 md:pb-0">
+    <div className={`min-h-screen bg-gray-50 flex flex-col font-sans selection:bg-brand-primary selection:text-white antialiased ${isPdp ? '' : 'pb-16'} md:pb-0`}>
       <Header
         cartCount={cartCount}
         openCart={() => dispatch(openCart())}
@@ -159,12 +161,14 @@ export default function App() {
         onAddToCart={handleAddToCart}
       />
 
-      <MobileBottomNav
-        pathname={location.pathname}
-        navigate={navigate}
-        cartCount={cartCount}
-        onOpenCart={() => dispatch(openCart())}
-      />
+      {!isPdp && (
+        <MobileBottomNav
+          pathname={location.pathname}
+          navigate={navigate}
+          cartCount={cartCount}
+          onOpenCart={() => dispatch(openCart())}
+        />
+      )}
     </div>
   );
 }

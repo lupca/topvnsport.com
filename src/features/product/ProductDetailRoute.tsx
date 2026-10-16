@@ -29,6 +29,13 @@ export default function ProductDetailRoute() {
       const description = describeSkuSelection(targetProduct, color, weight);
       if (description.status === 'missing_selection') {
         void popupService.alert(`Vui lòng chọn ${description.tierName}`);
+        const tier = targetProduct.tier_variations?.find(tv => tv.name === description.tierName);
+        const frame = tier ? document.getElementById(`tier-select-${tier.tier_index}`) : null;
+        if (frame) {
+          frame.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          console.error(`Không tìm thấy khung chọn "${description.tierName}" để cuộn tới (sản phẩm ${targetProduct.id})`);
+        }
       } else {
         void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
       }

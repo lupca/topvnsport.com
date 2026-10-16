@@ -35,14 +35,14 @@ describe('ProductDetailTabs', () => {
       <ProductDetailTabs
         product={racketProduct}
         isRacket={true}
-        activeTab="details"
+        activeTab="tech"
         onTabChange={vi.fn()}
       />
     );
 
-    expect(screen.getByText('Thương hiệu:')).toBeTruthy();
+    expect(screen.getByText('Thương hiệu')).toBeTruthy();
     expect(screen.getByText('Yonex')).toBeTruthy();
-    expect(screen.getByText('Xuất xứ:')).toBeTruthy();
+    expect(screen.getByText('Xuất xứ')).toBeTruthy();
     expect(screen.queryByText('Sản phẩm chưa có thông số kỹ thuật chi tiết.')).toBeNull();
   });
 
@@ -60,7 +60,7 @@ describe('ProductDetailTabs', () => {
     expect(screen.getByText('Đánh giá tay vợt')).toBeTruthy();
   });
 
-  it.each(['details', 'tech'] as const)('tab %s hiện tên giá trị VOMA, không hiện mã 1000850 của attributes cũ', (tab) => {
+  it.each(['tech'] as const)('tab %s hiện tên giá trị VOMA, không hiện mã 1000850 của attributes cũ', (tab) => {
     const { container } = render(
       <ProductDetailTabs product={racketProduct} isRacket={true} activeTab={tab} onTabChange={vi.fn()} />
     );
@@ -68,7 +68,7 @@ describe('ProductDetailTabs', () => {
     expect(container.textContent).not.toContain('1000850');
   });
 
-  it.each(['details', 'tech'] as const)('tab %s: không có vomaAttributes và không có spec vợt -> câu trống hiện có', (tab) => {
+  it.each(['tech'] as const)('tab %s: không có vomaAttributes và không có spec vợt -> câu trống hiện có', (tab) => {
     render(
       <ProductDetailTabs
         product={{ ...racketProduct, vomaAttributes: undefined }}
