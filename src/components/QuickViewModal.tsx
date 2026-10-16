@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { isRacketCategoryCode } from '../config/storefront';
 import { getSingleSellableSku } from '../features/cart/cartSlice';
 import { getProductPath } from '../utils/productSlug';
+import { getPriceDisplay } from '../utils/priceDisplay';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -17,6 +18,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
   const navigate = useNavigate();
   // Thêm nhanh chỉ khi sản phẩm có ĐÚNG một SKU bán được -- xem ProductCard.
   const hasPrice = product?.price !== undefined;
+  const price = product ? getPriceDisplay(product) : null;
   const canQuickAdd = product ? getSingleSellableSku(product) !== null : false;
   const stockUnknown = product?.stock === undefined;
   const outOfStock = product?.stock !== undefined && product.stock <= 0;
@@ -28,7 +30,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden relative border border-gray-100 shadow-2xl p-6"
+            className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative border border-gray-100 shadow-2xl p-6"
             id="quick-view-modal-content"
           >
             {/* Close button */}
@@ -40,19 +42,19 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
               <X className="w-5 h-5" />
             </button>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start h-full overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <div className="aspect-square bg-gray-50 rounded-xl p-4 flex items-center justify-center overflow-hidden">
                 <img src={product.image} alt={product.name} className="max-h-full object-contain" referrerPolicy="no-referrer" />
               </div>
               
-              <div className="space-y-4 min-h-0 overflow-y-auto pr-1">
+              <div className="space-y-4 pr-1">
                 <div className="space-y-1">
                   {product.brand && <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">{product.brand}</span>}
                   <h3 className="font-display font-black text-lg text-gray-900 leading-snug">{product.name}</h3>
                 </div>
 
                 {product.description && (
-                  <div className="max-h-56 overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
+                  <div className="md:max-h-56 md:overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
                     <p className="text-xs text-gray-600 leading-relaxed font-light whitespace-pre-line break-words">
                       {product.description}
                     </p>
@@ -96,10 +98,28 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
 
                 <div className="flex items-center justify-between">
                   <div>
-                    {hasPrice ? (
-                      <span className="text-lg font-extrabold text-brand-primary font-display">{((product.salePrice || product.price) as number).toLocaleString('vi-VN')}đ</span>
-                    ) : (
+                    {!hasPrice || !price ? (
                       <span className="text-sm font-bold text-gray-600 font-display" data-testid="no-price">Liên hệ để biết giá</span>
+                    ) : price.hasActivePromotion ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-bold text-red-600 font-display" data-testid="sale-price">
+                            {price.salePrice.toLocaleString('vi-VN')}đ
+                          </span>
+                          {price.discountPercent > 0 && (
+                            <span className="text-[10px] font-extrabold bg-red-600 text-white px-2 py-0.5 rounded-sm" data-testid="discount-badge">
+                              -{price.discountPercent}%
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-400 line-through block leading-none" data-testid="original-price">
+                          {price.originalPrice.toLocaleString('vi-VN')}đ
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-lg font-extrabold text-brand-primary font-display" data-testid="regular-price">
+                        {price.originalPrice.toLocaleString('vi-VN')}đ
+                      </span>
                     )}
                     {outOfStock && (
                       <p className="text-xs text-red-500 font-semibold mt-1">Tạm hết hàng</p>
