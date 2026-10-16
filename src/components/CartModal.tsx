@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { X, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck, QrCode, CreditCard } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck, QrCode, CreditCard } from 'lucide-react';
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
-import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, CartItemSkuStatus } from '../features/cart/cartSlice';
-import { useAppSelector } from '../app/hooks';
+import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity, CartItemSkuStatus } from '../features/cart/cartSlice';
+import { isStringingTierName } from './product-detail/helpers';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal from './OtpModal';
 
 
@@ -47,6 +48,7 @@ function cartItemWarningMessage(status: CartItemSkuStatus): string | null {
 }
 
 export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, onClearCart }: CartModalProps) {
+  const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.appData.products);
   // Dữ liệu sản phẩm đang tải (danh sách appData.products có thể còn rỗng/
   // thiếu) -- KHÔNG được kết luận "sản phẩm không còn"/"phân loại đã đổi" lúc
@@ -55,7 +57,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   // Tải sản phẩm lỗi -> không biết món nào còn bán: báo lỗi tải, khoá thanh toán.
   const productsError = useAppSelector(state => state.appData.productsError);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
-  const [createdOrderNumber, setCreatedOrderNumber] = useState('');
+  // Ảnh chụp đơn lúc đặt (COD) -- bước 3 đọc từ đây, không đọc giỏ (giỏ đã xoá).
+  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null } | null>(null);
   
   // Checkout Fields
   const [fullName, setFullName] = useState('');
@@ -63,10 +66,22 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const [address, setAddress] = useState('');
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'fast'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'sepay'>('sepay');
-  const [city, setCity] = useState('Hà Nội');
+  const [ward, setWard] = useState('');
+  const [province, setProvince] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [verificationToken, setVerificationToken] = useState('');
+
+  // Đóng giỏ -> lần mở sau về bước 1. Dữ liệu form khách đã nhập giữ nguyên.
+  // Đóng ở bước 3 (đơn đã tạo, giỏ đã xoá) thì bỏ luôn ảnh chụp đơn + token OTP.
+  useEffect(() => {
+    if (isOpen) return;
+    if (step === 3) {
+      setPlacedOrder(null);
+      setVerificationToken('');
+    }
+    setStep(1);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -79,6 +94,14 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   };
   const lineAmounts = cartItems.map(lineAmount);
   const itemsTotal = lineAmounts.some(a => a === null) ? null : (lineAmounts as number[]).reduce((acc, a) => acc + a, 0);
+
+  const productOf = (item: CartItem) => products.find(p => String(p.id) === String(item.productId));
+  const variantStock = (item: CartItem) => productOf(item)?.variants?.find(v => v.sku_code === item.skuCode)?.stock;
+  // "Không đan lưới" chỉ có nghĩa với sản phẩm có tầng cước mà phân loại đã chọn không nêu tầng đó.
+  const hasUnstrungChoice = (item: CartItem) =>
+    (productOf(item)?.tier_variations || []).some(
+      tv => isStringingTierName(tv.name) && !(item.variantLabel || '').includes(`${tv.name}:`)
+    );
 
   const shippingCost = shippingMethod === 'standard' ? 30000 : 50000;
   const orderTotal = itemsTotal === null ? null : itemsTotal + shippingCost;
@@ -106,8 +129,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       return;
     }
 
-    if (!fullName || !phone || !address) {
-      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại và địa chỉ nhận hàng.');
+    if (![fullName, phone, address, ward, province].every(v => v.trim())) {
+      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại, địa chỉ, phường/xã và tỉnh/thành phố nhận hàng.');
       return;
     }
 
@@ -130,7 +153,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
     setIsSubmitting(true);
     try {
-      const shippingAddress = `${address}, ${city}`;
+      const shippingAddress = [address, ward, province].map(v => v.trim()).join(', ');
       const customerId = await sportApi.findOrCreateCustomer({
         name: fullName.trim(),
         phone: phone.trim(),
@@ -163,7 +186,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         verification_token: activeToken,
       });
 
-      setCreatedOrderNumber(order?.order_number || '');
+      setPlacedOrder({ orderNumber: order?.order_number || '', shippingAddress, total: orderTotal });
 
       if (paymentMethod === 'sepay') {
         const checkoutForm = await sportApi.createSepayCheckout(order.id, order.order_number);
@@ -183,6 +206,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         return;
       }
 
+      // Đơn COD đã tạo trên OMS -> xoá giỏ NGAY (như đường SePay), chống đặt trùng.
+      onClearCart();
       setStep(3);
     } catch (err: any) {
       console.error(err);
@@ -200,7 +225,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const handleFinish = () => {
     onClearCart();
     setStep(1);
-    setCreatedOrderNumber('');
+    setPlacedOrder(null);
     setVerificationToken('');
     onClose();
   };
@@ -256,9 +281,9 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                               )}
                               {item.stringOption ? (
                                 <p className="text-brand-primary font-bold">• Đan cước: {item.stringOption.name} ({item.tension} Kg)</p>
-                              ) : (
+                              ) : hasUnstrungChoice(item) ? (
                                 <p className="text-gray-400">• Không đan lưới (Mua khung trơn)</p>
-                              )}
+                              ) : null}
                             </div>
 
                             {/* SKU không còn khớp biến thể thật nào của sản
@@ -271,7 +296,27 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                             )}
 
                             <div className="flex justify-between items-center pt-1.5">
-                              <span className="text-xs text-gray-400">Số lượng: <strong>{item.quantity}</strong></span>
+                              <div className="flex items-center gap-2 text-xs text-gray-400">
+                                <button
+                                  type="button"
+                                  aria-label="Giảm số lượng"
+                                  disabled={item.quantity <= 1}
+                                  onClick={() => dispatch(updateCartItemQuantity({ id: item.id, quantity: item.quantity - 1 }))}
+                                  className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded-sm text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </button>
+                                <strong className="min-w-4 text-center text-gray-900">{item.quantity}</strong>
+                                <button
+                                  type="button"
+                                  aria-label="Tăng số lượng"
+                                  disabled={(() => { const stock = variantStock(item); return typeof stock === 'number' && item.quantity >= stock; })()}
+                                  onClick={() => dispatch(updateCartItemQuantity({ id: item.id, quantity: item.quantity + 1 }))}
+                                  className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded-sm text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </div>
                               <span className="text-sm font-bold text-brand-primary font-mono">
                                 {formatMoney(lineAmounts[index])}
                               </span>
@@ -338,21 +383,6 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Tỉnh / Thành Phố</label>
-                  <select
-                    value={city}
-                    onChange={e => setCity(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
-                  >
-                    <option value="Hà Nội">Hà Nội</option>
-                    <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                    <option value="Đà Nẵng">Đà Nẵng</option>
-                    <option value="Hải Dương">Hải Dương</option>
-                    <option value="Khác">Khu vực khác</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
                   <label className="text-[10px] font-bold text-gray-400 uppercase">Địa chỉ cụ thể (Số nhà, Ngõ/Hẻm, Đường) *</label>
                   <input
                     type="text"
@@ -360,6 +390,30 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                     placeholder="Ví dụ: Số 12 Chùa Hà"
                     value={address}
                     onChange={e => setAddress(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Phường/Xã *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Nhập phường/xã"
+                    value={ward}
+                    onChange={e => setWard(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase">Tỉnh/Thành phố *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Nhập tỉnh/thành phố"
+                    value={province}
+                    onChange={e => setProvince(e.target.value)}
                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
                   />
                 </div>
@@ -432,13 +486,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               </p>
               
               <div className="bg-gray-50 p-4 rounded-xl text-left border border-gray-100 text-xs text-gray-700 space-y-2 font-mono">
-                {createdOrderNumber && <p>• <strong>Mã đơn hàng:</strong> {createdOrderNumber}</p>}
+                {placedOrder?.orderNumber && <p>• <strong>Mã đơn hàng:</strong> {placedOrder.orderNumber}</p>}
                 <p>• <strong>Người nhận:</strong> {fullName}</p>
                 <p>• <strong>Số điện thoại:</strong> {phone}</p>
-                <p>• <strong>Địa chỉ giao:</strong> {address}, {city}</p>
+                <p>• <strong>Địa chỉ giao:</strong> {placedOrder?.shippingAddress}</p>
                 <p>• <strong>Phương thức giao:</strong> {shippingMethod === 'standard' ? 'Giao hàng chuẩn (COD)' : 'Giao hàng hỏa tốc'}</p>
                 <p className="text-sm font-bold text-brand-primary border-t border-gray-200 pt-2 mt-2">
-                  Tổng hóa đơn thanh toán: {formatMoney(orderTotal)}
+                  Tổng hóa đơn thanh toán: {formatMoney(placedOrder?.total ?? null)}
                 </p>
               </div>
 
@@ -484,7 +538,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               <div className="flex gap-2.5">
                 <button
                   onClick={() => setStep(1)}
-                  className="border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-full transition"
+                  className="border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-sm transition"
                 >
                   Quay lại
                 </button>

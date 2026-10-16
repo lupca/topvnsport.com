@@ -98,6 +98,8 @@ async function fillCheckoutForm() {
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Test' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1 Test' } });
+  fireEvent.change(screen.getByPlaceholderText('Nhập phường/xã'), { target: { value: 'Phường Test' } });
+  fireEvent.change(screen.getByPlaceholderText('Nhập tỉnh/thành phố'), { target: { value: 'Tỉnh Test' } });
   // Chọn COD để nút submit hiển thị "Xác nhận đặt hàng" và tránh nhánh
   // redirect SePay (không liên quan tới việc chặn SKU không hợp lệ).
   fireEvent.click(screen.getByText('Thanh toán COD'));
