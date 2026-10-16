@@ -1,4 +1,4 @@
-import { ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import BlogImage from '../../components/BlogImage';
 import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -51,7 +51,7 @@ export default function HomePage() {
       {sortedCategories.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="font-display font-black text-lg md:text-2xl text-gray-900 tracking-tight uppercase mb-6 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-brand-primary" /> Danh mục trang thiết bị cầu lông
+            Danh mục trang thiết bị cầu lông
           </h2>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 md:gap-4">

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Sparkles } from 'lucide-react';
 import { Product, StringOption, TierVariation } from '../../types';
 import { variantUnitPrice } from '../../features/cart/cartSlice';
 import { aggregateStock, formatStringMeta, getTensionTooltip, inferStringMeta, isNoStringOption } from './helpers';
@@ -90,7 +89,6 @@ export default function StringingAssistant({
     <div id={stringingTierIndex ? `tier-select-${stringingTierIndex}` : undefined} className="bg-white border border-gray-200 rounded-2xl p-5 shadow-xs space-y-4">
       <div className="flex items-center justify-between border-b border-gray-100 pb-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-brand-primary" />
           <div>
             <h3 className="font-bold text-sm text-gray-900 uppercase">Dịch vụ đan cước chuyên nghiệp</h3>
             <p className="text-[11px] text-gray-400">Chọn cước và lực căng tùy biến theo trình độ</p>
@@ -201,7 +199,6 @@ export default function StringingAssistant({
             </div>
 
             <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-[11px] text-gray-600 leading-relaxed flex items-start gap-2">
-              <Sparkles className="w-4 h-4 text-brand-primary shrink-0 mt-0.5" />
               <span>{getTensionTooltip(tension)}</span>
             </div>
           </div>

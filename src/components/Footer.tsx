@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Phone, MapPin, Mail, ShieldCheck, Heart, Sparkles, Facebook, Youtube, Share2 } from 'lucide-react';
+import { Trophy, Phone, MapPin, Mail, ShieldCheck, Heart, Facebook, Youtube, Share2 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import { Category, Product } from '../types';

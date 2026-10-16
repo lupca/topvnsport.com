@@ -1,4 +1,4 @@
-import { Home, MapPin, ShoppingBag, Sparkles, Trophy } from 'lucide-react';
+import { Home, MapPin, ShoppingBag, SlidersHorizontal, Trophy } from 'lucide-react';
 import { NavigateFunction } from 'react-router-dom';
 
 type MobileBottomNavProps = {
@@ -37,8 +37,8 @@ export default function MobileBottomNav({ pathname, navigate, cartCount, onOpenC
         }}
         className="flex flex-col items-center gap-1 p-1 text-gray-400 hover:text-brand-primary transition"
       >
-        <Sparkles className="w-5 h-5 text-brand-primary " />
-        <span className="text-[10px] text-brand-primary font-medium">Chọn vợt AI</span>
+        <SlidersHorizontal className="w-5 h-5 text-brand-primary " />
+        <span className="text-[10px] text-brand-primary font-medium">Chọn vợt</span>
       </button>
 
       <button
