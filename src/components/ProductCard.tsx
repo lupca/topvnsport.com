@@ -76,7 +76,11 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
       </div>
 
       {/* Main product photo area */}
-      <div className="relative aspect-square overflow-hidden bg-gray-50 flex items-center justify-center p-4">
+      <div
+        className="relative aspect-square overflow-hidden bg-gray-50 flex items-center justify-center p-4 cursor-pointer"
+        onClick={() => navigate(getProductPath(product))}
+        data-testid="product-card-image"
+      >
         <img
           src={product.image}
           alt={product.name}
@@ -84,9 +88,13 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           referrerPolicy="no-referrer"
         />
         {/* Quick actions overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2.5 z-10">
+        {/* Chỉ tồn tại trên thiết bị có hover: trên cảm ứng không có phần tử bấm được mà không nhìn thấy. */}
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden [@media(hover:hover)]:flex items-center justify-center gap-2.5 z-10">
           <button
-            onClick={() => onQuickView(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onQuickView(product);
+            }}
             className="p-2 bg-white text-gray-800 rounded-full hover:bg-brand-primary hover:text-white shadow-md hover:scale-110 transition duration-200"
             title="Xem nhanh thông số"
           >
@@ -94,9 +102,9 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           </button>
           <button
             onClick={(e) => {
+              e.stopPropagation();
               if (outOfStock || stockUnknown || !hasPrice) return;
               if (!canQuickAdd) {
-                e.stopPropagation();
                 navigate(getProductPath(product));
                 return;
               }
@@ -116,7 +124,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
       </div>
 
       {/* Content details block */}
-      <div className="p-4 flex-1 flex flex-col justify-between" onClick={() => navigate(getProductPath(product))}>
+      <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between" onClick={() => navigate(getProductPath(product))}>
         <div className="space-y-1.5 cursor-pointer">
           {/* Brand & category */}
           <div className="flex items-center justify-between text-[11px] font-mono font-bold text-gray-400">
@@ -175,7 +183,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
 
         {/* Pricing Block */}
         <div className="mt-4 flex items-end justify-between pt-2 border-t border-gray-50">
-          <div>
+          <div className="min-w-0">
             {!hasPrice ? (
               <span className="text-sm font-bold text-gray-600 font-display" data-testid="no-price">
                 Liên hệ để biết giá
@@ -196,12 +204,33 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
             )}
           </div>
 
+          {canQuickAdd && (
+            <button
+              type="button"
+              data-testid="mobile-add-to-cart"
+              aria-label="Thêm vào giỏ"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (outOfStock || stockUnknown || !hasPrice) return;
+                onAddToCart(product, e);
+              }}
+              disabled={outOfStock || stockUnknown || !hasPrice}
+              className={`[@media(hover:hover)]:hidden shrink-0 p-2 rounded-full transition ${
+                outOfStock || stockUnknown || !hasPrice
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-brand-primary text-white'
+              }`}
+            >
+              <ShoppingCart className="w-4 h-4" />
+            </button>
+          )}
+
           <button
             onClick={(e) => {
               e.stopPropagation();
               navigate(getProductPath(product));
             }}
-            className="text-xs font-bold text-gray-900 group-hover:text-brand-primary hover:underline transition"
+            className="hidden sm:inline text-xs font-bold text-gray-900 group-hover:text-brand-primary hover:underline transition"
           >
             Chi tiết &rarr;
           </button>
