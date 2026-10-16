@@ -54,14 +54,14 @@ describe('STOR-028 PDP mobile', () => {
   it('PDP ẩn nav đáy', async () => {
     const { container } = renderApp('/product/ao-28');
     await screen.findByText('Áo 28', { selector: 'h1' }, { timeout: 60000 });
-    expect(screen.queryByText('Chọn vợt AI')).toBeNull(); // AC2
+    expect(screen.queryByText('Chọn vợt')).toBeNull(); // AC2
     expect((container.firstChild as HTMLElement).className).not.toContain('pb-16'); // AC3
   });
 
   it('trang khác PDP vẫn có nav đáy và pb-16', async () => {
     const { container } = renderApp('/catalog');
-    await screen.findByText('Chọn vợt AI', {}, { timeout: 60000 });
-    expect(screen.getByText('Chọn vợt AI')).toBeTruthy();
+    await screen.findByText('Chọn vợt', {}, { timeout: 60000 });
+    expect(screen.getByText('Chọn vợt')).toBeTruthy();
     expect((container.firstChild as HTMLElement).className).toContain('pb-16');
   });
 

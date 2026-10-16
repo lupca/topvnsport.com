@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Sparkles, Trophy, BookOpen, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Trophy, BookOpen, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';

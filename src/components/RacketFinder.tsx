@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Trophy, ShieldCheck, DollarSign, RefreshCw, ChevronRight, Check } from 'lucide-react';
+import { Trophy, ShieldCheck, DollarSign, RefreshCw, ChevronRight, Check } from 'lucide-react';
 import { Product } from '../types';
 import { getProductPath } from '../utils/productSlug';
 import { isRacketCategoryCode } from '../config/storefront';
@@ -70,7 +70,7 @@ export default function RacketFinder({ products }: RacketFinderProps) {
         {/* Header Title */}
         <div className="text-center mb-8">
           <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary text-xs font-semibold px-3 py-1 rounded-full border border-brand-primary/20 uppercase tracking-widest mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-brand-primary" /> Trình cố vấn ảo chọn vợt thông minh
+            Trình cố vấn ảo chọn vợt thông minh
           </span>
           <h2 className="font-display font-extrabold text-xl md:text-3xl tracking-tight leading-tight">
             TÌM KIẾM VỢT PHÙ HỢP CHỈ TRONG <span className="text-brand-primary">30 GIÂY</span>
@@ -247,7 +247,7 @@ export default function RacketFinder({ products }: RacketFinderProps) {
               ) : (
               <>
               <div className="bg-emerald-500/15 border border-emerald-500/20 rounded-xl p-4 text-center">
-                <p className="text-emerald-400 font-bold text-sm">✓ Phân tích hoàn tất! Dưới đây là 3 cây vợt tối ưu nhất dành cho bạn:</p>
+                <p className="text-emerald-400 font-bold text-sm">Phân tích hoàn tất! Dưới đây là 3 cây vợt tối ưu nhất dành cho bạn:</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">

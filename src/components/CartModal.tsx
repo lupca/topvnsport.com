@@ -549,7 +549,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   disabled={isSubmitting}
                   className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
                 >
-                  {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng ✓'}
+                  {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng'}
                 </button>
               </div>
             )}
