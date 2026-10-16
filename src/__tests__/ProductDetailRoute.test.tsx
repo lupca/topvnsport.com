@@ -86,6 +86,8 @@ function renderProductDetailRoute(product: Product) {
   return store;
 }
 
+Element.prototype.scrollIntoView = vi.fn(); // jsdom không có
+
 describe('ProductDetailRoute -- F6: thiếu tầng / không khớp -> đúng câu báo, KHÔNG dispatch addCartItem', () => {
   afterEach(() => {
     cleanup();

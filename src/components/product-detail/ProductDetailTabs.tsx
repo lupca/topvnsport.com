@@ -26,7 +26,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
 
   return (
     <div className="mt-14 border-t border-gray-100 pt-10">
-      <div className="flex border-b border-gray-200">
+      <div className="flex overflow-x-auto border-b border-gray-200">
         {[
           { id: 'details', label: 'Mô tả thực tế & Cảm nhận' },
           { id: 'tech', label: isRacket ? 'Bảng Điều Khiển Kỹ Thuật (Dashboard)' : 'Thông số kỹ thuật' },
@@ -40,7 +40,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id as DetailTab)}
-            className={`pb-3 px-4 text-xs md:text-sm font-bold uppercase tracking-wider border-b-2 transition ${
+            className={`pb-3 px-4 whitespace-nowrap shrink-0 text-xs md:text-sm font-bold uppercase tracking-wider border-b-2 transition ${
               activeTab === tab.id
                 ? 'border-brand-primary text-brand-primary'
                 : 'border-transparent text-gray-400 hover:text-gray-700'
@@ -61,16 +61,19 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                   <div className="whitespace-pre-line leading-relaxed">{product.description}</div>
                 </>
               )}
-              <div className="space-y-2 mt-4">
-                <p className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Điểm nổi bật:</p>
-                <ul className="list-disc pl-5 space-y-1.5">
-                  {product.features?.map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ul>
-              </div>
+              {product.features && product.features.length > 0 && (
+                <div className="space-y-2 mt-4">
+                  <p className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Điểm nổi bật:</p>
+                  <ul className="list-disc pl-5 space-y-1.5">
+                    {product.features.map((feature, index) => (
+                      <li key={index}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
+            {hasRacketSpecData && (
             <div className="lg:col-span-4 bg-gray-50 rounded-xl p-5 border border-gray-100">
               <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider mb-4 text-brand-primary">Thông số cơ bản:</h4>
               <div className="space-y-2.5 text-xs text-gray-600 font-mono">
@@ -107,22 +110,9 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                     <strong className="text-gray-900">{product.specs.swingWeight} kg/cm²</strong>
                   </div>
                 )}
-
-                {/* Attributes thật từ PIM (Thương hiệu, Xuất xứ, Tổ chức chịu
-                    trách nhiệm...) -- luôn hiện khi có, không riêng cho sản
-                    phẩm không phải vợt */}
-                {technicalAttributes.map((attribute, index) => (
-                  <div key={`${attribute.code}-${index}`} className="flex justify-between border-b border-gray-100 pb-1.5 gap-3">
-                    <span>{attribute.name}:</span>
-                    <strong className="text-gray-900 text-right">{attribute.value}</strong>
-                  </div>
-                ))}
-
-                {!hasRacketSpecData && technicalAttributes.length === 0 && (
-                  <p className="text-gray-500">Sản phẩm chưa có thông số kỹ thuật chi tiết.</p>
-                )}
               </div>
             </div>
+            )}
           </div>
         )}
 

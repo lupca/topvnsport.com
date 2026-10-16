@@ -21,7 +21,7 @@ export default function MobilePurchaseBar({
   onBuyNow
 }: MobilePurchaseBarProps) {
   return (
-    <div className="fixed bottom-[57px] left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-sm p-3 flex items-center justify-between gap-3 md:hidden">
+    <div className="sticky bottom-0 -mx-4 z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-sm p-3 flex items-center justify-between gap-3 md:hidden">
       <div className="flex items-center gap-2 min-w-0">
         <img
           src={productImage}

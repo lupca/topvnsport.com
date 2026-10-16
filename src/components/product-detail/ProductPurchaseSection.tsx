@@ -93,17 +93,17 @@ export default function ProductPurchaseSection({
             {product.name}
           </h1>
 
-          <div className="flex items-center gap-1.5 text-xs">
-            <div className="flex text-amber-400">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star key={star} className="w-4.5 h-4.5 fill-current" />
-              ))}
-            </div>
-            {/* Số đánh giá là số THẬT từ product.reviews -- không bịa số khi mảng rỗng */}
-            {product.reviews.length > 0 && (
+          {/* Sao và số đánh giá là dữ liệu THẬT từ product.reviews -- mảng rỗng thì không hiện gì */}
+          {product.reviews.length > 0 && (
+            <div className="flex items-center gap-1.5 text-xs">
+              <div className="flex text-amber-400">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star key={star} className="w-4.5 h-4.5 fill-current" />
+                ))}
+              </div>
               <span className="text-gray-500 font-medium">({product.reviews.length} đánh giá từ các tay vợt)</span>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="bg-brand-light/50 p-4 rounded-xl border border-blue-100 flex items-center justify-between">
@@ -137,7 +137,7 @@ export default function ProductPurchaseSection({
                 const otherTierValue = tier.tier_index === 1 ? selectedTier2 : selectedTier1;
 
                 return (
-                  <div key={tier.tier_index}>
+                  <div key={tier.tier_index} id={`tier-select-${tier.tier_index}`}>
                     <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">{tier.name}</label>
                     <div className="flex flex-wrap gap-2">
                       {tier.options.map((option) => {
