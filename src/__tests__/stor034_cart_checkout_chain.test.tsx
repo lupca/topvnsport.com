@@ -78,7 +78,7 @@ describe('STOR-034 CartModal -> /api/oms/checkout chain', () => {
     expect(order.customer).toEqual({ name: 'Nguyễn Test', phone: '0987654321', address: 'Số 1, Phường Ba Đình, Hà Nội' });
     expect(order).not.toHaveProperty('customer_id');
     expect(order).not.toHaveProperty('channel_id');
-    expect(order.note).toBe(`Đơn web - Giao tiêu chuẩn | COD | Đan cước ${SKU}: BG80 11 Kg`);
+    expect(order.note).toBe(`COD | Đan cước ${SKU}: BG80 11 Kg`);
     expect(order.items).toEqual([{ sku_code: SKU, quantity: 2 }]);
     expect(order.verification_token).toBe('vt');
     await waitFor(() => expect(onClearCart).toHaveBeenCalledTimes(1));
@@ -90,7 +90,7 @@ describe('STOR-034 CartModal -> /api/oms/checkout chain', () => {
     await waitFor(() => expect(calls).toHaveLength(4));
     expect(calls.map(c => c.url)).toEqual(['/api/oms/checkout/send-otp', '/api/oms/checkout/verify-otp', '/api/oms/checkout/orders', '/api/oms/checkout/payments']);
     expect(calls[3].body).toEqual({ order_number: 'DH-7' });
-    expect(calls[2].body.note).toBe(`Đơn web - Giao tiêu chuẩn | SePay QR Code | Đan cước ${SKU}: BG80 11 Kg`);
+    expect(calls[2].body.note).toBe(`SePay QR Code | Đan cước ${SKU}: BG80 11 Kg`);
     for (const c of calls) expect(c.url.startsWith('/api/oms/checkout/')).toBe(true);
     expect(onClearCart).toHaveBeenCalled();
   });

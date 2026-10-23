@@ -220,15 +220,12 @@ describe('STOR-036 CartModal chọn tỉnh/xã', () => {
     return calls.find(c => c.url.endsWith('/orders'))!.body;
   }
 
-  it('AC26-31,33 body đơn = OMS-131, địa chỉ ghép từ name OMS, không receiver_*/delivery_option; 201 -> bước 3', async () => {
+  it('AC26-31,33 body đơn = hợp đồng (C) 10 khoá, địa chỉ ghép từ name OMS; 201 -> bước 3', async () => {
     const body = await placeOrder();
     const addr = '12 Phố Huế, Phường Ba Đình, Hà Nội';
     expect(body.shipping_address).toBe(addr);
     expect(body.customer.address).toBe(addr);
-    expect(Object.keys(body).sort()).toEqual(['customer', 'items', 'note', 'shipping_address', 'shipping_fee', 'verification_token']);
-    expect(body).not.toHaveProperty('receiver_province_code');
-    expect(body).not.toHaveProperty('receiver_ward_code');
-    expect(body).not.toHaveProperty('delivery_option');
+    expect(Object.keys(body).sort()).toEqual(['customer', 'delivery_option', 'items', 'note', 'payment_method', 'receiver_province_code', 'receiver_ward_code', 'shipping_address', 'shipping_fee', 'verification_token']);
     expect(body.shipping_fee).toBe(78000); // phí STANDARD OMS báo (QUOTE_200)
     expect(await screen.findByText(new RegExp(addr))).toBeInTheDocument();
   });

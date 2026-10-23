@@ -54,7 +54,7 @@ beforeEach(() => {
     if (url.startsWith('/api/oms/admin-units')) return reply(ok(url.includes('level=ward') ? wardBody : PROVINCE_BODY));
     if (url === '/api/oms/shipping-quote') return reply(await quoteHandler(body, quoteCalls().length));
     const json = url.endsWith('/verify-otp') ? { success: true, verification_token: 'vt' }
-      : url.endsWith('/orders') ? ORDER_201 : { success: true };
+      : url.endsWith('/orders') ? { ...ORDER_201, shipping_fee: `${body.shipping_fee}.00`, total_amount: `${200000 + body.shipping_fee}.00` } : { success: true };
     return reply(ok(json));
   }));
 });
@@ -275,7 +275,7 @@ describe('STOR-037 lỗi báo giá', () => {
     expect(!!within(shippingSection()).queryByRole('button', { name: 'Thử lại' })).toBe(retry);
     expect(submitBtn()).toBeDisabled();
     expect(screen.queryByText('Giao hàng chuẩn')).toBeNull();
-    expect(feeLine()).toHaveTextContent('Chọn địa chỉ để tính phí');
+    expect(feeLine()).toHaveTextContent('Chưa tính được phí');
   });
 
   it('AC38,39 mạng reject: câu cố định + Thử lại', async () => {
@@ -347,11 +347,11 @@ describe('STOR-037 đặt đơn (OMS-131, phí = option đang chọn)', () => {
     expect((await placeOrder(true)).shipping_fee).toBe(226111);
   });
 
-  it('AC15 body đơn đúng 6 khoá, không receiver_*/delivery_option; chuẩn -> 78000', async () => {
+  it('AC15 body đơn đúng 10 khoá của hợp đồng (C); chuẩn -> 78000', async () => {
     const body = await placeOrder(false);
-    expect(Object.keys(body).sort()).toEqual(['customer', 'items', 'note', 'shipping_address', 'shipping_fee', 'verification_token']);
+    expect(Object.keys(body).sort()).toEqual(['customer', 'delivery_option', 'items', 'note', 'payment_method', 'receiver_province_code', 'receiver_ward_code', 'shipping_address', 'shipping_fee', 'verification_token']);
     expect(body.shipping_fee).toBe(78000);
-    expect(body.note).toBe('Đơn web - Giao tiêu chuẩn | COD');
+    expect(body.note).toBe('COD');
   });
 
   it('AC16 bước 3: Tổng hóa đơn = tiền hàng + phí đã báo', async () => {

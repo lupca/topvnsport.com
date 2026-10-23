@@ -8,18 +8,13 @@ interface TestCartItem {
   stringOption: { price: number } | null;
 }
 
-function calculateCartTotals(items: TestCartItem[], shippingMethod: 'standard' | 'fast' | 'store') {
+function calculateItemsTotal(items: TestCartItem[]) {
   const itemsTotal = items.reduce((sum, item) => {
     const stringPrice = item.stringOption ? item.stringOption.price : 0;
     return sum + (item.price + stringPrice) * item.quantity;
   }, 0);
 
-  let shippingCost = 30000;
-  if (shippingMethod === 'fast') shippingCost = 50000;
-  if (shippingMethod === 'store') shippingCost = 0;
-
-  const orderTotal = itemsTotal + shippingCost;
-  return { itemsTotal, shippingCost, orderTotal };
+  return { itemsTotal };
 }
 
 describe('Automated System Verification Tests', () => {
@@ -37,21 +32,7 @@ describe('Automated System Verification Tests', () => {
       }
     ];
 
-    // Standard Shipping
-    const standardTotals = calculateCartTotals(testItems, 'standard');
-    expect(standardTotals.itemsTotal).toBe((1000000 + 200000) * 1 + (2950000 * 2)); // 1.2M + 5.9M = 7.1M
-    expect(standardTotals.shippingCost).toBe(30000);
-    expect(standardTotals.orderTotal).toBe(7100000 + 30000);
-
-    // Fast Shipping
-    const fastTotals = calculateCartTotals(testItems, 'fast');
-    expect(fastTotals.shippingCost).toBe(50000);
-    expect(fastTotals.orderTotal).toBe(7100000 + 50000);
-
-    // Store pickup
-    const storeTotals = calculateCartTotals(testItems, 'store');
-    expect(storeTotals.shippingCost).toBe(0);
-    expect(storeTotals.orderTotal).toBe(7100000);
+    expect(calculateItemsTotal(testItems).itemsTotal).toBe((1000000 + 200000) * 1 + (2950000 * 2)); // 1.2M + 5.9M = 7.1M
   });
 
   test('Product catalog database has required fields', () => {

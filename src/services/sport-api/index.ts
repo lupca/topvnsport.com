@@ -372,6 +372,7 @@ async function createOrder(orderData: CreateOrderPayload) {
     const errorText = await response.text();
     const error = new Error(`Failed to create order: ${errorText}`) as any;
     error.status = response.status;
+    try { error.body = JSON.parse(errorText); } catch { error.body = null; }
     throw error;
   }
 

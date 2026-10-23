@@ -51,6 +51,7 @@ const EMPTY_LIST: UnitList = { units: null, loading: false, error: null };
 
 const QUOTE_FAILED_MESSAGE = 'Chưa tính được phí vận chuyển. Vui lòng thử lại.';
 const QUOTE_REJECTED_MESSAGE = 'Không tính được phí vận chuyển cho giỏ hàng và địa chỉ này.';
+const ORDER_REJECTED_MESSAGE = 'Đơn hàng chưa được chấp nhận. Vui lòng kiểm tra lại thông tin rồi thử lại.';
 const NO_DELIVERY_MESSAGE = 'Địa chỉ này hiện chưa có phương thức giao hàng nào. Vui lòng chọn địa chỉ khác.';
 
 // Báo giá của OMS cho đúng một bộ giỏ+xã (key).
@@ -86,7 +87,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const productsError = useAppSelector(state => state.appData.productsError);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   // Ảnh chụp đơn lúc đặt (COD) -- bước 3 đọc từ đây, không đọc giỏ (giỏ đã xoá).
-  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null } | null>(null);
+  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null; shippingFee: number | null; adjusted: boolean } | null>(null);
   
   // Checkout Fields
   const [fullName, setFullName] = useState('');
@@ -179,7 +180,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       });
     }).catch((err: any) => {
       if (quoteKeyRef.current !== quoteKey) return;
-      const message = typeof err?.body?.message === 'string'
+      const message = typeof err?.body?.message === 'string' && err.body.message.trim()
         ? err.body.message
         : err?.status === 422 ? QUOTE_REJECTED_MESSAGE : QUOTE_FAILED_MESSAGE;
       setQuote({ key: quoteKey, status: 'error', message, retryable: err?.status !== 422 });
@@ -229,6 +230,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const quoteOptions = currentQuote?.status === 'ok' ? currentQuote.data!.options : null;
   const selectedOption = quoteOptions?.find(o => o.delivery_option === deliveryOption);
   const selectedFee: number | null = isUsable(selectedOption) ? selectedOption.shipping_fee : null;
+  // Chưa có giá thì nói đúng lý do (không dùng chung một câu cho mọi ca).
+  const shippingFeePlaceholder = currentQuote?.status === 'loading' ? 'Đang tính phí...'
+    : currentQuote?.status === 'error' ? 'Chưa tính được phí'
+    : quoteOptions && !quoteOptions.some(isUsable) ? 'Không có phương thức giao'
+    : 'Chọn địa chỉ để tính phí';
   const orderTotal = itemsTotal === null || selectedFee === null ? null : itemsTotal + selectedFee;
   const formatMoney = (value: number | null) => (value === null ? '' : `${value.toLocaleString('vi-VN')}đ`);
 
@@ -281,6 +287,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       return;
     }
 
+    const clientTotal = orderTotal; // tổng khách đã thấy lúc bấm đặt
     setIsSubmitting(true);
     try {
       const shippingAddress = [address.trim(), ward.name, province.name].join(', ');
@@ -304,11 +311,31 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         items,
         shipping_fee: selectedFee,
         shipping_address: shippingAddress,
-        note: `${deliveryOption === 'EXPRESS' ? 'Đơn web - Giao hỏa tốc' : 'Đơn web - Giao tiêu chuẩn'} | ${paymentMethod === 'sepay' ? 'SePay QR Code' : 'COD'}${stringingNote}`,
+        note: `${paymentMethod === 'sepay' ? 'SePay QR Code' : 'COD'}${stringingNote}`,
         verification_token: activeToken,
+        receiver_province_code: province.code,
+        receiver_ward_code: ward.code,
+        delivery_option: deliveryOption,
+        payment_method: paymentMethod === 'cod' ? 'COD' : 'SEPAY',
       });
 
-      setPlacedOrder({ orderNumber: order?.order_number || '', shippingAddress, total: orderTotal });
+      // Số của OMS (201) thắng số client; không hữu hạn -> null (không hiện số tự tính).
+      const serverNumber = (v: unknown): number | null => {
+        const n = Number(v);
+        if (v === null || v === undefined || v === '' || !Number.isFinite(n)) {
+          console.error('OMS 201 có số tiền không hợp lệ', v);
+          return null;
+        }
+        return n;
+      };
+      const serverTotal = serverNumber(order?.total_amount);
+      setPlacedOrder({
+        orderNumber: order?.order_number || '',
+        shippingAddress,
+        total: serverTotal,
+        shippingFee: serverNumber(order?.shipping_fee),
+        adjusted: serverTotal !== null && serverTotal !== clientTotal,
+      });
 
       if (paymentMethod === 'sepay') {
         const checkoutForm = await sportApi.createSepayCheckout(order.order_number);
@@ -336,6 +363,14 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       if (err.status === 403) {
         await popupService.alert('Mã xác thực OTP đã hết hạn hoặc không hợp lệ. Vui lòng tải lại trang và xác thực lại.');
         setVerificationToken('');
+      } else if (err.status === 422) {
+        // Lỗi nghiệp vụ/schema của (C): hiện lời OMS, ở lại bước 2, giữ giỏ + token OTP.
+        const body = err.body;
+        const omsMessage = typeof body?.message === 'string' && body.message.trim()
+          ? body.message
+          : typeof body?.detail?.[0]?.msg === 'string' && body.detail[0].msg.trim() ? body.detail[0].msg : null;
+        await popupService.alert(omsMessage ?? ORDER_REJECTED_MESSAGE);
+        if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE') retryQuote();
       } else {
         await popupService.alert('Có lỗi xảy ra khi tạo đơn hàng trên OMS. Vui lòng thử lại!');
       }
@@ -638,6 +673,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <p>• <strong>Số điện thoại:</strong> {phone}</p>
                 <p>• <strong>Địa chỉ giao:</strong> {placedOrder?.shippingAddress}</p>
                 <p>• <strong>Phương thức giao:</strong> {deliveryOption === 'STANDARD' ? 'Giao hàng chuẩn (COD)' : 'Giao hàng hỏa tốc'}</p>
+                {placedOrder?.shippingFee != null && <p>• <strong>Phí vận chuyển:</strong> {formatMoney(placedOrder.shippingFee)}</p>}
+                {placedOrder?.adjusted && (
+                  <p className="text-amber-700 font-semibold">
+                    Phí vận chuyển đã được cập nhật theo báo giá mới nhất: {formatMoney(placedOrder.shippingFee)}
+                  </p>
+                )}
                 <p className="text-sm font-bold text-brand-primary border-t border-gray-200 pt-2 mt-2">
                   Tổng hóa đơn thanh toán: {formatMoney(placedOrder?.total ?? null)}
                 </p>
@@ -664,7 +705,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               <div className="flex justify-between">
                 <span>Phí vận chuyển:</span>
                 <strong className="text-gray-900 text-right">
-                  {selectedFee !== null ? formatMoney(selectedFee) : currentQuote?.status === 'loading' ? 'Đang tính phí...' : 'Chọn địa chỉ để tính phí'}
+                  {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
                   {selectedFee !== null && selectedOption?.is_fallback && <span className="block text-amber-600 text-[10px]">Phí tạm tính</span>}
                 </strong>
               </div>

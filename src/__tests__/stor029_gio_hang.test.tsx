@@ -16,7 +16,7 @@ vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: (...a: unknown[]) 
 
 const sendOtpMock = vi.fn().mockResolvedValue(undefined);
 const verifyOtpMock = vi.fn().mockResolvedValue({ success: true, verification_token: 'tok-123' });
-const createOrderMock = vi.fn().mockResolvedValue({ id: 1, order_number: 'DH-1' });
+const createOrderMock = vi.fn().mockResolvedValue({ id: 1, order_number: 'DH-1', shipping_fee: '30000.00', total_amount: '130000.00' });
 vi.mock('../services/sportApi', () => ({
   sportApi: {
     sendOtp: (...a: unknown[]) => sendOtpMock(...a),

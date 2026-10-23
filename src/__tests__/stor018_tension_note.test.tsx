@@ -115,7 +115,7 @@ async function driveToOtpSuccess() {
 const exbolt = { id: 'exbolt', name: 'Exbolt 65', price: 0 } as any;
 const bg80 = { id: 'bg80', name: 'BG80', price: 0 } as any;
 
-const BASE = 'Đơn web - Giao tiêu chuẩn | COD';
+const BASE = 'COD';
 
 async function orderNote() {
   await driveToOtpSuccess();

@@ -87,6 +87,11 @@ export type CreateOrderPayload = {
   note?: string;
   items: CreateOrderItem[];
   verification_token?: string;
+  // Hợp đồng OMS-133 (C): mã tỉnh/xã chuẩn, lựa chọn giao, phương thức thanh toán.
+  receiver_province_code: string;
+  receiver_ward_code: string;
+  delivery_option: DeliveryOption;
+  payment_method: 'COD' | 'SEPAY';
 };
 
 
