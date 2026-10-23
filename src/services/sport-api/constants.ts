@@ -1,6 +1,5 @@
 export const SIMULATED_LATENCY = import.meta.env.DEV && import.meta.env.MODE !== 'test' ? 200 : 0;
 export const PMI_API_URL = (import.meta as any).env?.VITE_PMI_API_URL || 'http://localhost:18100';
-export const OMS_API_URL = (import.meta as any).env?.VITE_OMS_API_URL || 'http://localhost:18101';
 export const WMS_API_URL = (import.meta as any).env?.VITE_WMS_API_URL || 'http://localhost:18102';
 export const NO_IMAGE_URL = 'https://via.placeholder.com/300?text=No+Image';
 
@@ -11,5 +10,8 @@ export const NO_IMAGE_URL = 'https://via.placeholder.com/300?text=No+Image';
 // from the grant itself -- no X-Tenant-Id / X-Seller-Id needed from here.
 export const PMI_PROXY_URL = '/api/pmi';
 export const WMS_PROXY_URL = '/api/wms';
+// Checkout (OTP -> order -> SePay) goes through api/oms the same way: the proxy
+// adds the catalog-grant token server-side and only allows 4 POST routes.
+export const OMS_CHECKOUT_PROXY_URL = '/api/oms/checkout';
 
 export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

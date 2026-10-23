@@ -9,9 +9,8 @@ import CartModal, { CartItem } from '../components/CartModal';
 
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn() } }));
 const sendOtp = vi.hoisted(() => vi.fn());
-const findOrCreateCustomer = vi.hoisted(() => vi.fn());
 const createOrder = vi.hoisted(() => vi.fn());
-vi.mock('../services/sportApi', () => ({ sportApi: { sendOtp, findOrCreateCustomer, createOrder } }));
+vi.mock('../services/sportApi', () => ({ sportApi: { sendOtp, createOrder } }));
 
 const item: CartItem = {
   id: 'i1', productId: '341', skuCode: 'PRD-X-1', name: 'Áo Yonex', brand: 'Yonex', image: 'x.jpg',
@@ -40,11 +39,10 @@ describe('CartModal khi tải sản phẩm lỗi', () => {
     expect(button).toBeDisabled();
     fireEvent.click(button);
     expect(sendOtp).not.toHaveBeenCalled();
-    expect(findOrCreateCustomer).not.toHaveBeenCalled();
     expect(createOrder).not.toHaveBeenCalled();
   });
 
-  it('F-1: submit thẳng form thanh toán khi productsError=true (không qua nút đã khoá) -> không gọi sendOtp/findOrCreateCustomer/createOrder', () => {
+  it('F-1: submit thẳng form thanh toán khi productsError=true (không qua nút đã khoá) -> không gọi sendOtp/createOrder', () => {
     const product = {
       id: '341', name: 'Áo Yonex', brand: 'Yonex', category: 'Áo', price: 1000, image: 'x.jpg', specs: {}, description: '',
       stock: 5, variants: [{ sku_code: 'PRD-X-1', price: 1000, stock: 5 }]
@@ -77,7 +75,6 @@ describe('CartModal khi tải sản phẩm lỗi', () => {
     expect(store.getState().appData.productsError).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: /Xác nhận đặt hàng/ }));
     expect(sendOtp).not.toHaveBeenCalled();
-    expect(findOrCreateCustomer).not.toHaveBeenCalled();
     expect(createOrder).not.toHaveBeenCalled();
   });
 });

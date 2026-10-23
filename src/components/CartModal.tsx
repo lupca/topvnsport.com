@@ -108,7 +108,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const formatMoney = (value: number | null) => (value === null ? '' : `${value.toLocaleString('vi-VN')}đ`);
 
   // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
-  // thanh toán/OTP, thay vì để lọt tới sau sendOtp/findOrCreateCustomer rồi
+  // thanh toán/OTP, thay vì để lọt tới sau sendOtp rồi
   // mới báo. Đang tải dữ liệu sản phẩm -> cũng khoá (chưa kết luận được gì).
   const canCheckout = !isLoadingProducts && !productsError && cartItems.every(item => isCartItemSkuValid(item, products));
 
@@ -154,13 +154,6 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     setIsSubmitting(true);
     try {
       const shippingAddress = [address, ward, province].map(v => v.trim()).join(', ');
-      const customerId = await sportApi.findOrCreateCustomer({
-        name: fullName.trim(),
-        phone: phone.trim(),
-        address: shippingAddress
-      });
-      const channelId = await sportApi.getOrCreateStorefrontChannelId();
-
       // Đã kiểm MỌI SKU ngay đầu handleCheckoutSubmit (trước cả sendOtp) --
       // không lặp lại kiểm ở đây.
       const items = cartItems.map(item => {
@@ -177,8 +170,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         .join('');
 
       const order = await sportApi.createOrder({
-        customer_id: customerId,
-        channel_id: channelId,
+        customer: { name: fullName.trim(), phone: phone.trim(), address: shippingAddress },
         items,
         shipping_fee: shippingCost,
         shipping_address: shippingAddress,
@@ -189,7 +181,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       setPlacedOrder({ orderNumber: order?.order_number || '', shippingAddress, total: orderTotal });
 
       if (paymentMethod === 'sepay') {
-        const checkoutForm = await sportApi.createSepayCheckout(order.id, order.order_number);
+        const checkoutForm = await sportApi.createSepayCheckout(order.order_number);
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = checkoutForm.action;
