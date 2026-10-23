@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sportApi } from '../../services/sportApi';
-import { Blog, Branch, Category, Product, StringOption } from '../../types';
+import { Branch, Category, Product, StringOption } from '../../types';
 
 export interface AppDataState {
   products: Product[];
-  blogs: Blog[];
   branches: Branch[];
   stringOptions: StringOption[];
   categories: Category[];
@@ -21,7 +20,6 @@ export interface AppDataState {
 
 const initialState: AppDataState = {
   products: [],
-  blogs: [],
   branches: [],
   stringOptions: [],
   categories: [],
@@ -38,25 +36,21 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
   const stockP = sportApi.getAllStock();
   const productsP = sportApi.getProducts(categoriesP, stockP);
   const stringOptionsP = sportApi.getStringOptions(productsP);
-  const [products, blogs, branches, stringOptions, categories, stock] = await Promise.allSettled([
+  const [products, branches, stringOptions, categories, stock] = await Promise.allSettled([
     productsP,
-    sportApi.getBlogs(),
     sportApi.getBranches(),
     stringOptionsP,
     categoriesP,
     stockP
   ]);
-  // blogs/branches không gọi mạng ném lỗi -- lỗi ở đó vẫn nổi lên.
-  for (const other of [blogs, branches]) {
-    if (other.status === 'rejected') throw other.reason;
-  }
+  // branches không gọi mạng ném lỗi -- lỗi ở đó vẫn nổi lên.
+  if (branches.status === 'rejected') throw branches.reason;
 
   return {
     products: products.status === 'fulfilled' ? products.value : [],
     productsError: products.status === 'rejected',
     categories: categories.status === 'fulfilled' ? categories.value : [],
     categoriesError: categories.status === 'rejected',
-    blogs: (blogs as PromiseFulfilledResult<Blog[]>).value,
     branches: (branches as PromiseFulfilledResult<Branch[]>).value,
     stringOptions: stringOptions.status === 'fulfilled' ? stringOptions.value : [],
     stringOptionsError: stringOptions.status === 'rejected',
@@ -75,7 +69,6 @@ const appDataSlice = createSlice({
       })
       .addCase(fetchAppData.fulfilled, (state, action) => {
         state.products = action.payload.products;
-        state.blogs = action.payload.blogs;
         state.branches = action.payload.branches;
         state.stringOptions = action.payload.stringOptions;
         state.categories = action.payload.categories;

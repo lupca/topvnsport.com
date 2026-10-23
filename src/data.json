@@ -32,10 +32,6 @@
         { "name": "High Tensile Slim Shaft", "description": "Đũa vợt mỏng 7.0mm tăng cường tính linh hoạt và phản hồi nhanh." },
         { "name": "Dynamic-Optimum Frame", "description": "Tối ưu hóa diện tích điểm ngọt giúp những pha đánh lệch tâm vẫn đạt được độ nảy tốt." }
       ],
-      "reviews": [
-        { "author": "Trần Minh Hoàng", "rating": 5, "comment": "Vợt siêu nhẹ, dễ vung, thủ cầu cực kỳ thoát. Căng cước Exbolt 63 gõ kêu cực đanh!", "date": "2026-06-15", "verified": true, "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" },
-        { "author": "Lê Thuỳ Linh", "rating": 4, "comment": "Con gái chơi vợt này quá hợp luôn, đánh không bị mỏi vai cổ tay. Shop đan 10kg vừa tay lắm.", "date": "2026-06-20", "verified": true, "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" }
-      ],
       "stock": 12,
       "badge": "HOT",
       "colors": ["Đen Cam", "Trắng Xanh"],
@@ -73,9 +69,6 @@
         { "name": "2G-Namd Flex Force", "description": "Vật liệu carbon đột phá giúp giải phóng lực tức thì khi tiếp xúc cầu." },
         { "name": "Isometric Frame Shape", "description": "Mở rộng vùng điểm ngọt lên tới 7% so với khung tròn truyền thống." }
       ],
-      "reviews": [
-        { "author": "Nguyễn Tiến Minh", "rating": 5, "comment": "Đập cầu cực kỳ cắm và đầm tay. Yêu cầu thể lực khá và cổ tay khỏe mới thuần được.", "date": "2026-05-10", "verified": true, "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" }
-      ],
       "stock": 5,
       "badge": "PRO",
       "colors": ["Kurenai Đỏ", "Dark Navy"],
@@ -110,9 +103,6 @@
       "technologies": [
         { "name": "M50 Super Carbon", "description": "Sợi carbon mô-đun cao thế hệ mới giúp tăng cường mật độ liên kết và độ bền bỉ dẻo dai." },
         { "name": "TB Nano + HDF Shock Absorption", "description": "Hệ thống hấp thụ chấn mật độ cao giúp cánh tay không bị rùng xóc khi đập cầu mạnh." }
-      ],
-      "reviews": [
-        { "author": "Lê Văn Đạt", "rating": 5, "comment": "Vợt tấn công phê nhất mình từng đánh, đập phát nào chết phát đấy, âm thanh nổ sướng tai.", "date": "2026-06-11", "verified": true, "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" }
       ],
       "stock": 3,
       "badge": "LIMITED",
@@ -149,9 +139,6 @@
         { "name": "High Modulus Carbon", "description": "Sợi carbon đàn hồi tốt giúp phục hồi đũa vợt nhanh chóng." },
         { "name": "Flexible Shaft Tech", "description": "Công nghệ tạo đũa dẻo tăng lực nảy tự nhiên mà không tốn sức tay." }
       ],
-      "reviews": [
-        { "author": "Phạm Tuấn Anh", "rating": 5, "comment": "Đúng chuẩn vợt quốc dân, ngon bổ rẻ. Rất bền, mình lỡ va chạm nhẹ vài lần mà không sao.", "date": "2026-06-25", "verified": true, "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80" }
-      ],
       "stock": 45,
       "badge": "NEW",
       "colors": ["Trắng Ngọc Trai", "Đen Huyền Bí"],
@@ -184,7 +171,6 @@
         { "name": "Sonic Flare System", "description": "Sử dụng sợi carbon cao cấp M40X ở đầu vợt để tăng cường độ đàn hồi và tạo lực đẩy tối đa." },
         { "name": "AERO Frame", "description": "Cạnh khung mượt mà giảm sức cản không khí, gia tăng tốc độ xoay trở." }
       ],
-      "reviews": [],
       "stock": 8,
       "badge": "HOT",
       "colors": ["Vàng Sét Lightning"],
@@ -209,9 +195,6 @@
         "Form bè (Wide) cực kỳ thoải mái cho chân người Việt",
         "Đế chống lật và bám thảm cầu lông tuyệt đối",
         "Đệm gót Power Cushion+ giảm áp lực lên đầu gối và gót chân"
-      ],
-      "reviews": [
-        { "author": "Nguyễn Văn Nam", "rating": 5, "comment": "Đế êm vô địch, mình chân bè đi bản Wide này vừa như in, không bị kích ngón út nữa.", "date": "2026-06-18", "verified": true }
       ],
       "stock": 15,
       "badge": "HOT",
@@ -238,7 +221,6 @@
         "Công nghệ chống lật cổ chân hạn chế tối đa chấn thương lật sơ mi",
         "Độ bền cực cao phù hợp cày ải nhiều loại sân"
       ],
-      "reviews": [],
       "stock": 20,
       "badge": "SALE",
       "colors": ["Xanh Neon", "Đen Trắng"]
@@ -252,7 +234,6 @@
       "price": 220000,
       "specs": { "weight": "Đường kính 0.68mm", "stiffness": "Siêu bền / Nảy", "balance": 0, "maxTension": 0 },
       "description": "Exbolt 68 là dòng dây cước đan vợt mới nhất của Yonex, kết hợp giữa sợi rèn đặc biệt Forged Fiber tăng độ bền bỉ lên 30% mà vẫn giữ được âm thanh nổ đanh vang dội và lực nảy bóng xuất sắc.",
-      "reviews": [],
       "stock": 100,
       "badge": "HOT"
     },
@@ -265,7 +246,6 @@
       "price": 1850000,
       "specs": { "weight": "6 Vợt", "stiffness": "Chống thấm nước", "balance": 0, "maxTension": 0 },
       "description": "Túi đựng vợt Yonex Pro Active Series gồm 2 ngăn lớn đựng vợt có lót bạc cách nhiệt Thermo-guard, ngăn chứa giày riêng biệt chống mùi và các ngăn phụ kiện tiện lợi, đệm quai đeo chống mỏi êm ái.",
-      "reviews": [],
       "stock": 15,
       "badge": "NEW"
     }
@@ -334,41 +314,6 @@
         "shoesName": "Yonex SHB 65Z",
         "stringName": "Cước Yonex BG66 Ultimax (Căng 13.5kg)"
       }
-    }
-  ],
-  "blogs": [
-    {
-      "id": "review-axforce-70",
-      "title": "Đánh giá chi tiết Vợt Lining Axforce 70: Sự kế thừa tinh anh",
-      "category": "Đánh giá thiết bị",
-      "summary": "Liệu cây vợt tấn công phân khúc cận cao cấp Lining Axforce 70 có thực sự xuất sắc và xứng đáng số tiền bỏ ra? Hãy cùng TopVNSport mổ xẻ thông số thực tế.",
-      "content": "Cây vợt Lining Axforce 70 được Lining trình làng nhằm lấp đầy phân khúc tấn công tốc độ cao. Với trọng lượng 4U và điểm cân bằng 302mm, Axforce 70 mang lại trải nghiệm đập cầu rất thoát nhưng không quá kén người chơi như đàn anh Axforce 90.\n\nTrải nghiệm thực tế trên sân thảm:\n1. **Phông cầu**: Vợt hỗ trợ lực cực tốt nhờ thân dẻo trung bình, cầu đi sát cuối sân mà không cần tốn quá nhiều lực cổ tay.\n2. **Đập cầu (Smash)**: Đường cầu đi rất cắm, có độ đầm chắc nhất định, không xảy ra hiện tượng rung lắc đầu vợt nhờ công nghệ hấp thụ chấn HDF.\n3. **Tì đè phản tạt**: Dù nặng đầu nhưng do khung vợt thiết kế vát mỏng khí động học nên xoay trở cực kỳ thoát, phù hợp cả đánh đơn lẫn đánh đôi ở vị trí cầu sau.",
-      "date": "2026-06-25",
-      "image": "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80",
-      "author": "Admin Hùng Cầu Lông",
-      "tags": ["Review Vợt", "Lining Axforce", "Cầu lông phong trào"]
-    },
-    {
-      "id": "review-san-loc-phat",
-      "title": "Review hệ thống Sân Cầu Lông Lộc Phát - Điểm hẹn lý tưởng của các tay vợt",
-      "category": "Đánh giá sân bãi",
-      "summary": "Trải nghiệm thực tế chất lượng thảm, hệ thống đèn chiếu sáng LED chống chói mắt tại tổ hợp sân cầu lông Lộc Phát nổi tiếng.",
-      "content": "Sân cầu lông Lộc Phát là một trong những cụm sân được đánh giá cao nhất tại khu vực nội thành. Gồm 6 sân thảm PVC tiêu chuẩn quốc tế với độ bám cực kỳ tốt, giảm bớt chấn thương đầu gối cho người chơi.\n\nĐiểm cộng tuyệt vời:\n- Trần nhà cao ráo trên 9 mét, không lo cầu chạm trần.\n- Hệ thống đèn LED được bố trí hai bên hông sân thay vì chiếu thẳng từ trên đỉnh đầu xuống, giúp người chơi không bị lóa mắt khi thực hiện những pha nhảy đập cầu (smash) hay đón cầu cao sâu.\n- Có khu vực tắm rửa vệ sinh sạch sẽ, quầy nước uống phục vụ chu đáo và chỗ đỗ xe rộng rãi.",
-      "date": "2026-06-22",
-      "image": "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80",
-      "author": "Trọng Tài Nguyễn Vũ",
-      "tags": ["Sân Cầu Lông", "Hà Nội", "Sân Lộc Phát"]
-    },
-    {
-      "id": "ky-thuat-co-tay",
-      "title": "Kỹ thuật sử dụng và tập luyện cổ tay trong cầu lông tránh chấn thương",
-      "category": "Hướng dẫn kỹ thuật",
-      "summary": "Rất nhiều người chơi phong trào bị đau mỏi cổ tay do phát lực sai cách. Xem ngay hướng dẫn khởi động và gập cổ tay đúng chuẩn y khoa thể thao.",
-      "content": "Trong bộ môn cầu lông, lực đánh không đến từ cả cánh tay mà phần lớn được giải phóng ở thời điểm gập cổ tay sát quả cầu. Phát lực sai cách bằng việc gồng cứng cánh tay sẽ làm giảm tốc độ cầu và gây ra chấn thương viêm gân cổ tay, viêm khớp khuỷu tay (Tennis Elbow).\n\nCác bước tập luyện cổ tay hiệu quả tại nhà:\n1. **Tập luyện với chai nước hoặc tạ nhẹ 1kg**: Thực hiện các động tác gập cổ tay lên xuống đều đặn mỗi ngày 3 hiệp, mỗi hiệp 20 lần giúp cơ cổ tay bền bỉ dẻo dai.\n2. **Khởi động kỹ trước khi vào sân**: Xoay khớp cổ tay, căng cơ cánh tay tối thiểu 5 phút trước khi cầm vợt khởi động.\n3. **Lựa chọn độ cứng đũa vợt phù hợp**: Nếu cổ tay yếu, tuyệt đối tránh xa các dòng vợt siêu cứng như Astrox 100ZZ hay Axforce 90. Hãy bắt đầu bằng các dòng thân dẻo hoặc trung bình dẻo như Kumpoo K520 Pro hoặc Lining G-Force X5 để được trợ lực tốt nhất.",
-      "date": "2026-06-18",
-      "image": "https://images.unsplash.com/photo-1613531415875-161a5622c5b7?auto=format&fit=crop&w=800&q=80",
-      "author": "HLV Lê Quốc Anh",
-      "tags": ["Kỹ thuật cầu lông", "Tránh chấn thương", "Cổ tay"]
     }
   ],
   "branches": [

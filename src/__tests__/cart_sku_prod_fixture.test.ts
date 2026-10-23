@@ -36,7 +36,6 @@ function toProduct(entry: FixtureProduct): Product {
     image: 'https://example.com/x.jpg',
     specs: {},
     description: '',
-    reviews: [],
     stock: 10,
     tier_variations: entry.tier_variations,
     variants: entry.variants.map((v): ProductVariant => ({

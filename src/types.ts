@@ -35,16 +35,6 @@ export interface ProductTechnology {
   description: string;
 }
 
-export interface ProductReview {
-  author: string;
-  rating: number;
-  comment: string;
-  date: string;
-  verified: boolean;
-  avatar?: string;
-  tags?: string[];
-}
-
 export interface ProductMedia {
   imageUrl: string;
   variantId?: number | null;
@@ -82,7 +72,6 @@ export interface Product {
   vomaAttributes?: ProductVomaAttribute[];
   features?: string[];
   technologies?: ProductTechnology[];
-  reviews: ProductReview[];
   // undefined = tồn kho không tải được (không biết), khác 0 = hết hàng.
   stock?: number;
   defaultSku?: string;
@@ -116,18 +105,6 @@ export interface ProductVariant {
   hasActivePromotion?: boolean;
 }
 
-
-export interface Blog {
-  id: string;
-  title: string;
-  category: 'Đánh giá thiết bị' | 'Hướng dẫn kỹ thuật' | 'Đánh giá sân bãi' | 'Tin tức';
-  summary: string;
-  content: string;
-  date: string;
-  image: string;
-  author: string;
-  tags: string[];
-}
 
 export interface Branch {
   id: string;

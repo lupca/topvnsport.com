@@ -23,7 +23,6 @@ const racketProduct: Product = {
     { code: 'brand', name: 'Thương hiệu', value: 'Yonex' },
     { code: 'origin', name: 'Xuất xứ', value: 'Trung Quốc' }
   ],
-  reviews: [],
   stock: 10
 };
 
@@ -46,7 +45,7 @@ describe('ProductDetailTabs', () => {
     expect(screen.queryByText('Sản phẩm chưa có thông số kỹ thuật chi tiết.')).toBeNull();
   });
 
-  it('tab đánh giá hiện số thật, không bịa số khi mảng reviews rỗng', () => {
+  it('chỉ có đúng 2 tab (mô tả, thông số), không có tab đánh giá', () => {
     render(
       <ProductDetailTabs
         product={racketProduct}
@@ -56,8 +55,7 @@ describe('ProductDetailTabs', () => {
       />
     );
 
-    expect(screen.queryByText(/Đánh giá tay vợt \(\d+\)/)).toBeNull();
-    expect(screen.getByText('Đánh giá tay vợt')).toBeTruthy();
+    expect(screen.getAllByRole('button')).toHaveLength(2);
   });
 
   it.each(['tech'] as const)('tab %s hiện tên giá trị VOMA, không hiện mã 1000850 của attributes cũ', (tab) => {

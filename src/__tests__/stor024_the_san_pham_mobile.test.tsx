@@ -18,7 +18,6 @@ const base: Product = {
   price: 1000000,
   specs: { weight: '', stiffness: '', balance: 0, maxTension: 0 },
   description: 'Mô tả dài',
-  reviews: [],
   stock: 5,
   variants: [{ tier_1_option: null, tier_2_option: null, sku_code: 'SKU-A', price: 1000000, stock: 5 }],
 } as Product;

@@ -1,4 +1,4 @@
-import { Home, MapPin, ShoppingBag, SlidersHorizontal, Trophy } from 'lucide-react';
+import { Home, MapPin, ShoppingBag, Trophy } from 'lucide-react';
 import { NavigateFunction } from 'react-router-dom';
 
 type MobileBottomNavProps = {
@@ -25,20 +25,6 @@ export default function MobileBottomNav({ pathname, navigate, cartCount, onOpenC
       >
         <Trophy className="w-5 h-5" />
         <span className="text-[10px]">Sản phẩm</span>
-      </button>
-
-      <button
-        onClick={() => {
-          navigate('/');
-          setTimeout(() => {
-            const el = document.getElementById('racket-finder-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }, 100);
-        }}
-        className="flex flex-col items-center gap-1 p-1 text-gray-400 hover:text-brand-primary transition"
-      >
-        <SlidersHorizontal className="w-5 h-5 text-brand-primary " />
-        <span className="text-[10px] text-brand-primary font-medium">Chọn vợt</span>
       </button>
 
       <button

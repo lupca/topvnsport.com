@@ -32,7 +32,7 @@ function renderRoute(product: Product) {
   const store = configureStore({
     reducer: { appData: appDataReducer, cart: cartReducer },
     preloadedState: {
-      appData: { products: [product], blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false },
+      appData: { products: [product], branches: [], stringOptions: [], categories: [], isLoading: false },
       cart: { items: [], isOpen: false, quickViewProduct: null }
     } as any
   });
@@ -78,7 +78,7 @@ describe('F1: biến thể [0, 200000]', () => {
 
 describe('F2: StringingAssistant không ghi "Miễn phí" khi không có giá thật', () => {
   const mk = (prices: [number, number]): Product => ({
-    id: 's', name: 'Vợt', image: '', specs: {}, description: '', reviews: [], stock: 5,
+    id: 's', name: 'Vợt', image: '', specs: {}, description: '', stock: 5,
     price: prices[0] > 0 ? prices[0] : undefined,
     tier_variations: [{ tier_index: 1, name: 'Cước', options: ['Không cước', 'Cước A'] }],
     variants: [

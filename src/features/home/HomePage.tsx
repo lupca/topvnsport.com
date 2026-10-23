@@ -1,11 +1,9 @@
 import { ChevronRight } from 'lucide-react';
-import BlogImage from '../../components/BlogImage';
 import { MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
-import RacketFinder from '../../components/RacketFinder';
 import TrustBadges from '../../components/TrustBadges';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { sortProducts } from '../../utils/productSort';
@@ -17,7 +15,6 @@ export default function HomePage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.appData.products ?? []);
-  const blogs = useAppSelector(state => state.appData.blogs ?? []);
   const categories = useAppSelector(state => state.appData.categories ?? []);
 
   const sortedCategories = getCategoriesSortedByCount(categories, products);
@@ -162,50 +159,6 @@ export default function HomePage() {
           </div>
         </section>
       )}
-
-      <section className="max-w-7xl mx-auto px-4 md:px-8">
-        <RacketFinder products={products} />
-      </section>
-
-      <section className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <span className="text-xs bg-brand-light text-brand-primary font-bold px-3 py-1 rounded-full border border-blue-100 uppercase tracking-widest">Kiến thức chuyên môn</span>
-            <h2 className="font-display font-black text-xl md:text-2xl text-gray-900 tracking-tight uppercase mt-2">
-              BÀI VIẾT NỔI BẬT & ĐÁNH GIÁ THỰC TẾ
-            </h2>
-          </div>
-          <button
-            onClick={() => navigate('/blog')}
-            className="text-xs font-bold text-brand-primary hover:underline flex items-center gap-0.5"
-          >
-            Xem tất cả bài viết <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {blogs.slice(0, 3).map(blog => (
-            <div
-              key={blog.id}
-              onClick={() => navigate(`/blog/${blog.id}`)}
-              className="bg-white rounded-xl border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition flex flex-col justify-between"
-            >
-              <div>
-                <BlogImage src={blog.image} alt={blog.title} className="aspect-[16/10] w-full object-cover" />
-                <div className="p-4 space-y-1.5">
-                  <span className="text-[9px] bg-brand-light text-brand-secondary font-bold px-2 py-0.5 rounded-sm uppercase">{blog.category}</span>
-                  <h4 className="font-bold text-sm text-gray-900 line-clamp-2 hover:text-brand-primary transition leading-snug">{blog.title}</h4>
-                  <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">{blog.summary}</p>
-                </div>
-              </div>
-              <div className="p-4 pt-0 text-[10px] text-gray-400 font-mono flex justify-between items-center mt-3">
-                <span>{blog.date}</span>
-                <span className="font-bold text-brand-primary">Đọc ngay &rarr;</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

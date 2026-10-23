@@ -1,30 +1,5 @@
 import { describe, test, expect } from 'vitest';
 import { products } from '../data';
-import { Product } from '../types';
-import { isRacketCategoryCode } from '../config/storefront';
-
-// Helper matching logic extracted from RacketFinder.tsx for verification
-function calculateRecommendations(answers: { skill: string; style: string; budget: string }): Product[] {
-  let matches = products.filter(p => isRacketCategoryCode(p.categoryCode));
-
-  // Filter by budget
-  if (answers.budget === 'low') {
-    matches = matches.filter(p => p.price <= 1500000);
-  } else if (answers.budget === 'medium') {
-    matches = matches.filter(p => p.price > 1000000 && p.price <= 3000000);
-  } else if (answers.budget === 'high') {
-    matches = matches.filter(p => p.price > 3000000);
-  }
-
-  // Filter by style
-  if (answers.style === 'attack') {
-    matches = matches.sort((a, b) => (b.specs.balance || 0) - (a.specs.balance || 0));
-  } else if (answers.style === 'defense') {
-    matches = matches.sort((a, b) => (a.specs.balance || 0) - (b.specs.balance || 0));
-  }
-
-  return matches.slice(0, 3);
-}
 
 // Helper cart total calculator
 interface TestCartItem {
@@ -48,36 +23,6 @@ function calculateCartTotals(items: TestCartItem[], shippingMethod: 'standard' |
 }
 
 describe('Automated System Verification Tests', () => {
-  test('Racket Finder Algorithm gives budget-appropriate rackets', () => {
-    // Low Budget Finder Check
-    const lowBudgetAnswers = { skill: 'beginner', style: 'allround', budget: 'low' };
-    const lowBudgetMatches = calculateRecommendations(lowBudgetAnswers);
-    
-    expect(lowBudgetMatches.length).toBeGreaterThan(0);
-    lowBudgetMatches.forEach(product => {
-      expect(product.price).toBeLessThanOrEqual(1500000);
-    });
-
-    // High Budget Finder Check
-    const highBudgetAnswers = { skill: 'pro', style: 'attack', budget: 'high' };
-    const highBudgetMatches = calculateRecommendations(highBudgetAnswers);
-
-    expect(highBudgetMatches.length).toBeGreaterThan(0);
-    highBudgetMatches.forEach(product => {
-      expect(product.price).toBeGreaterThan(3000000);
-    });
-  });
-
-  test('Racket Finder Algorithm prioritizes high balance point for attack style', () => {
-    const attackAnswers = { skill: 'intermediate', style: 'attack', budget: 'high' };
-    const matches = calculateRecommendations(attackAnswers);
-
-    expect(matches.length).toBeGreaterThan(0);
-    if (matches.length >= 2) {
-      expect(matches[0].specs.balance).toBeGreaterThanOrEqual(matches[1].specs.balance || 0);
-    }
-  });
-
   test('Cart pricing calculations sum product and stringing choices correctly', () => {
     const testItems: TestCartItem[] = [
       {

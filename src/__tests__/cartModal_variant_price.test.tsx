@@ -12,7 +12,7 @@ vi.mock('../services/sportApi', () => ({ sportApi: {} }));
 
 const product = {
   id: '337', name: 'Vợt', brand: 'Lining', category: 'Vợt', price: 900000, image: 'x.jpg', specs: {}, description: '',
-  reviews: [], stock: 5,
+  stock: 5,
   variants: [
     { tier_1_option: 'A', tier_2_option: null, sku_code: 'SKU-A', price: 900000, stock: 5 },
     { tier_1_option: 'B', tier_2_option: null, sku_code: 'SKU-B', price: 1300000, stock: 5 },
@@ -29,7 +29,7 @@ function mount(items: CartItem[], app: Record<string, unknown> = {}) {
   const store = configureStore({
     reducer: { appData: appDataReducer },
     preloadedState: {
-      appData: { products: [product], blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: false, ...app }
+      appData: { products: [product], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: false, ...app }
     } as any
   });
   render(

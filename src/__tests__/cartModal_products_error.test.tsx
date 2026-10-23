@@ -25,7 +25,7 @@ describe('CartModal khi tải sản phẩm lỗi', () => {
     const store = configureStore({
       reducer: { appData: appDataReducer },
       preloadedState: {
-        appData: { products: [], blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: true }
+        appData: { products: [], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: true }
       } as any
     });
     render(
@@ -47,12 +47,12 @@ describe('CartModal khi tải sản phẩm lỗi', () => {
   it('F-1: submit thẳng form thanh toán khi productsError=true (không qua nút đã khoá) -> không gọi sendOtp/findOrCreateCustomer/createOrder', () => {
     const product = {
       id: '341', name: 'Áo Yonex', brand: 'Yonex', category: 'Áo', price: 1000, image: 'x.jpg', specs: {}, description: '',
-      reviews: [], stock: 5, variants: [{ sku_code: 'PRD-X-1', price: 1000, stock: 5 }]
+      stock: 5, variants: [{ sku_code: 'PRD-X-1', price: 1000, stock: 5 }]
     };
     const store = configureStore({
       reducer: { appData: appDataReducer },
       preloadedState: {
-        appData: { products: [product], blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: false }
+        appData: { products: [product], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: false }
       } as any
     });
     render(
@@ -69,7 +69,7 @@ describe('CartModal khi tải sản phẩm lỗi', () => {
     act(() => {
       store.dispatch(
         fetchAppData.fulfilled(
-          { products: [product], productsError: true, categories: [], categoriesError: false, blogs: [], branches: [], stringOptions: [] } as any,
+          { products: [product], productsError: true, categories: [], categoriesError: false, branches: [], stringOptions: [] } as any,
           'req'
         )
       );

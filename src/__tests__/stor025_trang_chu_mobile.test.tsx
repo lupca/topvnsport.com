@@ -14,7 +14,7 @@ import { categoryTileThemes } from '../features/home/categoryTileThemes';
 import { sortProducts } from '../utils/productSort';
 
 const prod = (id: string, extra: Record<string, unknown> = {}) =>
-  ({ id, name: `SP ${id}`, brand: 'B', image: '', price: 100000, specs: {}, stock: 1, reviews: [], categoryCode: 'c1', ...extra }) as any;
+  ({ id, name: `SP ${id}`, brand: 'B', image: '', price: 100000, specs: {}, stock: 1, categoryCode: 'c1', ...extra }) as any;
 const categories = [
   { id: 1, name: 'Cầu Lông', code: 'c1', parent_id: null, display_name: 'Thể Thao > Cầu Lông' },
   { id: 2, name: 'Vợt', code: 'c2', parent_id: null, display_name: 'Thể Thao > Vợt' },
@@ -24,7 +24,7 @@ const Probe = () => <div data-testid="loc">{useLocation().pathname}</div>;
 
 function renderHome(products: any[]) {
   const store = configureStore({
-    reducer: { appData: (state = { products, blogs: [], categories }) => state, cart: cartReducer, catalog: catalogReducer },
+    reducer: { appData: (state = { products, categories }) => state, cart: cartReducer, catalog: catalogReducer },
     preloadedState: {
       cart: { items: [], isOpen: false, quickViewProduct: null },
       catalog: { selectedCategory: null, searchKeyword: '', priceRange: [0, 10000000], sortBy: 'featured' },

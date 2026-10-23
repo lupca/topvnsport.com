@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Trophy, BookOpen, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Trophy, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';
@@ -36,7 +36,7 @@ interface HeaderProps {
 export default function Header({ cartCount, openCart, products, categories }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const currentView = location.pathname.includes('catalog') ? 'catalog' : location.pathname.includes('blog') ? 'blog-list' : location.pathname.includes('store') ? 'store-locator' : location.pathname === '/' ? 'home' : '';
+  const currentView = location.pathname.includes('catalog') ? 'catalog' : location.pathname.includes('store') ? 'store-locator' : location.pathname === '/' ? 'home' : '';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
@@ -268,14 +268,6 @@ export default function Header({ cartCount, openCart, products, categories }: He
             <span>Sản Phẩm</span>
           </button>
           
-          <button 
-            onClick={() => navigate('/blog')}
-            className={`hidden lg:flex items-center gap-1.5 text-sm font-medium hover:text-brand-primary transition ${currentView.startsWith('blog') ? 'text-brand-primary' : 'text-gray-700'}`}
-          >
-            <BookOpen className="w-4.5 h-4.5" />
-            <span>Góc Kiến Thức</span>
-          </button>
-
           <button className="text-gray-600 hover:text-brand-primary transition relative">
             <Heart className="w-5 h-5" />
           </button>
@@ -375,13 +367,6 @@ export default function Header({ cartCount, openCart, products, categories }: He
                   {/* Additional Options */}
                   <div className="space-y-1.5 border-t border-gray-100 pt-4 text-xs font-semibold text-gray-700">
                     <button 
-                      onClick={() => { navigate('/blog'); setIsMobileMenuOpen(false); }}
-                      className="w-full text-left py-2.5 px-2 hover:bg-gray-50 rounded-lg flex items-center gap-2"
-                    >
-                      <BookOpen className="w-4 h-4 text-brand-primary" />
-                      Góc Kiến Thức & Đánh Giá Sân
-                    </button>
-                    <button 
                       onClick={() => { navigate('/stores'); setIsMobileMenuOpen(false); }}
                       className="w-full text-left py-2.5 px-2 hover:bg-gray-50 rounded-lg flex items-center gap-2"
                     >
@@ -410,22 +395,7 @@ export default function Header({ cartCount, openCart, products, categories }: He
             {sortedCategories.map(category => (
               <button key={category.id} onClick={() => navigate(`/catalog?category=${encodeURIComponent(category.code)}`)} className="text-gray-800 hover:text-brand-primary transition shrink-0 py-1">{getCategoryLabel(category, categories)}</button>
             ))}
-            
-            <button onClick={() => navigate('/blog')} className="text-gray-800 hover:text-brand-primary transition shrink-0 py-1">Đánh Giá Sân Bãi</button>
           </div>
-
-          {/* Consultation button */}
-          <button 
-            onClick={() => {
-              const el = document.getElementById('racket-finder-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-              else navigate('/');
-            }}
-            className="hidden md:flex items-center gap-1.5 text-xs text-brand-primary bg-brand-light hover:bg-brand-light px-3 py-1.5 rounded-full border border-blue-100 transition duration-200"
-          >
-            <Trophy className="w-3.5 h-3.5" />
-            <span>Trình Cố Vấn Chọn Vợt</span>
-          </button>
         </div>
       </nav>
     </header>

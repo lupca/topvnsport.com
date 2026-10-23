@@ -1,4 +1,4 @@
-import { Blog, Branch, Category, Product, StringOption } from '../../types';
+import { Branch, Category, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
 import { delay, OMS_API_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { findManualChannel, findStorefrontChannel, getChannels } from './omsHelpers';
@@ -249,16 +249,6 @@ async function getProductById(id: string): Promise<Product | null> {
   return products.find((product) => product.id === id) || null;
 }
 
-async function getBlogs(): Promise<Blog[]> {
-  await delay(SIMULATED_LATENCY);
-  return JSON.parse(JSON.stringify(rawData.blogs)) as Blog[];
-}
-
-async function getBlogById(id: string): Promise<Blog | null> {
-  const blog = rawData.blogs.find((item) => item.id === id);
-  return blog ? (JSON.parse(JSON.stringify(blog)) as Blog) : null;
-}
-
 async function getBranches(): Promise<Branch[]> {
   return JSON.parse(JSON.stringify(rawData.branches)) as Branch[];
 }
@@ -471,9 +461,7 @@ export const sportApi = {
   getProductById,
   getWmsStock: fetchWmsStock,
   getAllStock,
-  getBlogs,
   getCategories,
-  getBlogById,
   getBranches,
   getStringOptions,
   getConstants,

@@ -108,7 +108,6 @@ export default function Footer({ categories, products }: FooterProps) {
             <li><Link to="/stores" className="hover:text-white transition">Cửa hàng trải nghiệm trực tiếp</Link></li>
             <li><button className="hover:text-white transition">Chính sách bảo hành 90 ngày</button></li>
             <li><button className="hover:text-white transition">Đặt lịch đan cước lấy ngay</button></li>
-            <li><Link to="/blog" className="hover:text-white transition">Đánh giá chất lượng sân đấu</Link></li>
             <li><button className="hover:text-white transition">Hướng dẫn chọn vợt theo lực cổ tay</button></li>
           </ul>
         </div>

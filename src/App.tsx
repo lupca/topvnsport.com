@@ -5,10 +5,9 @@
 
 import { lazy, MouseEvent, Suspense, useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
-import { Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import BlogSection from './components/BlogSection';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import QuickViewModal from './components/QuickViewModal';
@@ -49,7 +48,7 @@ export default function App() {
   // PDP có MobilePurchaseBar sticky là thanh đáy duy nhất: không nav đáy, không pb-16.
   const isPdp = location.pathname.startsWith('/product/');
 
-  const { products, blogs, branches, categories, isLoading, categoriesError, productsError, stockError } = useAppSelector(state => state.appData);
+  const { products, branches, categories, isLoading, categoriesError, productsError, stockError } = useAppSelector(state => state.appData);
   const { items: cartItems, isOpen: isCartOpen, quickViewProduct } = useAppSelector(state => state.cart);
   const [hasOpenedCart, setHasOpenedCart] = useState(isCartOpen);
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
@@ -132,11 +131,19 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/product/:slug" element={<ProductDetailRoute />} />
-            <Route path="/blog/:id?" element={<BlogSection blogs={blogs} />} />
             <Route path="/stores" element={<StoreLocator branches={branches} products={products} />} />
             <Route path="/checkout/success" element={<CheckoutCallbackPage status="success" />} />
             <Route path="/checkout/error" element={<CheckoutCallbackPage status="error" />} />
             <Route path="/checkout/cancel" element={<CheckoutCallbackPage status="cancel" />} />
+            <Route
+              path="*"
+              element={
+                <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4" id="not-found">
+                  <h1 className="font-display font-black text-2xl text-gray-900">Không tìm thấy trang</h1>
+                  <Link to="/" className="inline-block text-sm font-bold text-brand-primary hover:underline">Về trang chủ</Link>
+                </div>
+              }
+            />
           </Routes>
         </Suspense>
       </main>

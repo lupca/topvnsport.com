@@ -221,7 +221,6 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     description: pmiProduct.description || undefined,
     attributes,
     vomaAttributes: mapVomaAttributes(pmiProduct.voma_attribute_values || [], pmiProduct.id),
-    reviews: [],
     stock: stock > 0 ? stock : 0,
     defaultSku: variants.find((variant) => Boolean(variant.sku_code))?.sku_code,
     colors,

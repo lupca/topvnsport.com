@@ -26,7 +26,6 @@ const twoTierShirt: Product = {
   image: 'https://example.com/341.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: 250,
   colors: ['DAZZLING BLUE', 'FRENCH BLUE', 'DARK ECLIPSE', 'WHITE', 'GOLDEN CREAM'],
   tier_variations: [
@@ -71,7 +70,6 @@ const twoTierRacket: Product = {
   image: 'https://example.com/337.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: 240,
   colors: ['Cannon Black', 'Cannon Deep Teal', 'Cannon Ambrosia'],
   tier_variations: [
@@ -118,7 +116,6 @@ const oneTierProduct: Product = {
   image: 'https://example.com/339.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: 50,
   colors: ['Khung không', 'Yonex BG 65Ti', 'Yonex BG 66U', 'Yonex EXBOLT 65', 'Kizuna Z61'],
   tier_variations: [
@@ -144,7 +141,6 @@ const noTierProduct: Product = {
   image: 'https://example.com/338.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: 10,
   colors: ['Tiêu chuẩn'],
   variants: [
@@ -234,7 +230,6 @@ describe('describeSkuSelection -- tổ hợp không tồn tại hoặc nhiều �
     image: 'https://example.com/999.jpg',
     specs: {},
     description: '',
-    reviews: [],
     stock: 5,
     colors: ['Đỏ', 'Xanh'],
     tier_variations: [
@@ -258,7 +253,6 @@ describe('describeSkuSelection -- tổ hợp không tồn tại hoặc nhiều �
     image: 'https://example.com/998.jpg',
     specs: {},
     description: '',
-    reviews: [],
     stock: 5,
     colors: ['Đỏ'],
     tier_variations: [{ tier_index: 1, name: 'Màu sắc', options: ['Đỏ'] }],
@@ -301,7 +295,6 @@ describe('F2 -- "SKU bán được" = biến thể có sku_code khác rỗng', (
     image: 'https://example.com/997.jpg',
     specs: {},
     description: '',
-    reviews: [],
     stock: 5,
     variants: [
       { tier_1_option: null, tier_2_option: null, sku_code: 'PRD-A', price: 100000, stock: 5 },
@@ -334,7 +327,6 @@ describe('F_TEST -- sản phẩm không tầng có 2 biến thể ĐỀU có sku
     image: 'https://example.com/996.jpg',
     specs: {},
     description: '',
-    reviews: [],
     stock: 5,
     defaultSku: 'A',
     variants: [
@@ -400,7 +392,6 @@ describe('buildVariantLabel (F5) -- nhãn dựng từ TÊN TẦNG THẬT, không
       image: 'https://example.com/995.jpg',
       specs: {},
       description: '',
-      reviews: [],
       stock: 5,
       tier_variations: [
         { tier_index: 1, name: 'Màu sắc', options: ['Đỏ', 'Xanh'] },
@@ -429,7 +420,6 @@ describe('buildVariantLabel (F5) -- nhãn dựng từ TÊN TẦNG THẬT, không
       image: 'https://example.com/994.jpg',
       specs: {},
       description: '',
-      reviews: [],
       stock: 5,
       tier_variations: [{ tier_index: 1, name: 'Màu sắc', options: ['Đỏ', 'Xanh'] }],
       variants: [

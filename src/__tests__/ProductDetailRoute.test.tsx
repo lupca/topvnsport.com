@@ -29,7 +29,6 @@ const productMissingTier2: Product = {
   image: 'https://example.com/x.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: 20,
   tier_variations: [
     { tier_index: 1, name: 'Màu Sắc', options: ['Đỏ'] },
@@ -52,7 +51,6 @@ const productSparseGrid: Product = {
   image: 'https://example.com/y.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: 20,
   tier_variations: [
     { tier_index: 1, name: 'Màu Sắc', options: ['Đỏ'] },
@@ -68,7 +66,7 @@ function renderProductDetailRoute(product: Product) {
   const store = configureStore({
     reducer: { appData: appDataReducer, cart: cartReducer },
     preloadedState: {
-      appData: { products: [product], blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false },
+      appData: { products: [product], branches: [], stringOptions: [], categories: [], isLoading: false },
       cart: { items: [], isOpen: false, quickViewProduct: null }
     } as any
   });
