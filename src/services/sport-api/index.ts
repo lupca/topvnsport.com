@@ -1,9 +1,8 @@
 import { Branch, Category, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
-import { delay, OMS_API_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
-import { findManualChannel, findStorefrontChannel, getChannels } from './omsHelpers';
+import { delay, OMS_CHECKOUT_PROXY_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { mapPmiProduct } from './productMappers';
-import { ApiListResponse, CreateOrderPayload, OmsChannel, OmsCustomer, OmsCustomerInput, PmiProduct, SendOtpResponse, VerifyOtpResponse } from './types';
+import { ApiListResponse, CreateOrderPayload, PmiProduct, SendOtpResponse, VerifyOtpResponse } from './types';
 
 // Đọc phản hồi /public/stock ({stock:{sku:qty}} hoặc {items:[{sku_code,...}]}).
 function parseWmsStock(data: any): Record<string, number> {
@@ -294,7 +293,7 @@ async function getConstants() {
 }
 
 async function createOrder(orderData: CreateOrderPayload) {
-  const response = await fetch(`${OMS_API_URL}/orders`, {
+  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/orders`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(orderData)
@@ -310,9 +309,9 @@ async function createOrder(orderData: CreateOrderPayload) {
   return response.json();
 }
 
-async function createSepayCheckout(orderId: number | string, orderNumber?: string) {
-  const payload = typeof orderId === 'number' ? { order_id: orderId } : { order_number: orderId || orderNumber };
-  const response = await fetch(`${OMS_API_URL}/api/payments/checkout`, {
+async function createSepayCheckout(orderNumber: string) {
+  const payload = { order_number: orderNumber };
+  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/payments`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -329,7 +328,7 @@ async function createSepayCheckout(orderId: number | string, orderNumber?: strin
 }
 
 async function sendOtp(phoneNumber: string): Promise<SendOtpResponse> {
-  const response = await fetch(`${OMS_API_URL}/api/sms/send-otp`, {
+  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/send-otp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phone_number: phoneNumber })
@@ -347,7 +346,7 @@ async function sendOtp(phoneNumber: string): Promise<SendOtpResponse> {
 }
 
 async function verifyOtp(phoneNumber: string, otpCode: string): Promise<VerifyOtpResponse> {
-  const response = await fetch(`${OMS_API_URL}/api/sms/verify-otp`, {
+  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/verify-otp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phone_number: phoneNumber, otp_code: otpCode })
@@ -364,98 +363,6 @@ async function verifyOtp(phoneNumber: string, otpCode: string): Promise<VerifyOt
   return response.json();
 }
 
-async function findOrCreateCustomer(customer: OmsCustomerInput): Promise<number> {
-  const createResponse = await fetch(`${OMS_API_URL}/customers`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(customer)
-  });
-
-  if (createResponse.ok || createResponse.status === 409) {
-    const created = (await createResponse.json()) as OmsCustomer;
-    if (created && typeof created.id === 'number') {
-      return created.id;
-    }
-  }
-
-  const errorText = await createResponse.text();
-  throw new Error(`Failed to create customer: ${errorText}`);
-}
-
-async function getOrCreateManualChannelId(): Promise<number> {
-  const searchedChannels = await getChannels('MANUAL');
-  const searchedManual = findManualChannel(searchedChannels);
-  if (searchedManual) {
-    return searchedManual.id;
-  }
-
-  const channels = await getChannels();
-  const manual = findManualChannel(channels);
-  if (manual) {
-    return manual.id;
-  }
-
-  const activeChannel = channels.find((channel) => channel.is_active);
-  if (activeChannel) {
-    return activeChannel.id;
-  }
-
-  const createResponse = await fetch(`${OMS_API_URL}/channels`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      code: 'MANUAL',
-      name: 'Manual',
-      is_active: true
-    })
-  });
-
-  if (createResponse.ok) {
-    const created = (await createResponse.json()) as OmsChannel;
-    return created.id;
-  }
-
-  const errorText = await createResponse.text();
-  throw new Error(`Failed to resolve channel: ${errorText}`);
-}
-
-async function getOrCreateStorefrontChannelId(): Promise<number> {
-  const searchedChannels = await getChannels('STOREFRONT');
-  const searchedStorefront = findStorefrontChannel(searchedChannels);
-  if (searchedStorefront) {
-    return searchedStorefront.id;
-  }
-
-  const channels = await getChannels();
-  const storefront = findStorefrontChannel(channels);
-  if (storefront) {
-    return storefront.id;
-  }
-
-  const activeChannel = channels.find((channel) => channel.is_active);
-  if (activeChannel) {
-    return activeChannel.id;
-  }
-
-  const createResponse = await fetch(`${OMS_API_URL}/channels`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      code: 'STOREFRONT',
-      name: 'Storefront',
-      is_active: true
-    })
-  });
-
-  if (createResponse.ok) {
-    const created = (await createResponse.json()) as OmsChannel;
-    return created.id;
-  }
-
-  const errorText = await createResponse.text();
-  throw new Error(`Failed to resolve channel: ${errorText}`);
-}
-
 export const sportApi = {
   getProducts,
   getProductById,
@@ -469,7 +376,4 @@ export const sportApi = {
   createSepayCheckout,
   sendOtp,
   verifyOtp,
-  findOrCreateCustomer,
-  getOrCreateManualChannelId,
-  getOrCreateStorefrontChannelId,
 };

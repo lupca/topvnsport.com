@@ -17,16 +17,12 @@ vi.mock('@topvnsport/ui-kit', () => ({
 
 const sendOtpMock = vi.fn().mockResolvedValue(undefined);
 const verifyOtpMock = vi.fn().mockResolvedValue({ success: true, verification_token: 'tok-123' });
-const findOrCreateCustomerMock = vi.fn().mockResolvedValue(1);
-const getOrCreateStorefrontChannelIdMock = vi.fn().mockResolvedValue(1);
 const createOrderMock = vi.fn().mockResolvedValue({ id: 1, order_number: 'DH-1' });
 
 vi.mock('../services/sportApi', () => ({
   sportApi: {
     sendOtp: (...args: unknown[]) => sendOtpMock(...args),
     verifyOtp: (...args: unknown[]) => verifyOtpMock(...args),
-    findOrCreateCustomer: (...args: unknown[]) => findOrCreateCustomerMock(...args),
-    getOrCreateStorefrontChannelId: (...args: unknown[]) => getOrCreateStorefrontChannelIdMock(...args),
     createOrder: (...args: unknown[]) => createOrderMock(...args),
     createSepayCheckout: vi.fn()
   }
@@ -116,8 +112,6 @@ describe('CartModal -- món hàng SKU không hợp lệ (F3: khớp theo biến 
     alertMock.mockClear();
     sendOtpMock.mockClear();
     verifyOtpMock.mockClear();
-    findOrCreateCustomerMock.mockClear();
-    getOrCreateStorefrontChannelIdMock.mockClear();
     createOrderMock.mockClear();
   });
 
@@ -157,11 +151,10 @@ describe('CartModal -- món hàng SKU không hợp lệ (F3: khớp theo biến 
   });
 });
 
-describe('F_LATE (medium) -- chặn SKU không hợp lệ TRƯỚC sendOtp/findOrCreateCustomer, không chỉ trước createOrder', () => {
+describe('F_LATE (medium) -- chặn SKU không hợp lệ TRƯỚC sendOtp, không chỉ trước createOrder', () => {
   beforeEach(() => {
     alertMock.mockClear();
     sendOtpMock.mockClear();
-    findOrCreateCustomerMock.mockClear();
     createOrderMock.mockClear();
   });
 
@@ -176,7 +169,7 @@ describe('F_LATE (medium) -- chặn SKU không hợp lệ TRƯỚC sendOtp/findO
     expect(getCheckoutButton()).toBeDisabled();
   });
 
-  it('có món không hợp lệ -> bấm "Tiến hành thanh toán" KHÔNG mở bước OTP: sendOtp, findOrCreateCustomer, createOrder đều không được gọi', () => {
+  it('có món không hợp lệ -> bấm "Tiến hành thanh toán" KHÔNG mở bước OTP: sendOtp, createOrder đều không được gọi', () => {
     const deletedVariantItem = makeItem({ skuCode: 'PRD-AO-DELETED-VARIANT' });
     renderCartModal([deletedVariantItem]);
 
@@ -185,7 +178,6 @@ describe('F_LATE (medium) -- chặn SKU không hợp lệ TRƯỚC sendOtp/findO
     // Nút bị vô hiệu -> vẫn ở bước 1 (không có form nhập họ tên/điện thoại)
     expect(screen.queryByPlaceholderText('Ví dụ: Nguyễn Văn A')).not.toBeInTheDocument();
     expect(sendOtpMock).not.toHaveBeenCalled();
-    expect(findOrCreateCustomerMock).not.toHaveBeenCalled();
     expect(createOrderMock).not.toHaveBeenCalled();
   });
 

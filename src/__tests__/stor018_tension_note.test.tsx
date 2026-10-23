@@ -17,16 +17,12 @@ vi.mock('@topvnsport/ui-kit', () => ({
 
 const sendOtpMock = vi.fn().mockResolvedValue(undefined);
 const verifyOtpMock = vi.fn().mockResolvedValue({ success: true, verification_token: 'tok-123' });
-const findOrCreateCustomerMock = vi.fn().mockResolvedValue(1);
-const getOrCreateStorefrontChannelIdMock = vi.fn().mockResolvedValue(1);
 const createOrderMock = vi.fn().mockResolvedValue({ id: 1, order_number: 'DH-1' });
 
 vi.mock('../services/sportApi', () => ({
   sportApi: {
     sendOtp: (...args: unknown[]) => sendOtpMock(...args),
     verifyOtp: (...args: unknown[]) => verifyOtpMock(...args),
-    findOrCreateCustomer: (...args: unknown[]) => findOrCreateCustomerMock(...args),
-    getOrCreateStorefrontChannelId: (...args: unknown[]) => getOrCreateStorefrontChannelIdMock(...args),
     createOrder: (...args: unknown[]) => createOrderMock(...args),
     createSepayCheckout: vi.fn()
   }

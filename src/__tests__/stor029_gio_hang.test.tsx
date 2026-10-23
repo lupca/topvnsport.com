@@ -14,14 +14,11 @@ vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: (...a: unknown[]) 
 
 const sendOtpMock = vi.fn().mockResolvedValue(undefined);
 const verifyOtpMock = vi.fn().mockResolvedValue({ success: true, verification_token: 'tok-123' });
-const findOrCreateCustomerMock = vi.fn().mockResolvedValue(1);
 const createOrderMock = vi.fn().mockResolvedValue({ id: 1, order_number: 'DH-1' });
 vi.mock('../services/sportApi', () => ({
   sportApi: {
     sendOtp: (...a: unknown[]) => sendOtpMock(...a),
     verifyOtp: (...a: unknown[]) => verifyOtpMock(...a),
-    findOrCreateCustomer: (...a: unknown[]) => findOrCreateCustomerMock(...a),
-    getOrCreateStorefrontChannelId: vi.fn().mockResolvedValue(1),
     createOrder: (...a: unknown[]) => createOrderMock(...a),
     createSepayCheckout: vi.fn()
   }
@@ -102,7 +99,7 @@ async function placeOrder() {
 }
 
 beforeEach(() => {
-  [alertMock, sendOtpMock, createOrderMock, findOrCreateCustomerMock, onClearCartSpy].forEach(m => m.mockClear());
+  [alertMock, sendOtpMock, createOrderMock, onClearCartSpy].forEach(m => m.mockClear());
 });
 afterEach(() => cleanup());
 
@@ -185,7 +182,7 @@ describe('STOR-029 địa chỉ', () => {
   });
   it('dia-chi-khach-hang', async () => {
     setup([shirtItem]); await placeOrder();
-    expect(findOrCreateCustomerMock.mock.calls[0][0].address).toBe('Số 1 Test, Phường A, Tỉnh B');
+    expect(createOrderMock.mock.calls[0][0].customer.address).toBe('Số 1 Test, Phường A, Tỉnh B');
   });
   it('man-thanh-cong-dia-chi', async () => {
     setup([shirtItem]); await placeOrder();

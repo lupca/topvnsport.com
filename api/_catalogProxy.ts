@@ -93,3 +93,49 @@ export async function proxyToVoma(req: any, res: any, baseUrl: string | undefine
     res.status(502).json({ detail: 'upstream_unreachable' });
   }
 }
+
+// STOR-034: checkout (OTP -> order -> SePay) proxy to the OMS public API.
+// POST only, 4 whitelisted paths; method/path are checked BEFORE the token is
+// resolved so a bad request never reveals whether a token is configured.
+const OMS_CHECKOUT_PATHS = new Set(['checkout/send-otp', 'checkout/verify-otp', 'checkout/orders', 'checkout/payments']);
+
+export async function proxyOmsCheckout(req: any, res: any) {
+  res.setHeader('Cache-Control', 'no-store');
+  if (req.method !== 'POST') {
+    res.status(405).json({ detail: 'method_not_allowed' });
+    return;
+  }
+
+  const segments: string[] = Array.isArray(req.query.path) ? req.query.path : [req.query.path].filter(Boolean);
+  const path = segments.join('/');
+  if (!OMS_CHECKOUT_PATHS.has(path)) {
+    res.status(404).json({ detail: 'not_found' });
+    return;
+  }
+
+  const baseUrl = process.env.VITE_OMS_API_URL;
+  const token = resolveCatalogGrantToken();
+  if (!baseUrl || !token) {
+    console.error('OMS checkout proxy misconfigured: missing VITE_OMS_API_URL, or no valid CATALOG_GRANT_TOKENS entry for STOREFRONT_SELLER_ID');
+    res.status(500).json({ detail: 'proxy_misconfigured' });
+    return;
+  }
+
+  try {
+    // Vercel's Node runtime parses application/json into req.body (object);
+    // a string body is forwarded verbatim.
+    const body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    const upstreamResponse = await fetch(`${baseUrl}/public/${path}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body,
+    });
+    const text = await upstreamResponse.text();
+    res.status(upstreamResponse.status);
+    res.setHeader('content-type', upstreamResponse.headers.get('content-type') || 'application/json');
+    res.send(text);
+  } catch (error) {
+    console.error('OMS checkout proxy request failed:', error);
+    res.status(502).json({ detail: 'upstream_unreachable' });
+  }
+}

@@ -78,8 +78,7 @@ export type CreateOrderItem = {
 };
 
 export type CreateOrderPayload = {
-  customer_id: number;
-  channel_id: number;
+  customer: { name: string; phone: string; address?: string };
   shipping_fee: number;
   shipping_address: string;
   note?: string;
@@ -98,36 +97,6 @@ export type VerifyOtpResponse = {
   verification_token: string;
 };
 
-
-export type OmsCustomer = {
-  id: number;
-  name: string;
-  phone: string;
-  email?: string | null;
-  address?: string | null;
-};
-
-export type OmsPaginatedCustomers = {
-  items?: OmsCustomer[];
-};
-
-export type OmsCustomerInput = {
-  name: string;
-  phone: string;
-  address: string;
-  email?: string;
-};
-
-export type OmsChannel = {
-  id: number;
-  code: string;
-  name: string;
-  is_active: boolean;
-};
-
-export type OmsPaginatedChannels = {
-  items?: OmsChannel[];
-};
 
 export type ApiListResponse<T> = {
   items?: T[];
