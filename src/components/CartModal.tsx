@@ -53,6 +53,7 @@ const QUOTE_FAILED_MESSAGE = 'Chưa tính được phí vận chuyển. Vui lòn
 const QUOTE_REJECTED_MESSAGE = 'Không tính được phí vận chuyển cho giỏ hàng và địa chỉ này.';
 const ORDER_REJECTED_MESSAGE = 'Đơn hàng chưa được chấp nhận. Vui lòng kiểm tra lại thông tin rồi thử lại.';
 const TOTAL_MISSING_MESSAGE = 'Chưa nhận được tổng tiền từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.';
+const FEE_MISSING_MESSAGE = 'Chưa nhận được phí vận chuyển từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.';
 const NO_DELIVERY_MESSAGE = 'Địa chỉ này hiện chưa có phương thức giao hàng nào. Vui lòng chọn địa chỉ khác.';
 
 // Báo giá của OMS cho đúng một bộ giỏ+xã (key).
@@ -674,8 +675,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <p>• <strong>Số điện thoại:</strong> {phone}</p>
                 <p>• <strong>Địa chỉ giao:</strong> {placedOrder?.shippingAddress}</p>
                 <p>• <strong>Phương thức giao:</strong> {deliveryOption === 'STANDARD' ? 'Giao hàng chuẩn (COD)' : 'Giao hàng hỏa tốc'}</p>
-                {placedOrder?.shippingFee != null && <p>• <strong>Phí vận chuyển:</strong> {formatMoney(placedOrder.shippingFee)}</p>}
-                {placedOrder?.adjusted && (
+                {placedOrder && <p>• <strong>Phí vận chuyển:</strong> {placedOrder.shippingFee != null ? formatMoney(placedOrder.shippingFee) : FEE_MISSING_MESSAGE}</p>}
+                {placedOrder?.adjusted && placedOrder.shippingFee != null && (
                   <p className="text-amber-700 font-semibold">
                     Phí vận chuyển đã được cập nhật theo báo giá mới nhất: {formatMoney(placedOrder.shippingFee)}
                   </p>

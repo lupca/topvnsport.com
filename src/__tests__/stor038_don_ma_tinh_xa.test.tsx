@@ -175,6 +175,13 @@ describe('STOR-038 bước 3 theo response 201', () => {
     expect(screen.queryByText(/278\.000đ/)).toBeNull();
     expect(screen.queryByText(/1\.\d{3}\.000đ/)).toBeNull();
   });
+  it('shipping_fee 201 không hữu hạn -> dòng phí nói rõ, không câu "đã được cập nhật" rỗng', async () => {
+    orderReply = { status: 201, body: { ...ORDER_201_STANDARD_COD, shipping_fee: 'abc' } };
+    await sendOtpAndOrder();
+    const line = (await screen.findByText(/Phí vận chuyển:/)).closest('p')!.textContent!;
+    expect(line).toBe('• Phí vận chuyển: Chưa nhận được phí vận chuyển từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.');
+    expect(screen.queryByText(/đã được cập nhật theo báo giá mới nhất/)).toBeNull();
+  });
   it('AC23 SePay: sau 201 vẫn POST /payments với order_number của 201', async () => {
     await sendOtpAndOrder({ payment: 'SePay' });
     await waitFor(() => expect(calls.some(c => c.url.endsWith('/payments'))).toBe(true));
