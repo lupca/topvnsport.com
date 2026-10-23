@@ -110,9 +110,15 @@ describe('STOR-036 CartModal chọn tỉnh/xã', () => {
     fireEvent.focus(provinceBox());
     fireEvent.click(await screen.findByRole('option', { name: 'Thành phố Hồ Chí Minh' }));
     expect(wardBox()).toHaveValue('');
-    // xã đã bị xoá -> gửi đơn bị chặn
+    // Điền đủ chữ để alert chỉ có thể đến từ guard tỉnh/xã: xã cũ (Ba Đình) đã bị
+    // xoá khỏi state -> chặn gửi OTP, không ship tới '…, Phường Ba Đình, TP HCM'.
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Văn A' } });
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
     fireEvent.click(screen.getByRole('button', { name: /Xác nhận đặt hàng|Thanh toán SePay/ }));
-    await waitFor(() => expect(alertMock).toHaveBeenCalled());
+    await waitFor(() => expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('phường/xã')));
+    expect(alertMock).not.toHaveBeenCalledWith(expect.stringContaining('họ tên'));
+    expect(calls.some(c => c.url.endsWith('/send-otp'))).toBe(false);
   });
 
   it('AC62 đóng ở bước 2 rồi mở lại: tỉnh/xã đã chọn còn nguyên', async () => {
