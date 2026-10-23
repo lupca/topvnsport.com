@@ -52,6 +52,7 @@ const EMPTY_LIST: UnitList = { units: null, loading: false, error: null };
 const QUOTE_FAILED_MESSAGE = 'Chưa tính được phí vận chuyển. Vui lòng thử lại.';
 const QUOTE_REJECTED_MESSAGE = 'Không tính được phí vận chuyển cho giỏ hàng và địa chỉ này.';
 const ORDER_REJECTED_MESSAGE = 'Đơn hàng chưa được chấp nhận. Vui lòng kiểm tra lại thông tin rồi thử lại.';
+const TOTAL_MISSING_MESSAGE = 'Chưa nhận được tổng tiền từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.';
 const NO_DELIVERY_MESSAGE = 'Địa chỉ này hiện chưa có phương thức giao hàng nào. Vui lòng chọn địa chỉ khác.';
 
 // Báo giá của OMS cho đúng một bộ giỏ+xã (key).
@@ -680,7 +681,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   </p>
                 )}
                 <p className="text-sm font-bold text-brand-primary border-t border-gray-200 pt-2 mt-2">
-                  Tổng hóa đơn thanh toán: {formatMoney(placedOrder?.total ?? null)}
+                  Tổng hóa đơn thanh toán: {placedOrder?.total != null ? formatMoney(placedOrder.total) : TOTAL_MISSING_MESSAGE}
                 </p>
               </div>
 
