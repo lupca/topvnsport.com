@@ -5,6 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import appDataReducer from '../features/appData/appDataSlice';
+import { QUOTE_200 } from './fixtures/shippingQuote';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 import { PROVINCE_BODY, WARD_BODY, pickAdminUnits } from './fixtures/adminUnits';
@@ -34,6 +35,9 @@ beforeEach(() => {
       const json = url.includes('level=ward') ? WARD_BODY : PROVINCE_BODY;
       return { ok: true, status: 200, json: async () => json, text: async () => JSON.stringify(json) };
     }
+    if (url === '/api/oms/shipping-quote') {
+      return { ok: true, status: 200, json: async () => QUOTE_200, text: async () => JSON.stringify(QUOTE_200) };
+    }
     const body = init?.body ? JSON.parse(init.body) : undefined;
     calls.push({ url, body });
     const json = url.endsWith('/verify-otp') ? { success: true, verification_token: 'vt' }
@@ -58,6 +62,7 @@ async function run(payment: 'COD' | 'SePay') {
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
   await pickAdminUnits();
+  await waitFor(() => expect(screen.getByRole('button', { name: /Xác nhận đặt hàng|Thanh toán SePay/ })).not.toBeDisabled());
   fireEvent.click(screen.getByText(payment === 'COD' ? 'Thanh toán COD' : 'SePay QR Code'));
   fireEvent.click(screen.getByRole('button', { name: /Xác nhận đặt hàng|Thanh toán SePay/ }));
   fireEvent.change(await screen.findByPlaceholderText('Nhập 6 số OTP'), { target: { value: '123456' } });

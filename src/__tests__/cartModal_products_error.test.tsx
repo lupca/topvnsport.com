@@ -5,12 +5,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { act, render, screen, fireEvent, cleanup } from '@testing-library/react';
 import appDataReducer, { fetchAppData } from '../features/appData/appDataSlice';
+import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
 import CartModal, { CartItem } from '../components/CartModal';
 
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn() } }));
 const sendOtp = vi.hoisted(() => vi.fn());
 const createOrder = vi.hoisted(() => vi.fn());
-vi.mock('../services/sportApi', () => ({ sportApi: { sendOtp, createOrder } }));
+vi.mock('../services/sportApi', () => ({ sportApi: { sendOtp, createOrder, getShippingQuote: async () => QUOTE_200_FALLBACK } }));
 
 const item: CartItem = {
   id: 'i1', productId: '341', skuCode: 'PRD-X-1', name: 'Áo Yonex', brand: 'Yonex', image: 'x.jpg',

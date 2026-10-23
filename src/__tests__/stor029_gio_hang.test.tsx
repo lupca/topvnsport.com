@@ -7,6 +7,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import appDataReducer from '../features/appData/appDataSlice';
 import cartReducer, { clearCart } from '../features/cart/cartSlice';
 import { getAdminUnitsFromFixture, pickAdminUnits, ADDRESS_SUFFIX } from './fixtures/adminUnits';
+import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 
@@ -22,6 +23,7 @@ vi.mock('../services/sportApi', () => ({
     verifyOtp: (...a: unknown[]) => verifyOtpMock(...a),
     createOrder: (...a: unknown[]) => createOrderMock(...a),
     getAdminUnits: (...a: [string, string?]) => getAdminUnitsFromFixture(a[0]),
+    getShippingQuote: async () => QUOTE_200_FALLBACK,
     createSepayCheckout: vi.fn()
   }
 }));
@@ -174,7 +176,8 @@ describe('STOR-029 địa chỉ', () => {
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
     fireEvent.focus(await screen.findByRole('combobox', { name: 'Tỉnh/Thành phố' }));
     fireEvent.click(await screen.findByRole('option', { name: 'Hà Nội' }));
-    fireEvent.click(screen.getByRole('button', { name: /Thanh toán SePay|Xác nhận đặt hàng/ }));
+    // STOR-037: chưa có báo giá nên nút khoá; guard tỉnh/xã vẫn chặn đường submit form (Enter).
+    fireEvent.submit(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà').closest('form')!);
     await waitFor(() => expect(alertMock).toHaveBeenCalled());
     expect(sendOtpMock).not.toHaveBeenCalled();
   });
@@ -183,7 +186,8 @@ describe('STOR-029 địa chỉ', () => {
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'A' } });
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
-    fireEvent.click(screen.getByRole('button', { name: /Thanh toán SePay|Xác nhận đặt hàng/ }));
+    // STOR-037: chưa có báo giá nên nút khoá; guard tỉnh/xã vẫn chặn đường submit form (Enter).
+    fireEvent.submit(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà').closest('form')!);
     await waitFor(() => expect(alertMock).toHaveBeenCalled());
     expect(sendOtpMock).not.toHaveBeenCalled();
   });

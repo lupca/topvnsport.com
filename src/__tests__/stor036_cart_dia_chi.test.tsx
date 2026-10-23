@@ -7,6 +7,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import appDataReducer from '../features/appData/appDataSlice';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
+import { QUOTE_200 } from './fixtures/shippingQuote';
 import { PROVINCE_BODY, WARD_BODY, ERR_422_QUERY, ERR_429, ERR_503, ERR_422_SCHEMA, ERR_401, pickAdminUnits } from './fixtures/adminUnits';
 
 const alertMock = vi.fn().mockResolvedValue(undefined);
@@ -45,6 +46,7 @@ beforeEach(() => {
       const q = unitReplies[url.includes('level=ward') ? 'ward' : 'province'];
       return reply(q.length > 1 ? q.shift()! : q[0]);
     }
+    if (url === '/api/oms/shipping-quote') return reply({ status: 200, body: QUOTE_200 });
     const json = url.endsWith('/verify-otp') ? { success: true, verification_token: 'vt' }
       : url.endsWith('/orders') ? ORDER_201 : { success: true };
     return reply({ status: 200, body: json });
@@ -115,7 +117,7 @@ describe('STOR-036 CartModal chọn tỉnh/xã', () => {
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Văn A' } });
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
-    fireEvent.click(screen.getByRole('button', { name: /Xác nhận đặt hàng|Thanh toán SePay/ }));
+    fireEvent.submit(wardBox().closest('form')!); // nút khoá khi chưa có báo giá (STOR-037) -> đi đường submit form
     await waitFor(() => expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('phường/xã')));
     expect(alertMock).not.toHaveBeenCalledWith(expect.stringContaining('họ tên'));
     expect(calls.some(c => c.url.endsWith('/send-otp'))).toBe(false);
@@ -190,13 +192,13 @@ describe('STOR-036 CartModal chọn tỉnh/xã', () => {
       renderCart(); fillText();
       fireEvent.focus(provinceBox());
       fireEvent.click(await screen.findByRole('option', { name: 'Hà Nội' }));
-      fireEvent.click(screen.getByRole('button', { name: /Xác nhận đặt hàng|Thanh toán SePay/ }));
+      fireEvent.submit(wardBox().closest('form')!); // nút khoá khi chưa có báo giá (STOR-037) -> đi đường submit form
       await waitFor(() => expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('phường/xã')));
       expect(calls.some(c => c.url.endsWith('/send-otp'))).toBe(false);
     });
     it('AC25 thiếu tỉnh -> alert, không send-otp', async () => {
       renderCart(); fillText();
-      fireEvent.click(screen.getByRole('button', { name: /Xác nhận đặt hàng|Thanh toán SePay/ }));
+      fireEvent.submit(wardBox().closest('form')!); // nút khoá khi chưa có báo giá (STOR-037) -> đi đường submit form
       await waitFor(() => expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('tỉnh/thành phố')));
       expect(calls.some(c => c.url.endsWith('/send-otp'))).toBe(false);
     });
@@ -208,6 +210,7 @@ describe('STOR-036 CartModal chọn tỉnh/xã', () => {
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: ' 12 Phố Huế ' } });
     await pickAdminUnits();
+    await screen.findByText('Giao hàng chuẩn');
     if (fast) fireEvent.click(screen.getByText('Giao hỏa tốc'));
     fireEvent.click(screen.getByText('Thanh toán COD'));
     fireEvent.click(screen.getByRole('button', { name: 'Xác nhận đặt hàng' }));
@@ -226,11 +229,11 @@ describe('STOR-036 CartModal chọn tỉnh/xã', () => {
     expect(body).not.toHaveProperty('receiver_province_code');
     expect(body).not.toHaveProperty('receiver_ward_code');
     expect(body).not.toHaveProperty('delivery_option');
-    expect(body.shipping_fee).toBe(30000);
+    expect(body.shipping_fee).toBe(78000); // phí STANDARD OMS báo (QUOTE_200)
     expect(await screen.findByText(new RegExp(addr))).toBeInTheDocument();
   });
 
-  it('AC32 hỏa tốc -> shipping_fee 50000', async () => {
-    expect((await placeOrder(true)).shipping_fee).toBe(50000);
+  it('AC32 hỏa tốc -> shipping_fee 226111 (phí EXPRESS OMS báo)', async () => {
+    expect((await placeOrder(true)).shipping_fee).toBe(226111);
   });
 });

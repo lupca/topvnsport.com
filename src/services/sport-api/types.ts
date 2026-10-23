@@ -90,6 +90,35 @@ export type CreateOrderPayload = {
 };
 
 
+export type DeliveryOption = 'STANDARD' | 'EXPRESS';
+
+// Hợp đồng OMS-132 (B) POST /public/shipping-quote.
+export type ShippingQuoteRequest = {
+  items: { sku_code: string; quantity: number }[];
+  receiver_province_code: string;
+  receiver_ward_code: string;
+  delivery_option: DeliveryOption | null;
+};
+
+export type ShippingQuoteOption = {
+  delivery_option: DeliveryOption;
+  available: boolean;
+  unavailable_reason: string | null;
+  service_code: string | null;
+  service_name: string | null;
+  shipping_fee: number | null;
+  eta_days: number | null;
+  is_fallback: boolean;
+};
+
+export type ShippingQuote = {
+  currency: string;
+  receiver_province_code: string;
+  receiver_ward_code: string;
+  is_fallback: boolean;
+  options: ShippingQuoteOption[];
+};
+
 export type SendOtpResponse = {
   success: boolean;
   message?: string;

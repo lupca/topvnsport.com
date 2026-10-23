@@ -2,7 +2,7 @@ import { Branch, Category, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
 import { delay, OMS_CHECKOUT_PROXY_URL, OMS_PROXY_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { mapPmiProduct } from './productMappers';
-import { AdminUnit, ApiListResponse, CreateOrderPayload, PmiProduct, SendOtpResponse, VerifyOtpResponse } from './types';
+import { AdminUnit, ApiListResponse, CreateOrderPayload, PmiProduct, SendOtpResponse, ShippingQuote, ShippingQuoteRequest, VerifyOtpResponse } from './types';
 
 // Đọc phản hồi /public/stock ({stock:{sku:qty}} hoặc {items:[{sku_code,...}]}).
 function parseWmsStock(data: any): Record<string, number> {
@@ -331,6 +331,36 @@ async function getAdminUnits(level: 'province' | 'ward', parent?: string): Promi
   return all;
 }
 
+// Báo giá ship của OMS (hợp đồng (B)). Không 2xx -> NÉM (kèm .status và .body đã
+// parse, null nếu không phải JSON); 200 không có mảng options -> NÉM. Không đoán phí.
+async function getShippingQuote(request: ShippingQuoteRequest): Promise<ShippingQuote> {
+  const url = `${OMS_PROXY_URL}/shipping-quote`;
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(request),
+    });
+  } catch (error) {
+    console.error(url, error);
+    throw error;
+  }
+  if (!response.ok) {
+    console.error(url, response.status);
+    const error = new Error(`OMS shipping-quote failed with status ${response.status}`) as any;
+    error.status = response.status;
+    error.body = await response.json().catch(() => null);
+    throw error;
+  }
+  const data = await response.json();
+  if (!data || !Array.isArray(data.options)) {
+    console.error(url, 'body without options');
+    throw new Error('OMS shipping-quote returned an unexpected body');
+  }
+  return data;
+}
+
 async function createOrder(orderData: CreateOrderPayload) {
   const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/orders`, {
     method: 'POST',
@@ -412,6 +442,7 @@ export const sportApi = {
   getStringOptions,
   getConstants,
   getAdminUnits,
+  getShippingQuote,
   createOrder,
   createSepayCheckout,
   sendOtp,
