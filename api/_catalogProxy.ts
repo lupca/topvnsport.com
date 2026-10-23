@@ -142,7 +142,8 @@ export async function proxyOmsCheckout(req: any, res: any) {
       const incoming = new URLSearchParams(queryIndex === -1 ? '' : req.url.slice(queryIndex + 1));
       const params = new URLSearchParams();
       for (const key of ADMIN_UNIT_QUERY_KEYS) for (const value of incoming.getAll(key)) params.append(key, value);
-      const queryString = params.size > 0 ? `?${params}` : '';
+      const query = params.toString();
+      const queryString = query ? `?${query}` : '';
       upstreamResponse = await fetch(`${baseUrl}/public/${path}${queryString}`, {
         method: 'GET',
         headers: { Authorization: `Bearer ${token}` },
