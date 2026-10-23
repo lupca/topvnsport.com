@@ -73,6 +73,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const [phoneTouched, setPhoneTouched] = useState(false);
   const phoneNormalized = normalizePhone(phone);
   const phoneValid = isValidPhone(phone);
+  // Đã nhập mà sai thì khoá nút; còn trống thì để guard 'thiếu thông tin' báo bằng lời.
+  const phoneBlocked = phone.trim() !== '' && !phoneValid;
   const showPhoneError = phone.trim() !== '' && !phoneValid && (phoneTouched || isPhoneComplete(phone));
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [verificationToken, setVerificationToken] = useState('');
@@ -134,13 +136,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       return;
     }
 
-    if (!phoneValid) {
-      setPhoneTouched(true);
+    if (![fullName, phone, address, ward, province].every(v => v.trim())) {
+      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại, địa chỉ, phường/xã và tỉnh/thành phố nhận hàng.');
       return;
     }
 
-    if (![fullName, phone, address, ward, province].every(v => v.trim())) {
-      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại, địa chỉ, phường/xã và tỉnh/thành phố nhận hàng.');
+    if (!phoneValid) {
+      setPhoneTouched(true);
       return;
     }
 
@@ -552,8 +554,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   onClick={() => {
                     void handleCheckoutSubmit();
                   }}
-                  disabled={isSubmitting || !phoneValid}
-                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || !phoneValid ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                  disabled={isSubmitting || phoneBlocked}
+                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
                 >
                   {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng'}
                 </button>

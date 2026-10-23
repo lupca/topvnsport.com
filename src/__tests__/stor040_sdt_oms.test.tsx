@@ -7,6 +7,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import appDataReducer from '../features/appData/appDataSlice';
 import CartModal, { CartItem } from '../components/CartModal';
 import { sportApi } from '../services/sportApi';
+import { popupService } from '@topvnsport/ui-kit';
 import { PHONE_REGEX, isValidPhone, normalizePhone, PHONE_ERROR_MESSAGE } from '../utils/phone';
 import { Product } from '../types';
 
@@ -100,6 +101,15 @@ describe('STOR-040 ô SĐT bước 2', () => {
     type('0912345678');
     expect(orderBtn().disabled).toBe(false);
     expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('SĐT còn trống: nút không khoá; bấm thì báo thiếu thông tin bằng lời, không gửi OTP', async () => {
+    const spy = vi.spyOn(sportApi, 'sendOtp');
+    openStep2(); fillOthers(); type('');
+    expect(orderBtn().disabled).toBe(false);
+    fireEvent.click(orderBtn());
+    await waitFor(() => expect(popupService.alert).toHaveBeenCalledWith(expect.stringContaining('Vui lòng cung cấp đầy đủ')));
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('submit form với SĐT sai: không gọi sendOtp, không fetch send-otp', async () => {
