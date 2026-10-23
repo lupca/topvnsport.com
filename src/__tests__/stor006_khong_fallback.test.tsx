@@ -93,7 +93,7 @@ describe('STOR-006 getProducts/getProductById (hợp đồng PIM)', () => {
   });
 });
 
-const base: Product = { id: 'p', name: 'Vợt', image: '', price: 1, specs: {}, reviews: [], stock: 1, categoryCode: 'VC001491' } as Product;
+const base: Product = { id: 'p', name: 'Vợt', image: '', price: 1, specs: {}, stock: 1, categoryCode: 'VC001491' } as Product;
 
 describe('STOR-006 render', () => {
   afterEach(() => cleanup());

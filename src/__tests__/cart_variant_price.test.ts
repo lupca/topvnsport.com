@@ -13,7 +13,7 @@ import { CartItem } from '../components/CartModal';
 // giá cấp sản phẩm (price/salePrice) là giá thấp nhất, KHÔNG phải giá biến thể.
 const racket: Product = {
   id: '337', name: 'Vợt Lining Axforce', brand: 'Lining', category: 'Vợt', price: 900000, salePrice: 900000,
-  image: 'x.jpg', specs: {}, description: '', reviews: [], stock: 10,
+  image: 'x.jpg', specs: {}, description: '', stock: 10,
   tier_variations: [{ tier_index: 1, name: 'Loại', options: ['A', 'B', 'C'] }],
   variants: [
     { tier_1_option: 'A', tier_2_option: null, sku_code: 'SKU-A', price: 900000, stock: 5 },

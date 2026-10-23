@@ -240,7 +240,6 @@ describe('Milestone 7 Challenger 2 - Empirical Verification Suite', () => {
 
       const start = performance.now();
       await sportApi.getProducts();
-      await sportApi.getBlogs();
       await sportApi.getBranches();
       await sportApi.getConstants();
       const duration = performance.now() - start;

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getPriceDisplay } from '../utils/priceDisplay';
 import { Product } from '../types';
 
-const base = { id: 'p', name: 'p', image: '', specs: {}, description: '', reviews: [], stock: 1 } as unknown as Product;
+const base = { id: 'p', name: 'p', image: '', specs: {}, description: '', stock: 1 } as unknown as Product;
 
 describe('getPriceDisplay', () => {
   it('P1: salePrice bằng price, không KM -> không có khuyến mãi', () => {

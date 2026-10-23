@@ -19,7 +19,7 @@ function v(color: string, str: string, price: number, stock: number | undefined)
 function racket(variants: ProductVariant[]): Product {
   return {
     id: '337', slug: 'vot-337', name: 'Vợt 337', brand: 'Lining', category: 'Vợt', price: 1000000, image: 'x.jpg',
-    specs: {}, description: '', reviews: [], stock: 99,
+    specs: {}, description: '', stock: 99,
     tier_variations: [
       { tier_index: 1, name: 'Màu Sắc', options: COLORS },
       { tier_index: 2, name: 'Loại Cước', options: STRINGS }
@@ -86,7 +86,7 @@ describe('STOR-027', () => {
 
   const sparse: Product = {
     id: 'sp', slug: 'sp', name: 'Áo', brand: 'Y', category: 'Áo', price: 1, image: 'x.jpg', specs: {}, description: '',
-    reviews: [], stock: 20,
+    stock: 20,
     tier_variations: [
       { tier_index: 1, name: 'Màu Sắc', options: ['Đỏ', 'Xanh'] },
       { tier_index: 2, name: 'Size', options: ['S', 'L'] }

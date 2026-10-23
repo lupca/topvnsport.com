@@ -14,7 +14,7 @@ import Header from '../components/Header';
 import { Product } from '../types';
 
 const mk = (id: string, brand?: string): Product => ({
-  id, name: `SP ${id}`, brand, image: '', price: 1000, specs: {}, description: '', reviews: [], stock: 1
+  id, name: `SP ${id}`, brand, image: '', price: 1000, specs: {}, description: '', stock: 1
 });
 const products = [mk('a', 'Yonex'), mk('b', 'VICTOR'), mk('c', 'VICTORY'), mk('d'), mk('e', 'Yonex')];
 
@@ -35,7 +35,7 @@ describe('danh sách thương hiệu từ dữ liệu', () => {
     const store = configureStore({
       reducer: { appData: appDataReducer, cart: cartReducer, catalog: catalogReducer },
       preloadedState: {
-        appData: { products, blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false },
+        appData: { products, branches: [], stringOptions: [], categories: [], isLoading: false },
         cart: { items: [], isOpen: false, quickViewProduct: null }
       } as any
     });

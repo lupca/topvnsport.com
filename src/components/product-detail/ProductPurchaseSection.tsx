@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Phone, ShoppingCart, Star } from 'lucide-react';
+import { ArrowLeft, Phone, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product, StringOption, TierVariation } from '../../types';
 import StringingAssistant from './StringingAssistant';
@@ -92,18 +92,6 @@ export default function ProductPurchaseSection({
           <h1 className="font-display font-black text-xl md:text-3xl text-gray-900 tracking-tight leading-snug">
             {product.name}
           </h1>
-
-          {/* Sao và số đánh giá là dữ liệu THẬT từ product.reviews -- mảng rỗng thì không hiện gì */}
-          {product.reviews.length > 0 && (
-            <div className="flex items-center gap-1.5 text-xs">
-              <div className="flex text-amber-400">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star key={star} className="w-4.5 h-4.5 fill-current" />
-                ))}
-              </div>
-              <span className="text-gray-500 font-medium">({product.reviews.length} đánh giá từ các tay vợt)</span>
-            </div>
-          )}
         </div>
 
         <div className="bg-brand-light/50 p-4 rounded-xl border border-blue-100 flex items-center justify-between">

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Star } from 'lucide-react';
 import { Product } from '../../types';
 
-export type DetailTab = 'details' | 'tech' | 'reviews';
+export type DetailTab = 'details' | 'tech';
 
 interface ProductDetailTabsProps {
   product: Product;
@@ -29,13 +28,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
       <div className="flex overflow-x-auto border-b border-gray-200">
         {[
           { id: 'details', label: 'Mô tả thực tế & Cảm nhận' },
-          { id: 'tech', label: isRacket ? 'Bảng Điều Khiển Kỹ Thuật (Dashboard)' : 'Thông số kỹ thuật' },
-          {
-            id: 'reviews',
-            // Số đánh giá là số THẬT từ product.reviews -- không bịa số khi
-            // mảng rỗng (mapper hiện luôn trả reviews: []).
-            label: product.reviews.length > 0 ? `Đánh giá tay vợt (${product.reviews.length})` : 'Đánh giá tay vợt'
-          }
+          { id: 'tech', label: isRacket ? 'Bảng Điều Khiển Kỹ Thuật (Dashboard)' : 'Thông số kỹ thuật' }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -275,51 +268,6 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'reviews' && (
-          <div className="space-y-6">
-            {product.reviews && product.reviews.length > 0 ? (
-              <div className="divide-y divide-gray-100">
-                {product.reviews.map((review, index) => (
-                  <div key={index} className="py-5 flex gap-4">
-                    {review.avatar && (
-                      <img
-                        src={review.avatar}
-                        alt={review.author}
-                        className="w-10 h-10 object-cover rounded-full bg-gray-100"
-                        referrerPolicy="no-referrer"
-                      />
-                    )}
-                    <div className="space-y-1.5 flex-1">
-                      <div className="flex items-center justify-between">
-                        <strong className="text-sm text-gray-900">{review.author}</strong>
-                        <span className="text-[11px] text-gray-400 font-mono">{review.date}</span>
-                      </div>
-
-                      <div className="flex text-amber-400 gap-0.5">
-                        {Array.from({ length: review.rating }).map((_, ratingIndex) => (
-                          <Star key={ratingIndex} className="w-3.5 h-3.5 fill-current" />
-                        ))}
-                      </div>
-
-                      <p className="text-xs text-gray-700 leading-relaxed">{review.comment}</p>
-
-                      {review.verified && (
-                        <span className="inline-flex items-center gap-1 text-[9px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-sm font-bold uppercase tracking-wider">
-                          ✓ Đã mua hàng tại TopVNSport
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-10 bg-gray-50 rounded-xl">
-                <p className="text-gray-500 text-sm">Chưa có đánh giá nào cho cây vợt này.</p>
               </div>
             )}
           </div>

@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import { Category, Product } from '../types';
 
 const mk = (id: string, extra: Partial<Product> = {}): Product => ({
-  id, name: `Vot Yonex ${id}`, brand: 'Yonex', image: '', price: 145000, specs: {}, description: '', reviews: [], stock: 1, categoryCode: 'c1', ...extra
+  id, name: `Vot Yonex ${id}`, brand: 'Yonex', image: '', price: 145000, specs: {}, description: '', stock: 1, categoryCode: 'c1', ...extra
 } as Product);
 const cat = (id: number, code: string): Category => ({ id, name: code, code, parent_id: null, display_name: `Nhóm ${code}` });
 const categories = [cat(1, 'c1'), cat(2, 'c2')];

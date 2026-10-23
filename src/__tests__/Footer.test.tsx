@@ -25,7 +25,6 @@ function makeProduct(overrides: Partial<Product>): Product {
     price: 500000,
     specs: {},
     description: '',
-    reviews: [],
     stock: 1,
     ...overrides
   };

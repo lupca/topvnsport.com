@@ -23,7 +23,6 @@ const baseMockProduct: Product = {
     maxTension: 28
   },
   description: 'Mô tả thử nghiệm.',
-  reviews: [],
   stock: 10
 };
 

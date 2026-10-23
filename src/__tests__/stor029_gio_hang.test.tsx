@@ -29,13 +29,13 @@ vi.mock('../services/sportApi', () => ({
 
 const SHIRT_SKU = 'SKU-AO-M';
 const shirt: Product = {
-  id: '1', name: 'Áo Yonex', brand: 'Yonex', category: 'Áo', price: 100000, image: 'x.jpg', specs: {}, description: '', reviews: [], stock: 3,
+  id: '1', name: 'Áo Yonex', brand: 'Yonex', category: 'Áo', price: 100000, image: 'x.jpg', specs: {}, description: '', stock: 3,
   tier_variations: [{ tier_index: 1, name: 'Size', options: ['M'] }],
   variants: [{ tier_1_option: 'M', tier_2_option: null, sku_code: SHIRT_SKU, price: 100000, stock: 3 }]
 };
 const RACKET_SKU = 'SKU-VOT-KHUNG';
 const racket: Product = {
-  id: '2', name: 'Vợt Yonex', brand: 'Yonex', category: 'Vợt', price: 2000000, image: 'y.jpg', specs: {}, description: '', reviews: [], stock: 5,
+  id: '2', name: 'Vợt Yonex', brand: 'Yonex', category: 'Vợt', price: 2000000, image: 'y.jpg', specs: {}, description: '', stock: 5,
   tier_variations: [{ tier_index: 1, name: 'Loại Cước', options: ['Khung không dây', 'Đã căng dây'] }],
   variants: [
     { tier_1_option: 'Khung không dây', tier_2_option: null, sku_code: RACKET_SKU, price: 2000000, stock: 5 },
@@ -59,7 +59,7 @@ function makeStore(items: CartItem[], products: Product[]) {
   return configureStore({
     reducer: { appData: appDataReducer, cart: cartReducer },
     preloadedState: {
-      appData: { products, blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false },
+      appData: { products, branches: [], stringOptions: [], categories: [], isLoading: false },
       cart: { items, isOpen: true, quickViewProduct: null }
     } as any
   });

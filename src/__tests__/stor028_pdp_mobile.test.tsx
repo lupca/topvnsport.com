@@ -14,7 +14,7 @@ const alertMock = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: (...a: unknown[]) => alertMock(...a) } }));
 const api = vi.hoisted(() => ({
   getProducts: vi.fn(), getAllStock: vi.fn().mockResolvedValue({}), getCategories: vi.fn().mockResolvedValue([]),
-  getBlogs: vi.fn().mockResolvedValue([]), getBranches: vi.fn().mockResolvedValue([]), getStringOptions: vi.fn().mockResolvedValue([])
+  getBranches: vi.fn().mockResolvedValue([]), getStringOptions: vi.fn().mockResolvedValue([])
 }));
 vi.mock('../services/sportApi', () => ({ sportApi: api }));
 
@@ -30,7 +30,7 @@ afterEach(() => { cleanup(); scrollIntoView.mockClear(); alertMock.mockClear(); 
 
 const product: Product = {
   id: 'p28', slug: 'ao-28', name: 'Áo 28', brand: 'Yonex', category: 'Áo', price: 200000, image: 'x.jpg',
-  specs: {}, description: 'Mô tả', reviews: [], stock: 20, features: [],
+  specs: {}, description: 'Mô tả', stock: 20, features: [],
   vomaAttributes: [{ code: 'origin', name: 'Xuất xứ', value: 'Trung Quốc' }],
   tier_variations: [
     { tier_index: 1, name: 'Màu Sắc', options: ['Đỏ', 'Xanh'] },
@@ -54,14 +54,13 @@ describe('STOR-028 PDP mobile', () => {
   it('PDP ẩn nav đáy', async () => {
     const { container } = renderApp('/product/ao-28');
     await screen.findByText('Áo 28', { selector: 'h1' }, { timeout: 60000 });
-    expect(screen.queryByText('Chọn vợt')).toBeNull(); // AC2
+    expect(container.querySelector('div.md\\:hidden.fixed.bottom-0')).toBeNull(); // AC2
     expect((container.firstChild as HTMLElement).className).not.toContain('pb-16'); // AC3
   });
 
   it('trang khác PDP vẫn có nav đáy và pb-16', async () => {
     const { container } = renderApp('/catalog');
-    await screen.findByText('Chọn vợt', {}, { timeout: 60000 });
-    expect(screen.getByText('Chọn vợt')).toBeTruthy();
+    await waitFor(() => expect(container.querySelector('div.md\\:hidden.fixed.bottom-0')).not.toBeNull(), { timeout: 60000 });
     expect((container.firstChild as HTMLElement).className).toContain('pb-16');
   });
 
@@ -108,7 +107,7 @@ describe('STOR-028 PDP mobile', () => {
   it('tab: nhãn không xuống dòng, hàng tab cuộn ngang', () => {
     render(<ProductDetailTabs product={product} isRacket={false} activeTab="details" onTabChange={vi.fn()} />);
     const tabs = screen.getAllByRole('button');
-    expect(tabs.length).toBe(3);
+    expect(tabs.length).toBe(2);
     tabs.forEach(b => expect(b.className).toContain('whitespace-nowrap')); // AC8
     expect(tabs[0].parentElement!.className).toContain('overflow-x-auto'); // AC9
   });

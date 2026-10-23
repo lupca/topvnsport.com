@@ -158,7 +158,6 @@ const base: Product = {
   image: 'https://example.com/x.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: undefined,
   variants: [{ tier_1_option: null, tier_2_option: null, sku_code: 'SKU-1', price: 100000, stock: undefined }]
 } as Product;
@@ -177,7 +176,7 @@ function detail(product: Product) {
   const store = configureStore({
     reducer: { appData: appDataReducer, cart: cartReducer },
     preloadedState: {
-      appData: { products: [product], blogs: [], branches: [], stringOptions: [], stringOptionsError: false, categories: [], isLoading: false },
+      appData: { products: [product], branches: [], stringOptions: [], stringOptionsError: false, categories: [], isLoading: false },
       cart: { items: [], isOpen: false, quickViewProduct: null }
     } as any
   });

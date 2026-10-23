@@ -8,7 +8,7 @@ import { Product } from '../types';
 function makeProduct(noString: object, string: object): Product {
   return {
     id: '337', name: 'Vợt', brand: 'Cannon', category: 'Vợt', price: 1100000, salePrice: 1100000, image: 'x.jpg',
-    specs: {}, description: '', reviews: [], stock: 5,
+    specs: {}, description: '', stock: 5,
     tier_variations: [
       { tier_index: 1, name: 'Màu', options: ['Deep Teal'] },
       { tier_index: 2, name: 'Loại Cước', options: ['Khung không dây', 'Exbolt 65'] }

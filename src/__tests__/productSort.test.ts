@@ -3,7 +3,7 @@ import { sortProducts } from '../utils/productSort';
 import { Product } from '../types';
 
 const mk = (id: string, o: Partial<Product> = {}): Product =>
-  ({ id, name: id, image: '', category: '', price: 100, specs: {}, description: '', reviews: [], ...o } as Product);
+  ({ id, name: id, image: '', category: '', price: 100, specs: {}, description: '', ...o } as Product);
 const ids = (l: Product[]) => l.map(p => p.id);
 
 describe('sortProducts', () => {

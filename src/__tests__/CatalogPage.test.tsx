@@ -38,7 +38,6 @@ function makeProduct(overrides: Partial<Product>): Product {
     price: 500000,
     specs: overrides.specs || {},
     description: '',
-    reviews: [],
     stock: 5,
     ...overrides
   };
@@ -48,7 +47,7 @@ function renderCatalogPage(categories: Category[], products: Product[]) {
   const store = configureStore({
     reducer: { appData: appDataReducer, cart: cartReducer, catalog: catalogReducer },
     preloadedState: {
-      appData: { products, blogs: [], branches: [], stringOptions: [], categories, isLoading: false },
+      appData: { products, branches: [], stringOptions: [], categories, isLoading: false },
       cart: { items: [], isOpen: false, quickViewProduct: null }
     } as any
   });

@@ -43,7 +43,6 @@ const product341: Product = {
   image: 'https://example.com/341.jpg',
   specs: {},
   description: '',
-  reviews: [],
   stock: 10,
   tier_variations: [
     { tier_index: 1, name: 'Màu Sắc', options: ['DAZZLING BLUE'] },
@@ -76,7 +75,7 @@ function renderCartModal(cartItems: CartItem[], products: Product[] = [product34
   const store = configureStore({
     reducer: { appData: appDataReducer },
     preloadedState: {
-      appData: { products, blogs: [], branches: [], stringOptions: [], categories: [], isLoading }
+      appData: { products, branches: [], stringOptions: [], categories: [], isLoading }
     } as any
   });
 

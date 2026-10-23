@@ -12,7 +12,6 @@ const products: Product[] = [
     price: 100000,
     specs: { weight: '4U', stiffness: 'Stiff', balance: 300, maxTension: 28 },
     description: '',
-    reviews: [],
     stock: 10
   },
   {
@@ -24,7 +23,6 @@ const products: Product[] = [
     price: 100000,
     specs: { weight: '4U', stiffness: 'Stiff', balance: 300, maxTension: 28 },
     description: '',
-    reviews: [],
     stock: 10
   }
 ];

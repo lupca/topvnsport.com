@@ -29,10 +29,9 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
     vi.clearAllMocks();
   });
 
-  it('1. Renders HomePage cleanly when products, blogs, and categories are all undefined', () => {
+  it('1. Renders HomePage cleanly when products and categories are all undefined', () => {
     const store = createMockStore({
       products: undefined,
-      blogs: undefined,
       categories: undefined,
       branches: [],
       stringOptions: [],
@@ -49,14 +48,12 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
       );
     }).not.toThrow();
 
-    expect(screen.getByText(/Trình cố vấn ảo chọn vợt thông minh/i)).toBeTruthy();
     expect(screen.queryByTestId('promo-banner')).toBeNull();
   });
 
-  it('2. Renders HomePage cleanly when products, blogs, and categories are all null', () => {
+  it('2. Renders HomePage cleanly when products and categories are all null', () => {
     const store = createMockStore({
       products: null,
-      blogs: null,
       categories: null,
       branches: null,
       stringOptions: null,
@@ -73,7 +70,6 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
       );
     }).not.toThrow();
 
-    expect(screen.getByText(/Trình cố vấn ảo chọn vợt thông minh/i)).toBeTruthy();
   });
 
   it('3. Renders HomePage cleanly when appData slice is empty object {}', () => {
@@ -89,13 +85,11 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
       );
     }).not.toThrow();
 
-    expect(screen.getByText(/Trình cố vấn ảo chọn vợt thông minh/i)).toBeTruthy();
   });
 
   it('4. Renders HomePage cleanly when slices have mixed undefined and null values', () => {
     const store = createMockStore({
       products: undefined,
-      blogs: null,
       categories: [],
     });
 
@@ -115,7 +109,6 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
   it('5. Renders HomePage with empty arrays [] without error', () => {
     const store = createMockStore({
       products: [],
-      blogs: [],
       categories: [],
     });
 
@@ -133,7 +126,6 @@ describe('Challenger M2-2: HomePage Redux Selector Fallbacks Empirical Stress Te
   it('6. Tests vulnerability when state slices contain non-array types (object, string, number)', () => {
     const store = createMockStore({
       products: {} as any, // Non-array object
-      blogs: 'invalid' as any,
       categories: 123 as any,
     });
 

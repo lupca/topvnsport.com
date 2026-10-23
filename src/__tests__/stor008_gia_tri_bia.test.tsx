@@ -23,7 +23,6 @@ const base: Product = {
   image: '',
   specs: {},
   description: '',
-  reviews: [],
   stock: 5,
   variants: [{ tier_1_option: null, tier_2_option: null, sku_code: 'SKU-NP', price: 0, stock: 5 }]
 };

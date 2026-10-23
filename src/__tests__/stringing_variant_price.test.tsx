@@ -7,7 +7,7 @@ import { Product } from '../types';
 
 const product: Product = {
   id: '337', name: 'Vợt', brand: 'Lining', category: 'Vợt', price: 900000, salePrice: 900000, image: 'x.jpg',
-  specs: {}, description: '', reviews: [], stock: 5,
+  specs: {}, description: '', stock: 5,
   tier_variations: [
     { tier_index: 1, name: 'Màu', options: ['Đỏ'] },
     { tier_index: 2, name: 'Loại Cước', options: ['Khung trơn', 'BG65'] }

@@ -12,11 +12,11 @@ import catalogReducer from '../features/catalog/catalogSlice';
 import { readFileSync } from 'node:fs';
 
 const prod = (id: string, extra: Record<string, unknown> = {}) =>
-  ({ id, name: `SP ${id}`, brand: 'B', image: '', price: 100000, specs: {}, stock: 1, reviews: [], ...extra }) as any;
+  ({ id, name: `SP ${id}`, brand: 'B', image: '', price: 100000, specs: {}, stock: 1, ...extra }) as any;
 
 function renderHome(products: any[]) {
   const store = configureStore({
-    reducer: { appData: (state = { products, blogs: [], categories: [] }) => state, cart: cartReducer, catalog: catalogReducer },
+    reducer: { appData: (state = { products, categories: [] }) => state, cart: cartReducer, catalog: catalogReducer },
     preloadedState: {
       cart: { items: [], isOpen: false, quickViewProduct: null },
       catalog: { selectedCategory: null, searchKeyword: '', priceRange: [0, 10000000], sortBy: 'featured' },

@@ -13,7 +13,7 @@ afterEach(cleanup);
 
 const racket: Product = {
   id: 'r1', slug: 'vot-test', name: 'Vợt test', brand: 'B', categoryCode: RACKET_CATEGORY_CODES[0],
-  price: 1000000, image: '', specs: {}, description: '', reviews: [], stock: 5
+  price: 1000000, image: '', specs: {}, description: '', stock: 5
 } as any;
 
 const noop = () => {};

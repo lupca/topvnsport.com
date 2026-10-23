@@ -24,7 +24,7 @@ const fmt = (n: number) => `${n.toLocaleString('vi-VN')}đ`;
 
 const racket: Product = {
   id: 'r1', slug: 'vot-test', name: 'Vợt test', brand: 'B', categoryCode: RACKET_CATEGORY_CODES[0],
-  price: 6480000, image: '', specs: {}, description: '', reviews: [], stock: 5,
+  price: 6480000, image: '', specs: {}, description: '', stock: 5,
   tier_variations: [{ tier_index: 1, name: 'Màu', options: ['Đỏ'] }],
   variants: [{ tier_1_option: 'Đỏ', tier_2_option: null, sku_code: 'R1', price: 3240000, stock: 5 }]
 } as any;
@@ -40,7 +40,7 @@ function mountRoute(extra: Record<string, unknown> = {}) {
   const store = configureStore({
     reducer: { appData: appDataReducer, cart: cartReducer },
     preloadedState: {
-      appData: { products: [racket], blogs: [], branches: [], stringOptions: [kizuna], categories: [], isLoading: false, ...extra },
+      appData: { products: [racket], branches: [], stringOptions: [kizuna], categories: [], isLoading: false, ...extra },
       cart: { items: [], isOpen: false, quickViewProduct: null }
     } as any
   });
@@ -73,7 +73,7 @@ describe('STOR-016 bỏ cước rời', () => {
     const store = configureStore({
       reducer: { appData: appDataReducer },
       preloadedState: {
-        appData: { products: [racket], blogs: [], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: false }
+        appData: { products: [racket], branches: [], stringOptions: [], categories: [], isLoading: false, categoriesError: false, productsError: false }
       } as any
     });
     render(
