@@ -7,6 +7,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import appDataReducer from '../features/appData/appDataSlice';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
+import { PROVINCE_BODY, WARD_BODY, pickAdminUnits } from './fixtures/adminUnits';
 
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn().mockResolvedValue(undefined) } }));
 
@@ -29,6 +30,10 @@ beforeEach(() => {
   calls = [];
   onClearCart.mockClear();
   vi.stubGlobal('fetch', vi.fn(async (url: string, init: any) => {
+    if (url.startsWith('/api/oms/admin-units')) {
+      const json = url.includes('level=ward') ? WARD_BODY : PROVINCE_BODY;
+      return { ok: true, status: 200, json: async () => json, text: async () => JSON.stringify(json) };
+    }
     const body = init?.body ? JSON.parse(init.body) : undefined;
     calls.push({ url, body });
     const json = url.endsWith('/verify-otp') ? { success: true, verification_token: 'vt' }
@@ -52,8 +57,7 @@ async function run(payment: 'COD' | 'SePay') {
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: ' Nguyễn Test ' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập phường/xã'), { target: { value: 'Phường A' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập tỉnh/thành phố'), { target: { value: 'Tỉnh B' } });
+  await pickAdminUnits();
   fireEvent.click(screen.getByText(payment === 'COD' ? 'Thanh toán COD' : 'SePay QR Code'));
   fireEvent.click(screen.getByRole('button', { name: /Xác nhận đặt hàng|Thanh toán SePay/ }));
   fireEvent.change(await screen.findByPlaceholderText('Nhập 6 số OTP'), { target: { value: '123456' } });
@@ -66,7 +70,7 @@ describe('STOR-034 CartModal -> /api/oms/checkout chain', () => {
     await run('COD');
     expect(calls.map(c => c.url)).toEqual(['/api/oms/checkout/send-otp', '/api/oms/checkout/verify-otp', '/api/oms/checkout/orders']);
     const order = calls[2].body;
-    expect(order.customer).toEqual({ name: 'Nguyễn Test', phone: '0987654321', address: 'Số 1, Phường A, Tỉnh B' });
+    expect(order.customer).toEqual({ name: 'Nguyễn Test', phone: '0987654321', address: 'Số 1, Phường Ba Đình, Hà Nội' });
     expect(order).not.toHaveProperty('customer_id');
     expect(order).not.toHaveProperty('channel_id');
     expect(order.note).toBe(`Đơn web - Giao tiêu chuẩn | COD | Đan cước ${SKU}: BG80 11 Kg`);

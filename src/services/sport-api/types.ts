@@ -77,6 +77,9 @@ export type CreateOrderItem = {
   quantity: number;
 };
 
+// Hợp đồng OMS (A) GET /public/admin-units: chỉ 4 trường này.
+export type AdminUnit = { code: string; level: 'province' | 'ward'; name: string; parent_code: string | null };
+
 export type CreateOrderPayload = {
   customer: { name: string; phone: string; address?: string };
   shipping_fee: number;

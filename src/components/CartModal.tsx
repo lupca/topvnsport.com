@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck, QrCode, CreditCard } from 'lucide-react';
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
@@ -7,6 +7,8 @@ import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, up
 import { isStringingTierName } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal from './OtpModal';
+import AdminUnitPicker from './AdminUnitPicker';
+import { AdminUnit } from '../services/sport-api/types';
 
 
 export interface CartItem {
@@ -35,6 +37,17 @@ interface CartModalProps {
   onRemoveItem: (id: string) => void;
   onClearCart: () => void;
 }
+
+const PROVINCES_LOAD_ERROR_MESSAGE = 'Không tải được danh sách tỉnh/thành phố.';
+const WARDS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách phường/xã.';
+
+// Lời lỗi OMS (top-level message) nguyên văn; không có -> câu cố định.
+function adminUnitsErrorMessage(err: any, fixed: string): string {
+  return typeof err?.body?.message === 'string' ? err.body.message : fixed;
+}
+
+type UnitList = { units: AdminUnit[] | null; loading: boolean; error: string | null };
+const EMPTY_LIST: UnitList = { units: null, loading: false, error: null };
 
 const PRODUCTS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách sản phẩm. Vui lòng tải lại trang.';
 
@@ -66,8 +79,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const [address, setAddress] = useState('');
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'fast'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'sepay'>('sepay');
-  const [ward, setWard] = useState('');
-  const [province, setProvince] = useState('');
+  // Tỉnh/xã chọn từ danh mục OMS; mã giữ trong state để STOR-037 gửi cùng delivery_option.
+  const [province, setProvince] = useState<AdminUnit | null>(null);
+  const [ward, setWard] = useState<AdminUnit | null>(null);
+  const [provinceQuery, setProvinceQuery] = useState('');
+  const [wardQuery, setWardQuery] = useState('');
+  const [provinces, setProvinces] = useState<UnitList>(EMPTY_LIST);
+  const [wards, setWards] = useState<UnitList>(EMPTY_LIST);
+  const provincesInFlight = useRef(false);
+  const wardsParent = useRef<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [verificationToken, setVerificationToken] = useState('');
@@ -82,6 +102,50 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     }
     setStep(1);
   }, [isOpen]);
+
+  const loadProvinces = async () => {
+    if (provincesInFlight.current) return;
+    provincesInFlight.current = true;
+    setProvinces({ units: null, loading: true, error: null });
+    try {
+      setProvinces({ units: await sportApi.getAdminUnits('province'), loading: false, error: null });
+    } catch (err: any) {
+      setProvinces({ units: null, loading: false, error: adminUnitsErrorMessage(err, PROVINCES_LOAD_ERROR_MESSAGE) });
+    } finally {
+      provincesInFlight.current = false;
+    }
+  };
+
+  const loadWards = async (provinceCode: string) => {
+    wardsParent.current = provinceCode;
+    setWards({ units: null, loading: true, error: null });
+    try {
+      const units = await sportApi.getAdminUnits('ward', provinceCode);
+      if (wardsParent.current === provinceCode) setWards({ units, loading: false, error: null });
+    } catch (err: any) {
+      if (wardsParent.current === provinceCode) {
+        setWards({ units: null, loading: false, error: adminUnitsErrorMessage(err, WARDS_LOAD_ERROR_MESSAGE) });
+      }
+    }
+  };
+
+  // Mở bước 2 mà chưa có danh sách tỉnh -> tải. Lỗi thì dừng, chờ khách bấm "Thử lại".
+  useEffect(() => {
+    if (isOpen && step === 2 && !provinces.units && !provinces.loading && !provinces.error) void loadProvinces();
+  }, [isOpen, step, provinces]);
+
+  // Đổi tỉnh (chọn tỉnh khác hoặc gõ lại) -> xoá xã đã chọn và chữ tìm xã.
+  const handleProvinceChange = (unit: AdminUnit | null) => {
+    setProvince(unit);
+    setWard(null);
+    setWardQuery('');
+    if (unit) {
+      void loadWards(unit.code);
+    } else {
+      wardsParent.current = null;
+      setWards(EMPTY_LIST);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -129,8 +193,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       return;
     }
 
-    if (![fullName, phone, address, ward, province].every(v => v.trim())) {
-      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại, địa chỉ, phường/xã và tỉnh/thành phố nhận hàng.');
+    if (![fullName, phone, address].every(v => v.trim())) {
+      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại và địa chỉ nhận hàng.');
+      return;
+    }
+    if (!province?.code || !ward?.code) {
+      await popupService.alert('Vui lòng chọn tỉnh/thành phố và phường/xã nhận hàng từ danh sách.');
       return;
     }
 
@@ -153,7 +221,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
     setIsSubmitting(true);
     try {
-      const shippingAddress = [address, ward, province].map(v => v.trim()).join(', ');
+      const shippingAddress = [address.trim(), ward.name, province.name].join(', ');
       // Đã kiểm MỌI SKU ngay đầu handleCheckoutSubmit (trước cả sendOtp) --
       // không lặp lại kiểm ở đây.
       const items = cartItems.map(item => {
@@ -386,29 +454,32 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Phường/Xã *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nhập phường/xã"
-                    value={ward}
-                    onChange={e => setWard(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
-                  />
-                </div>
+                <AdminUnitPicker
+                  label="Tỉnh/Thành phố"
+                  placeholder="Chọn tỉnh/thành phố"
+                  units={provinces.units}
+                  value={province}
+                  query={provinceQuery}
+                  onQueryChange={setProvinceQuery}
+                  onChange={handleProvinceChange}
+                  loading={provinces.loading}
+                  error={provinces.error}
+                  onRetry={() => void loadProvinces()}
+                />
 
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Tỉnh/Thành phố *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nhập tỉnh/thành phố"
-                    value={province}
-                    onChange={e => setProvince(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
-                  />
-                </div>
+                <AdminUnitPicker
+                  label="Phường/Xã"
+                  placeholder={province ? 'Chọn phường/xã' : 'Chọn tỉnh/thành phố trước'}
+                  units={wards.units}
+                  value={ward}
+                  query={wardQuery}
+                  onQueryChange={setWardQuery}
+                  onChange={setWard}
+                  loading={wards.loading}
+                  error={wards.error}
+                  onRetry={() => province && void loadWards(province.code)}
+                  disabled={!province}
+                />
               </div>
 
               {/* Shipping Method */}

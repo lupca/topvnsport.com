@@ -16,3 +16,9 @@ describe('Header search logic', () => {
     expect(matches.some(product => product.category === 'Cước')).toBe(true);
   });
 });
+
+describe('normalizeSearchText đ->d (STOR-036)', () => {
+  test('Phường Ba Đình -> phuong ba dinh', () => {
+    expect(normalizeSearchText('Phường Ba Đình')).toBe('phuong ba dinh');
+  });
+});

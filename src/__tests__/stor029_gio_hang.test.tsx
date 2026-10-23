@@ -6,6 +6,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import appDataReducer from '../features/appData/appDataSlice';
 import cartReducer, { clearCart } from '../features/cart/cartSlice';
+import { getAdminUnitsFromFixture, pickAdminUnits, ADDRESS_SUFFIX } from './fixtures/adminUnits';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 
@@ -20,6 +21,7 @@ vi.mock('../services/sportApi', () => ({
     sendOtp: (...a: unknown[]) => sendOtpMock(...a),
     verifyOtp: (...a: unknown[]) => verifyOtpMock(...a),
     createOrder: (...a: unknown[]) => createOrderMock(...a),
+    getAdminUnits: (...a: [string, string?]) => getAdminUnitsFromFixture(a[0]),
     createSepayCheckout: vi.fn()
   }
 }));
@@ -85,8 +87,7 @@ async function fillForm() {
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Test' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: '  Số 1 Test ' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập phường/xã'), { target: { value: ' Phường A ' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập tỉnh/thành phố'), { target: { value: 'Tỉnh B ' } });
+  await pickAdminUnits();
   fireEvent.click(screen.getByText('Thanh toán COD'));
 }
 async function placeOrder() {
@@ -171,22 +172,32 @@ describe('STOR-029 địa chỉ', () => {
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'A' } });
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
     fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
-    fireEvent.change(screen.getByPlaceholderText('Nhập tỉnh/thành phố'), { target: { value: 'Tỉnh B' } });
+    fireEvent.focus(await screen.findByRole('combobox', { name: 'Tỉnh/Thành phố' }));
+    fireEvent.click(await screen.findByRole('option', { name: 'Hà Nội' }));
+    fireEvent.click(screen.getByRole('button', { name: /Thanh toán SePay|Xác nhận đặt hàng/ }));
+    await waitFor(() => expect(alertMock).toHaveBeenCalled());
+    expect(sendOtpMock).not.toHaveBeenCalled();
+  });
+  it('thieu-tinh-chan-otp', async () => {
+    setup([shirtItem]); toStep2();
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'A' } });
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
     fireEvent.click(screen.getByRole('button', { name: /Thanh toán SePay|Xác nhận đặt hàng/ }));
     await waitFor(() => expect(alertMock).toHaveBeenCalled());
     expect(sendOtpMock).not.toHaveBeenCalled();
   });
   it('dia-chi-gui-oms', async () => {
     setup([shirtItem]); await placeOrder();
-    expect(createOrderMock.mock.calls[0][0].shipping_address).toBe('Số 1 Test, Phường A, Tỉnh B');
+    expect(createOrderMock.mock.calls[0][0].shipping_address).toBe('Số 1 Test, Phường Ba Đình, Hà Nội');
   });
   it('dia-chi-khach-hang', async () => {
     setup([shirtItem]); await placeOrder();
-    expect(createOrderMock.mock.calls[0][0].customer.address).toBe('Số 1 Test, Phường A, Tỉnh B');
+    expect(createOrderMock.mock.calls[0][0].customer.address).toBe('Số 1 Test, Phường Ba Đình, Hà Nội');
   });
   it('man-thanh-cong-dia-chi', async () => {
     setup([shirtItem]); await placeOrder();
-    expect(await screen.findByText(/Số 1 Test, Phường A, Tỉnh B/)).toBeInTheDocument();
+    expect(await screen.findByText(/Số 1 Test, Phường Ba Đình, Hà Nội/)).toBeInTheDocument();
   });
 });
 
