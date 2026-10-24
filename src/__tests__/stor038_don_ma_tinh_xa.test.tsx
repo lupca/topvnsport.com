@@ -39,6 +39,7 @@ const ordersOf = () => calls.filter(c => c.url.endsWith('/orders'));
 const quotesOf = () => calls.filter(c => c.url === '/api/oms/shipping-quote');
 
 beforeEach(() => {
+  sessionStorage.clear();
   calls = []; alertMock.mockClear(); onClearCart.mockClear();
   quoteBody = QUOTE_200;
   orderReply = { status: 201, body: ORDER_201_STANDARD_COD };
@@ -232,10 +233,10 @@ describe('STOR-038 422 của (C)', () => {
     await sendOtpAndOrder();
     await waitFor(() => expect(alertMock).toHaveBeenCalledWith(fixedFallback));
   });
-  it('AC32 403 OTP vẫn hiện câu hết hạn như cũ', async () => {
+  it('AC32 403 OTP hiện lời OMS (STOR-042)', async () => {
     orderReply = { status: 403, body: ERR_403_TOKEN };
     await sendOtpAndOrder();
-    await waitFor(() => expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Mã xác thực OTP đã hết hạn hoặc không hợp lệ')));
+    await waitFor(() => expect(alertMock).toHaveBeenCalledWith('Mã xác minh không hợp lệ.'));
   });
 });
 

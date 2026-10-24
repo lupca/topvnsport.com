@@ -125,6 +125,7 @@ async function orderNote() {
 
 describe('STOR-018 -- độ căng của món đan cước đi vào note đơn OMS', () => {
   beforeEach(() => {
+    sessionStorage.clear();
     createOrderMock.mockClear();
     sendOtpMock.mockClear();
   });

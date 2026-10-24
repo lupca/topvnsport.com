@@ -7,7 +7,7 @@ import { popupService } from '@topvnsport/ui-kit';
 import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity, CartItemSkuStatus } from '../features/cart/cartSlice';
 import { isStringingTierName } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import OtpModal from './OtpModal';
+import OtpModal, { getStoredCooldown, markOtpSent } from './OtpModal';
 import AdminUnitPicker from './AdminUnitPicker';
 import { AdminUnit, DeliveryOption, ShippingQuote, ShippingQuoteOption } from '../services/sport-api/types';
 
@@ -46,6 +46,26 @@ const WARDS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách phường/xã
 function adminUnitsErrorMessage(err: any, fixed: string): string {
   return typeof err?.body?.message === 'string' ? err.body.message : fixed;
 }
+
+// Lời lỗi cho khách: chuỗi trong body OMS, rồi err.message, rồi câu cố định.
+function errorText(err: any, fixed: string): string {
+  const b = err?.body;
+  const candidates = [typeof b === 'string' ? b : null, b?.message, b?.detail, err?.message];
+  const found = candidates.find((c): c is string => typeof c === 'string' && c.trim() !== '');
+  return found ?? fixed;
+}
+
+// POST /orders lỗi mà không biết OMS đã tạo đơn chưa: mất kết nối, hết giờ, 5xx, phản hồi hỏng.
+function isOutcomeUnknown(err: any): boolean {
+  if (err?.kind === 'network' || err?.kind === 'timeout' || err?.kind === 'invalid_response') return true;
+  return typeof err?.status !== 'number' || err.status >= 500;
+}
+
+const UNCERTAIN_ORDER_MESSAGE = 'Chưa chắc đơn đã được tạo vì kết nối tới cửa hàng bị gián đoạn. Xin đừng đặt lại ngay: hãy kiểm tra tin nhắn/email xác nhận đơn hoặc liên hệ cửa hàng để hỏi đơn theo số điện thoại đã nhập, rồi mới đặt lại nếu chưa có đơn.';
+const MISSING_ORDER_NUMBER_MESSAGE = 'Chưa chắc đơn đã được tạo: hệ thống phản hồi nhưng không trả về mã đơn hàng. Xin đừng đặt lại ngay: hãy kiểm tra tin nhắn/email xác nhận đơn hoặc liên hệ cửa hàng để hỏi đơn theo số điện thoại đã nhập.';
+const ORDER_FAILED_MESSAGE = 'Chưa tạo được đơn hàng. Vui lòng thử lại!';
+const TOKEN_REJECTED_MESSAGE = 'Mã xác thực OTP đã hết hạn hoặc không hợp lệ. Vui lòng xác thực lại số điện thoại.';
+const PAYMENT_OPEN_FAILED_MESSAGE = 'Cổng thanh toán chưa phản hồi. Vui lòng bấm "Thanh toán lại".';
 
 type UnitList = { units: AdminUnit[] | null; loading: boolean; error: string | null };
 const EMPTY_LIST: UnitList = { units: null, loading: false, error: null };
@@ -90,7 +110,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const productsError = useAppSelector(state => state.appData.productsError);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   // Ảnh chụp đơn lúc đặt (COD) -- bước 3 đọc từ đây, không đọc giỏ (giỏ đã xoá).
-  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null; shippingFee: number | null; adjusted: boolean } | null>(null);
+  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null; shippingFee: number | null; adjusted: boolean; method: 'cod' | 'sepay' } | null>(null);
+  // SePay: đơn đã tạo nhưng chưa mở được trang thanh toán (null = chưa lỗi).
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [isPaying, setIsPaying] = useState(false);
+  // Đặt đơn lỗi mà chưa biết đơn đã tạo chưa: khoá nút tới khi khách xác nhận đã kiểm tra.
+  const [orderUncertain, setOrderUncertain] = useState<string | null>(null);
   
   // Checkout Fields
   const [fullName, setFullName] = useState('');
@@ -130,6 +155,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     if (isOpen) return;
     if (step === 3) {
       setPlacedOrder(null);
+      setPaymentError(null);
       setVerificationToken('');
     }
     setStep(1);
@@ -254,6 +280,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
   const handleCheckoutSubmit = async (e?: React.FormEvent, tokenOverride?: string) => {
     if (e) e.preventDefault();
+    if (orderUncertain || isSubmitting) return;
 
     // Kiểm SKU của MỌI món hàng TRƯỚC bất kỳ lời gọi API nào (kể cả sendOtp)
     // -- khách không nhận OTP/không bị tạo hồ sơ khách hàng rồi mới bị chặn.
@@ -289,9 +316,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     // Send the initial OTP before opening the verification modal so provider
     // errors (for example, a phone number without Zalo) block checkout here.
     if (!activeToken) {
+      // Vừa gửi OTP cho số này (chưa quá 60s): mở lại modal, không gửi thêm (send-otp sẽ 429).
+      if (getStoredCooldown(phoneNormalized) > 0) {
+        setIsOtpModalOpen(true);
+        return;
+      }
       setIsSubmitting(true);
       try {
         await sportApi.sendOtp(phoneNormalized);
+        markOtpSent(phoneNormalized);
         setIsOtpModalOpen(true);
       } catch (err: any) {
         await popupService.alert(err.message);
@@ -303,8 +336,9 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
     const clientTotal = orderTotal; // tổng khách đã thấy lúc bấm đặt
     setIsSubmitting(true);
+    const shippingAddress = [address.trim(), ward.name, province.name].join(', ');
+    let order: any;
     try {
-      const shippingAddress = [address.trim(), ward.name, province.name].join(', ');
       // Đã kiểm MỌI SKU ngay đầu handleCheckoutSubmit (trước cả sendOtp) --
       // không lặp lại kiểm ở đây.
       const items = cartItems.map(item => {
@@ -320,7 +354,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         .map(item => ` | Đan cước ${item.skuCode}: ${item.stringOption!.name} ${item.tension} Kg`)
         .join('');
 
-      const order = await sportApi.createOrder({
+      order = await sportApi.createOrder({
         customer: { name: fullName.trim(), phone: phoneNormalized, address: shippingAddress },
         items,
         shipping_fee: selectedFee,
@@ -332,51 +366,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         delivery_option: deliveryOption,
         payment_method: paymentMethod === 'cod' ? 'COD' : 'SEPAY',
       });
-
-      // Số của OMS (201) thắng số client; không hữu hạn -> null (không hiện số tự tính).
-      const serverNumber = (v: unknown): number | null => {
-        const n = Number(v);
-        if (v === null || v === undefined || v === '' || !Number.isFinite(n)) {
-          console.error('OMS 201 có số tiền không hợp lệ', v);
-          return null;
-        }
-        return n;
-      };
-      const serverTotal = serverNumber(order?.total_amount);
-      setPlacedOrder({
-        orderNumber: order?.order_number || '',
-        shippingAddress,
-        total: serverTotal,
-        shippingFee: serverNumber(order?.shipping_fee),
-        adjusted: serverTotal !== null && serverTotal !== clientTotal,
-      });
-
-      if (paymentMethod === 'sepay') {
-        const checkoutForm = await sportApi.createSepayCheckout(order.order_number);
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = checkoutForm.action;
-        for (const [key, value] of Object.entries(checkoutForm.fields)) {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = value as string;
-          form.appendChild(input);
-        }
-        document.body.appendChild(form);
-        onClearCart();
-        form.submit();
-        return;
-      }
-
-      // Đơn COD đã tạo trên OMS -> xoá giỏ NGAY (như đường SePay), chống đặt trùng.
-      onClearCart();
-      setStep(3);
     } catch (err: any) {
       console.error(err);
+      setIsSubmitting(false);
       if (err.status === 403) {
-        await popupService.alert('Mã xác thực OTP đã hết hạn hoặc không hợp lệ. Vui lòng tải lại trang và xác thực lại.');
         setVerificationToken('');
+        await popupService.alert(errorText(err, TOKEN_REJECTED_MESSAGE));
       } else if (err.status === 422) {
         // Lỗi nghiệp vụ/schema của (C): hiện lời OMS, ở lại bước 2, giữ giỏ + token OTP.
         const body = err.body;
@@ -385,11 +380,72 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           : typeof body?.detail?.[0]?.msg === 'string' && body.detail[0].msg.trim() ? body.detail[0].msg : null;
         await popupService.alert(omsMessage ?? ORDER_REJECTED_MESSAGE);
         if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE') retryQuote();
+      } else if (isOutcomeUnknown(err)) {
+        setOrderUncertain(UNCERTAIN_ORDER_MESSAGE);
+        await popupService.alert(UNCERTAIN_ORDER_MESSAGE);
       } else {
-        await popupService.alert('Có lỗi xảy ra khi tạo đơn hàng trên OMS. Vui lòng thử lại!');
+        await popupService.alert(errorText(err, ORDER_FAILED_MESSAGE));
       }
+      return;
+    }
+    setIsSubmitting(false);
+
+    if (!order?.order_number) {
+      // 201 không có mã đơn: không sang bước thành công, không gọi thanh toán.
+      console.error('OMS 201 thiếu order_number', order);
+      setOrderUncertain(MISSING_ORDER_NUMBER_MESSAGE);
+      await popupService.alert(MISSING_ORDER_NUMBER_MESSAGE);
+      return;
+    }
+
+    // Số của OMS (201) thắng số client; không hữu hạn -> null (không hiện số tự tính).
+    const serverNumber = (v: unknown): number | null => {
+      const n = Number(v);
+      if (v === null || v === undefined || v === '' || !Number.isFinite(n)) {
+        console.error('OMS 201 có số tiền không hợp lệ', v);
+        return null;
+      }
+      return n;
+    };
+    const serverTotal = serverNumber(order.total_amount);
+    setPlacedOrder({
+      orderNumber: order.order_number,
+      shippingAddress,
+      total: serverTotal,
+      shippingFee: serverNumber(order.shipping_fee),
+      adjusted: serverTotal !== null && serverTotal !== clientTotal,
+      method: paymentMethod,
+    });
+
+    // Đơn đã tạo trên OMS -> xoá giỏ NGAY, chống đặt trùng (kể cả khi bước thanh toán lỗi).
+    onClearCart();
+    setStep(3);
+    if (paymentMethod === 'sepay') await openSepay(order.order_number);
+  };
+
+  // Chỉ gọi /payments với mã đơn đã có -- không bao giờ tạo đơn lại.
+  const openSepay = async (orderNumber: string) => {
+    setIsPaying(true);
+    setPaymentError(null);
+    try {
+      const checkoutForm = await sportApi.createSepayCheckout(orderNumber);
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = checkoutForm.action;
+      for (const [key, value] of Object.entries(checkoutForm.fields)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value as string;
+        form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+    } catch (err: any) {
+      console.error(err);
+      setPaymentError(errorText(err, PAYMENT_OPEN_FAILED_MESSAGE));
     } finally {
-      setIsSubmitting(false);
+      setIsPaying(false);
     }
   };
 
@@ -397,6 +453,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     onClearCart();
     setStep(1);
     setPlacedOrder(null);
+    setPaymentError(null);
     setVerificationToken('');
     onClose();
   };
@@ -412,7 +469,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           <div className="flex items-center gap-2">
             <ShoppingBag className="w-5 h-5 text-brand-primary" />
             <span className="font-display font-black text-base text-gray-900 uppercase">
-              {step === 1 ? 'Giỏ Hàng Của Bạn' : step === 2 ? 'Thanh Toán Đơn Hàng' : 'Đặt Hàng Thành Công'}
+              {step === 1 ? 'Giỏ Hàng Của Bạn' : step === 2 || placedOrder?.method === 'sepay' ? 'Thanh Toán Đơn Hàng' : 'Đặt Hàng Thành Công'}
             </span>
           </div>
           <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-900 transition">
@@ -525,7 +582,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           )}
 
           {step === 2 && (
-            <form onSubmit={handleCheckoutSubmit} className="space-y-4">
+            <form id="checkout-form" noValidate onSubmit={handleCheckoutSubmit} className="space-y-4">
+              {orderUncertain && (
+                <div role="alert" className="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] p-3 rounded-lg space-y-2">
+                  <p>{orderUncertain}</p>
+                  <button type="button" onClick={() => setOrderUncertain(null)} className="underline font-bold">
+                    Tôi đã kiểm tra, chưa có đơn — cho phép đặt lại
+                  </button>
+                </div>
+              )}
               <div className="space-y-3">
                 <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary border-b border-gray-100 pb-1.5">Thông tin nhận hàng</h3>
                 
@@ -549,7 +614,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                     required
                     placeholder="Ví dụ: 0912345678"
                     value={phone}
-                    onChange={e => setPhone(e.target.value)}
+                    onChange={e => {
+                      setPhone(e.target.value);
+                      // Token OTP gắn với số đã xác thực; đổi số thì phải xác thực lại.
+                      if (verificationToken && normalizePhone(e.target.value) !== phoneNormalized) setVerificationToken('');
+                    }}
                     onBlur={() => setPhoneTouched(true)}
                     aria-invalid={showPhoneError}
                     className={`w-full bg-gray-50 border ${showPhoneError ? 'border-red-500' : 'border-gray-200'} rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition`}
@@ -677,7 +746,30 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
             </form>
           )}
 
-          {step === 3 && (
+          {step === 3 && placedOrder?.method === 'sepay' && (
+            <div className="text-center py-8 space-y-4">
+              {paymentError ? (
+                <>
+                  <h3 className="font-display font-black text-lg text-gray-900 uppercase">Chưa mở được trang thanh toán</h3>
+                  <p role="alert" className="text-xs text-red-600 font-semibold">
+                    Đã tạo đơn {placedOrder.orderNumber}. Chưa mở được trang thanh toán: {paymentError}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => void openSepay(placedOrder.orderNumber)}
+                    disabled={isPaying}
+                    className={`w-full text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm ${isPaying ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                  >
+                    {isPaying ? 'Đang xử lý...' : 'Thanh toán lại'}
+                  </button>
+                </>
+              ) : (
+                <p className="text-xs text-gray-500">Đã tạo đơn {placedOrder.orderNumber}. Đang chuyển tới trang thanh toán SePay...</p>
+              )}
+            </div>
+          )}
+
+          {step === 3 && placedOrder?.method !== 'sepay' && (
             <div className="text-center py-8 space-y-4 animate-in zoom-in-95 duration-200">
               <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto" />
               <h3 className="font-display font-black text-xl text-gray-900 uppercase">ĐẶT HÀNG THÀNH CÔNG!</h3>
@@ -746,17 +838,17 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
             ) : (
               <div className="flex gap-2.5">
                 <button
+                  type="button"
                   onClick={() => setStep(1)}
                   className="border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-sm transition"
                 >
                   Quay lại
                 </button>
                 <button
-                  onClick={() => {
-                    void handleCheckoutSubmit();
-                  }}
-                  disabled={isSubmitting || selectedFee === null || phoneBlocked}
-                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || selectedFee === null || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                  type="submit"
+                  form="checkout-form"
+                  disabled={isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked}
+                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
                 >
                   {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng'}
                 </button>

@@ -57,6 +57,12 @@ export function setStoredOtpCode(phone: string, code: string): void {
   } catch (e) {}
 }
 
+// Ghi nhận lần gửi OTP thật: đếm ngược 60s tính từ đây, mã cũ bị bỏ.
+export function markOtpSent(phone: string): void {
+  setStoredCooldownExpiry(phone, 60);
+  setStoredOtpCode(phone, '');
+}
+
 export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: OtpModalProps) {
   const [cooldown, setCooldown] = useState(() => getStoredCooldown(phoneNumber));
   const [otpCode, setOtpCode] = useState(() => getStoredOtpCode(phoneNumber));
@@ -67,6 +73,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
   useEffect(() => {
     if (!isOpen || !phoneNumber) return;
 
+    setErrorMessage('');
     const storedCode = getStoredOtpCode(phoneNumber);
     setOtpCode(storedCode);
 
@@ -94,7 +101,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
   }, [isOpen, phoneNumber]);
 
   const handleOtpCodeChange = (val: string) => {
-    const cleanCode = val.replace(/\D/g, '');
+    const cleanCode = val.replace(/\D/g, '').slice(0, 6);
     setOtpCode(cleanCode);
     setStoredOtpCode(phoneNumber, cleanCode);
   };
@@ -105,7 +112,8 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
     try {
       await sportApi.sendOtp(phoneNumber);
       setCooldown(60);
-      setStoredCooldownExpiry(phoneNumber, 60);
+      markOtpSent(phoneNumber);
+      setOtpCode('');
     } catch (err: any) {
       setErrorMessage(mapApiError(err.status, err.message));
     } finally {
@@ -125,13 +133,23 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
     try {
       const res = await sportApi.verifyOtp(phoneNumber, otpCode);
       if (res.success && res.verification_token) {
+        setStoredOtpCode(phoneNumber, '');
+        setOtpCode('');
         onSuccess(res.verification_token);
+      } else {
+        setErrorMessage('Xác thực chưa hoàn tất: hệ thống không trả về mã xác thực. Vui lòng thử lại hoặc gửi lại mã.');
       }
     } catch (err: any) {
       setErrorMessage(mapApiError(err.status, err.message));
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const handleClose = () => {
+    setStoredOtpCode(phoneNumber, '');
+    setOtpCode('');
+    onClose();
   };
 
   const mapApiError = (status: number, defaultMsg: string): string => {
@@ -154,7 +172,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
   return (
     <div className="fixed inset-0 bg-black/60 z-55 flex items-center justify-center p-4 animate-in fade-in duration-200" id="otp-verification-modal">
       <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl relative animate-in zoom-in-95 duration-200">
-        <button onClick={onClose} className="absolute right-4 top-4 text-gray-400 hover:text-gray-900 transition" type="button">
+        <button onClick={handleClose} className="absolute right-4 top-4 text-gray-400 hover:text-gray-900 transition" type="button">
           <X className="w-5 h-5" />
         </button>
 
@@ -179,7 +197,8 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
           <form onSubmit={handleVerify} className="space-y-4">
             <input
               type="text"
-              maxLength={6}
+              inputMode="numeric"
+              autoComplete="one-time-code"
               pattern="\d{6}"
               required
               placeholder="Nhập 6 số OTP"
