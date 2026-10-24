@@ -10,6 +10,8 @@ import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
 import { PHONE_REGEX, isValidPhone, normalizePhone, PHONE_ERROR_MESSAGE } from '../utils/phone';
 import { Product } from '../types';
+import { PROVINCE_BODY, WARD_BODY, pickAdminUnits } from './fixtures/adminUnits';
+import { QUOTE_200 } from './fixtures/shippingQuote';
 
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn().mockResolvedValue(undefined) } }));
 
@@ -32,6 +34,11 @@ beforeEach(() => {
   sessionStorage.clear();
   vi.stubGlobal('fetch', vi.fn(async (url: string, init: any) => {
     const body = init?.body ? JSON.parse(init.body) : undefined;
+    if (url.startsWith('/api/oms/admin-units')) {
+      const j = url.includes('level=ward') ? WARD_BODY : PROVINCE_BODY;
+      return { ok: true, status: 200, json: async () => j, text: async () => JSON.stringify(j) };
+    }
+    if (url === '/api/oms/shipping-quote') return { ok: true, status: 200, json: async () => QUOTE_200, text: async () => JSON.stringify(QUOTE_200) };
     calls.push({ url, body });
     const json = url.endsWith('/verify-otp') ? { success: true, verification_token: 'vt' }
       : url.endsWith('/orders') ? { id: 7, order_number: 'DH-7' }
@@ -51,11 +58,11 @@ function openStep2() {
 }
 const phoneInput = () => screen.getByPlaceholderText('Ví dụ: 0912345678') as HTMLInputElement;
 const orderBtn = () => screen.getByRole('button', { name: /Xác nhận đặt hàng/ }) as HTMLButtonElement;
-const fillOthers = () => {
+const fillOthers = async () => {
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Test' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập phường/xã'), { target: { value: 'Phường A' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập tỉnh/thành phố'), { target: { value: 'Tỉnh B' } });
+  await pickAdminUnits();
+  await screen.findByText('Giao hàng chuẩn'); // báo giá về -> có phí, nút đặt hàng không bị khoá vì thiếu giá
   fireEvent.click(screen.getByText('Thanh toán COD'));
 };
 const type = (v: string) => fireEvent.change(phoneInput(), { target: { value: v } });
@@ -95,8 +102,8 @@ describe('STOR-040 ô SĐT bước 2', () => {
     expect(screen.getByRole('alert')).toBeTruthy();
   });
 
-  it('nút đặt hàng khoá khi SĐT sai, mở khi đúng', () => {
-    openStep2(); fillOthers(); type('0212345678');
+  it('nút đặt hàng khoá khi SĐT sai, mở khi đúng', async () => {
+    openStep2(); await fillOthers(); type('0212345678');
     expect(orderBtn().disabled).toBe(true);
     type('0912345678');
     expect(orderBtn().disabled).toBe(false);
@@ -105,7 +112,7 @@ describe('STOR-040 ô SĐT bước 2', () => {
 
   it('SĐT còn trống: nút không khoá; bấm thì báo thiếu thông tin bằng lời, không gửi OTP', async () => {
     const spy = vi.spyOn(sportApi, 'sendOtp');
-    openStep2(); fillOthers(); type('');
+    openStep2(); await fillOthers(); type('');
     expect(orderBtn().disabled).toBe(false);
     fireEvent.click(orderBtn());
     await waitFor(() => expect(popupService.alert).toHaveBeenCalledWith(expect.stringContaining('Vui lòng cung cấp đầy đủ')));
@@ -114,7 +121,7 @@ describe('STOR-040 ô SĐT bước 2', () => {
 
   it('submit form với SĐT sai: không gọi sendOtp, không fetch send-otp', async () => {
     const spy = vi.spyOn(sportApi, 'sendOtp');
-    openStep2(); fillOthers(); type('0212345678');
+    openStep2(); await fillOthers(); type('0212345678');
     fireEvent.submit(phoneInput().closest('form')!);
     await Promise.resolve();
     expect(spy).not.toHaveBeenCalled();
@@ -123,7 +130,7 @@ describe('STOR-040 ô SĐT bước 2', () => {
   });
 
   it("'0912 345 678': send-otp, OtpModal, verify-otp, orders đều mang 0912345678", async () => {
-    openStep2(); fillOthers(); type('0912 345 678');
+    openStep2(); await fillOthers(); type('0912 345 678');
     fireEvent.click(orderBtn());
     fireEvent.change(await screen.findByPlaceholderText('Nhập 6 số OTP'), { target: { value: '123456' } });
     expect(screen.getByText('0912345678', { selector: 'strong' })).toBeTruthy();

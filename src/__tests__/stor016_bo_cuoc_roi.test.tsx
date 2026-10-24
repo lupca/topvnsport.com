@@ -65,7 +65,7 @@ describe('STOR-016 bỏ cước rời', () => {
     expect(screen.queryByText(/Không tải được danh sách cước/)).toBeNull();
   });
 
-  it('gio-khong-cong-cuoc: món có stringOption.price=220000 không làm tăng Tổng cộng', () => {
+  it('gio-khong-cong-cuoc: món có stringOption.price=220000 không làm tăng Tổng tiền hàng; chưa có báo giá thì chưa có Tổng cộng', () => {
     const item: CartItem = {
       id: 'i1', productId: 'r1', skuCode: 'R1', name: 'Vợt test', brand: 'B', image: '', price: 3240000,
       selectedWeight: 'Tiêu chuẩn', selectedColor: 'Đỏ', stringOption: kizuna as any, tension: 10.5, quantity: 2
@@ -81,7 +81,10 @@ describe('STOR-016 bỏ cước rời', () => {
         <CartModal isOpen onClose={noop} cartItems={[item]} onRemoveItem={noop} onClearCart={noop} />
       </Provider>
     );
-    expect(screen.getByText('Tổng cộng thanh toán:').parentElement!.textContent).toContain(fmt(3240000 * 2 + 30000));
+    expect(screen.getByText('Tổng tiền hàng:').parentElement!.textContent).toContain(fmt(3240000 * 2));
+    // STOR-037: chưa chọn xã -> chưa có báo giá OMS -> không có phí, không có tổng cộng.
+    expect(screen.getByText('Phí vận chuyển:').parentElement!.textContent).toContain('Chọn địa chỉ để tính phí');
+    expect(screen.getByText('Tổng cộng thanh toán:').parentElement!.textContent).not.toMatch(/\d/);
   });
 
   it('pdp-khong-tro-ly: trang chi tiết vợt không tầng cước -> không trợ lý, giá = giá biến thể', () => {

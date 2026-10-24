@@ -5,6 +5,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import appDataReducer from '../features/appData/appDataSlice';
+import { getAdminUnitsFromFixture, pickAdminUnits } from './fixtures/adminUnits';
+import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 
@@ -24,6 +26,8 @@ vi.mock('../services/sportApi', () => ({
     sendOtp: (...args: unknown[]) => sendOtpMock(...args),
     verifyOtp: (...args: unknown[]) => verifyOtpMock(...args),
     createOrder: (...args: unknown[]) => createOrderMock(...args),
+    getAdminUnits: (...a: [string, string?]) => getAdminUnitsFromFixture(a[0]),
+    getShippingQuote: async () => QUOTE_200_FALLBACK,
     createSepayCheckout: vi.fn()
   }
 }));
@@ -93,8 +97,7 @@ async function fillCheckoutForm() {
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Test' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: 0912345678'), { target: { value: '0987654321' } });
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: 'Số 1 Test' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập phường/xã'), { target: { value: 'Phường Test' } });
-  fireEvent.change(screen.getByPlaceholderText('Nhập tỉnh/thành phố'), { target: { value: 'Tỉnh Test' } });
+  await pickAdminUnits();
   // Chọn COD để nút submit hiển thị "Xác nhận đặt hàng" và tránh nhánh
   // redirect SePay (không liên quan tới việc chặn SKU không hợp lệ).
   fireEvent.click(screen.getByText('Thanh toán COD'));
@@ -112,7 +115,7 @@ async function driveToOtpSuccess() {
 const exbolt = { id: 'exbolt', name: 'Exbolt 65', price: 0 } as any;
 const bg80 = { id: 'bg80', name: 'BG80', price: 0 } as any;
 
-const BASE = 'Đơn web - Giao tiêu chuẩn | COD';
+const BASE = 'COD';
 
 async function orderNote() {
   await driveToOtpSuccess();

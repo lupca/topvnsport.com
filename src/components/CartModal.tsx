@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { isValidPhone, isPhoneComplete, normalizePhone, PHONE_ERROR_MESSAGE } from '../utils/phone';
 import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck, QrCode, CreditCard } from 'lucide-react';
 import { StringOption } from '../types';
@@ -8,6 +8,8 @@ import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, up
 import { isStringingTierName } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal from './OtpModal';
+import AdminUnitPicker from './AdminUnitPicker';
+import { AdminUnit, DeliveryOption, ShippingQuote, ShippingQuoteOption } from '../services/sport-api/types';
 
 
 export interface CartItem {
@@ -37,6 +39,35 @@ interface CartModalProps {
   onClearCart: () => void;
 }
 
+const PROVINCES_LOAD_ERROR_MESSAGE = 'Không tải được danh sách tỉnh/thành phố.';
+const WARDS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách phường/xã.';
+
+// Lời lỗi OMS (top-level message) nguyên văn; không có -> câu cố định.
+function adminUnitsErrorMessage(err: any, fixed: string): string {
+  return typeof err?.body?.message === 'string' ? err.body.message : fixed;
+}
+
+type UnitList = { units: AdminUnit[] | null; loading: boolean; error: string | null };
+const EMPTY_LIST: UnitList = { units: null, loading: false, error: null };
+
+const QUOTE_FAILED_MESSAGE = 'Chưa tính được phí vận chuyển. Vui lòng thử lại.';
+const QUOTE_REJECTED_MESSAGE = 'Không tính được phí vận chuyển cho giỏ hàng và địa chỉ này.';
+const ORDER_REJECTED_MESSAGE = 'Đơn hàng chưa được chấp nhận. Vui lòng kiểm tra lại thông tin rồi thử lại.';
+const TOTAL_MISSING_MESSAGE = 'Chưa nhận được tổng tiền từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.';
+const FEE_MISSING_MESSAGE = 'Chưa nhận được phí vận chuyển từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.';
+const NO_DELIVERY_MESSAGE = 'Địa chỉ này hiện chưa có phương thức giao hàng nào. Vui lòng chọn địa chỉ khác.';
+
+// Báo giá của OMS cho đúng một bộ giỏ+xã (key).
+type QuoteState = { key: string; status: 'loading' | 'ok' | 'error'; data?: ShippingQuote; message?: string; retryable?: boolean };
+
+const DELIVERY_OPTIONS: { value: DeliveryOption; label: string }[] = [
+  { value: 'STANDARD', label: 'Giao hàng chuẩn' },
+  { value: 'EXPRESS', label: 'Giao hỏa tốc' },
+];
+// Option dùng được = OMS báo available và có phí là số.
+const isUsable = (o: ShippingQuoteOption | undefined): o is ShippingQuoteOption =>
+  !!o && o.available === true && typeof o.shipping_fee === 'number';
+
 const PRODUCTS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách sản phẩm. Vui lòng tải lại trang.';
 
 // Lời người bán cho từng lý do món hàng không hợp lệ -- KHÔNG dùng chung một
@@ -59,16 +90,30 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const productsError = useAppSelector(state => state.appData.productsError);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   // Ảnh chụp đơn lúc đặt (COD) -- bước 3 đọc từ đây, không đọc giỏ (giỏ đã xoá).
-  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null } | null>(null);
+  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null; shippingFee: number | null; adjusted: boolean } | null>(null);
   
   // Checkout Fields
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
-  const [shippingMethod, setShippingMethod] = useState<'standard' | 'fast'>('standard');
+  const [deliveryOption, setDeliveryOption] = useState<DeliveryOption>('STANDARD');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'sepay'>('sepay');
-  const [ward, setWard] = useState('');
-  const [province, setProvince] = useState('');
+  // Tỉnh/xã chọn từ danh mục OMS; mã giữ trong state để STOR-037 gửi cùng delivery_option.
+  const [province, setProvince] = useState<AdminUnit | null>(null);
+  const [ward, setWard] = useState<AdminUnit | null>(null);
+  const [provinceQuery, setProvinceQuery] = useState('');
+  const [wardQuery, setWardQuery] = useState('');
+  const [provinces, setProvinces] = useState<UnitList>(EMPTY_LIST);
+  const [wards, setWards] = useState<UnitList>(EMPTY_LIST);
+  const provincesInFlight = useRef(false);
+  const wardsParent = useRef<string | null>(null);
+  const [quote, setQuote] = useState<QuoteState | null>(null);
+  const quoteKeyRef = useRef<string | null>(null);
+  const [retryTick, setRetryTick] = useState(0);
+  // Một báo giá cho mỗi bộ (giỏ, tỉnh, xã). null = chưa chọn xã.
+  const quoteKey = province && ward
+    ? JSON.stringify([cartItems.map(i => [i.skuCode, i.quantity]), province.code, ward.code])
+    : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneTouched, setPhoneTouched] = useState(false);
   const phoneNormalized = normalizePhone(phone);
@@ -90,6 +135,85 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     setStep(1);
   }, [isOpen]);
 
+  const loadProvinces = async () => {
+    if (provincesInFlight.current) return;
+    provincesInFlight.current = true;
+    setProvinces({ units: null, loading: true, error: null });
+    try {
+      setProvinces({ units: await sportApi.getAdminUnits('province'), loading: false, error: null });
+    } catch (err: any) {
+      setProvinces({ units: null, loading: false, error: adminUnitsErrorMessage(err, PROVINCES_LOAD_ERROR_MESSAGE) });
+    } finally {
+      provincesInFlight.current = false;
+    }
+  };
+
+  const loadWards = async (provinceCode: string) => {
+    wardsParent.current = provinceCode;
+    setWards({ units: null, loading: true, error: null });
+    try {
+      const units = await sportApi.getAdminUnits('ward', provinceCode);
+      if (wardsParent.current === provinceCode) setWards({ units, loading: false, error: null });
+    } catch (err: any) {
+      if (wardsParent.current === provinceCode) {
+        setWards({ units: null, loading: false, error: adminUnitsErrorMessage(err, WARDS_LOAD_ERROR_MESSAGE) });
+      }
+    }
+  };
+
+  // Mở bước 2 mà chưa có danh sách tỉnh -> tải. Lỗi thì dừng, chờ khách bấm "Thử lại".
+  useEffect(() => {
+    if (isOpen && step === 2 && !provinces.units && !provinces.loading && !provinces.error) void loadProvinces();
+  }, [isOpen, step, provinces]);
+
+  // Bước 2 + đã chọn xã + bộ giỏ/xã chưa báo giá -> hỏi OMS (delivery_option null = lấy cả hai).
+  // Kết quả về muộn của bộ cũ bị bỏ (so với quoteKeyRef). Lỗi: dừng, chờ khách bấm "Thử lại".
+  useEffect(() => {
+    if (!isOpen || step !== 2 || !quoteKey || !province || !ward) return;
+    if (quoteKeyRef.current === quoteKey) return;
+    quoteKeyRef.current = quoteKey;
+    setQuote({ key: quoteKey, status: 'loading' });
+    sportApi.getShippingQuote({
+      items: cartItems.map(i => ({ sku_code: i.skuCode!, quantity: i.quantity })),
+      receiver_province_code: province.code,
+      receiver_ward_code: ward.code,
+      delivery_option: null,
+    }).then(data => {
+      if (quoteKeyRef.current !== quoteKey) return;
+      setQuote({ key: quoteKey, status: 'ok', data });
+      // Option đang chọn không dùng được nữa -> chuyển sang option còn dùng được.
+      setDeliveryOption(cur => {
+        const byOpt = (v: DeliveryOption) => data.options.find(o => o.delivery_option === v);
+        if (isUsable(byOpt(cur))) return cur;
+        return DELIVERY_OPTIONS.find(d => isUsable(byOpt(d.value)))?.value ?? cur;
+      });
+    }).catch((err: any) => {
+      if (quoteKeyRef.current !== quoteKey) return;
+      const message = typeof err?.body?.message === 'string' && err.body.message.trim()
+        ? err.body.message
+        : err?.status === 422 ? QUOTE_REJECTED_MESSAGE : QUOTE_FAILED_MESSAGE;
+      setQuote({ key: quoteKey, status: 'error', message, retryable: err?.status !== 422 });
+    });
+  }, [isOpen, step, quoteKey, retryTick]);
+
+  const retryQuote = () => {
+    quoteKeyRef.current = null;
+    setRetryTick(t => t + 1);
+  };
+
+  // Đổi tỉnh (chọn tỉnh khác hoặc gõ lại) -> xoá xã đã chọn và chữ tìm xã.
+  const handleProvinceChange = (unit: AdminUnit | null) => {
+    setProvince(unit);
+    setWard(null);
+    setWardQuery('');
+    if (unit) {
+      void loadWards(unit.code);
+    } else {
+      wardsParent.current = null;
+      setWards(EMPTY_LIST);
+    }
+  };
+
   if (!isOpen) return null;
 
   // Giá TÍNH LẠI từ biến thể đã tải (không tin item.price lưu localStorage).
@@ -110,8 +234,17 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       tv => isStringingTierName(tv.name) && !(item.variantLabel || '').includes(`${tv.name}:`)
     );
 
-  const shippingCost = shippingMethod === 'standard' ? 30000 : 50000;
-  const orderTotal = itemsTotal === null ? null : itemsTotal + shippingCost;
+  // Chỉ dùng báo giá của ĐÚNG bộ giỏ+xã hiện tại; không có giá dùng được -> null (không đoán phí).
+  const currentQuote = quote && quote.key === quoteKey ? quote : null;
+  const quoteOptions = currentQuote?.status === 'ok' ? currentQuote.data!.options : null;
+  const selectedOption = quoteOptions?.find(o => o.delivery_option === deliveryOption);
+  const selectedFee: number | null = isUsable(selectedOption) ? selectedOption.shipping_fee : null;
+  // Chưa có giá thì nói đúng lý do (không dùng chung một câu cho mọi ca).
+  const shippingFeePlaceholder = currentQuote?.status === 'loading' ? 'Đang tính phí...'
+    : currentQuote?.status === 'error' ? 'Chưa tính được phí'
+    : quoteOptions && !quoteOptions.some(isUsable) ? 'Không có phương thức giao'
+    : 'Chọn địa chỉ để tính phí';
+  const orderTotal = itemsTotal === null || selectedFee === null ? null : itemsTotal + selectedFee;
   const formatMoney = (value: number | null) => (value === null ? '' : `${value.toLocaleString('vi-VN')}đ`);
 
   // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
@@ -136,10 +269,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       return;
     }
 
-    if (![fullName, phone, address, ward, province].every(v => v.trim())) {
-      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại, địa chỉ, phường/xã và tỉnh/thành phố nhận hàng.');
+    if (![fullName, phone, address].every(v => v.trim())) {
+      await popupService.alert('Vui lòng cung cấp đầy đủ họ tên, số điện thoại và địa chỉ nhận hàng.');
       return;
     }
+    if (!province?.code || !ward?.code) {
+      await popupService.alert('Vui lòng chọn tỉnh/thành phố và phường/xã nhận hàng từ danh sách.');
+      return;
+    }
+    if (selectedFee === null) return;
 
     if (!phoneValid) {
       setPhoneTouched(true);
@@ -163,9 +301,10 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       return;
     }
 
+    const clientTotal = orderTotal; // tổng khách đã thấy lúc bấm đặt
     setIsSubmitting(true);
     try {
-      const shippingAddress = [address, ward, province].map(v => v.trim()).join(', ');
+      const shippingAddress = [address.trim(), ward.name, province.name].join(', ');
       // Đã kiểm MỌI SKU ngay đầu handleCheckoutSubmit (trước cả sendOtp) --
       // không lặp lại kiểm ở đây.
       const items = cartItems.map(item => {
@@ -184,13 +323,33 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       const order = await sportApi.createOrder({
         customer: { name: fullName.trim(), phone: phoneNormalized, address: shippingAddress },
         items,
-        shipping_fee: shippingCost,
+        shipping_fee: selectedFee,
         shipping_address: shippingAddress,
-        note: `${shippingMethod === 'fast' ? 'Đơn web - Giao hỏa tốc' : 'Đơn web - Giao tiêu chuẩn'} | ${paymentMethod === 'sepay' ? 'SePay QR Code' : 'COD'}${stringingNote}`,
+        note: `${paymentMethod === 'sepay' ? 'SePay QR Code' : 'COD'}${stringingNote}`,
         verification_token: activeToken,
+        receiver_province_code: province.code,
+        receiver_ward_code: ward.code,
+        delivery_option: deliveryOption,
+        payment_method: paymentMethod === 'cod' ? 'COD' : 'SEPAY',
       });
 
-      setPlacedOrder({ orderNumber: order?.order_number || '', shippingAddress, total: orderTotal });
+      // Số của OMS (201) thắng số client; không hữu hạn -> null (không hiện số tự tính).
+      const serverNumber = (v: unknown): number | null => {
+        const n = Number(v);
+        if (v === null || v === undefined || v === '' || !Number.isFinite(n)) {
+          console.error('OMS 201 có số tiền không hợp lệ', v);
+          return null;
+        }
+        return n;
+      };
+      const serverTotal = serverNumber(order?.total_amount);
+      setPlacedOrder({
+        orderNumber: order?.order_number || '',
+        shippingAddress,
+        total: serverTotal,
+        shippingFee: serverNumber(order?.shipping_fee),
+        adjusted: serverTotal !== null && serverTotal !== clientTotal,
+      });
 
       if (paymentMethod === 'sepay') {
         const checkoutForm = await sportApi.createSepayCheckout(order.order_number);
@@ -218,6 +377,14 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       if (err.status === 403) {
         await popupService.alert('Mã xác thực OTP đã hết hạn hoặc không hợp lệ. Vui lòng tải lại trang và xác thực lại.');
         setVerificationToken('');
+      } else if (err.status === 422) {
+        // Lỗi nghiệp vụ/schema của (C): hiện lời OMS, ở lại bước 2, giữ giỏ + token OTP.
+        const body = err.body;
+        const omsMessage = typeof body?.message === 'string' && body.message.trim()
+          ? body.message
+          : typeof body?.detail?.[0]?.msg === 'string' && body.detail[0].msg.trim() ? body.detail[0].msg : null;
+        await popupService.alert(omsMessage ?? ORDER_REJECTED_MESSAGE);
+        if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE') retryQuote();
       } else {
         await popupService.alert('Có lỗi xảy ra khi tạo đơn hàng trên OMS. Vui lòng thử lại!');
       }
@@ -402,57 +569,82 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Phường/Xã *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nhập phường/xã"
-                    value={ward}
-                    onChange={e => setWard(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
-                  />
-                </div>
+                <AdminUnitPicker
+                  label="Tỉnh/Thành phố"
+                  placeholder="Chọn tỉnh/thành phố"
+                  units={provinces.units}
+                  value={province}
+                  query={provinceQuery}
+                  onQueryChange={setProvinceQuery}
+                  onChange={handleProvinceChange}
+                  loading={provinces.loading}
+                  error={provinces.error}
+                  onRetry={() => void loadProvinces()}
+                />
 
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Tỉnh/Thành phố *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nhập tỉnh/thành phố"
-                    value={province}
-                    onChange={e => setProvince(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
-                  />
-                </div>
+                <AdminUnitPicker
+                  label="Phường/Xã"
+                  placeholder={province ? 'Chọn phường/xã' : 'Chọn tỉnh/thành phố trước'}
+                  units={wards.units}
+                  value={ward}
+                  query={wardQuery}
+                  onQueryChange={setWardQuery}
+                  onChange={setWard}
+                  loading={wards.loading}
+                  error={wards.error}
+                  onRetry={() => province && void loadWards(province.code)}
+                  disabled={!province}
+                />
               </div>
 
               {/* Shipping Method */}
               <div className="space-y-2 pt-3 border-t border-gray-100">
                 <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Phương thức vận chuyển</h3>
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div
-                    onClick={() => setShippingMethod('standard')}
-                    className={`p-3 rounded-lg border cursor-pointer transition flex items-center gap-2 ${shippingMethod === 'standard' ? 'bg-brand-light border-brand-primary' : 'bg-white border-gray-150 hover:border-gray-200'}`}
-                  >
-                    <Truck className="w-4 h-4 text-brand-primary" />
-                    <div>
-                      <p className="font-bold text-[11px] text-gray-900">Giao hàng chuẩn</p>
-                      <p className="text-[10px] text-gray-400">3 - 5 ngày • 30.000đ</p>
-                    </div>
+                {!currentQuote && <p className="text-[11px] text-gray-400">Chọn tỉnh/thành phố và phường/xã để xem phí giao hàng.</p>}
+                {currentQuote?.status === 'loading' && <p className="text-[11px] text-gray-400">Đang lấy báo giá vận chuyển...</p>}
+                {currentQuote?.status === 'error' && (
+                  <div role="alert" className="text-[11px] text-red-600 font-semibold space-y-1.5">
+                    <p>{currentQuote.message}</p>
+                    {currentQuote.retryable && (
+                      <button type="button" onClick={retryQuote} className="underline text-brand-primary">Thử lại</button>
+                    )}
                   </div>
-
-                  <div
-                    onClick={() => setShippingMethod('fast')}
-                    className={`p-3 rounded-lg border cursor-pointer transition flex items-center gap-2 ${shippingMethod === 'fast' ? 'bg-brand-light border-brand-primary' : 'bg-white border-gray-150 hover:border-gray-200'}`}
-                  >
-                    <Truck className="w-4 h-4 text-brand-primary " />
-                    <div>
-                      <p className="font-bold text-[11px] text-gray-900">Giao hỏa tốc</p>
-                      <p className="text-[10px] text-gray-400">1 - 2 ngày • 50.000đ</p>
-                    </div>
+                )}
+                {quoteOptions && !quoteOptions.some(isUsable) && (
+                  <p role="alert" className="text-[11px] text-red-600 font-semibold">{NO_DELIVERY_MESSAGE}</p>
+                )}
+                {quoteOptions && (
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {DELIVERY_OPTIONS.map(({ value, label }) => {
+                      const opt = quoteOptions.find(o => o.delivery_option === value);
+                      if (!opt) return null;
+                      const usable = isUsable(opt);
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          disabled={!usable}
+                          aria-disabled={!usable}
+                          onClick={() => usable && setDeliveryOption(value)}
+                          className={`p-3 rounded-lg border text-left transition flex items-center gap-2 ${!usable ? 'bg-gray-50 border-gray-100 opacity-70 cursor-not-allowed' : deliveryOption === value ? 'bg-brand-light border-brand-primary cursor-pointer' : 'bg-white border-gray-150 hover:border-gray-200 cursor-pointer'}`}
+                        >
+                          <Truck className="w-4 h-4 text-brand-primary shrink-0" />
+                          <div className="min-w-0">
+                            <p className="font-bold text-[11px] text-gray-900">{label}</p>
+                            {usable ? (
+                              <p className="text-[10px] text-gray-400">
+                                {opt.eta_days !== null && <>Dự kiến {opt.eta_days} ngày • </>}{formatMoney(opt.shipping_fee)}
+                                {opt.is_fallback && <span className="block text-amber-600 font-semibold">Phí tạm tính</span>}
+                              </p>
+                            ) : (
+                              <p className="text-[10px] text-red-600">{opt.unavailable_reason}</p>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Payment Method */}
@@ -498,9 +690,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <p>• <strong>Người nhận:</strong> {fullName}</p>
                 <p>• <strong>Số điện thoại:</strong> {phone}</p>
                 <p>• <strong>Địa chỉ giao:</strong> {placedOrder?.shippingAddress}</p>
-                <p>• <strong>Phương thức giao:</strong> {shippingMethod === 'standard' ? 'Giao hàng chuẩn (COD)' : 'Giao hàng hỏa tốc'}</p>
+                <p>• <strong>Phương thức giao:</strong> {deliveryOption === 'STANDARD' ? 'Giao hàng chuẩn (COD)' : 'Giao hàng hỏa tốc'}</p>
+                {placedOrder && <p>• <strong>Phí vận chuyển:</strong> {placedOrder.shippingFee != null ? formatMoney(placedOrder.shippingFee) : FEE_MISSING_MESSAGE}</p>}
+                {placedOrder?.adjusted && placedOrder.shippingFee != null && (
+                  <p className="text-amber-700 font-semibold">
+                    Phí vận chuyển đã được cập nhật theo báo giá mới nhất: {formatMoney(placedOrder.shippingFee)}
+                  </p>
+                )}
                 <p className="text-sm font-bold text-brand-primary border-t border-gray-200 pt-2 mt-2">
-                  Tổng hóa đơn thanh toán: {formatMoney(placedOrder?.total ?? null)}
+                  Tổng hóa đơn thanh toán: {placedOrder?.total != null ? formatMoney(placedOrder.total) : TOTAL_MISSING_MESSAGE}
                 </p>
               </div>
 
@@ -524,7 +722,10 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               </div>
               <div className="flex justify-between">
                 <span>Phí vận chuyển:</span>
-                <strong className="text-gray-900">{shippingCost.toLocaleString('vi-VN')}đ</strong>
+                <strong className="text-gray-900 text-right">
+                  {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
+                  {selectedFee !== null && selectedOption?.is_fallback && <span className="block text-amber-600 text-[10px]">Phí tạm tính</span>}
+                </strong>
               </div>
               <div className="flex justify-between text-sm border-t border-gray-200 pt-1.5 mt-1.5 font-bold">
                 <span className="text-gray-900">Tổng cộng thanh toán:</span>
@@ -554,8 +755,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   onClick={() => {
                     void handleCheckoutSubmit();
                   }}
-                  disabled={isSubmitting || phoneBlocked}
-                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                  disabled={isSubmitting || selectedFee === null || phoneBlocked}
+                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || selectedFee === null || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
                 >
                   {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng'}
                 </button>

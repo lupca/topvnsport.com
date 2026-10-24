@@ -13,5 +13,7 @@ export const WMS_PROXY_URL = '/api/wms';
 // Checkout (OTP -> order -> SePay) goes through api/oms the same way: the proxy
 // adds the catalog-grant token server-side and only allows 4 POST routes.
 export const OMS_CHECKOUT_PROXY_URL = '/api/oms/checkout';
+// Danh mục tỉnh/xã (GET /api/oms/admin-units) đi cùng proxy, ngoài nhóm checkout.
+export const OMS_PROXY_URL = '/api/oms';
 
 export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
