@@ -102,6 +102,7 @@ async function placeOrder() {
 }
 
 beforeEach(() => {
+  sessionStorage.clear();
   [alertMock, sendOtpMock, createOrderMock, onClearCartSpy].forEach(m => m.mockClear());
 });
 afterEach(() => cleanup());

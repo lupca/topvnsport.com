@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductDetailPage from '../../components/ProductDetailPage';
-import { addCartItem, buildConfiguredCartItem, describeSkuSelection, openCart } from '../cart/cartSlice';
+import { addCartItemAndOpen, buildConfiguredCartItem, describeSkuSelection } from '../cart/cartSlice';
 import { StringOption } from '../../types';
 import { findProductBySlug } from '../../utils/productSlug';
 
@@ -49,8 +49,7 @@ export default function ProductDetailRoute() {
       return;
     }
 
-    dispatch(addCartItem(item));
-    dispatch(openCart());
+    dispatch(addCartItemAndOpen(item));
   };
 
   return (

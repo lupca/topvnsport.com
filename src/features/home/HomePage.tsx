@@ -7,7 +7,7 @@ import ProductCard from '../../components/ProductCard';
 import TrustBadges from '../../components/TrustBadges';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { sortProducts } from '../../utils/productSort';
-import { addCartItem, buildDefaultCartItem, openCart, setQuickViewProduct } from '../cart/cartSlice';
+import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
 import { categoryTileThemes, getCategoryMonogram, getCategorySubtitle } from './categoryTileThemes';
 
 
@@ -37,8 +37,7 @@ export default function HomePage() {
       void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
       return;
     }
-    dispatch(addCartItem(item));
-    dispatch(openCart());
+    dispatch(addCartItemAndOpen(item));
   };
 
   return (

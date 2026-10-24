@@ -121,6 +121,15 @@ export const {
   setQuickViewProduct
 } = cartSlice.actions;
 
+// Thêm vào giỏ rồi mở giỏ. Bị từ chối vì tồn (items không đổi, Header hiện popup tồn) -> KHÔNG mở giỏ.
+export const addCartItemAndOpen =
+  (item: CartItemInput) =>
+  (dispatch: (a: unknown) => unknown, getState: () => { cart: CartState }): void => {
+    const before = getState().cart.items;
+    dispatch(addCartItem(item));
+    if (getState().cart.items !== before) dispatch(openCart());
+  };
+
 export type SkuSelectionDescription =
   | { status: 'ok'; skuCode: string }
   | { status: 'missing_selection'; tierName: string }

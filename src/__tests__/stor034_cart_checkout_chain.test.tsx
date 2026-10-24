@@ -28,6 +28,7 @@ let calls: { url: string; body: any }[];
 const onClearCart = vi.fn();
 
 beforeEach(() => {
+  sessionStorage.clear();
   calls = [];
   onClearCart.mockClear();
   vi.stubGlobal('fetch', vi.fn(async (url: string, init: any) => {

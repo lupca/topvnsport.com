@@ -17,7 +17,7 @@ import { fetchAppData } from './features/appData/appDataSlice';
 import CatalogPage from './features/catalog/CatalogPage';
 import { setSearchQuery, setSelectedBrand, setSelectedCategory } from './features/catalog/catalogSlice';
 import {
-  addCartItem,
+  addCartItemAndOpen,
   buildDefaultCartItem,
   clearCart,
   closeCart,
@@ -84,8 +84,7 @@ export default function App() {
       void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
       return;
     }
-    dispatch(addCartItem(item));
-    dispatch(openCart());
+    dispatch(addCartItemAndOpen(item));
   };
 
   if (isLoading) {
