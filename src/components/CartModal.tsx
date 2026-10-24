@@ -123,6 +123,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   // SePay: đơn đã tạo nhưng chưa mở được trang thanh toán (null = chưa lỗi).
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
+  const [pending, setPending] = useState<{ order: PlacedOrder; error: string } | null>(() => readPending());
   // Đặt đơn lỗi mà chưa biết đơn đã tạo chưa: khoá nút tới khi khách xác nhận đã kiểm tra.
   const [orderUncertain, setOrderUncertain] = useState<string | null>(null);
   
@@ -172,15 +173,9 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     setStep(1);
   }, [isOpen]);
 
-  // Mở lại giỏ khi còn đơn SePay chờ thanh toán -> hiện lại màn 'Thanh toán lại'.
+  // Mỗi lần mở giỏ: nạp đơn SePay chờ thanh toán (nếu có) để hiện dải nhắc ở bước 1 -- không che giỏ hiện tại.
   useEffect(() => {
-    if (!isOpen || placedOrder) return;
-    const pending = readPending();
-    if (pending) {
-      setPlacedOrder(pending.order);
-      setPaymentError(pending.error);
-      setStep(3);
-    }
+    if (isOpen) setPending(readPending());
   }, [isOpen]);
 
   const loadProvinces = async () => {
@@ -474,11 +469,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       document.body.appendChild(form);
       form.submit();
       clearPending(); // đã chuyển sang cổng thanh toán
+      setPending(null);
     } catch (err: any) {
       console.error(err);
       const message = errorText(err, PAYMENT_OPEN_FAILED_MESSAGE);
       setPaymentError(message);
       writePending(placed, message);
+      setPending({ order: placed, error: message });
     } finally {
       setIsPaying(false);
     }
@@ -486,6 +483,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
   const handleFinish = () => {
     clearPending(); // khách chủ động kết thúc: bỏ đơn chờ thanh toán đã nhớ
+    setPending(null);
     onClearCart();
     setStep(1);
     setPlacedOrder(null);
@@ -517,6 +515,16 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
           {step === 1 && (
             <div className="space-y-4">
+              {pending && (
+                <div role="status" className="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] p-3 rounded-lg space-y-2">
+                  <p>Đơn {pending.order.orderNumber} chưa thanh toán.</p>
+                  {pending.error && <p>{pending.error}</p>}
+                  <div className="flex gap-3">
+                    <button type="button" disabled={isPaying} onClick={() => void openSepay(pending.order)} className="underline font-bold">Thanh toán lại</button>
+                    <button type="button" onClick={() => { clearPending(); setPending(null); }} className="underline">Bỏ nhắc</button>
+                  </div>
+                </div>
+              )}
               {cartItems.length > 0 ? (
                 <>
                   <div className="divide-y divide-gray-100">
@@ -797,6 +805,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                     className={`w-full text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm ${isPaying ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
                   >
                     {isPaying ? 'Đang xử lý...' : 'Thanh toán lại'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setStep(1); setPlacedOrder(null); setPaymentError(null); }}
+                    className="w-full border border-gray-300 text-gray-700 font-bold text-xs uppercase tracking-wider py-3 rounded-sm"
+                  >
+                    Quay về giỏ hàng
                   </button>
                 </>
               ) : (
