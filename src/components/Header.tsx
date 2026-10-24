@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { ReactReduxContext } from 'react-redux';
+import { popupService } from '@topvnsport/ui-kit';
+import { clearStockNotice } from '../features/cart/cartSlice';
 import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Trophy, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -37,6 +40,20 @@ interface HeaderProps {
 export default function Header({ cartCount, openCart, products, categories }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Báo khách khi thêm vượt tồn (cartSlice ghi stockNotice). Header luôn có mặt
+  // nên là chỗ chung cho mọi nơi thêm giỏ; không có store (test riêng) thì bỏ qua.
+  const store = useContext(ReactReduxContext)?.store;
+  useEffect(() => {
+    if (!store) return;
+    return store.subscribe(() => {
+      const notice = store.getState().cart?.stockNotice;
+      if (notice) {
+        store.dispatch(clearStockNotice());
+        void popupService.alert(notice);
+      }
+    });
+  }, [store]);
   const currentView = location.pathname.includes('catalog') ? 'catalog' : location.pathname.includes('store') ? 'store-locator' : location.pathname === '/' ? 'home' : '';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -163,6 +180,7 @@ export default function Header({ cartCount, openCart, products, categories }: He
           {/* Quick Cart on top right for mobile */}
           <button 
             onClick={openCart}
+            aria-label="Giỏ hàng"
             className="md:hidden text-gray-700 hover:text-brand-primary transition relative flex items-center gap-1.5 p-2 bg-gray-50 hover:bg-brand-light rounded-full"
           >
             <ShoppingBag className="w-5 h-5 text-gray-800" />
@@ -275,6 +293,7 @@ export default function Header({ cartCount, openCart, products, categories }: He
 
           <button 
             onClick={openCart}
+            aria-label="Giỏ hàng"
             className="text-gray-600 hover:text-brand-primary transition relative flex items-center gap-1 p-2 bg-gray-50 hover:bg-brand-light rounded-full"
           >
             <ShoppingBag className="w-5 h-5 text-gray-800 group-hover:text-brand-primary" />

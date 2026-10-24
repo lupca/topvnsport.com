@@ -173,25 +173,29 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
   };
   const resolvedPrice = minPrice > 0 ? minPrice : undefined;
 
-  const hasActivePromotion = Boolean(
-    pmiProduct.has_active_promotion || mappedVariants.some((v) => v.hasActivePromotion)
-  );
+  // Giá thẻ: cặp giá bán/gốc phải CÙNG MỘT biến thể -- biến thể rẻ nhất (giá
+  // bán thực). Không ghép giá KM của biến thể này với giá gốc của biến thể khác.
+  const cheapest = mappedVariants
+    .filter((v) => v.price > 0 && (v.computedPrice ?? 0) > 0)
+    .sort((l, r) => (l.computedPrice as number) - (r.computedPrice as number))[0];
+  const productLevel = pmiProduct.computed_price !== undefined && pmiProduct.computed_price !== null;
 
-  const originalPrice = pmiProduct.original_price !== undefined && pmiProduct.original_price !== null
-    ? Number(pmiProduct.original_price)
-    : resolvedPrice;
+  const hasActivePromotion = productLevel
+    ? Boolean(pmiProduct.has_active_promotion || mappedVariants.some((v) => v.hasActivePromotion))
+    : Boolean(cheapest?.hasActivePromotion);
 
-  const activeComputedPrices = mappedVariants
-    .filter((v) => v.hasActivePromotion && v.computedPrice !== undefined)
-    .map((v) => v.computedPrice as number);
+  const originalPrice = productLevel
+    ? (pmiProduct.original_price !== undefined && pmiProduct.original_price !== null ? Number(pmiProduct.original_price) : resolvedPrice)
+    : cheapest?.originalPrice ?? resolvedPrice;
 
-  const computedPrice = pmiProduct.computed_price !== undefined && pmiProduct.computed_price !== null
+  const computedPrice = productLevel
     ? Number(pmiProduct.computed_price)
-    : (activeComputedPrices.length > 0 ? Math.min(...activeComputedPrices) : originalPrice);
+    : cheapest?.computedPrice ?? originalPrice;
 
-  const percentageDiscount = pmiProduct.percentage_discount !== undefined && pmiProduct.percentage_discount !== null
+  const percentageDiscount = productLevel && pmiProduct.percentage_discount !== undefined && pmiProduct.percentage_discount !== null
     ? Number(pmiProduct.percentage_discount)
-    : (hasActivePromotion && originalPrice > 0 ? Math.round(((originalPrice - computedPrice) / originalPrice) * 100) : 0);
+    : (!productLevel && cheapest?.hasActivePromotion ? cheapest.percentageDiscount : undefined) ??
+      (hasActivePromotion && originalPrice > 0 ? Math.round(((originalPrice - computedPrice) / originalPrice) * 100) : 0);
 
   return {
     id: String(pmiProduct.id),
