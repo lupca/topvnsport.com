@@ -3,7 +3,7 @@ import { ArrowLeft, Phone, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product, StringOption, TierVariation } from '../../types';
 import StringingAssistant from './StringingAssistant';
-import { StockState, isStringingTierName } from './helpers';
+import { StockState, isStringingTier } from './helpers';
 
 interface ProductPurchaseSectionProps {
   product: Product;
@@ -118,7 +118,7 @@ export default function ProductPurchaseSection({
         {product.tier_variations && product.tier_variations.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {product.tier_variations
-              .filter((tier) => !isStringingTierName(tier.name))
+              .filter((tier) => !isStringingTier(tier))
               .map((tier) => {
                 const selectedValue = tier.tier_index === 1 ? selectedTier1 : selectedTier2;
                 const setValue = tier.tier_index === 1 ? onSetSelectedTier1 : onSetSelectedTier2;
@@ -131,7 +131,7 @@ export default function ProductPurchaseSection({
                       {tier.options.map((option) => {
                         // Tầng kia là tầng cước: gộp mọi cước (không khoá màu còn bản có cước).
                         const otherIsStringing = product.tier_variations?.some(
-                          (tv) => tv.tier_index !== tier.tier_index && isStringingTierName(tv.name)
+                          (tv) => tv.tier_index !== tier.tier_index && isStringingTier(tv)
                         );
                         const other = otherIsStringing ? '' : otherTierValue;
                         const stockForOption = tier.tier_index === 1

@@ -1,0 +1,335 @@
+{
+ "tiers": [
+  {
+   "product_id": 337,
+   "name": "Màu Sắc",
+   "options": [
+    "Cannon Black",
+    "Cannon Deep Teal",
+    "Cannon Ambrosia"
+   ]
+  },
+  {
+   "product_id": 337,
+   "name": "Loại Cước",
+   "options": [
+    "Khung không dây",
+    "PA2055",
+    "BG 65TI",
+    "BG 66U",
+    "Exbolt 63",
+    "Exbolt 65",
+    "Exbolt 68",
+    "Kizuna Z61"
+   ]
+  },
+  {
+   "product_id": 310,
+   "name": "Màu Sắc",
+   "options": [
+    "Blue",
+    "Yellow",
+    "Red"
+   ]
+  },
+  {
+   "product_id": 310,
+   "name": "Căng Cước",
+   "options": [
+    "Khung không dây",
+    "PA2055",
+    "BG 65Ti",
+    "BG 66U",
+    "Exbolt 63",
+    "Exbolt 65",
+    "Exbolt 68",
+    "Kizuna Z61"
+   ]
+  },
+  {
+   "product_id": 312,
+   "name": "Căng Cước",
+   "options": [
+    "Khung không dây",
+    "Cước trợ lực",
+    "BG 65Ti",
+    "Ex63-65-68-66U-Z61"
+   ]
+  },
+  {
+   "product_id": 330,
+   "name": "CĂNG CƯỚC",
+   "options": [
+    "KHUNG KHÔNG DÂY",
+    "CƯỚC TRỢ LỰC",
+    "YONEX BG65Ti",
+    "YONEX EX63-65-68",
+    "YONEX BG66U",
+    "Kizuna Z61"
+   ]
+  },
+  {
+   "product_id": 315,
+   "name": "Chủng loại",
+   "options": [
+    "ArcSaber 1 Clear",
+    "ArcSaber 1 Feel",
+    "ArcSaber 1 Ability"
+   ]
+  },
+  {
+   "product_id": 315,
+   "name": "Độ Căng Cước",
+   "options": [
+    "Khung không dây",
+    "Cước trợ lực",
+    "BG 65Ti",
+    "Cước khác inbox shop"
+   ]
+  },
+  {
+   "product_id": 329,
+   "name": "Phân Loại",
+   "options": [
+    "Motor Pro",
+    "Motor Trắng",
+    "Motor Pink"
+   ]
+  },
+  {
+   "product_id": 329,
+   "name": "Dây Vợt",
+   "options": [
+    "Kizuna Z61",
+    "Khung không dây",
+    "Yonex 65Ti",
+    "Exbolt 63",
+    "Exbolt 65",
+    "Exbolt 68",
+    "Loại khác inb shop",
+    "PA2055"
+   ]
+  },
+  {
+   "product_id": 339,
+   "name": "Dây vợt",
+   "options": [
+    "Khung không",
+    "Yonex BG 65Ti",
+    "Yonex BG 66U",
+    "Yonex EXBOLT 65",
+    "Kizuna Z61"
+   ]
+  },
+  {
+   "product_id": 278,
+   "name": "Màu sắc",
+   "options": [
+    "Trắng (Trẻ trung)",
+    "Đen (Mạnh mẽ)"
+   ]
+  },
+  {
+   "product_id": 278,
+   "name": "Dây Căng",
+   "options": [
+    "Khung không dây",
+    "PA2055",
+    "BG 65Ti",
+    "Exbolt 65",
+    "Exbolt 68",
+    "Kizuna Z61",
+    "Khác Inbox Shop"
+   ]
+  },
+  {
+   "product_id": 316,
+   "name": "Màu cước",
+   "options": [
+    "BG80 Trắng",
+    "BG80 Vàng",
+    "BG66 Ultimax Hồng",
+    "BG65 Titanium (Đỏ)",
+    "BG5 Match Vàng",
+    "BG5 Match Hồng",
+    "BG5 Match Xanh"
+   ]
+  },
+  {
+   "product_id": 284,
+   "name": "Phân loại",
+   "options": [
+    "1 đoạn (cuốn 1 lần)",
+    "Cả cuộn"
+   ]
+  },
+  {
+   "product_id": 341,
+   "name": "Màu Sắc",
+   "options": [
+    "DAZZLING BLUE",
+    "FRENCH BLUE",
+    "DARK ECLIPSE",
+    "WHITE",
+    "GOLDEN CREAM"
+   ]
+  },
+  {
+   "product_id": 341,
+   "name": "Size",
+   "options": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+   ]
+  }
+ ],
+ "racket310_variants": [
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "Khung không dây",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-KHUNG-KHONG-DAY",
+   "price": 780000.0
+  },
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "Exbolt 63",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-EXBOLT-63",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "Exbolt 68",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-EXBOLT-68",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "PA2055",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-PA2055",
+   "price": 840000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "Exbolt 63",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-EXBOLT-63",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "BG 66U",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-BG-66U",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "BG 65Ti",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-BG-65TI",
+   "price": 940000.0
+  },
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "Exbolt 65",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-EXBOLT-65",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "Kizuna Z61",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-KIZUNA-Z61",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "Exbolt 65",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-EXBOLT-65",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "Khung không dây",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-KHUNG-KHONG-DAY",
+   "price": 780000.0
+  },
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "Exbolt 68",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-EXBOLT-68",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "PA2055",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-PA2055",
+   "price": 840000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "Exbolt 65",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-EXBOLT-65",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "BG 65Ti",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-BG-65TI",
+   "price": 940000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "Exbolt 68",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-EXBOLT-68",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "Khung không dây",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-KHUNG-KHONG-DAY",
+   "price": 780000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "BG 65Ti",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-BG-65TI",
+   "price": 940000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "Kizuna Z61",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-KIZUNA-Z61",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Yellow",
+   "tier_2_option": "Kizuna Z61",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-YELLOW-KIZUNA-Z61",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "BG 66U",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-BG-66U",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "Exbolt 63",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-EXBOLT-63",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Red",
+   "tier_2_option": "BG 66U",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-RED-BG-66U",
+   "price": 980000.0
+  },
+  {
+   "tier_1_option": "Blue",
+   "tier_2_option": "PA2055",
+   "sku_code": "VCLYAL45IRM3MMCKTTVH-ACEM-BLUE-PA2055",
+   "price": 840000.0
+  }
+ ]
+}
