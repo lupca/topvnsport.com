@@ -3,3 +3,13 @@
 export function isFinalPaymentError(err: any): boolean {
   return err?.status === 400 || err?.status === 404 || err?.status === 409;
 }
+
+// [S3] "Báo giá 422 địa chỉ người nhận"/[S1] (B) OMS-139: ô nào bị hãng/OMS từ chối. Chỉ theo field_path.
+export type ReceiverAddressField = 'receiver_ward_code' | 'receiver_province_code';
+export function receiverAddressField(body: any): ReceiverAddressField | null {
+  const f = body?.field_path;
+  return f === 'receiver_ward_code' || f === 'receiver_province_code' ? f : null;
+}
+// /orders 422 phải báo giá lại: theo field_path (ô địa chỉ) hoặc theo code ADDRESS_NOT_MAPPED. Không so message.
+export const isReceiverAddressError = (body: any): boolean =>
+  receiverAddressField(body) !== null || body?.code === 'ADDRESS_NOT_MAPPED';

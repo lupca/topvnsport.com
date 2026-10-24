@@ -14,12 +14,14 @@ interface AdminUnitPickerProps {
   error: string | null;
   onRetry: () => void;
   disabled?: boolean;
+  // Lời từ chối của OMS/hãng cho đúng ô này (422 địa chỉ). Khác `error` (lỗi tải danh sách): không có nút Thử lại.
+  fieldError?: string | null;
 }
 
 // Ô chọn có tìm không dấu: gõ -> lọc danh sách (inline, cuộn được), bấm một dòng
 // để chọn. Không có danh sách dự phòng: lỗi tải -> lời lỗi + nút "Thử lại".
 export default function AdminUnitPicker({
-  label, placeholder, units, value, query, onQueryChange, onChange, loading, error, onRetry, disabled,
+  label, placeholder, units, value, query, onQueryChange, onChange, loading, error, onRetry, disabled, fieldError,
 }: AdminUnitPickerProps) {
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -49,6 +51,7 @@ export default function AdminUnitPicker({
         aria-autocomplete="list"
         autoComplete="off"
         required
+        aria-invalid={fieldError ? true : undefined}
         disabled={disabled}
         placeholder={placeholder}
         value={query}
@@ -71,6 +74,7 @@ export default function AdminUnitPicker({
           <button type="button" onClick={onRetry} className="underline text-brand-primary">Thử lại</button>
         </div>
       )}
+      {fieldError && <p className="text-[11px] text-red-600 font-semibold" role="alert">{fieldError}</p>}
       {open && !error && !loading && units && (
         <ul role="listbox" aria-label={label} className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg bg-white divide-y divide-gray-100">
           {options.length === 0 && <li className="px-3 py-2 text-[11px] text-gray-400">Không có kết quả</li>}

@@ -4,7 +4,7 @@ import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, 
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
-import { isFinalPaymentError } from '../features/checkout/omsErrors';
+import { ReceiverAddressField, isFinalPaymentError, isReceiverAddressError, receiverAddressField } from '../features/checkout/omsErrors';
 import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
 import { isStringingTier } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
@@ -97,7 +97,7 @@ const FEE_MISSING_MESSAGE = 'Chưa nhận được phí vận chuyển từ hệ
 const NO_DELIVERY_MESSAGE = 'Địa chỉ này hiện chưa có phương thức giao hàng nào. Vui lòng chọn địa chỉ khác.';
 
 // Báo giá của OMS cho đúng một bộ giỏ+xã (key).
-type QuoteState = { key: string; status: 'loading' | 'ok' | 'error'; data?: ShippingQuote; message?: string; retryable?: boolean };
+type QuoteState = { key: string; status: 'loading' | 'ok' | 'error'; data?: ShippingQuote; message?: string; retryable?: boolean; field?: ReceiverAddressField; fieldMessage?: string };
 
 const DELIVERY_OPTIONS: { value: DeliveryOption; label: string }[] = [
   { value: 'STANDARD', label: 'Giao hàng chuẩn' },
@@ -238,7 +238,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       const message = typeof err?.body?.message === 'string' && err.body.message.trim()
         ? err.body.message
         : err?.status === 422 ? QUOTE_REJECTED_MESSAGE : QUOTE_FAILED_MESSAGE;
-      setQuote({ key: quoteKey, status: 'error', message, retryable: err?.status !== 422 });
+      // 422 có field_path ô địa chỉ: lời OMS gắn vào ô đó, khối vận chuyển chỉ nói chung.
+      const field = err?.status === 422 && typeof err.body?.message === 'string' && err.body.message.trim() ? receiverAddressField(err.body) : null;
+      setQuote({
+        key: quoteKey, status: 'error', retryable: err?.status !== 422,
+        message: field ? QUOTE_REJECTED_MESSAGE : message, ...(field && { field, fieldMessage: message }),
+      });
     });
   }, [isOpen, step, quoteKey, retryTick]);
 
@@ -408,7 +413,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           ? body.message
           : typeof body?.detail?.[0]?.msg === 'string' && body.detail[0].msg.trim() ? body.detail[0].msg : null;
         await popupService.alert(omsMessage ?? ORDER_REJECTED_MESSAGE);
-        if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE') retryQuote();
+        if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE' || isReceiverAddressError(body)) retryQuote();
       } else if (isOutcomeUnknown(err)) {
         setOrderUncertain(UNCERTAIN_ORDER_MESSAGE);
         await popupService.alert(UNCERTAIN_ORDER_MESSAGE);
@@ -706,6 +711,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   loading={provinces.loading}
                   error={provinces.error}
                   onRetry={() => void loadProvinces()}
+                  fieldError={currentQuote?.field === 'receiver_province_code' ? currentQuote.fieldMessage : null}
                 />
 
                 <AdminUnitPicker
@@ -720,6 +726,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   error={wards.error}
                   onRetry={() => province && void loadWards(province.code)}
                   disabled={!province}
+                  fieldError={currentQuote?.field === 'receiver_ward_code' ? currentQuote.fieldMessage : null}
                 />
               </div>
 

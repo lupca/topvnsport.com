@@ -261,7 +261,7 @@ describe('STOR-037 option không dùng được', () => {
 describe('STOR-037 lỗi báo giá', () => {
   it.each([
     ['AC30,33 422 SKU_NOT_FOUND', 422, ERR_SKU_NOT_FOUND, 'Không tìm thấy sản phẩm có mã TVS-AO-01-M.', false],
-    ['AC31,33 422 RECEIVER_WARD_PROVINCE_MISMATCH', 422, ERR_WARD_MISMATCH, 'Phường/xã đã chọn không thuộc tỉnh/thành đã chọn.', false],
+    ['AC31,33 422 RECEIVER_WARD_PROVINCE_MISMATCH', 422, ERR_WARD_MISMATCH, 'Không tính được phí vận chuyển cho giỏ hàng và địa chỉ này.', false], // STOR-049: field_path receiver_ward_code -> lời OMS chuyển xuống ô Phường/Xã,
     ['AC32,33 422 schema', 422, ERR_422_SCHEMA_B, 'Không tính được phí vận chuyển cho giỏ hàng và địa chỉ này.', false],
     ['AC34,35 429', 429, ERR_429, 'Bạn thao tác quá nhanh. Vui lòng thử lại sau ít giây.', true],
     ['AC36,37 503', 503, ERR_503, 'Hệ thống vận chuyển chưa phản hồi. Vui lòng thử lại sau.', true],

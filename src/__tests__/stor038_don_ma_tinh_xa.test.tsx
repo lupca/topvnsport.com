@@ -212,11 +212,11 @@ describe('STOR-038 422 của (C)', () => {
     await sendOtpAndOrder();
     await waitFor(() => expect(quotesOf()).toHaveLength(2));
   });
-  it('AC25b RECEIVER_WARD_PROVINCE_MISMATCH -> không báo giá lại', async () => {
+  it('AC25b RECEIVER_WARD_PROVINCE_MISMATCH -> báo giá lại (STOR-049: field_path receiver_ward_code)', async () => {
     orderReply = { status: 422, body: ERR_C_WARD_MISMATCH };
     await sendOtpAndOrder();
     await waitFor(() => expect(alertMock).toHaveBeenCalled());
-    expect(quotesOf()).toHaveLength(1);
+    await waitFor(() => expect(quotesOf()).toHaveLength(2));
   });
   it('AC31 sau 422 bấm đặt lại: POST /orders lần hai đi luôn, không send-otp lần nữa', async () => {
     orderReply = { status: 422, body: ERR_C_WARD_MISMATCH };
