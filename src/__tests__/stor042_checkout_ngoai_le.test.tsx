@@ -10,6 +10,7 @@ import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
 import CartModal, { CartItem } from '../components/CartModal';
 import OtpModal, { getStoredOtpCode, getStoredCooldown, setStoredOtpCode, setStoredCooldownExpiry } from '../components/OtpModal';
 import { Product } from '../types';
+import cartReducer, { addCartItemAndOpen, closeCart } from '../features/cart/cartSlice';
 
 const alertMock = vi.fn().mockResolvedValue(undefined);
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: (...a: unknown[]) => alertMock(...a) } }));
@@ -47,16 +48,18 @@ function err(msg: string, extra: Record<string, unknown>) {
   return Object.assign(new Error(msg), extra);
 }
 
-function mount() {
+function mount(cartItem: CartItem = item, prod: Product = product) {
   const store = configureStore({
     reducer: { appData: appDataReducer },
-    preloadedState: { appData: { products: [product], branches: [], stringOptions: [], categories: [], isLoading: false } } as any
+    preloadedState: { appData: { products: [prod], branches: [], stringOptions: [], categories: [], isLoading: false } } as any
   });
-  return render(
+  const el = (open: boolean) => (
     <Provider store={store}>
-      <CartModal isOpen onClose={() => {}} cartItems={[item]} onRemoveItem={() => {}} onClearCart={clearCart} />
+      <CartModal isOpen={open} onClose={() => {}} cartItems={[cartItem]} onRemoveItem={() => {}} onClearCart={clearCart} />
     </Provider>
   );
+  const r = render(el(true));
+  return { ...r, setOpen: (open: boolean) => r.rerender(el(open)) };
 }
 const phoneInput = () => screen.getByPlaceholderText('Ví dụ: 0912345678') as HTMLInputElement;
 const orderBtn = () => screen.getByRole('button', { name: /Thanh toán SePay QR|Xác nhận đặt hàng|Đang xử lý/ }) as HTMLButtonElement;
@@ -100,7 +103,7 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
 describe('STOR-042 lỗi 1: SePay đơn đã tạo mà /payments lỗi -> không đặt trùng', () => {
   it('giữ mã đơn, xoá giỏ, báo lời OMS; "Thanh toán lại" chỉ gọi payments với đúng mã đơn', async () => {
-    sepayMock.mockRejectedValueOnce(err('Failed', { status: 502, body: { message: 'Cổng SePay đang bảo trì' } }));
+    sepayMock.mockRejectedValueOnce(err('Cổng SePay đang bảo trì', { kind: 'http', status: 502, body: { code: 'X', message: 'Cổng SePay đang bảo trì' } }));
     mount();
     await driveToOrder();
     expect(await screen.findByText(/Đã tạo đơn DH-9\. Chưa mở được trang thanh toán: Cổng SePay đang bảo trì/)).toBeInTheDocument();
@@ -125,7 +128,7 @@ describe('STOR-042 lỗi 1: SePay đơn đã tạo mà /payments lỗi -> không
     sepayMock.mockRejectedValueOnce({});
     mount();
     await driveToOrder();
-    expect(await screen.findByText(/Chưa mở được trang thanh toán: .+/)).toBeInTheDocument();
+    expect(await screen.findByText('Đã tạo đơn DH-9. Chưa mở được trang thanh toán: Cổng thanh toán chưa phản hồi. Vui lòng bấm "Thanh toán lại".')).toBeInTheDocument();
   });
 });
 
@@ -176,11 +179,14 @@ describe('STOR-042 lỗi 3: 201 thiếu order_number', () => {
 
 describe('STOR-042 lỗi 4/5/6: 403, đổi SĐT, 400/429', () => {
   it('403 VERIFICATION_TOKEN: hiện lời OMS, xoá token -> lần sau gửi OTP mới', async () => {
-    createOrderMock.mockRejectedValueOnce(err('Forbidden', { status: 403, body: { code: 'VERIFICATION_TOKEN_EXPIRED', message: 'Mã xác thực đã hết hạn, hãy xác thực lại' } }));
+    // Đã qua 60s kể từ lần gửi OTP: không còn chờ gửi lại.
+    createOrderMock.mockImplementationOnce(async () => {
+      sessionStorage.removeItem('otp_cooldown_expiry_0987654321');
+      throw err('Mã xác thực đã hết hạn, hãy xác thực lại', { status: 403, body: { code: 'VERIFICATION_TOKEN_EXPIRED', message: 'Mã xác thực đã hết hạn, hãy xác thực lại' } });
+    });
     mount();
     await driveToOrder('cod');
     await waitFor(() => expect(alertMock).toHaveBeenCalledWith('Mã xác thực đã hết hạn, hãy xác thực lại'));
-    sessionStorage.clear(); // hết cooldown
     await clickOrder();
     await waitFor(() => expect(sendOtpMock).toHaveBeenCalledTimes(2));
     expect(createOrderMock).toHaveBeenCalledTimes(1);
@@ -199,7 +205,7 @@ describe('STOR-042 lỗi 4/5/6: 403, đổi SĐT, 400/429', () => {
   });
 
   it.each([400, 429])('%s có message chuỗi -> hiện lời OMS', async (status) => {
-    createOrderMock.mockRejectedValueOnce(err('x', { status, body: { message: `Lời OMS ${status}` } }));
+    createOrderMock.mockRejectedValueOnce(err(`Lời OMS ${status}`, { status, body: { message: `Lời OMS ${status}` } }));
     mount();
     await driveToOrder('cod');
     await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Lời OMS ${status}`));
@@ -313,5 +319,95 @@ describe('STOR-042 lỗi 9: đóng OtpModal rồi đặt lại trong 60s', () =>
     fireEvent.click(document.querySelector('#otp-verification-modal button[type="button"]')!);
     await clickOrder();
     await waitFor(() => expect(sendOtpMock).toHaveBeenCalledTimes(2));
+  });
+});
+
+describe('STOR-042 vòng 2 - F4: 403 token khi vừa gửi OTP (< 60s)', () => {
+  it('báo còn N giây, mở modal chờ gửi lại (ô trống, khoá), không gửi/xác nhận mã cũ', async () => {
+    createOrderMock.mockRejectedValueOnce(err('Mã hết hạn', { status: 403, body: { code: 'VERIFICATION_TOKEN_EXPIRED', message: 'Mã hết hạn' } }));
+    mount();
+    await driveToOrder('cod');
+    await waitFor(() => expect(alertMock).toHaveBeenCalledWith(expect.stringMatching(/^Mã xác thực đã hết hạn\. Bạn có thể nhận mã mới sau \d+ giây\.$/)));
+    const input = await screen.findByPlaceholderText('Nhập 6 số OTP') as HTMLInputElement;
+    expect(input.value).toBe('');
+    expect(input).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Xác nhận OTP' })).toBeDisabled();
+    expect(screen.getByText(/Gửi lại sau \(\d+s\)/)).toBeInTheDocument();
+    expect(sendOtpMock).toHaveBeenCalledTimes(1);
+    expect(verifyOtpMock).toHaveBeenCalledTimes(1);
+    // Hết cooldown -> gửi lại được, ô nhập mở khoá
+    sessionStorage.setItem('otp_cooldown_expiry_0987654321', String(Date.now() - 1000));
+    await waitFor(() => expect(screen.getByText('Gửi lại mã')).not.toBeDisabled(), { timeout: 3000 });
+    fireEvent.click(screen.getByText('Gửi lại mã'));
+    await waitFor(() => expect(sendOtpMock).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(screen.getByPlaceholderText('Nhập 6 số OTP')).not.toBeDisabled());
+  });
+});
+
+describe('STOR-042 vòng 2 - F5: đơn SePay chờ thanh toán sống qua đóng/mở giỏ', () => {
+  async function toPaymentError() {
+    sepayMock.mockRejectedValueOnce(err('Cổng SePay đang bảo trì', { kind: 'http', status: 400, body: { code: 'X', message: 'Cổng SePay đang bảo trì' } }));
+    const m = mount();
+    await driveToOrder();
+    await screen.findByRole('button', { name: 'Thanh toán lại' });
+    return m;
+  }
+  it('đóng rồi mở lại giỏ: vẫn thấy mã đơn + "Thanh toán lại" chỉ gọi payments', async () => {
+    const { setOpen } = await toPaymentError();
+    setOpen(false);
+    expect(screen.queryByRole('button', { name: 'Thanh toán lại' })).not.toBeInTheDocument();
+    setOpen(true);
+    expect(await screen.findByText(/Đã tạo đơn DH-9\. Chưa mở được trang thanh toán: Cổng SePay đang bảo trì/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Thanh toán lại' }));
+    await waitFor(() => expect(sepayMock).toHaveBeenLastCalledWith('DH-9'));
+    expect(createOrderMock).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(submitSpy).toHaveBeenCalled());
+    expect(sessionStorage.getItem('pending_sepay_order')).toBeNull();
+  });
+  it('khách bấm "Hoàn thành mua sắm" (chủ động bỏ) -> xoá đơn chờ, mở lại không còn màn lỗi', async () => {
+    const { setOpen } = await toPaymentError();
+    fireEvent.click(screen.getByRole('button', { name: 'Hoàn thành mua sắm' }));
+    expect(sessionStorage.getItem('pending_sepay_order')).toBeNull();
+    setOpen(false);
+    setOpen(true);
+    expect(screen.queryByRole('button', { name: 'Thanh toán lại' })).not.toBeInTheDocument();
+  });
+});
+
+describe('STOR-042 vòng 2 - mục 6: lời cho over_stock/out_of_stock', () => {
+  const withStock = (stock: number) => ({ ...product, variants: [{ ...(product as any).variants[0], stock }] }) as unknown as Product;
+  it('vượt tồn -> "Chỉ còn N sản phẩm..." và khoá thanh toán', () => {
+    mount({ ...item, quantity: 3 }, withStock(2));
+    expect(screen.getByText('Chỉ còn 2 sản phẩm. Vui lòng giảm số lượng.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Tiến hành thanh toán/ })).toBeDisabled();
+  });
+  it('hết hàng -> "Phân loại này đã hết hàng..."', () => {
+    mount(item, withStock(0));
+    expect(screen.getByText('Phân loại này đã hết hàng. Vui lòng xoá khỏi giỏ.')).toBeInTheDocument();
+  });
+});
+
+describe('STOR-042 vòng 2 - mục 6: thêm giỏ bị từ chối vì tồn thì không mở giỏ', () => {
+  const mk = () => configureStore({ reducer: { cart: cartReducer } });
+  it('stock=0: items không đổi, stockNotice được ghi, isOpen=false', () => {
+    const store = mk();
+    store.dispatch(addCartItemAndOpen({ ...item, stock: 0 }) as any);
+    const st = store.getState().cart;
+    expect(st.items).toHaveLength(0);
+    expect(st.stockNotice).toBeTruthy();
+    expect(st.isOpen).toBe(false);
+  });
+  it('thêm được: items có món và isOpen=true', () => {
+    const store = mk();
+    store.dispatch(addCartItemAndOpen({ ...item, stock: 5 }) as any);
+    expect(store.getState().cart.items).toHaveLength(1);
+    expect(store.getState().cart.isOpen).toBe(true);
+  });
+  it('đã có 2/2 trong giỏ, thêm nữa bị từ chối: không mở giỏ', () => {
+    const store = mk();
+    store.dispatch(addCartItemAndOpen({ ...item, quantity: 2, stock: 2 }) as any);
+    store.dispatch(closeCart());
+    store.dispatch(addCartItemAndOpen({ ...item, quantity: 1, stock: 2 }) as any);
+    expect(store.getState().cart.isOpen).toBe(false);
   });
 });

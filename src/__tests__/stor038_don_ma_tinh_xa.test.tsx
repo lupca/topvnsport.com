@@ -233,10 +233,10 @@ describe('STOR-038 422 của (C)', () => {
     await sendOtpAndOrder();
     await waitFor(() => expect(alertMock).toHaveBeenCalledWith(fixedFallback));
   });
-  it('AC32 403 OTP hiện lời OMS (STOR-042)', async () => {
+  it('AC32 403 OTP vừa gửi < 60s: báo còn N giây gửi lại (STOR-042)', async () => {
     orderReply = { status: 403, body: ERR_403_TOKEN };
     await sendOtpAndOrder();
-    await waitFor(() => expect(alertMock).toHaveBeenCalledWith('Mã xác minh không hợp lệ.'));
+    await waitFor(() => expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('Bạn có thể nhận mã mới sau')));
   });
 });
 

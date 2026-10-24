@@ -4,7 +4,7 @@ import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, 
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
-import { describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity, CartItemSkuStatus } from '../features/cart/cartSlice';
+import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
 import { isStringingTierName } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal, { getStoredCooldown, markOtpSent } from './OtpModal';
@@ -47,10 +47,11 @@ function adminUnitsErrorMessage(err: any, fixed: string): string {
   return typeof err?.body?.message === 'string' ? err.body.message : fixed;
 }
 
-// Lời lỗi cho khách: chuỗi trong body OMS, rồi err.message, rồi câu cố định.
+// Lời lỗi cho khách: err.message (sportApi), rồi chuỗi trong body, rồi câu cố định.
 function errorText(err: any, fixed: string): string {
+  // sportApi đã chọn sẵn câu hiển thị được (lời OMS đáng tin hoặc câu tiếng Việt cố định) -> err.message trước.
   const b = err?.body;
-  const candidates = [typeof b === 'string' ? b : null, b?.message, b?.detail, err?.message];
+  const candidates = [err?.message, typeof b === 'string' ? b : null, b?.message, b?.detail];
   const found = candidates.find((c): c is string => typeof c === 'string' && c.trim() !== '');
   return found ?? fixed;
 }
@@ -66,6 +67,23 @@ const MISSING_ORDER_NUMBER_MESSAGE = 'Chưa chắc đơn đã được tạo: h�
 const ORDER_FAILED_MESSAGE = 'Chưa tạo được đơn hàng. Vui lòng thử lại!';
 const TOKEN_REJECTED_MESSAGE = 'Mã xác thực OTP đã hết hạn hoặc không hợp lệ. Vui lòng xác thực lại số điện thoại.';
 const PAYMENT_OPEN_FAILED_MESSAGE = 'Cổng thanh toán chưa phản hồi. Vui lòng bấm "Thanh toán lại".';
+
+type PlacedOrder = { orderNumber: string; shippingAddress: string; total: number | null; shippingFee: number | null; adjusted: boolean; method: 'cod' | 'sepay' };
+
+// Đơn SePay đã tạo mà chưa mở được trang thanh toán: nhớ để đóng/mở lại giỏ vẫn còn nút 'Thanh toán lại'.
+const PENDING_KEY = 'pending_sepay_order';
+function readPending(): { order: PlacedOrder; error: string } | null {
+  try {
+    const v = JSON.parse(sessionStorage.getItem(PENDING_KEY) || 'null');
+    return v && typeof v.order?.orderNumber === 'string' && v.order.orderNumber && typeof v.error === 'string' ? v : null;
+  } catch { return null; }
+}
+function writePending(order: PlacedOrder, error: string) {
+  try { sessionStorage.setItem(PENDING_KEY, JSON.stringify({ order, error })); } catch { /* sessionStorage bị chặn: chỉ mất khả năng khôi phục */ }
+}
+function clearPending() {
+  try { sessionStorage.removeItem(PENDING_KEY); } catch { /* như trên */ }
+}
 
 type UnitList = { units: AdminUnit[] | null; loading: boolean; error: string | null };
 const EMPTY_LIST: UnitList = { units: null, loading: false, error: null };
@@ -90,15 +108,6 @@ const isUsable = (o: ShippingQuoteOption | undefined): o is ShippingQuoteOption 
 
 const PRODUCTS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách sản phẩm. Vui lòng tải lại trang.';
 
-// Lời người bán cho từng lý do món hàng không hợp lệ -- KHÔNG dùng chung một
-// câu cho cả hai ca (sản phẩm bị gỡ khỏi cửa hàng khác với PIM đổi/xoá tổ hợp).
-function cartItemWarningMessage(status: CartItemSkuStatus): string | null {
-  if (status === 'product_not_found') return 'Sản phẩm này hiện không còn trên cửa hàng. Vui lòng xoá khỏi giỏ.';
-  if (status === 'sku_changed') return 'Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.';
-  if (status === 'no_price') return 'Phân loại này hiện chưa có giá. Vui lòng xoá và chọn lại.';
-  return null;
-}
-
 export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, onClearCart }: CartModalProps) {
   const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.appData.products);
@@ -110,7 +119,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const productsError = useAppSelector(state => state.appData.productsError);
   const [step, setStep] = useState(1); // 1 = Cart list, 2 = Checkout Form, 3 = Success Screen
   // Ảnh chụp đơn lúc đặt (COD) -- bước 3 đọc từ đây, không đọc giỏ (giỏ đã xoá).
-  const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; shippingAddress: string; total: number | null; shippingFee: number | null; adjusted: boolean; method: 'cod' | 'sepay' } | null>(null);
+  const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
   // SePay: đơn đã tạo nhưng chưa mở được trang thanh toán (null = chưa lỗi).
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
@@ -147,6 +156,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const phoneBlocked = phone.trim() !== '' && !phoneValid;
   const showPhoneError = phone.trim() !== '' && !phoneValid && (phoneTouched || isPhoneComplete(phone));
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  // Sau 403 token mà vừa gửi OTP < 60s: modal mở ở trạng thái chờ gửi lại, không nhận mã cũ.
+  const [otpNeedsResend, setOtpNeedsResend] = useState(false);
   const [verificationToken, setVerificationToken] = useState('');
 
   // Đóng giỏ -> lần mở sau về bước 1. Dữ liệu form khách đã nhập giữ nguyên.
@@ -159,6 +170,17 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       setVerificationToken('');
     }
     setStep(1);
+  }, [isOpen]);
+
+  // Mở lại giỏ khi còn đơn SePay chờ thanh toán -> hiện lại màn 'Thanh toán lại'.
+  useEffect(() => {
+    if (!isOpen || placedOrder) return;
+    const pending = readPending();
+    if (pending) {
+      setPlacedOrder(pending.order);
+      setPaymentError(pending.error);
+      setStep(3);
+    }
   }, [isOpen]);
 
   const loadProvinces = async () => {
@@ -291,7 +313,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     }
     const invalidItem = cartItems.find(item => describeCartItemSkuStatus(item, products) !== 'ok');
     if (invalidItem) {
-      const message = cartItemWarningMessage(describeCartItemSkuStatus(invalidItem, products));
+      const message = cartItemWarningMessage(describeCartItemSkuStatus(invalidItem, products), variantStock(invalidItem));
       if (message) await popupService.alert(message);
       return;
     }
@@ -325,6 +347,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       try {
         await sportApi.sendOtp(phoneNormalized);
         markOtpSent(phoneNormalized);
+        setOtpNeedsResend(false);
         setIsOtpModalOpen(true);
       } catch (err: any) {
         await popupService.alert(err.message);
@@ -371,7 +394,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       setIsSubmitting(false);
       if (err.status === 403) {
         setVerificationToken('');
-        await popupService.alert(errorText(err, TOKEN_REJECTED_MESSAGE));
+        const wait = getStoredCooldown(phoneNormalized);
+        if (wait > 0) {
+          // Vừa gửi OTP: không gửi lại được ngay. Mở modal chờ, không cho xác nhận mã đã dùng.
+          setOtpNeedsResend(true);
+          setIsOtpModalOpen(true);
+          await popupService.alert(`Mã xác thực đã hết hạn. Bạn có thể nhận mã mới sau ${wait} giây.`);
+        } else {
+          await popupService.alert(errorText(err, TOKEN_REJECTED_MESSAGE));
+        }
       } else if (err.status === 422) {
         // Lỗi nghiệp vụ/schema của (C): hiện lời OMS, ở lại bước 2, giữ giỏ + token OTP.
         const body = err.body;
@@ -408,27 +439,28 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       return n;
     };
     const serverTotal = serverNumber(order.total_amount);
-    setPlacedOrder({
+    const placed: PlacedOrder = {
       orderNumber: order.order_number,
       shippingAddress,
       total: serverTotal,
       shippingFee: serverNumber(order.shipping_fee),
       adjusted: serverTotal !== null && serverTotal !== clientTotal,
       method: paymentMethod,
-    });
+    };
+    setPlacedOrder(placed);
 
     // Đơn đã tạo trên OMS -> xoá giỏ NGAY, chống đặt trùng (kể cả khi bước thanh toán lỗi).
     onClearCart();
     setStep(3);
-    if (paymentMethod === 'sepay') await openSepay(order.order_number);
+    if (paymentMethod === 'sepay') await openSepay(placed);
   };
 
   // Chỉ gọi /payments với mã đơn đã có -- không bao giờ tạo đơn lại.
-  const openSepay = async (orderNumber: string) => {
+  const openSepay = async (placed: PlacedOrder) => {
     setIsPaying(true);
     setPaymentError(null);
     try {
-      const checkoutForm = await sportApi.createSepayCheckout(orderNumber);
+      const checkoutForm = await sportApi.createSepayCheckout(placed.orderNumber);
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = checkoutForm.action;
@@ -441,15 +473,19 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       }
       document.body.appendChild(form);
       form.submit();
+      clearPending(); // đã chuyển sang cổng thanh toán
     } catch (err: any) {
       console.error(err);
-      setPaymentError(errorText(err, PAYMENT_OPEN_FAILED_MESSAGE));
+      const message = errorText(err, PAYMENT_OPEN_FAILED_MESSAGE);
+      setPaymentError(message);
+      writePending(placed, message);
     } finally {
       setIsPaying(false);
     }
   };
 
   const handleFinish = () => {
+    clearPending(); // khách chủ động kết thúc: bỏ đơn chờ thanh toán đã nhớ
     onClearCart();
     setStep(1);
     setPlacedOrder(null);
@@ -491,7 +527,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                         ? null
                         : productsError
                         ? PRODUCTS_LOAD_ERROR_MESSAGE
-                        : cartItemWarningMessage(describeCartItemSkuStatus(item, products));
+                        : cartItemWarningMessage(describeCartItemSkuStatus(item, products), variantStock(item));
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5">
                           <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
@@ -756,7 +792,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   </p>
                   <button
                     type="button"
-                    onClick={() => void openSepay(placedOrder.orderNumber)}
+                    onClick={() => void openSepay(placedOrder)}
                     disabled={isPaying}
                     className={`w-full text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm ${isPaying ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
                   >
@@ -871,6 +907,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       <OtpModal
         isOpen={isOtpModalOpen}
         phoneNumber={phoneNormalized}
+        needsResend={otpNeedsResend}
+        onResent={() => setOtpNeedsResend(false)}
         onClose={() => setIsOtpModalOpen(false)}
         onSuccess={(token) => {
           setIsOtpModalOpen(false);

@@ -7,6 +7,9 @@ interface OtpModalProps {
   phoneNumber: string;
   onClose: () => void;
   onSuccess: (verificationToken: string) => void;
+  // Mã vừa gửi đã bị dùng/hết hạn: ô OTP khoá tới khi gửi lại được mã mới.
+  needsResend?: boolean;
+  onResent?: () => void;
 }
 
 const getExpiryKey = (phone: string) => `otp_cooldown_expiry_${phone}`;
@@ -63,17 +66,19 @@ export function markOtpSent(phone: string): void {
   setStoredOtpCode(phone, '');
 }
 
-export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: OtpModalProps) {
+export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, needsResend = false, onResent }: OtpModalProps) {
   const [cooldown, setCooldown] = useState(() => getStoredCooldown(phoneNumber));
   const [otpCode, setOtpCode] = useState(() => getStoredOtpCode(phoneNumber));
   const [errorMessage, setErrorMessage] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const locked = needsResend;
 
   useEffect(() => {
     if (!isOpen || !phoneNumber) return;
 
     setErrorMessage('');
+    if (needsResend) setStoredOtpCode(phoneNumber, '');
     const storedCode = getStoredOtpCode(phoneNumber);
     setOtpCode(storedCode);
 
@@ -114,6 +119,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
       setCooldown(60);
       markOtpSent(phoneNumber);
       setOtpCode('');
+      onResent?.();
     } catch (err: any) {
       setErrorMessage(mapApiError(err.status, err.message));
     } finally {
@@ -123,6 +129,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (locked) return;
     if (otpCode.length !== 6) {
       setErrorMessage('Vui lòng nhập đầy đủ mã OTP gồm 6 chữ số.');
       return;
@@ -201,6 +208,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
               autoComplete="one-time-code"
               pattern="\d{6}"
               required
+              disabled={locked}
               placeholder="Nhập 6 số OTP"
               value={otpCode}
               onChange={(e) => handleOtpCodeChange(e.target.value)}
@@ -223,9 +231,9 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess }: Ot
               
               <button
                 type="submit"
-                disabled={isVerifying || otpCode.length !== 6}
+                disabled={locked || isVerifying || otpCode.length !== 6}
                 className={`flex-1 text-white font-bold text-xs uppercase py-3 rounded-xl flex items-center justify-center gap-1.5 ${
-                  isVerifying || otpCode.length !== 6 ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'
+                  locked || isVerifying || otpCode.length !== 6 ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'
                 }`}
               >
                 {isVerifying ? 'Đang xác nhận...' : 'Xác nhận OTP'}

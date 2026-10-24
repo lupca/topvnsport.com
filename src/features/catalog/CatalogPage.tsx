@@ -18,7 +18,7 @@ import {
   setSelectedStiffness,
   setSelectedWeight
 } from './catalogSlice';
-import { addCartItem, buildDefaultCartItem, openCart, setQuickViewProduct } from '../cart/cartSlice';
+import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
 
 const ALL_CATEGORIES_OPTION = 'Tất cả';
 
@@ -117,8 +117,7 @@ export default function CatalogPage() {
       void popupService.alert('Phân loại này hiện không có sẵn. Vui lòng chọn phân loại khác.');
       return;
     }
-    dispatch(addCartItem(item));
-    dispatch(openCart());
+    dispatch(addCartItemAndOpen(item));
   };
 
   const sortedProducts = useMemo(() => sortProducts(filteredProducts, sortMode), [filteredProducts, sortMode]);
