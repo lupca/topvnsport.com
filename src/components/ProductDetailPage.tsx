@@ -5,7 +5,7 @@ import TrustSealsPanel from './TrustSealsPanel';
 import ProductPurchaseSection from './product-detail/ProductPurchaseSection';
 import ProductDetailTabs, { DetailTab } from './product-detail/ProductDetailTabs';
 import MobilePurchaseBar from './product-detail/MobilePurchaseBar';
-import { StockState, aggregateStock, initialTierValue, inferStringMeta, isNoStringOption, isStringingTierName } from './product-detail/helpers';
+import { StockState, aggregateStock, initialTierValue, inferStringMeta, isNoStringOption, isStringingTier } from './product-detail/helpers';
 import { isRacketCategoryCode } from '../config/storefront';
 
 interface ProductDetailPageProps {
@@ -36,7 +36,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   const [selectedTier2, setSelectedTier2] = useState<string>(() => initialTierValue(product, 2));
 
   const stringingVariation = product.tier_variations?.find(
-    (tv) => isStringingTierName(tv.name)
+    (tv) => isStringingTier(tv)
   );
   const hasStringingVariation = !!stringingVariation;
   const stringingTierIndex = stringingVariation?.tier_index;

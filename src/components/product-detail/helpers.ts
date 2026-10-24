@@ -42,10 +42,11 @@ export const inferStringMeta = (
   };
 };
 
-// So khớp tên tier "Loại cước" không phân biệt hoa/thường -- prod có cả
-// 'Loại cước' lẫn 'Loại Cước'.
-export const isStringingTierName = (name: string | undefined | null): boolean =>
-  (name || '').trim().toLowerCase() === 'loại cước';
+// Tầng cước của vợt = tầng có lựa chọn 'khung không dây'. Không so tên tầng:
+// người bán đặt tên tùy ý. Tầng chọn màu cước của
+// cuộn cước không có lựa chọn này nên không khớp. PIM chưa có trường chính thức.
+export const isStringingTier = (tier: { options: string[] }): boolean =>
+  tier.options.some(isNoStringOption);
 
 // Ghép "Loại • Ø Độ dày" chỉ từ các phần THẬT có dữ liệu; trả rỗng khi không
 // có phần nào (UI tự ẩn cả dòng khi rỗng).
@@ -83,6 +84,6 @@ export const initialTierValue = (product: Product, tierIndex: number): string =>
   const tier = product.tier_variations?.find((tv) => tv.tier_index === tierIndex);
   if (!tier) return '';
   if (tier.options.length === 1) return tier.options[0];
-  if (isStringingTierName(tier.name)) return tier.options.find(isNoStringOption) ?? '';
+  if (isStringingTier(tier)) return tier.options.find(isNoStringOption) ?? '';
   return '';
 };

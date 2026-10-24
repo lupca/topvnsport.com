@@ -5,7 +5,7 @@ import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
 import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
-import { isStringingTierName } from './product-detail/helpers';
+import { isStringingTier } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal, { getStoredCooldown, markOtpSent } from './OtpModal';
 import AdminUnitPicker from './AdminUnitPicker';
@@ -274,7 +274,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   // "Không đan lưới" chỉ có nghĩa với sản phẩm có tầng cước mà phân loại đã chọn không nêu tầng đó.
   const hasUnstrungChoice = (item: CartItem) =>
     (productOf(item)?.tier_variations || []).some(
-      tv => isStringingTierName(tv.name) && !(item.variantLabel || '').includes(`${tv.name}:`)
+      tv => isStringingTier(tv) && !(item.variantLabel || '').includes(`${tv.name}:`)
     );
 
   // Chỉ dùng báo giá của ĐÚNG bộ giỏ+xã hiện tại; không có giá dùng được -> null (không đoán phí).
