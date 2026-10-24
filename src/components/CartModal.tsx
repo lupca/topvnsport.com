@@ -4,6 +4,7 @@ import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, 
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
+import { isFinalPaymentError } from '../features/checkout/omsErrors';
 import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
 import { isStringingTier } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
@@ -122,6 +123,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
   // SePay: đơn đã tạo nhưng chưa mở được trang thanh toán (null = chưa lỗi).
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [paymentFinal, setPaymentFinal] = useState(false); // lỗi cuối: thanh toán lại chỉ nhận lại cùng lỗi
   const [isPaying, setIsPaying] = useState(false);
   const [pending, setPending] = useState<{ order: PlacedOrder; error: string } | null>(() => readPending());
   // Đặt đơn lỗi mà chưa biết đơn đã tạo chưa: khoá nút tới khi khách xác nhận đã kiểm tra.
@@ -168,6 +170,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     if (step === 3) {
       setPlacedOrder(null);
       setPaymentError(null);
+      setPaymentFinal(false);
       setVerificationToken('');
     }
     setStep(1);
@@ -447,13 +450,14 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     // Đơn đã tạo trên OMS -> xoá giỏ NGAY, chống đặt trùng (kể cả khi bước thanh toán lỗi).
     onClearCart();
     setStep(3);
-    if (paymentMethod === 'sepay') await openSepay(placed);
+    if (paymentMethod === 'sepay') await openSepay(placed, 'step3');
   };
 
   // Chỉ gọi /payments với mã đơn đã có -- không bao giờ tạo đơn lại.
-  const openSepay = async (placed: PlacedOrder) => {
+  const openSepay = async (placed: PlacedOrder, from: 'reminder' | 'step3') => {
     setIsPaying(true);
     setPaymentError(null);
+    setPaymentFinal(false);
     try {
       const checkoutForm = await sportApi.createSepayCheckout(placed.orderNumber);
       const form = document.createElement('form');
@@ -473,9 +477,17 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     } catch (err: any) {
       console.error(err);
       const message = errorText(err, PAYMENT_OPEN_FAILED_MESSAGE);
-      setPaymentError(message);
-      writePending(placed, message);
-      setPending({ order: placed, error: message });
+      if (isFinalPaymentError(err)) {
+        clearPending();
+        setPending(null);
+        setPaymentError(message);
+        setPaymentFinal(true);
+        if (from === 'reminder') await popupService.alert(message); // bước 3 đã hiện lời tại chỗ
+      } else {
+        setPaymentError(message);
+        writePending(placed, message);
+        setPending({ order: placed, error: message });
+      }
     } finally {
       setIsPaying(false);
     }
@@ -488,6 +500,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     setStep(1);
     setPlacedOrder(null);
     setPaymentError(null);
+    setPaymentFinal(false);
     setVerificationToken('');
     onClose();
   };
@@ -520,7 +533,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   <p>Đơn {pending.order.orderNumber} chưa thanh toán.</p>
                   {pending.error && <p>{pending.error}</p>}
                   <div className="flex gap-3">
-                    <button type="button" disabled={isPaying} onClick={() => void openSepay(pending.order)} className="underline font-bold">Thanh toán lại</button>
+                    <button type="button" disabled={isPaying} onClick={() => void openSepay(pending.order, 'reminder')} className="underline font-bold">Thanh toán lại</button>
                     <button type="button" onClick={() => { clearPending(); setPending(null); }} className="underline">Bỏ nhắc</button>
                   </div>
                 </div>
@@ -798,17 +811,19 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   <p role="alert" className="text-xs text-red-600 font-semibold">
                     Đã tạo đơn {placedOrder.orderNumber}. Chưa mở được trang thanh toán: {paymentError}
                   </p>
+                  {!paymentFinal && (
+                    <button
+                      type="button"
+                      onClick={() => void openSepay(placedOrder, 'step3')}
+                      disabled={isPaying}
+                      className={`w-full text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm ${isPaying ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                    >
+                      {isPaying ? 'Đang xử lý...' : 'Thanh toán lại'}
+                    </button>
+                  )}
                   <button
                     type="button"
-                    onClick={() => void openSepay(placedOrder)}
-                    disabled={isPaying}
-                    className={`w-full text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm ${isPaying ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
-                  >
-                    {isPaying ? 'Đang xử lý...' : 'Thanh toán lại'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setStep(1); setPlacedOrder(null); setPaymentError(null); }}
+                    onClick={() => { setStep(1); setPlacedOrder(null); setPaymentError(null); setPaymentFinal(false); }}
                     className="w-full border border-gray-300 text-gray-700 font-bold text-xs uppercase tracking-wider py-3 rounded-sm"
                   >
                     Quay về giỏ hàng
