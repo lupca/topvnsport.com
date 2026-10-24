@@ -16,7 +16,7 @@
     "@reduxjs/toolkit": "^2.9.0",
     "@tailwindcss/vite": "^4.1.14",
     "@topvnsport/api-client": "https://codeload.github.com/lupca/voma-api-client/tar.gz/dcd5302b92bc1c9563daa7972de530c9c723fc84",
-    "@topvnsport/ui-kit": "https://codeload.github.com/lupca/voma-ui-kit/tar.gz/fce8ccb5617521c1d2d68ee9b24a5e8cf811ca94",
+    "@topvnsport/ui-kit": "https://codeload.github.com/lupca/voma-ui-kit/tar.gz/4f07b604eaba423054963688607e0b2f13078516",
     "@vitejs/plugin-react": "^5.0.4",
     "clsx": "^2.1.1",
     "lucide-react": "^0.546.0",

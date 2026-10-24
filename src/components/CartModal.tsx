@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { isValidPhone, isPhoneComplete, normalizePhone, PHONE_ERROR_MESSAGE } from '../utils/phone';
 import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck, QrCode, CreditCard } from 'lucide-react';
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
@@ -114,6 +115,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     ? JSON.stringify([cartItems.map(i => [i.skuCode, i.quantity]), province.code, ward.code])
     : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const phoneNormalized = normalizePhone(phone);
+  const phoneValid = isValidPhone(phone);
+  // Đã nhập mà sai thì khoá nút; còn trống thì để guard 'thiếu thông tin' báo bằng lời.
+  const phoneBlocked = phone.trim() !== '' && !phoneValid;
+  const showPhoneError = phone.trim() !== '' && !phoneValid && (phoneTouched || isPhoneComplete(phone));
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [verificationToken, setVerificationToken] = useState('');
 
@@ -272,6 +279,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     }
     if (selectedFee === null) return;
 
+    if (!phoneValid) {
+      setPhoneTouched(true);
+      return;
+    }
+
     const activeToken = tokenOverride || verificationToken;
 
     // Send the initial OTP before opening the verification modal so provider
@@ -279,7 +291,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     if (!activeToken) {
       setIsSubmitting(true);
       try {
-        await sportApi.sendOtp(phone);
+        await sportApi.sendOtp(phoneNormalized);
         setIsOtpModalOpen(true);
       } catch (err: any) {
         await popupService.alert(err.message);
@@ -309,7 +321,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         .join('');
 
       const order = await sportApi.createOrder({
-        customer: { name: fullName.trim(), phone: phone.trim(), address: shippingAddress },
+        customer: { name: fullName.trim(), phone: phoneNormalized, address: shippingAddress },
         items,
         shipping_fee: selectedFee,
         shipping_address: shippingAddress,
@@ -533,12 +545,16 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   <label className="text-[10px] font-bold text-gray-400 uppercase">Số điện thoại liên hệ *</label>
                   <input
                     type="tel"
+                    inputMode="tel"
                     required
                     placeholder="Ví dụ: 0912345678"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
+                    onBlur={() => setPhoneTouched(true)}
+                    aria-invalid={showPhoneError}
+                    className={`w-full bg-gray-50 border ${showPhoneError ? 'border-red-500' : 'border-gray-200'} rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition`}
                   />
+                  {showPhoneError && <p role="alert" className="text-[11px] text-red-600">{PHONE_ERROR_MESSAGE}</p>}
                 </div>
 
                 <div className="space-y-1">
@@ -739,8 +755,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   onClick={() => {
                     void handleCheckoutSubmit();
                   }}
-                  disabled={isSubmitting || selectedFee === null}
-                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || selectedFee === null ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                  disabled={isSubmitting || selectedFee === null || phoneBlocked}
+                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || selectedFee === null || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
                 >
                   {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng'}
                 </button>
@@ -762,7 +778,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       </div>
       <OtpModal
         isOpen={isOtpModalOpen}
-        phoneNumber={phone}
+        phoneNumber={phoneNormalized}
         onClose={() => setIsOtpModalOpen(false)}
         onSuccess={(token) => {
           setIsOtpModalOpen(false);
