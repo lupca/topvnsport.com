@@ -65,7 +65,7 @@ async function placeSepayOrder() {
   fireEvent.click(screen.getByRole('button', { name: /Thanh toán SePay/ }));
   fireEvent.change(await screen.findByPlaceholderText('Nhập 6 số OTP'), { target: { value: '123456' } });
   fireEvent.click(screen.getByRole('button', { name: 'Xác nhận OTP' }));
-  await screen.findByRole('button', { name: 'Thanh toán lại' });
+  await screen.findByText(/Chưa mở được trang thanh toán:/); // 409 là lỗi cuối (STOR-048): không còn nút 'Thanh toán lại'
 }
 
 describe('STOR-042 F1 với sportApi thật', () => {

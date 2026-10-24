@@ -55,7 +55,7 @@ function mount(items: CartItem[]) {
 
 // Đặt SePay thành công đơn DH-9 nhưng /payments lỗi -> màn đơn chờ (giỏ đã xoá).
 async function toPendingScreen() {
-  sepayMock.mockRejectedValueOnce(Object.assign(new Error('Cổng SePay đang bảo trì'), { kind: 'http', status: 400 }));
+  sepayMock.mockRejectedValueOnce(Object.assign(new Error('Cổng SePay đang bảo trì'), { kind: 'http', status: 503 }));
   const m = mount([OLD]);
   fireEvent.click(screen.getByRole('button', { name: /Tiến hành thanh toán/ }));
   fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Khách' } });
