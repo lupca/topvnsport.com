@@ -20,14 +20,14 @@ export default function CheckoutCallbackPage({ status }: CheckoutCallbackPagePro
           </div>
 
           <div className="space-y-2">
-            <h1 className="font-display font-black text-2xl text-gray-900 uppercase">Thanh toán thành công!</h1>
+            <h1 className="font-display font-black text-2xl text-gray-900 uppercase">Đã nhận đơn hàng</h1>
             <p className="text-sm text-gray-500">
-              Cảm ơn bạn đã hoàn tất thanh toán cho đơn hàng. Hệ thống đã xác nhận thanh toán qua SePay.
+              {orderNumber ? `Đã nhận đơn hàng ${orderNumber}.` : 'Đã nhận đơn hàng.'} Cửa hàng sẽ xác nhận khi nhận được thanh toán qua SePay.
             </p>
           </div>
 
           {orderNumber && (
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700">
+            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700 break-all">
               Mã đơn hàng: <strong className="text-brand-primary">{orderNumber}</strong>
             </div>
           )}
