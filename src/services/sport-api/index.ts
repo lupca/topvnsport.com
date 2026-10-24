@@ -292,11 +292,80 @@ async function getConstants() {
   return JSON.parse(JSON.stringify(rawData.constants));
 }
 
+// ---- Gọi OMS: timeout + lỗi tiếng Việt thống nhất ----------------------------
+// Mọi hàm gọi /api/oms/* NÉM Error có .message (tiếng Việt hiển thị được), .kind
+// ('http'|'network'|'timeout'|'invalid_response'), .status (số | undefined), .body (JSON | null).
+export const OMS_TIMEOUT_MS = 20_000;
+export type OmsErrorKind = 'http' | 'network' | 'timeout' | 'invalid_response';
+
+const MSG_NETWORK = 'Không kết nối được tới hệ thống đặt hàng. Vui lòng kiểm tra mạng rồi thử lại.';
+const MSG_TIMEOUT = 'Hệ thống đặt hàng phản hồi quá lâu. Vui lòng thử lại sau ít phút.';
+const MSG_INVALID = 'Hệ thống trả về dữ liệu không hợp lệ. Vui lòng thử lại sau ít phút.';
+
+function httpMessage(status: number): string {
+  if (status === 429) return 'Bạn thao tác quá nhanh. Vui lòng đợi một lúc rồi thử lại.';
+  if (status === 502 || status === 503 || status === 504) return 'Hệ thống đặt hàng đang tạm thời không phản hồi. Vui lòng thử lại sau ít phút.';
+  if (status >= 500) return 'Hệ thống đặt hàng gặp lỗi khi xử lý. Vui lòng thử lại sau ít phút.';
+  if (status === 422) return 'Thông tin gửi đi chưa hợp lệ. Vui lòng kiểm tra lại.';
+  return 'Yêu cầu không được chấp nhận. Vui lòng kiểm tra lại thông tin.';
+}
+
+function decorate(error: unknown, kind: OmsErrorKind, message: string, status?: number, body: unknown = null): any {
+  // Giữ nguyên chính đối tượng lỗi nếu có (test/caller so sánh bằng định danh).
+  const e: any = error !== null && typeof error === 'object' ? error : new Error(message);
+  Object.defineProperties(e, {
+    message: { value: message, configurable: true, writable: true },
+    kind: { value: kind, configurable: true, writable: true, enumerable: true },
+    status: { value: status, configurable: true, writable: true, enumerable: true },
+    body: { value: body, configurable: true, writable: true, enumerable: true },
+  });
+  return e;
+}
+
+// ponytail: GET (init rỗng) gọi fetch(url) không signal -> hết giờ chỉ bỏ chờ, không huỷ request; POST có abort thật.
+async function omsCall(url: string, init?: RequestInit): Promise<any> {
+  const ctrl = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => { ctrl.abort(); reject(decorate(new Error(MSG_TIMEOUT), 'timeout', MSG_TIMEOUT)); }, OMS_TIMEOUT_MS);
+  });
+  const work = (async () => {
+    let response: Response;
+    try {
+      response = init ? await fetch(url, { ...init, signal: ctrl.signal }) : await fetch(url);
+    } catch (error) {
+      console.error(url, error);
+      throw decorate(error, 'network', MSG_NETWORK);
+    }
+    if (!response.ok) {
+      console.error(url, response.status);
+      const body = await response.json().catch(() => null);
+      // 5xx: chỉ tin lời OMS khi body có `code` của OMS; detail trần của proxy/server không bao giờ hiện.
+      const trusted = response.status < 500 || (body && typeof body.code === 'string');
+      const text = trusted ? [body?.message, body?.detail].find((v) => typeof v === 'string' && v.trim()) : undefined;
+      throw decorate(new Error(), 'http', text ?? httpMessage(response.status), response.status, body);
+    }
+    try {
+      return await response.json();
+    } catch {
+      console.error(url, 'body is not JSON');
+      throw decorate(new Error(), 'invalid_response', MSG_INVALID);
+    }
+  })();
+  try {
+    return await Promise.race([work, timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+const invalid = (url: string, why: string) => { console.error(url, why); return decorate(new Error(), 'invalid_response', MSG_INVALID); };
+const postJson = (payload: unknown): RequestInit => ({ method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
 const ADMIN_UNITS_PAGE_SIZE = 500;
 
 // Lấy HẾT danh mục tỉnh/xã từ OMS (hợp đồng (A)): đi theo next_cursor tới null.
-// Trang nào lỗi -> console.error(url, status) rồi NÉM (kèm .status và .body đã
-// parse, null nếu không phải JSON); không trả danh sách cụt, không danh sách dự phòng.
+// Trang nào lỗi -> NÉM (omsCall); không trả danh sách cụt, không danh sách dự phòng.
 async function getAdminUnits(level: 'province' | 'ward', parent?: string): Promise<AdminUnit[]> {
   const all: AdminUnit[] = [];
   let cursor: string | null = null;
@@ -306,132 +375,41 @@ async function getAdminUnits(level: 'province' | 'ward', parent?: string): Promi
     query.set('limit', String(ADMIN_UNITS_PAGE_SIZE));
     if (cursor) query.set('cursor', cursor);
     const url = `${OMS_PROXY_URL}/admin-units?${query.toString()}`;
-    let response: Response;
-    try {
-      response = await fetch(url);
-    } catch (error) {
-      console.error(url, error);
-      throw error;
-    }
-    if (!response.ok) {
-      console.error(url, response.status);
-      const error = new Error(`OMS admin-units failed with status ${response.status}`) as any;
-      error.status = response.status;
-      error.body = await response.json().catch(() => null);
-      throw error;
-    }
-    const data = await response.json();
-    if (!data || !Array.isArray(data.items)) {
-      console.error(url, 'body without items');
-      throw new Error('OMS admin-units returned an unexpected body');
-    }
+    const data = await omsCall(url);
+    if (!data || !Array.isArray(data.items)) throw invalid(url, 'body without items');
     all.push(...data.items);
     cursor = data.next_cursor ?? null;
   } while (cursor);
   return all;
 }
 
-// Báo giá ship của OMS (hợp đồng (B)). Không 2xx -> NÉM (kèm .status và .body đã
-// parse, null nếu không phải JSON); 200 không có mảng options -> NÉM. Không đoán phí.
+// Báo giá ship của OMS (hợp đồng (B)). 200 không có mảng options -> NÉM. Không đoán phí.
 async function getShippingQuote(request: ShippingQuoteRequest): Promise<ShippingQuote> {
   const url = `${OMS_PROXY_URL}/shipping-quote`;
-  let response: Response;
-  try {
-    response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(request),
-    });
-  } catch (error) {
-    console.error(url, error);
-    throw error;
-  }
-  if (!response.ok) {
-    console.error(url, response.status);
-    const error = new Error(`OMS shipping-quote failed with status ${response.status}`) as any;
-    error.status = response.status;
-    error.body = await response.json().catch(() => null);
-    throw error;
-  }
-  const data = await response.json();
-  if (!data || !Array.isArray(data.options)) {
-    console.error(url, 'body without options');
-    throw new Error('OMS shipping-quote returned an unexpected body');
-  }
+  const data = await omsCall(url, postJson(request));
+  if (!data || !Array.isArray(data.options)) throw invalid(url, 'body without options');
   return data;
 }
 
-async function createOrder(orderData: CreateOrderPayload) {
-  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/orders`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(orderData)
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    const error = new Error(`Failed to create order: ${errorText}`) as any;
-    error.status = response.status;
-    try { error.body = JSON.parse(errorText); } catch { error.body = null; }
-    throw error;
-  }
-
-  return response.json();
-}
+const createOrder = (orderData: CreateOrderPayload) => omsCall(`${OMS_CHECKOUT_PROXY_URL}/orders`, postJson(orderData));
 
 async function createSepayCheckout(orderNumber: string) {
-  const payload = { order_number: orderNumber };
-  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/payments`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    const error = new Error(`Failed to create SePay checkout form: ${errorText}`) as any;
-    error.status = response.status;
-    throw error;
+  const url = `${OMS_CHECKOUT_PROXY_URL}/payments`;
+  const data = await omsCall(url, postJson({ order_number: orderNumber }));
+  let https = false;
+  try { https = new URL(data?.action).protocol === 'https:'; } catch { /* action thiếu/không phải URL */ }
+  const f = data?.fields;
+  if (!https || !f || typeof f !== 'object' || Array.isArray(f) || !Object.values(f).every((v) => typeof v === 'string')) {
+    throw invalid(url, 'checkout form without https action / string fields');
   }
-
-  return response.json() as Promise<{ action: string; fields: Record<string, string> }>;
+  return data as { action: string; fields: Record<string, string> };
 }
 
-async function sendOtp(phoneNumber: string): Promise<SendOtpResponse> {
-  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/send-otp`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone_number: phoneNumber })
-  });
+const sendOtp = (phoneNumber: string): Promise<SendOtpResponse> =>
+  omsCall(`${OMS_CHECKOUT_PROXY_URL}/send-otp`, postJson({ phone_number: phoneNumber }));
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
-    throw {
-      status: response.status,
-      message: errorData.detail || 'Failed to send OTP'
-    };
-  }
-
-  return response.json();
-}
-
-async function verifyOtp(phoneNumber: string, otpCode: string): Promise<VerifyOtpResponse> {
-  const response = await fetch(`${OMS_CHECKOUT_PROXY_URL}/verify-otp`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone_number: phoneNumber, otp_code: otpCode })
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
-    throw {
-      status: response.status,
-      message: errorData.detail || 'Failed to verify OTP'
-    };
-  }
-
-  return response.json();
-}
+const verifyOtp = (phoneNumber: string, otpCode: string): Promise<VerifyOtpResponse> =>
+  omsCall(`${OMS_CHECKOUT_PROXY_URL}/verify-otp`, postJson({ phone_number: phoneNumber, otp_code: otpCode }));
 
 export const sportApi = {
   getProducts,
