@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductDetailPage from '../../components/ProductDetailPage';
@@ -13,7 +13,14 @@ export default function ProductDetailRoute() {
   const stringOptions = useAppSelector(state => state.appData.stringOptions);
   const product = findProductBySlug(products, slug);
 
-  if (!product) return <div>Not Found</div>;
+  if (!product) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4" id="not-found">
+        <h1 className="font-display font-black text-2xl text-gray-900">Không tìm thấy trang</h1>
+        <Link to="/" className="inline-block text-sm font-bold text-brand-primary hover:underline">Về trang chủ</Link>
+      </div>
+    );
+  }
 
   const handleAddToCartWithSpecs = (
     targetProduct: (typeof products)[number],

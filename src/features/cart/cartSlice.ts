@@ -6,7 +6,12 @@ interface CartState {
   items: CartItem[];
   isOpen: boolean;
   quickViewProduct: Product | null;
+  // Câu báo khách khi thêm vượt tồn (Header hiện rồi xoá). undefined/null = không có.
+  stockNotice?: string | null;
 }
+
+// Món thêm vào giỏ kèm tồn đã biết của biến thể (số; undefined = chưa biết tồn).
+export type CartItemInput = CartItem & { stock?: number };
 
 const CART_STORAGE_KEY = 'cart_items';
 
@@ -15,7 +20,15 @@ export function loadCartItemsFromStorage(): CartItem[] {
     const data = localStorage.getItem(CART_STORAGE_KEY);
     if (!data) return [];
     const parsed = JSON.parse(data);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    // Giỏ hỏng (tay sửa/phiên bản cũ): bỏ phần tử không phải món hàng hợp lệ,
+    // quantity phải là số nguyên > 0 -- không để sập app hay tổng âm.
+    return parsed.filter(
+      (it): it is CartItem =>
+        typeof it === 'object' && it !== null &&
+        typeof it.id === 'string' && typeof it.productId === 'string' &&
+        typeof it.price === 'number' && Number.isInteger(it.quantity) && it.quantity > 0
+    );
   } catch (e) {
     return [];
   }
@@ -39,14 +52,31 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addCartItem: (state, action: PayloadAction<CartItem>) => {
-      const existingIndex = state.items.findIndex(item => item.id === action.payload.id);
-      if (existingIndex > -1) {
-        state.items[existingIndex].quantity += action.payload.quantity || 1;
+    addCartItem: (state, action: PayloadAction<CartItemInput>) => {
+      const { stock, ...item } = action.payload;
+      const add = Number.isInteger(item.quantity) && item.quantity > 0 ? item.quantity : 1;
+      // Gộp cùng SKU + cùng dây + cùng lực căng (thêm từ thẻ và từ trang chi tiết).
+      const existing = state.items.find(i =>
+        i.id === item.id ||
+        (Boolean(item.skuCode) && i.skuCode === item.skuCode &&
+          (i.stringOption?.id ?? null) === (item.stringOption?.id ?? null) && i.tension === item.tension)
+      );
+      const have = existing?.quantity ?? 0;
+      if (typeof stock === 'number' && have + add > stock) {
+        state.stockNotice = stock <= 0
+          ? 'Sản phẩm này đã hết hàng.'
+          : `Chỉ còn ${stock} sản phẩm.${have > 0 ? ` Trong giỏ của bạn đã có ${have}.` : ''}`;
+        return;
+      }
+      if (existing) {
+        existing.quantity += add;
       } else {
-        state.items.push(action.payload);
+        state.items.push({ ...item, quantity: add });
       }
       saveCartItemsToStorage(state.items);
+    },
+    clearStockNotice: state => {
+      state.stockNotice = null;
     },
     removeCartItem: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter(item => item.id !== action.payload);
@@ -82,6 +112,7 @@ const cartSlice = createSlice({
 
 export const {
   addCartItem,
+  clearStockNotice,
   removeCartItem,
   updateCartItemQuantity,
   clearCart,
@@ -185,10 +216,22 @@ export function buildVariantLabel(product: Product, tier1: string, tier2: string
 // giá cấp sản phẩm thay).
 export function variantUnitPrice(variant: ProductVariant): number | null {
   if (!(variant.price > 0)) return null;
-  return variant.computedPrice ?? variant.price;
+  const unit = variant.computedPrice ?? variant.price;
+  // computed_price = 0 (hoặc không phải số) không phải giá thật -- không bán 0đ.
+  return unit > 0 ? unit : null;
 }
 
-export type CartItemSkuStatus = 'ok' | 'product_not_found' | 'sku_changed' | 'no_price';
+export type CartItemSkuStatus = 'ok' | 'product_not_found' | 'sku_changed' | 'no_price' | 'out_of_stock' | 'over_stock';
+
+// Lời người bán cho từng lý do món hàng không hợp lệ (CartModal dùng để báo khách).
+export function cartItemWarningMessage(status: CartItemSkuStatus, stock?: number): string | null {
+  if (status === 'product_not_found') return 'Sản phẩm này hiện không còn trên cửa hàng. Vui lòng xoá khỏi giỏ.';
+  if (status === 'sku_changed') return 'Phân loại của sản phẩm này đã thay đổi. Vui lòng xoá và chọn lại.';
+  if (status === 'no_price') return 'Phân loại này hiện chưa có giá. Vui lòng xoá và chọn lại.';
+  if (status === 'out_of_stock') return 'Phân loại này đã hết hàng. Vui lòng xoá khỏi giỏ.';
+  if (status === 'over_stock') return `Chỉ còn ${stock} sản phẩm. Vui lòng giảm số lượng.`;
+  return null;
+}
 
 // Phân biệt RÕ hai lý do khiến món hàng không còn hợp lệ, để UI báo đúng câu
 // (lời người bán) cho từng ca thay vì gộp chung:
@@ -202,7 +245,14 @@ export function describeCartItemSkuStatus(item: CartItem, products: Product[]): 
   if (!product) return 'product_not_found';
   const variant = item.skuCode ? sellableVariantsOf(product).find(v => v.sku_code === item.skuCode) : undefined;
   if (!variant) return 'sku_changed';
-  return variantUnitPrice(variant) === null ? 'no_price' : 'ok';
+  if (variantUnitPrice(variant) === null) return 'no_price';
+  // Tồn là số (WMS đã tải): hết hàng / vượt tồn khoá thanh toán. Tồn không biết
+  // (undefined) không chặn -- không đoán là hết hàng.
+  if (typeof variant.stock === 'number') {
+    if (variant.stock <= 0) return 'out_of_stock';
+    if (!Number.isInteger(item.quantity) || item.quantity > variant.stock) return 'over_stock';
+  }
+  return 'ok';
 }
 
 // Đơn giá của món theo biến thể ĐÃ TẢI (không tin CartItem.price lưu
@@ -231,7 +281,7 @@ export function isCartItemSkuValid(item: CartItem, products: Product[]): boolean
   return describeCartItemSkuStatus(item, products) === 'ok';
 }
 
-export function buildDefaultCartItem(product: Product): CartItem | null {
+export function buildDefaultCartItem(product: Product): CartItemInput | null {
   // Không có giá thật thì không bao giờ tạo món hàng (không gửi giá bịa đi).
   if (product.price === undefined) return null;
   const variant = getSingleSellableVariant(product);
@@ -266,7 +316,8 @@ export function buildDefaultCartItem(product: Product): CartItem | null {
     variantLabel: buildVariantLabel(product, selectedColor, selectedWeight),
     stringOption: null,
     tension: 10.5,
-    quantity: 1
+    quantity: 1,
+    stock: variant.stock
   };
 }
 
@@ -276,7 +327,7 @@ export function buildConfiguredCartItem(
   color: string,
   stringChoice: StringOption | null,
   tension: number
-): CartItem | null {
+): CartItemInput | null {
   if (product.price === undefined) return null;
   const skuCode = resolveSkuCode(product, color, weight);
   if (!skuCode) {
@@ -299,7 +350,8 @@ export function buildConfiguredCartItem(
     variantLabel: buildVariantLabel(product, color, weight),
     stringOption: stringChoice,
     tension,
-    quantity: 1
+    quantity: 1,
+    stock: variant.stock
   };
 }
 

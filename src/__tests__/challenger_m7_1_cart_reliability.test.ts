@@ -122,8 +122,8 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       const negQtyItem = { ...item, quantity: -3 };
       const state2 = cartReducer(state1, addCartItem(negQtyItem));
 
-      // 1 + (-3) = -2. Item remains in cart with negative quantity!
-      expect(state2.items[0].quantity).toBe(-2);
+      // STOR-045: số lượng không hợp lệ bị coi là 1 -> không còn âm.
+      expect(state2.items[0].quantity).toBe(2);
       expect(state2.items.length).toBe(1);
     });
 
@@ -132,10 +132,12 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       const itemWithNeg = { ...buildDefaultCartItem(mockSimpleProduct)!, id: 'NEW-NEG-ITEM', quantity: -5 };
 
       let state = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(itemWithZero));
-      expect(state.items[0].quantity).toBe(0);
+      expect(state.items[0].quantity).toBe(1);
 
       state = cartReducer(state, addCartItem(itemWithNeg));
-      expect(state.items[1].quantity).toBe(-5);
+      // cùng SKU -> gộp vào dòng đầu (1 + 1).
+      expect(state.items.length).toBe(1);
+      expect(state.items[0].quantity).toBe(2);
     });
   });
 
@@ -167,11 +169,12 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       expect(configuredItem.id).toBe('PROD-SIMPLE-1-Tiêu chuẩn-Tiêu chuẩn-none-10.5');
       expect(defaultItem.id).not.toBe(configuredItem.id);
 
-      // Adding both to cart results in 2 separate cart items despite identical physical specifications!
+      // STOR-045: cùng SKU + dây + lực căng -> gộp một dòng dù id khác nhau.
       let state = cartReducer({ items: [], isOpen: false, quickViewProduct: null }, addCartItem(defaultItem));
       state = cartReducer(state, addCartItem(configuredItem));
 
-      expect(state.items.length).toBe(2);
+      expect(state.items.length).toBe(1);
+      expect(state.items[0].quantity).toBe(2);
     });
 
     it('creates separate cart items when adding items with different attributes', () => {
@@ -204,7 +207,8 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       state = cartReducer(state, addCartItem(itemStr2));
       state = cartReducer(state, addCartItem(itemTension2));
 
-      expect(state.items.length).toBe(5);
+      // itemWeight1/2 cùng SKU (sản phẩm không có tầng cân nặng) -> gộp: 4 dòng.
+      expect(state.items.length).toBe(4);
     });
 
     it('handles non-racket products correctly in buildDefaultCartItem', () => {
@@ -249,10 +253,8 @@ describe('Milestone 7 Empirical Challenge - Cart State & Edge Cases', () => {
       localStorage.setItem('cart_items', JSON.stringify(corruptedData));
 
       const loaded = loadCartItemsFromStorage();
-      // Returns raw corrupted array without filtering out non-CartItem objects or invalid schemas
-      expect(loaded.length).toBe(6);
-      expect(loaded[0]).toBeNull();
-      expect(loaded[4]).toEqual({ invalidSchema: true });
+      // STOR-045: phần tử không phải món hợp lệ bị lọc bỏ.
+      expect(loaded).toEqual([]);
     });
 
     it('handles localStorage.setItem QuotaExceededError / SecurityError gracefully without crashing app', () => {
