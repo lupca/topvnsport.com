@@ -340,7 +340,9 @@ async function omsCall(url: string, init?: RequestInit): Promise<any> {
     if (!response.ok) {
       console.error(url, response.status);
       const body = await response.json().catch(() => null);
-      const text = [body?.message, body?.detail].find((v) => typeof v === 'string' && v.trim());
+      // 5xx: chỉ tin lời OMS khi body có `code` của OMS; detail trần của proxy/server không bao giờ hiện.
+      const trusted = response.status < 500 || (body && typeof body.code === 'string');
+      const text = trusted ? [body?.message, body?.detail].find((v) => typeof v === 'string' && v.trim()) : undefined;
       throw decorate(new Error(), 'http', text ?? httpMessage(response.status), response.status, body);
     }
     try {

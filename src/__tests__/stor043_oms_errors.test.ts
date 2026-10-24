@@ -51,10 +51,35 @@ describe.each(Object.keys(CALLS))('STOR-043 %s', (name) => {
     const e = await caught(call);
     expect(e.kind).toBe('http'); expect(e.status).toBe(s); expect(viet(e.message)).toBe(true);
   });
+  it.each([
+    [502, { detail: 'upstream_unreachable' }],
+    [500, { detail: 'proxy_misconfigured' }],
+    [500, { detail: 'Internal Server Error' }],
+  ])('%i body proxy thật %j -> không lộ chữ server', async (s, body) => {
+    vi.stubGlobal('fetch', vi.fn(async () => res(s, body)));
+    const e = await caught(call);
+    expect(e.message).not.toBe(body.detail); expect(viet(e.message)).toBe(true); expect(e.body).toEqual(body);
+  });
+  it('503 có code OMS + message tiếng Việt -> dùng lời OMS', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => res(503, { code: 'SHIPPING_UNAVAILABLE', message: 'Chưa báo giá được phí ship.' })));
+    expect((await caught(call)).message).toBe('Chưa báo giá được phí ship.');
+  });
   it('200 body không phải JSON -> invalid_response', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => res(200, undefined)));
     const e = await caught(call);
     expect(e.kind).toBe('invalid_response'); expect(viet(e.message)).toBe(true);
+  });
+});
+
+describe('STOR-043 hết giờ huỷ POST', () => {
+  it('signal.aborted === true sau timeout', async () => {
+    vi.useFakeTimers();
+    let sig: AbortSignal | undefined;
+    vi.stubGlobal('fetch', vi.fn((_u: string, init: any) => { sig = init.signal; return new Promise(() => {}); }));
+    const p = caught(CALLS.createOrder);
+    await vi.advanceTimersByTimeAsync(20_001);
+    await p;
+    expect(sig?.aborted).toBe(true);
   });
 });
 
