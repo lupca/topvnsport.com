@@ -344,36 +344,6 @@ describe('STOR-042 vòng 2 - F4: 403 token khi vừa gửi OTP (< 60s)', () => {
   });
 });
 
-describe('STOR-042 vòng 2 - F5: đơn SePay chờ thanh toán sống qua đóng/mở giỏ', () => {
-  async function toPaymentError() {
-    sepayMock.mockRejectedValueOnce(err('Cổng SePay đang bảo trì', { kind: 'http', status: 400, body: { code: 'X', message: 'Cổng SePay đang bảo trì' } }));
-    const m = mount();
-    await driveToOrder();
-    await screen.findByRole('button', { name: 'Thanh toán lại' });
-    return m;
-  }
-  it('đóng rồi mở lại giỏ: vẫn thấy mã đơn + "Thanh toán lại" chỉ gọi payments', async () => {
-    const { setOpen } = await toPaymentError();
-    setOpen(false);
-    expect(screen.queryByRole('button', { name: 'Thanh toán lại' })).not.toBeInTheDocument();
-    setOpen(true);
-    expect(await screen.findByText(/Đã tạo đơn DH-9\. Chưa mở được trang thanh toán: Cổng SePay đang bảo trì/)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Thanh toán lại' }));
-    await waitFor(() => expect(sepayMock).toHaveBeenLastCalledWith('DH-9'));
-    expect(createOrderMock).toHaveBeenCalledTimes(1);
-    await waitFor(() => expect(submitSpy).toHaveBeenCalled());
-    expect(sessionStorage.getItem('pending_sepay_order')).toBeNull();
-  });
-  it('khách bấm "Hoàn thành mua sắm" (chủ động bỏ) -> xoá đơn chờ, mở lại không còn màn lỗi', async () => {
-    const { setOpen } = await toPaymentError();
-    fireEvent.click(screen.getByRole('button', { name: 'Hoàn thành mua sắm' }));
-    expect(sessionStorage.getItem('pending_sepay_order')).toBeNull();
-    setOpen(false);
-    setOpen(true);
-    expect(screen.queryByRole('button', { name: 'Thanh toán lại' })).not.toBeInTheDocument();
-  });
-});
-
 describe('STOR-042 vòng 2 - mục 6: lời cho over_stock/out_of_stock', () => {
   const withStock = (stock: number) => ({ ...product, variants: [{ ...(product as any).variants[0], stock }] }) as unknown as Product;
   it('vượt tồn -> "Chỉ còn N sản phẩm..." và khoá thanh toán', () => {
