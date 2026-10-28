@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
 /* STOR-039: Tailwind không quét node_modules; popup ui-kit (SystemPopupProvider: z-[100],
    backdrop-blur-sm…) phải được quét, không thì popup nằm dưới drawer giỏ z-50. */
@@ -17,6 +17,15 @@
   
   --color-surface: #ffffff;
   --color-surface-hover: #f9f9f9;
+
+  /* High-Contrast Ink (yonexshop.jp) */
+  --color-ink-primary: #000000;
+  --color-ink-secondary: #18181b;
+  --color-ink-muted: #52525b;
+  --color-brand-sale: #c62828;
+  --color-pill-bg: #e5e5e5;
+  --color-line-tag: #d4d4d8;
+  --color-line-strong: #18181b;
 }
 
 /* Ensure headings and buttons consistently use the sporty & professional Montserrat font */
