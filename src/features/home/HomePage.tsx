@@ -1,13 +1,15 @@
 import { ChevronRight } from 'lucide-react';
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
 import TrustBadges from '../../components/TrustBadges';
+import { inferRacketPlayStyle } from '../../utils/badmintonReadiness';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { sortProducts } from '../../utils/productSort';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
+import BadmintonCenterSlider from './BadmintonCenterSlider';
 import { categoryTileThemes, getCategoryMonogram, getCategorySubtitle } from './categoryTileThemes';
 
 
@@ -25,7 +27,22 @@ export default function HomePage() {
   const discounts = promoProducts.map(p => p.percentageDiscount).filter((d): d is number => Number.isFinite(d) && (d as number) > 0);
   const maxDiscount = discounts.length > 0 ? Math.max(...discounts) : undefined;
 
-  const inStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0).slice(0, 8);
+  const allInStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0);
+  const [selectedPlayStyle, setSelectedPlayStyle] = useState<string>('ALL');
+
+  const availablePlayStyles = Array.from(
+    new Set(
+      allInStock
+        .map(p => (inferRacketPlayStyle(p) ?? p.characteristics) as string | undefined)
+        .filter((s): s is string => Boolean(s))
+    )
+  );
+
+  const inStock = (
+    selectedPlayStyle === 'ALL'
+      ? allInStock
+      : allInStock.filter(p => (inferRacketPlayStyle(p) ?? p.characteristics) === selectedPlayStyle)
+  ).slice(0, 8);
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
@@ -45,8 +62,97 @@ export default function HomePage() {
       <TrustBadges />
 
       {sortedCategories.length > 0 && (
+        <section data-testid="badminton-hub-header" className="max-w-7xl mx-auto px-4 md:px-8 pt-2">
+          <div className="title-box text-center mb-4">
+            <h1 className="font-display font-black text-2xl md:text-4xl tracking-tight text-ink-primary uppercase">
+              BADMINTON
+            </h1>
+          </div>
+          <div data-testid="cate-select-bar" className="cate_select bg-pill-bg rounded-3xl p-2.5 md:p-3 flex flex-wrap items-center justify-center gap-2">
+            {sortedCategories.map(cat => {
+              const label = getCategoryLabel(cat, categories);
+              const count = categoryCounts[cat.code] || 0;
+
+              return (
+                <button
+                  type="button"
+                  key={cat.id}
+                  data-testid={`cate-pill-${cat.code}`}
+                  onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.code)}`)}
+                  className="bg-white text-ink-primary border border-line-tag hover:border-line-strong rounded-full px-4 py-1.5 text-xs md:text-sm font-bold transition flex items-center gap-1.5"
+                >
+                  <span>{label}</span>
+                  <span className="text-ink-muted font-mono tabular-nums">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <BadmintonCenterSlider products={allInStock.slice(0, 5)} />
+
+      {allInStock.length > 0 && (
+        <section data-testid="instock-shelf" className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <h2 className="font-display font-black text-lg md:text-2xl text-ink-primary tracking-tight uppercase">Sản phẩm còn hàng</h2>
+            <button
+              type="button"
+              onClick={() => navigate('/catalog')}
+              className="text-xs font-bold text-brand-primary hover:underline flex items-center gap-0.5"
+            >
+              Xem tất cả <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {availablePlayStyles.length > 0 && (
+            <div data-testid="playstyle-filter-bar" className="flex flex-wrap items-center gap-2 mb-4">
+              <button
+                type="button"
+                data-testid="playstyle-chip-ALL"
+                onClick={() => setSelectedPlayStyle('ALL')}
+                className={`rounded-full px-3.5 py-1 text-xs font-bold border transition ${
+                  selectedPlayStyle === 'ALL'
+                    ? 'bg-ink-primary text-white border-ink-primary'
+                    : 'bg-white text-ink-primary border-line-tag hover:border-line-strong'
+                }`}
+              >
+                Tất cả
+              </button>
+              {availablePlayStyles.map(style => (
+                <button
+                  type="button"
+                  key={style}
+                  data-testid={`playstyle-chip-${style}`}
+                  onClick={() => setSelectedPlayStyle(style)}
+                  className={`rounded-full px-3.5 py-1 text-xs font-bold border transition ${
+                    selectedPlayStyle === style
+                      ? 'bg-ink-primary text-white border-ink-primary'
+                      : 'bg-white text-ink-primary border-line-tag hover:border-line-strong'
+                  }`}
+                >
+                  {style}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+            {inStock.map(p => (
+              <ProductCard
+                key={p.id}
+                product={p}
+                onQuickView={prod => dispatch(setQuickViewProduct(prod))}
+                onAddToCart={(prod, e) => handleAddToCart(prod, e)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {sortedCategories.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 md:px-8">
-          <h2 className="font-display font-black text-lg md:text-2xl text-gray-900 tracking-tight uppercase mb-6 flex items-center gap-2">
+          <h2 className="font-display font-black text-lg md:text-2xl text-ink-primary tracking-tight uppercase mb-6 flex items-center gap-2">
             Danh mục trang thiết bị cầu lông
           </h2>
 
@@ -62,7 +168,7 @@ export default function HomePage() {
                   key={cat.id}
                   onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.code)}`)}
                   aria-label={`Mở danh mục ${label}`}
-                  className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-3 md:p-5 text-left shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                  className="group relative overflow-hidden rounded-2xl border border-line-tag bg-white p-3 md:p-5 text-left shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
                 >
                   <div className={`absolute inset-0 bg-gradient-to-br ${theme.accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
                   <div className={`absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r ${theme.shell}`} />
@@ -77,11 +183,11 @@ export default function HomePage() {
 
                     <div className="flex items-end justify-between gap-4">
                       <div className="min-w-0">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-gray-400 group-hover:text-brand-primary transition">Danh mục</p>
-                        <h3 className="mt-1 font-display text-sm md:text-xl font-black tracking-tight text-gray-900 line-clamp-2 group-hover:text-brand-primary transition">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-ink-muted group-hover:text-brand-primary transition">Danh mục</p>
+                        <h3 className="mt-1 font-display text-sm md:text-xl font-black tracking-tight text-ink-primary line-clamp-2 group-hover:text-brand-primary transition">
                           {label}
                         </h3>
-                        <p className="hidden md:block mt-2 text-sm leading-relaxed text-gray-500 line-clamp-3">
+                        <p className="hidden md:block mt-2 text-sm leading-relaxed text-ink-muted line-clamp-3">
                           {getCategorySubtitle(cat)}
                         </p>
                       </div>
@@ -93,38 +199,13 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <div className="mt-auto flex items-center justify-between text-[11px] font-medium text-gray-500">
+                    <div className="mt-auto flex items-center justify-between text-[11px] font-medium text-ink-muted">
                       <span className="font-bold text-brand-primary">Khám phá</span>
                     </div>
                   </div>
                 </button>
               );
             })}
-          </div>
-        </section>
-      )}
-
-      {inStock.length > 0 && (
-        <section data-testid="instock-shelf" className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between gap-4 mb-4">
-            <h2 className="font-display font-black text-lg md:text-2xl text-gray-900 tracking-tight uppercase">Sản phẩm còn hàng</h2>
-            <button
-              type="button"
-              onClick={() => navigate('/catalog')}
-              className="text-xs font-bold text-brand-primary hover:underline flex items-center gap-0.5"
-            >
-              Xem tất cả <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {inStock.map(p => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                onQuickView={prod => dispatch(setQuickViewProduct(prod))}
-                onAddToCart={(prod, e) => handleAddToCart(prod, e)}
-              />
-            ))}
           </div>
         </section>
       )}
