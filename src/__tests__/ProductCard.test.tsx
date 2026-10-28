@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import React from 'react';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -264,5 +266,148 @@ describe('ProductCard component', () => {
 
     expect(onAddToCartMock).not.toHaveBeenCalled();
     expect(screen.getByText('DETAIL PAGE MARKER')).toBeInTheDocument();
+  });
+
+  describe('STOR-051 High-Contrast Ink, Badges & Readiness', () => {
+    it('Vợt "Yonex Nanoflare 800 Pro" thiếu characteristics tự hiện playstyle-badge "Phản Tạt"', () => {
+      const nanoflareRacket: Product = {
+        ...mockUnpromotedProduct,
+        id: 'racket-nanoflare',
+        name: 'Vợt Yonex Nanoflare 800 Pro',
+        characteristics: undefined,
+        specs: {}
+      };
+
+      render(
+        <MemoryRouter>
+          <ProductCard product={nanoflareRacket} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+        </MemoryRouter>
+      );
+
+      const badge = screen.getByTestId('playstyle-badge');
+      expect(badge).toBeInTheDocument();
+      expect(badge.textContent).toBe('Phản Tạt');
+    });
+
+    it('Vợt "Vợt A" với specs rỗng và characteristics undefined không hiện playstyle-badge', () => {
+      const racketA: Product = {
+        ...mockUnpromotedProduct,
+        id: 'racket-a',
+        name: 'Vợt A',
+        characteristics: undefined,
+        specs: {}
+      };
+
+      render(
+        <MemoryRouter>
+          <ProductCard product={racketA} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+        </MemoryRouter>
+      );
+
+      expect(screen.queryByTestId('playstyle-badge')).toBeNull();
+    });
+
+    it('Sản phẩm có tầng cước hiện o2o-stringing-badge với nội dung "Hỗ trợ đan cước"', () => {
+      const stringingProduct: Product = {
+        ...mockUnpromotedProduct,
+        id: 'prod-stringing',
+        tier_variations: [
+          { tier_index: 1, name: 'Phân loại', options: ['4U', '5U'] },
+          { tier_index: 2, name: 'Loại Cước', options: ['Khung Không Dây', 'BG65'] }
+        ]
+      };
+
+      render(
+        <MemoryRouter>
+          <ProductCard product={stringingProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+        </MemoryRouter>
+      );
+
+      const badge = screen.getByTestId('o2o-stringing-badge');
+      expect(badge).toBeInTheDocument();
+      expect(badge.textContent).toBe('Hỗ trợ đan cước');
+      expect(badge.className).toContain('bg-[#e8f1fb]');
+      expect(badge.className).toContain('text-brand-primary');
+      expect(badge.className).toContain('border-brand-primary/30');
+    });
+
+    it('Sản phẩm không có tầng cước không hiện o2o-stringing-badge', () => {
+      render(
+        <MemoryRouter>
+          <ProductCard product={mockUnpromotedProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+        </MemoryRouter>
+      );
+
+      expect(screen.queryByTestId('o2o-stringing-badge')).toBeNull();
+    });
+
+    it('Sản phẩm có tier_variations ["4UG5","3U5"] hiện tier-preview-strip với 2 chip', () => {
+      const tieredProduct: Product = {
+        ...mockUnpromotedProduct,
+        id: 'prod-tiered',
+        tier_variations: [
+          { tier_index: 1, name: 'Phân loại', options: ['4UG5', '3U5'] }
+        ]
+      };
+
+      render(
+        <MemoryRouter>
+          <ProductCard product={tieredProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+        </MemoryRouter>
+      );
+
+      const strip = screen.getByTestId('tier-preview-strip');
+      expect(strip).toBeInTheDocument();
+      expect(strip.children.length).toBe(2);
+      expect(strip.children[0].textContent).toBe('4UG5');
+      expect(strip.children[1].textContent).toBe('3U5');
+      expect(strip.children[0].className).toContain('border-line-tag');
+      expect(strip.children[0].className).toContain('text-ink-secondary');
+    });
+
+    it('áp dụng chuẩn tương phản Yonex High-Contrast Ink lên các phần tử ProductCard', () => {
+      const { container } = render(
+        <MemoryRouter>
+          <ProductCard product={mockUnpromotedProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+        </MemoryRouter>
+      );
+
+      const cardRoot = container.firstElementChild as HTMLElement;
+      expect(cardRoot.className).toContain('border-gray-200');
+      expect(cardRoot.className).toContain('hover:border-ink-secondary');
+
+      const brandEl = screen.getByTestId('brand-label');
+      expect(brandEl.parentElement?.className).toContain('text-ink-muted');
+
+      const nameEl = screen.getByRole('heading', { level: 3 });
+      expect(nameEl.className).toContain('font-bold');
+      expect(nameEl.className).toContain('text-sm');
+      expect(nameEl.className).toContain('text-ink-primary');
+
+      const weightLabel = screen.getByText('Trọng lượng:');
+      expect(weightLabel.className).toContain('text-ink-muted');
+      const weightVal = screen.getByText('4U');
+      expect(weightVal.className).toContain('font-bold');
+      expect(weightVal.className).toContain('text-ink-primary');
+      expect(weightLabel.closest('.border-line-tag')).toBeInTheDocument();
+
+      const regularPrice = screen.getByTestId('regular-price');
+      expect(regularPrice.className).toContain('tabular-nums');
+    });
+
+    it('khẳng định TrustBadges.tsx hết "font-light" và mô tả là text-xs text-ink-muted font-medium', () => {
+      const trustBadgesSource = readFileSync(resolve(__dirname, '../components/TrustBadges.tsx'), 'utf8');
+      expect(trustBadgesSource).not.toContain('font-light');
+      expect(trustBadgesSource).toContain('text-xs text-ink-muted font-medium');
+      expect(trustBadgesSource).toContain('text-ink-primary');
+    });
+
+    it('khẳng định QuickViewModal.tsx hết "font-light" và mô tả là text-ink-secondary font-normal', () => {
+      const quickViewSource = readFileSync(resolve(__dirname, '../components/QuickViewModal.tsx'), 'utf8');
+      expect(quickViewSource).not.toContain('font-light');
+      expect(quickViewSource).toContain('text-xs text-ink-secondary leading-relaxed font-normal whitespace-pre-line break-words');
+      expect(quickViewSource).toContain('text-ink-primary');
+      expect(quickViewSource).toContain('text-ink-muted');
+    });
   });
 });

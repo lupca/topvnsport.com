@@ -55,7 +55,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
 
                 {product.description && (
                   <div className="md:max-h-56 md:overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
-                    <p className="text-xs text-gray-600 leading-relaxed font-light whitespace-pre-line break-words">
+                    <p className="text-xs text-ink-secondary leading-relaxed font-normal whitespace-pre-line break-words">
                       {product.description}
                     </p>
                   </div>
@@ -68,29 +68,29 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                     product.specs.stiffness ||
                     typeof product.specs.balance === 'number' ||
                     typeof product.specs.maxTension === 'number') && (
-                  <div className="space-y-1.5 text-xs text-gray-600 font-mono py-3 border-t border-b border-gray-100">
+                  <div className="space-y-1.5 text-xs text-ink-muted font-mono py-3 border-t border-b border-gray-100">
                     {product.specs.weight && (
                       <div className="flex justify-between">
                         <span>Cân nặng:</span>
-                        <strong className="text-gray-900">{product.specs.weight}</strong>
+                        <strong className="text-ink-primary">{product.specs.weight}</strong>
                       </div>
                     )}
                     {product.specs.stiffness && (
                       <div className="flex justify-between">
                         <span>Độ cứng thân:</span>
-                        <strong className="text-gray-900">{product.specs.stiffness}</strong>
+                        <strong className="text-ink-primary">{product.specs.stiffness}</strong>
                       </div>
                     )}
                     {typeof product.specs.balance === 'number' && (
                       <div className="flex justify-between">
                         <span>Điểm cân bằng:</span>
-                        <strong className="text-gray-900">{product.specs.balance}mm</strong>
+                        <strong className="text-ink-primary">{product.specs.balance}mm</strong>
                       </div>
                     )}
                     {typeof product.specs.maxTension === 'number' && (
                       <div className="flex justify-between">
                         <span>Lực căng tối đa:</span>
-                        <strong className="text-gray-900">{product.specs.maxTension} Lbs</strong>
+                        <strong className="text-ink-primary">{product.specs.maxTension} Lbs</strong>
                       </div>
                     )}
                   </div>
