@@ -1,11 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
-import { Eye, ShoppingCart, Star, Zap, Activity } from 'lucide-react';
+import { Eye, ShoppingCart, Activity } from 'lucide-react';
 import { getProductPath } from '../utils/productSlug';
 import { isRacketCategoryCode } from '../config/storefront';
 import { getPriceDisplay } from '../utils/priceDisplay';
 import { getSingleSellableSku } from '../features/cart/cartSlice';
+import { inferRacketPlayStyle, hasO2OStringing, getPrimaryTierPreview } from '../utils/badmintonReadiness';
 
 interface ProductCardProps {
   key?: string;
@@ -25,10 +26,15 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
   const hasPrice = product.price !== undefined;
   const { hasActivePromotion, salePrice, originalPrice, discountPercent } = getPriceDisplay(product);
 
+  const playStyle = inferRacketPlayStyle(product) ?? product.characteristics;
+  const supportsO2OStringing = hasO2OStringing(product);
+  const tierPreview = getPrimaryTierPreview(product, 4);
+
   // Visual helper for racket playstyles
-  const characteristicStyles = {
+  const characteristicStyles: Record<string, { bg: string; dot: string }> = {
     'Tấn Công': { bg: 'bg-red-50 text-red-600 border-red-100', dot: 'bg-red-500' },
     'Phòng Thủ': { bg: 'bg-blue-50 text-blue-600 border-blue-100', dot: 'bg-blue-500' },
+    'Phản Tạt': { bg: 'bg-sky-50 text-brand-primary border-sky-200', dot: 'bg-brand-primary' },
     'Toàn Diện': { bg: 'bg-green-50 text-green-600 border-green-100', dot: 'bg-green-500' },
     'Người Mới': { bg: 'bg-brand-light text-brand-primary border-blue-100', dot: 'bg-brand-primary' }
   };
@@ -50,7 +56,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
 
   return (
     <div 
-      className="group bg-white rounded-xl border border-gray-100 overflow-hidden shadow-xs hover:shadow-sm transition-all duration-300 flex flex-col justify-between h-full relative"
+      className="group bg-white rounded-xl border border-gray-200 hover:border-ink-secondary overflow-hidden shadow-xs hover:shadow-sm transition-all duration-300 flex flex-col justify-between h-full relative"
       id={`product-card-${product.id}`}
     >
       {/* Product Badges */}
@@ -127,13 +133,13 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
       <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between" onClick={() => navigate(getProductPath(product))}>
         <div className="space-y-1.5 cursor-pointer">
           {/* Brand & category */}
-          <div className="flex items-center justify-between text-[11px] font-mono font-bold text-gray-400">
+          <div className="flex items-center justify-between text-[11px] font-mono font-bold text-ink-muted">
             {product.brand && <span className="text-brand-primary uppercase tracking-wider" data-testid="brand-label">{product.brand}</span>}
             {product.category && <span data-testid="category-label">{product.category}</span>}
           </div>
 
           {/* Product Name */}
-          <h3 className="font-sans font-semibold text-sm text-gray-800 group-hover:text-brand-primary line-clamp-2 transition leading-snug">
+          <h3 className="font-sans font-bold text-sm text-ink-primary group-hover:text-brand-primary line-clamp-2 transition leading-snug">
             {product.name}
           </h3>
 
@@ -141,23 +147,23 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
               khi sản phẩm thuộc ngành vợt VÀ có ít nhất một thông số thật */}
           {isRacketCategoryCode(product.categoryCode) &&
             (product.specs.weight || typeof product.specs.balance === 'number' || product.specs.stiffness) && (
-            <div className="py-2 grid grid-cols-2 gap-x-2 gap-y-1 border-t border-b border-gray-50 my-2 text-[10px] text-gray-500 font-mono">
+            <div className="py-2 grid grid-cols-2 gap-x-2 gap-y-1 border-t border-b border-line-tag my-2 text-[10px] text-ink-muted font-mono">
               {product.specs.weight && (
                 <div className="flex items-center gap-1">
-                  <span className="text-gray-400">Trọng lượng:</span>
-                  <span className="font-semibold text-gray-700">{product.specs.weight.split(' ')[0]}</span>
+                  <span className="text-ink-muted">Trọng lượng:</span>
+                  <span className="font-bold text-ink-primary">{product.specs.weight.split(' ')[0]}</span>
                 </div>
               )}
               {typeof product.specs.balance === 'number' && (
                 <div className="flex items-center gap-1">
-                  <span className="text-gray-400">Điểm CB:</span>
-                  <span className="font-semibold text-gray-700">{product.specs.balance}mm</span>
+                  <span className="text-ink-muted">Điểm CB:</span>
+                  <span className="font-bold text-ink-primary">{product.specs.balance}mm</span>
                 </div>
               )}
               {product.specs.stiffness && (
                 <div className="flex items-center gap-1 col-span-2">
-                  <span className="text-gray-400">Độ cứng:</span>
-                  <span className="font-semibold text-gray-700 truncate max-w-[120px]">{product.specs.stiffness.split(' ')[0]}</span>
+                  <span className="text-ink-muted">Độ cứng:</span>
+                  <span className="font-bold text-ink-primary truncate max-w-[120px]">{product.specs.stiffness.split(' ')[0]}</span>
                 </div>
               )}
             </div>
@@ -170,13 +176,40 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
             </div>
           )}
 
-          {/* Characteristics Badge */}
-          {product.characteristics && (
-            <div className="my-1">
-              <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${characteristicStyles[product.characteristics]?.bg || 'bg-gray-100 text-gray-700'}`}>
-                <span className={`w-1 h-1 rounded-full ${characteristicStyles[product.characteristics]?.dot || 'bg-gray-500'}`}></span>
-                {product.characteristics}
-              </span>
+          {/* PlayStyle Badge & O2O Stringing */}
+          {(playStyle || supportsO2OStringing) && (
+            <div className="my-1 flex flex-wrap items-center gap-1.5">
+              {playStyle && (
+                <span
+                  data-testid="playstyle-badge"
+                  className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${characteristicStyles[playStyle]?.bg || 'bg-gray-100 text-gray-700'}`}
+                >
+                  <span className={`w-1 h-1 rounded-full ${characteristicStyles[playStyle]?.dot || 'bg-gray-500'}`}></span>
+                  {playStyle}
+                </span>
+              )}
+              {supportsO2OStringing && (
+                <span
+                  data-testid="o2o-stringing-badge"
+                  className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#e8f1fb] text-brand-primary border border-brand-primary/30"
+                >
+                  Hỗ trợ đan cước
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Tier preview strip */}
+          {tierPreview.length > 0 && (
+            <div className="flex flex-wrap gap-1 my-1.5" data-testid="tier-preview-strip">
+              {tierPreview.map((option, idx) => (
+                <span
+                  key={idx}
+                  className="text-[10px] px-1.5 py-0.5 rounded border border-line-tag text-ink-secondary bg-gray-50/50"
+                >
+                  {option}
+                </span>
+              ))}
             </div>
           )}
         </div>
@@ -190,15 +223,15 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
               </span>
             ) : hasActivePromotion ? (
               <>
-                <span className="text-base font-bold text-red-600 font-display block leading-tight" data-testid="sale-price">
+                <span className="text-base font-bold text-red-600 font-display block leading-tight tabular-nums" data-testid="sale-price">
                   {(salePrice ?? 0).toLocaleString('vi-VN')}đ
                 </span>
-                <span className="text-xs text-gray-400 line-through block leading-none" data-testid="original-price">
+                <span className="text-xs text-gray-400 line-through block leading-none tabular-nums" data-testid="original-price">
                   {(originalPrice ?? 0).toLocaleString('vi-VN')}đ
                 </span>
               </>
             ) : (
-              <span className="text-base font-extrabold text-brand-primary font-display" data-testid="regular-price">
+              <span className="text-base font-extrabold text-brand-primary font-display tabular-nums" data-testid="regular-price">
                 {(originalPrice ?? 0).toLocaleString('vi-VN')}đ
               </span>
             )}
