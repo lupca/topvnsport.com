@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TopVNSport — Bản Thiết Kế Trang Chủ Badminton (Theo mẫu YonexShop.jp)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================================
+       TOPVNSPORT — BẢN THIẾT KẾ TRANG CHỦ BADMINTON (YONEXSHOP.JP/?CATEGORY_ID=1)
+       Mục tiêu:
+       1. Trang chủ (/) đi thẳng vào chuyên trang BADMINTON giống yonexshop.jp/?category_id=1:
+          - Tiêu đề trung tâm "BADMINTON" + Thanh pill danh mục con (.cate_select)
+          - Hero Banner Slider kiểu Center-Mode (slide giữa rõ 100%, 2 bên mờ 40%) + chấm + nút dừng
+          - Khối "SẢN PHẨM NỔI BẬT" (#top_rated-wrap) lưới 4 cột PC / 2 cột Mobile, thẻ sản phẩm
+            chữ đen sắc nét kèm bảng tag thông số đóng khung (.feature_contents)
+          - Khối "DANH MỤC CẦU LÔNG" (#main_img-wrap_c) lưới ảnh 4 cột PC / 2 cột Mobile
+          - Nút đen đặc trung tâm "XEM TẤT CẢ SẢN PHẨM" (#top_btn)
+       2. Khắc phục triệt để lỗi chữ & màu chữ bị nhạt trên web hiện tại:
+          - Bỏ toàn bộ text-gray-400 (#9ca3af - tương phản 2.54:1) và font-light (300) trên nền sáng
+          - Áp dụng hệ màu mực in (Ink System) độ tương phản cao chuẩn Yonex Nhật Bản:
+            + --ink-primary: #000000 (21:1) cho tiêu đề, tên SP, giá, menu, tag thông số
+            + --ink-secondary: #18181b (17.4:1) cho nhãn phụ, mô tả ngắn, điều hướng
+            + --ink-muted: #52525b (7.0:1 - đạt chuẩn AAA) cho nhãn phụ trợ, giá gạch ngang
+       ========================================================================= */
+    :root {
+      /* Brand Colors */
+      --brand-primary: #005eb8;      /* Xanh Yonex chính thức */
+      --brand-secondary: #003a70;    /* Xanh đậm Yonex hover */
+      --brand-soft: #e8f1fb;         /* Nền xanh nhạt nhấn */
+      --brand-sale: #c62828;         /* Đỏ khuyến mãi sắc nét */
+
+      /* High-Contrast Ink System (Thay thế chữ xám nhạt hiện tại) */
+      --ink-primary: #000000;        /* Đen tuyền chuẩn Yonex.jp (Contrast 21:1) */
+      --ink-secondary: #18181b;      /* Đen than đậm cho nội dung phụ (Contrast 17.4:1) */
+      --ink-muted: #52525b;          /* Xám đậm tối thiểu được phép dùng (Contrast 7.0:1) */
+
+      /* Surfaces & Lines */
+      --surface: #ffffff;
+      --surface-subtle: #f7f8fa;
+      --pill-bg: #e5e5e5;            /* Màu nền thanh .cate_select chuẩn yonexshop.jp */
+      --pill-hover: #d4d4d8;
+      --line-light: #e4e4e7;
+      --line-tag: #d4d4d8;           /* Viền ô .feature_contents trên thẻ sản phẩm */
+      --line-strong: #18181b;
+
+      /* Typography */
+      --font-sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: "Montserrat", "Be Vietnam Pro", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--surface);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: var(--ink-primary);
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* =========================================================================
+       THANH CHUYỂN CHẾ ĐỘ XEM BẢN THIẾT KẾ (DESIGN INSPECTOR BAR)
+       ========================================================================= */
+    .design-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--brand-primary);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    .design-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .design-badge {
+      background: var(--brand-primary);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .design-toolbar-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .design-toolbar-sub {
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .design-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .design-tab {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .design-tab:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+
+    .design-tab.active {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      font-weight: 700;
+    }
+
+    .view-panel {
+      display: none;
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    /* =========================================================================
+       PHẦN 1: HEADER & ANNOUNCEMENT BAR (CHUẨN YONEXSHOP.JP + TOPVNSPORT O2O)
+       ========================================================================= */
+    .tvs-topbar {
+      background: #000000;
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 8px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tvs-topbar-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tvs-topbar strong {
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .tvs-topbar-sep {
+      color: #71717a;
+    }
+
+    .tvs-topbar a {
+      color: #ffffff;
+      font-weight: 600;
+      transition: opacity 0.15s;
+    }
+
+    .tvs-topbar a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    .tvs-header {
+      background: #ffffff;
+      border-bottom: 1px solid #d4d4d8;
+      position: sticky;
+      top: 49px;
+      z-index: 500;
+    }
+
+    .tvs-header-main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 14px 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .tvs-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .tvs-logo-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      border: 1.5px solid #18181b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .tvs-logo-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tvs-logo-text {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 23px;
+      letter-spacing: -0.02em;
+      color: var(--ink-primary);
+      line-height: 1;
+    }
+
+    .tvs-logo-text span {
+      color: var(--brand-primary);
+    }
+
+    .tvs-logo-sub {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-secondary);
+      margin-top: 3px;
+    }
+
+    /* Gnav + Search */
+    .tvs-header-center {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .tvs-gnav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      list-style: none;
+    }
+
+    .tvs-gnav a {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink-primary);
+      padding: 6px 0;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .tvs-gnav a.active,
+    .tvs-gnav a:hover {
+      color: var(--brand-primary);
+    }
+
+    .tvs-gnav a.active::after,
+    .tvs-gnav a:hover::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 2.5px;
+      background: var(--brand-primary);
+    }
+
+    .tvs-search-wrap {
+      flex: 1;
+      max-width: 420px;
+      position: relative;
+    }
+
+    .tvs-search-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 40px 0 16px;
+      border: 1.5px solid #52525b;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink-primary);
+      background: #ffffff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .tvs-search-input::placeholder {
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .tvs-search-input:focus {
+      outline: none;
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 3px rgba(0, 94, 184, 0.15);
+    }
+
+    .tvs-search-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--ink-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+    }
+
+    .tvs-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tvs-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink-primary);
+      background: #ffffff;
+      border: 1.5px solid #18181b;
+      padding: 8px 14px;
+      border-radius: 999px;
+      transition: all 0.15s;
+    }
+
+    .tvs-action-btn:hover {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .tvs-cart-count {
+      background: var(--brand-primary);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: 999px;
+    }
+
+    /* Thanh thông báo mỏng dưới Header (.flexslider_textbnr trên yonexshop.jp) */
+    .yonex-textbnr {
+      background: #f4f4f5;
+      border-bottom: 1px solid #e4e4e7;
+      padding: 9px 24px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink-primary);
+    }
+
+    .yonex-textbnr .highlight {
+      color: var(--brand-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* =========================================================================
+       PHẦN 2: .topContents — TRANG CHỦ BADMINTON (CHUẨN YONEXSHOP.JP/?CATEGORY_ID=1)
+       ========================================================================= */
+    .topContents {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 0 95px;
+    }
+
+    /* 2.1. Tiêu đề trung tâm BADMINTON (.title-box > h2.title) */
+    .title-box {
+      text-align: center;
+      padding: 38px 0 12px;
+    }
+
+    .title-box h1.title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: var(--ink-primary);
+      line-height: 1.15;
+    }
+
+    .title-box .title-sub {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      margin-top: 4px;
+    }
+
+    /* 2.2. Thanh chọn danh mục con hình viên thuốc (.cate_box > .cate_select) */
+    .cate_box {
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .cate_select {
+      background: var(--pill-bg);
+      padding: 0 22px;
+      border-radius: 50px;
+      margin: 0 auto 44px;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .cate_select ul {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      list-style: none;
+    }
+
+    .cate_select ul li button {
+      background: transparent;
+      border: none;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink-primary);
+      transition: all 0.15s ease;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cate_select ul li button:hover {
+      color: var(--brand-primary);
+    }
+
+    .cate_select ul li button.active {
+      color: var(--brand-primary);
+    }
+
+    .cate_select ul li button.active::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 8px;
+      height: 2.5px;
+      background: var(--brand-primary);
+      border-radius: 2px;
+    }
+
+    .cate_select ul li button .cnt {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+    }
+
+    /* 2.3. Center-Mode Hero Banner Slider (.slick-slider-pc) */
+    .hero-slider-section {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .center-slider-viewport {
+      display: grid;
+      grid-template-columns: 12% 76% 12%;
+      gap: 10px;
+      align-items: center;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .slide-peek,
+    .slide-center {
+      position: relative;
+      overflow: hidden;
+      background: #111111;
+      aspect-ratio: 1400 / 600;
+      cursor: pointer;
+    }
+
+    .slide-peek {
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+      height: 100%;
+    }
+
+    .slide-peek:hover {
+      opacity: 0.65;
+    }
+
+    .slide-peek img,
+    .slide-center img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Caption overlay trên slide trung tâm để làm rõ thông điệp chiến dịch tại VN */
+    .slide-caption-bar {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      background: rgba(0, 0, 0, 0.86);
+      color: #ffffff;
+      padding: 14px 20px;
+      border-left: 4px solid var(--brand-primary);
+      max-width: 520px;
+      backdrop-filter: blur(4px);
+    }
+
+    .slide-caption-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #60a5fa;
+      margin-bottom: 4px;
+    }
+
+    .slide-caption-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+    }
+
+    .slide-caption-sub {
+      font-size: 13px;
+      font-weight: 500;
+      color: #f4f4f5;
+      margin-top: 4px;
+    }
+
+    /* Điều hướng Slider: chấm tròn + nút tạm dừng (.dots-pc & .slick_pause) */
+    .slider-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 16px 20px 10px;
+    }
+
+    .slider-arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid #18181b;
+      background: #ffffff;
+      color: #000000;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .slider-arrow:hover {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .slick-dots {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .slick-dots button {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: none;
+      background: #9ca3af;
+      padding: 0;
+      transition: all 0.2s;
+    }
+
+    .slick-dots button.active {
+      background: #000000;
+      transform: scale(1.2);
+    }
+
+    .slick-pause-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-primary);
+      background: #f4f4f5;
+      border: 1px solid #d4d4d8;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .slick-pause-btn:hover {
+      border-color: #000000;
+    }
+
+    /* =========================================================================
+       PHẦN 3: #top_rated-wrap — SẢN PHẨM NỔI BẬT (おすすめ商品)
+       Chuẩn YonexShop.jp: Tiêu đề 30px căn giữa, lưới 4 cột (25%), chữ đen sắc nét,
+       thông số đóng khung vuông vắn (.feature_table > .feature_contents)
+       ========================================================================= */
+    .text-wrap {
+      padding: 42px 20px 30px;
+      text-align: center;
+    }
+
+    .text-wrap h2 {
+      font-family: var(--font-display);
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--ink-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .text-wrap .section-sub {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      margin-top: 6px;
+    }
+
+    .category-list {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 32px 24px;
+      list-style: none;
+    }
+
+    .yonex-product-card {
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+
+    .yonex-product-card .img-area {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      background: #f8f9fa;
+      border: 1px solid #e4e4e7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 16px;
+      cursor: pointer;
+    }
+
+    .yonex-product-card:hover .img-area {
+      border-color: #18181b;
+    }
+
+    .yonex-product-card .img-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.35s ease;
+    }
+
+    .yonex-product-card:hover .img-area img {
+      transform: scale(1.04);
+    }
+
+    .card-badges {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .card-badge {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      line-height: 1.2;
+      color: #ffffff;
+      background: #000000;
+    }
+
+    .card-badge.blue {
+      background: var(--brand-primary);
+    }
+
+    .card-badge.red {
+      background: var(--brand-sale);
+    }
+
+    .yonex-product-card .text-area {
+      padding: 12px 4px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    /* .category-name: Chữ in hoa đậm, rõ ràng, không dùng gray-400 nhạt */
+    .yonex-product-card .category-name {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--brand-primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .yonex-product-card .category-name .cat-type {
+      color: var(--ink-secondary);
+    }
+
+    /* .item-name: 16px, font-weight 600, màu đen tuyền #000000 chuẩn Yonex */
+    .yonex-product-card .item-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink-primary);
+      line-height: 1.42;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 45px;
+    }
+
+    .yonex-product-card:hover .item-name {
+      color: var(--brand-primary);
+    }
+
+    /* .price: 17px, font-weight 700, màu đen tuyền #000000 (hoặc đỏ đậm khi sale) */
+    .yonex-product-card .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 2px 0 4px;
+    }
+
+    .yonex-product-card .price {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--ink-primary);
+    }
+
+    .yonex-product-card .price.sale {
+      color: var(--brand-sale);
+    }
+
+    .yonex-product-card .price-old {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      text-decoration: line-through;
+    }
+
+    .yonex-product-card .tax-note {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    /* .feature_table > .feature_contents: Các ô thông số viền vuông chuẩn yonexshop.jp/item.css */
+    .feature_table {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .feature_contents {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-primary);
+      padding: 3px 8px;
+      border: 1px solid var(--line-tag);
+      background: #ffffff;
+      line-height: 1.35;
+    }
+
+    .feature_contents.stringing {
+      border-color: var(--brand-primary);
+      background: var(--brand-soft);
+      color: var(--brand-secondary);
+      font-weight: 700;
+    }
+
+    /* =========================================================================
+       PHẦN 4: #main_img-wrap_c — DANH MỤC CẦU LÔNG (カテゴリー)
+       Chuẩn YonexShop.jp: Lưới 4 cột (23.5%), ảnh danh mục + chữ đậm căn giữa
+       ========================================================================= */
+    #main_img-wrap_c {
+      max-width: 1440px;
+      margin: 16px auto 0;
+      padding: 0 24px 36px;
+    }
+
+    #main_img-wrap_c .img-wrap {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .cat-visual-card {
+      display: block;
+      group: true;
+      cursor: pointer;
+    }
+
+    .cat-visual-card .cat-img-box {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border: 1px solid #e4e4e7;
+      background: #f4f4f5;
+    }
+
+    .cat-visual-card .cat-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s ease;
+    }
+
+    .cat-visual-card:hover .cat-img-box img {
+      transform: scale(1.04);
+    }
+
+    .cat-visual-card p {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--ink-primary);
+      padding: 12px 0 4px;
+      text-align: center;
+    }
+
+    .cat-visual-card:hover p {
+      color: var(--brand-primary);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    /* =========================================================================
+       PHẦN 5: #top_btn — NÚT ĐEN ĐẶC TRUNG TÂM "XEM TẤT CẢ SẢN PHẨM" (商品一覧を見る)
+       ========================================================================= */
+    .center-cta-wrap {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    #top_btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 400px;
+      max-width: 90%;
+      height: 52px;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      background: #000000;
+      border: 2px solid #000000;
+      border-radius: 5px;
+      transition: all 0.2s ease;
+    }
+
+    #top_btn:hover {
+      background: var(--brand-primary);
+      border-color: var(--brand-primary);
+    }
+
+    /* =========================================================================
+       PHẦN 6: DẢI CAM KẾT & CHÂN TRANG ĐỘ TƯƠNG PHẢN CAO
+       ========================================================================= */
+    .trust-strip {
+      border-top: 1px solid #e4e4e7;
+      border-bottom: 1px solid #e4e4e7;
+      background: #f8f9fa;
+      padding: 36px 24px;
+    }
+
+    .trust-grid {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .trust-item {
+      padding: 0 16px;
+      border-left: 2px solid #d4d4d8;
+    }
+
+    .trust-item:first-child {
+      border-left: none;
+    }
+
+    .trust-item h4 {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--ink-primary);
+      margin-bottom: 4px;
+    }
+
+    .trust-item p {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      line-height: 1.45;
+    }
+
+    .yonex-footer {
+      background: #111111;
+      color: #ffffff;
+      padding: 56px 24px 36px;
+    }
+
+    .yonex-footer-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .yonex-footer h5 {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+
+    .yonex-footer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .yonex-footer a,
+    .yonex-footer p {
+      color: #e4e4e7;
+      font-size: 13.5px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .yonex-footer a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    /* =========================================================================
+       TAB 2: KHUNG XEM MOBILE 390PX (CHUẨN SP YONEXSHOP.JP)
+       ========================================================================= */
+    .mobile-preview-stage {
+      background: #f1f5f9;
+      padding: 36px 20px 80px;
+      min-height: calc(100vh - 55px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .phone-frame {
+      width: 390px;
+      background: #ffffff;
+      border: 10px solid #0f172a;
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+    }
+
+    .sp-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e4e4e7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sp-title-box {
+      text-align: center;
+      padding: 22px 12px 8px;
+    }
+
+    .sp-title-box h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 800;
+      color: #000000;
+      letter-spacing: 0.04em;
+    }
+
+    /* Trên SP, .cate_select là thanh ngang cuộn được, chữ gạch chân đậm như yonexshop.jp */
+    .sp-cate-select {
+      background: #e5e5e5;
+      padding: 10px 12px;
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      white-space: nowrap;
+      margin-bottom: 24px;
+    }
+
+    .sp-cate-select span {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #000000;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .sp-cate-select span.active {
+      color: var(--brand-primary);
+    }
+
+    .sp-slider {
+      display: grid;
+      grid-template-columns: 6% 88% 6%;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .sp-slide-box {
+      aspect-ratio: 1 / 1;
+      background: #111;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sp-slide-box.peek {
+      opacity: 0.4;
+    }
+
+    .sp-slide-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sp-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 12px;
+      padding: 0 12px;
+    }
+
+    /* =========================================================================
+       TAB 3 & TAB 4: BẢNG SO SÁNH CHỮ NHẠT VS CHỮ ĐẬM & ĐẶC TẢ TOKEN
+       ========================================================================= */
+    .spec-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 40px 24px 90px;
+    }
+
+    .spec-hero {
+      border-bottom: 2px solid #000000;
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+
+    .spec-hero h2 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: #000000;
+    }
+
+    .spec-hero p {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      margin-top: 6px;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .compare-box {
+      border: 1.5px solid #d4d4d8;
+      border-radius: 12px;
+      padding: 24px;
+      background: #ffffff;
+    }
+
+    .compare-box.after {
+      border: 2px solid #000000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .compare-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    .compare-tag.bad {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .compare-tag.good {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 36px;
+      font-size: 14px;
+    }
+
+    .spec-table th {
+      background: #18181b;
+      color: #ffffff;
+      text-align: left;
+      padding: 12px 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .spec-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e4e4e7;
+      vertical-align: top;
+      color: #000000;
+      font-weight: 500;
+    }
+
+    .spec-table code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: #f4f4f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .swatch {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      vertical-align: -2px;
+      margin-right: 6px;
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 1024px) {
+      .category-list,
+      #main_img-wrap_c .img-wrap,
+      .trust-grid,
+      .yonex-footer-inner {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+      .tvs-header-main {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =======================================================================
+       THANH CÔNG CỤ XEM BẢN THIẾT KẾ
+       ======================================================================= -->
+  <div class="design-toolbar">
+    <div class="design-toolbar-left">
+      <span class="design-badge">DESIGN SPEC · TOPVNSPORT</span>
+      <div>
+        <div class="design-toolbar-title">Trang chủ Badminton (Theo chuẩn yonexshop.jp/?category_id=1) &amp; Hệ chữ độ tương phản cao</div>
+        <div class="design-toolbar-sub">Bản thiết kế giao diện tĩnh/tương tác — Chưa can thiệp code sản xuất</div>
+      </div>
+    </div>
+    <div class="design-tabs" role="tablist">
+      <button class="design-tab active" onclick="switchTab('desktop', this)">1. Trang chủ Desktop (1440px)</button>
+      <button class="design-tab" onclick="switchTab('mobile', this)">2. Trang chủ Mobile (390px)</button>
+      <button class="design-tab" onclick="switchTab('contrast', this)">3. Đối chiếu Font &amp; Màu chữ (Trước / Sau)</button>
+      <button class="design-tab" onclick="switchTab('tokens', this)">4. Đặc tả Kỹ thuật &amp; Token</button>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       TAB 1: GIAO DIỆN TRANG CHỦ DESKTOP (CHUẨN YONEXSHOP.JP/?CATEGORY_ID=1)
+       ======================================================================= -->
+  <div id="panel-desktop" class="view-panel active">
+
+    <!-- Topbar đen tuyền chữ trắng rõ nét -->
+    <div class="tvs-topbar">
+      <div class="tvs-topbar-group">
+        <span>Hotline: <strong>097 6007006</strong> (08:00 – 22:00)</span>
+        <span class="tvs-topbar-sep">|</span>
+        <span>Cam kết <strong>100% Chính Hãng</strong> — Đền gấp 10 nếu phát hiện hàng giả</span>
+      </div>
+      <div class="tvs-topbar-group">
+        <a href="#stores">Cửa hàng trải nghiệm Hà Nội</a>
+        <span class="tvs-topbar-sep">|</span>
+        <a href="#stringing">Dịch vụ đan vợt lấy ngay</a>
+        <span class="tvs-topbar-sep">|</span>
+        <a href="#orders">Kiểm tra đơn hàng</a>
+      </div>
+    </div>
+
+    <!-- Main Sticky Header -->
+    <header class="tvs-header">
+      <div class="tvs-header-main">
+        <div class="tvs-logo">
+          <div class="tvs-logo-mark">
+            <img src="https://down-zl-vn.img.susercontent.com/vn-11134004-820l4-mdxbg9gyt81z6e_tn.webp" alt="TopVNSport" referrerpolicy="no-referrer" />
+          </div>
+          <div>
+            <div class="tvs-logo-text">TOPVN<span>SPORT</span></div>
+            <div class="tvs-logo-sub">Badminton Specialty Store</div>
+          </div>
+        </div>
+
+        <div class="tvs-header-center">
+          <ul class="tvs-gnav">
+            <li><a href="#badminton" class="active">CẦU LÔNG (BADMINTON)</a></li>
+            <li><a href="#rackets">VỢT CẦU LÔNG</a></li>
+            <li><a href="#shoes">GIÀY CẦU LÔNG</a></li>
+            <li><a href="#strings">CƯỚC ĐAN</a></li>
+            <li><a href="#wear">TRANG PHỤC</a></li>
+            <li><a href="#stores">CỬA HÀNG</a></li>
+          </ul>
+
+          <div class="tvs-search-wrap">
+            <input
+              type="text"
+              class="tvs-search-input"
+              placeholder="Tìm vợt Yonex, Li-Ning, cước BG66U, giày cầu lông..."
+              aria-label="Tìm kiếm sản phẩm"
+            />
+            <button class="tvs-search-btn" aria-label="Tìm kiếm">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="tvs-header-actions">
+          <button class="tvs-action-btn" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span>Giỏ hàng</span>
+            <span class="tvs-cart-count">2</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Thanh thông báo kiểu .flexslider_textbnr trên YonexShop.jp -->
+      <div class="yonex-textbnr">
+        <span>[CHÍNH SÁCH O2O] Miễn phí công đan chuẩn quốc tế &amp; tặng quấn cán cho mọi đơn vợt chính hãng — <span class="highlight">Xem chi tiết</span></span>
+      </div>
+    </header>
+
+    <!-- =====================================================================
+         .topContents — PHI THẲNG VÀO CHUYÊN TRANG BADMINTON NHƯ YONEXSHOP.JP
+         ===================================================================== -->
+    <main class="topContents">
+
+      <!-- 1. Tiêu đề trang chủ BADMINTON (.title-box) -->
+      <div class="title-box">
+        <h1 class="title">BADMINTON</h1>
+        <p class="title-sub">Chuyên trang thiết bị cầu lông chính hãng Yonex · Li-Ning · Victor · Kizuna</p>
+      </div>
+
+      <!-- 2. Thanh Pill Danh Mục Cầu Lông (.cate_box > .cate_select) -->
+      <div class="cate_box">
+        <nav class="cate_select" aria-label="Danh mục cầu lông">
+          <ul id="desktop-cate-pills">
+            <li><button type="button" class="active" onclick="filterCategory('ALL', this)">Tất cả <span class="cnt">(68)</span></button></li>
+            <li><button type="button" onclick="filterCategory('RACKET', this)">Vợt cầu lông <span class="cnt">(42)</span></button></li>
+            <li><button type="button" onclick="filterCategory('STRING', this)">Cước đan vợt <span class="cnt">(8)</span></button></li>
+            <li><button type="button" onclick="filterCategory('SHOE', this)">Giày cầu lông <span class="cnt">(4)</span></button></li>
+            <li><button type="button" onclick="filterCategory('WEAR', this)">Quần áo thi đấu <span class="cnt">(6)</span></button></li>
+            <li><button type="button" onclick="filterCategory('BAG', this)">Bao vợt &amp; Balo <span class="cnt">(3)</span></button></li>
+            <li><button type="button" onclick="filterCategory('ACC', this)">Phụ kiện &amp; Quấn cán <span class="cnt">(5)</span></button></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- 3. Center-Mode Hero Slider (.slick-slider-pc) -->
+      <section class="hero-slider-section" aria-label="Banner chiến dịch nổi bật">
+        <div class="center-slider-viewport">
+          <div class="slide-peek" onclick="prevSlide()" title="Slide trước">
+            <img id="slider-prev-img" src="https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/1.YNX_NF800_Banner_08_JP_1400-600-min.jpg" alt="Slide trước" referrerpolicy="no-referrer" />
+          </div>
+
+          <div class="slide-center">
+            <img id="slider-main-img" src="https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/250904_99_1400_600.jpg" alt="Banner chính" referrerpolicy="no-referrer" />
+            <div class="slide-caption-bar">
+              <div class="slide-caption-eyebrow" id="slider-eyebrow">YONEX BADMINTON · DÒNG TẤN CÔNG CHỦ LỰC</div>
+              <div class="slide-caption-title" id="slider-title">ASTROX SERIES — SỨC MẠNH ĐẬP CẦU ÁP ĐẢO</div>
+              <div class="slide-caption-sub" id="slider-sub">Sẵn hàng đủ thông số 3U / 4U, tùy chọn đan cước BG66 Ultimax, Exbolt 63/65/68 ngay trên web.</div>
+            </div>
+          </div>
+
+          <div class="slide-peek" onclick="nextSlide()" title="Slide tiếp theo">
+            <img id="slider-next-img" src="https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/250820VAC_1400_700_4.jpg" alt="Slide kế tiếp" referrerpolicy="no-referrer" />
+          </div>
+        </div>
+
+        <div class="slider-controls">
+          <button type="button" class="slider-arrow" onclick="prevSlide()" aria-label="Slide trước">&larr;</button>
+          <ul class="slick-dots" id="slider-dots"></ul>
+          <button type="button" class="slider-arrow" onclick="nextSlide()" aria-label="Slide sau">&rarr;</button>
+          <button type="button" class="slick-pause-btn" id="slider-pause-btn" onclick="toggleAutoplay()">
+            <span id="pause-icon">❚❚</span> <span id="pause-label">Tạm dừng</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 4. Khối Sản Phẩm Nổi Bật (#top_rated-wrap — おすすめ商品) -->
+      <section id="top_rated-wrap" class="top_rated">
+        <div class="text-wrap">
+          <h2>SẢN PHẨM NỔI BẬT</h2>
+          <p class="section-sub">Tuyển chọn vợt, giày, cước đan và trang phục cầu lông sẵn hàng tại hệ thống TopVNSport</p>
+        </div>
+
+        <ul class="category-list" id="featured-product-grid">
+          <!-- Được render từ danh sách sản phẩm thật của TopVNSport bên dưới -->
+        </ul>
+
+        <!-- 5. Khối Danh Mục Cầu Lông (#main_img-wrap_c — カテゴリー) -->
+        <div class="text-wrap" style="padding-top: 64px;">
+          <h2>DANH MỤC CẦU LÔNG</h2>
+          <p class="section-sub">Đi thẳng vào từng nhóm trang thiết bị chuyên dụng</p>
+        </div>
+
+        <div class="last" id="main_img-wrap_c">
+          <div class="img-wrap">
+            <a class="cat-visual-card" href="#rackets" onclick="filterCategoryByCode('RACKET'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/250324cate_bad1_PC.jpg" alt="Vợt cầu lông" referrerpolicy="no-referrer" />
+              </div>
+              <p>Vợt Cầu Lông (Rackets)</p>
+            </a>
+            <a class="cat-visual-card" href="#shoes" onclick="filterCategoryByCode('SHOE'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/bad_2_SP_2605.jpg" alt="Giày cầu lông" referrerpolicy="no-referrer" />
+              </div>
+              <p>Giày Cầu Lông (Shoes)</p>
+            </a>
+            <a class="cat-visual-card" href="#wear" onclick="filterCategoryByCode('WEAR'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/250324cate_bad3_PC.jpg" alt="Trang phục cầu lông" referrerpolicy="no-referrer" />
+              </div>
+              <p>Trang Phục Tập Luyện</p>
+            </a>
+            <a class="cat-visual-card" href="#gamewear" onclick="filterCategoryByCode('WEAR'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/bad_4_PC_260513.jpg" alt="Áo đấu giải" referrerpolicy="no-referrer" />
+              </div>
+              <p>Áo Đấu Chuyên Nghiệp</p>
+            </a>
+            <a class="cat-visual-card" href="#bags" onclick="filterCategoryByCode('BAG'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/250324cate_bad5_PC.jpg" alt="Bao vợt và Balo" referrerpolicy="no-referrer" />
+              </div>
+              <p>Bao Vợt &amp; Balo (Bags)</p>
+            </a>
+            <a class="cat-visual-card" href="#strings" onclick="filterCategoryByCode('STRING'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/bad_6_pc.jpg" alt="Cước đan vợt" referrerpolicy="no-referrer" />
+              </div>
+              <p>Cước Đan Vợt (Strings)</p>
+            </a>
+            <a class="cat-visual-card" href="#shuttles" onclick="filterCategoryByCode('ACC'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/bad_7_pc.jpg" alt="Quả cầu lông" referrerpolicy="no-referrer" />
+              </div>
+              <p>Quả Cầu Lông (Shuttlecocks)</p>
+            </a>
+            <a class="cat-visual-card" href="#accessories" onclick="filterCategoryByCode('ACC'); return false;">
+              <div class="cat-img-box">
+                <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_pc/250324cate_bad6_PC.jpg" alt="Phụ kiện cầu lông" referrerpolicy="no-referrer" />
+              </div>
+              <p>Phụ Kiện &amp; Quấn Cán</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- 6. Nút Đen Đặc Trung Tâm (#top_btn — 商品一覧を見る) -->
+        <div class="center-cta-wrap">
+          <a href="#catalog" id="top_btn">XEM TẤT CẢ SẢN PHẨM CẦU LÔNG</a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Dải cam kết chữ đậm sắc nét -->
+    <section class="trust-strip">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <h4>100% Chính Hãng</h4>
+          <p>Cam kết phân phối chính hãng Yonex, Li-Ning, Victor, Kizuna. Hoàn tiền 1000% nếu giả.</p>
+        </div>
+        <div class="trust-item">
+          <h4>Đan Vợt Chuẩn Quốc Tế</h4>
+          <p>Tùy chọn loại cước (BG66U, Exbolt 65, Z63X) và số kg căng ngay khi đặt vợt.</p>
+        </div>
+        <div class="trust-item">
+          <h4>Giao Hỏa Tốc &amp; COD</h4>
+          <p>Kiểm tra khung vợt, tem bảo hành trước khi thanh toán trên toàn quốc.</p>
+        </div>
+        <div class="trust-item">
+          <h4>Cửa Hàng Trải Nghiệm</h4>
+          <p>Cầm thử trọng lượng 3U/4U/5U và đo điểm cân bằng trực tiếp tại Hà Nội.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="yonex-footer">
+      <div class="yonex-footer-inner">
+        <div>
+          <h5>TOPVNSPORT — BADMINTON SPECIALTY STORE</h5>
+          <p>Hệ thống bán lẻ và đan vợt cầu lông chuyên nghiệp O2O. Đồng bộ tồn kho thời gian thực từ hệ thống VOMA.</p>
+          <p style="margin-top: 10px;"><strong>Hotline:</strong> 097 6007006 (08:00 – 22:00)</p>
+        </div>
+        <div>
+          <h5>DANH MỤC CẦU LÔNG</h5>
+          <ul>
+            <li><a href="#rackets">Vợt Cầu Lông Yonex / Li-Ning</a></li>
+            <li><a href="#shoes">Giày Cầu Lông Chuyên Dụng</a></li>
+            <li><a href="#strings">Cước Đan Vợt (Strings)</a></li>
+            <li><a href="#wear">Quần Áo &amp; Trang Phục</a></li>
+            <li><a href="#bags">Bao Vợt &amp; Balo Thể Thao</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>DỊCH VỤ &amp; BẢO HÀNH</h5>
+          <ul>
+            <li><a href="#warranty">Chính sách bảo hành chính hãng</a></li>
+            <li><a href="#stringing-guide">Bảng tư vấn mức căng cước</a></li>
+            <li><a href="#shipping">Giao hàng hỏa tốc &amp; COD</a></li>
+            <li><a href="#stores">Hệ thống cửa hàng trải nghiệm</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>SHOWROOM TRẢI NGHIỆM</h5>
+          <p>Khách hàng muốn cầm thử trực tiếp vợt và căng cước lấy ngay vui lòng ghé cửa hàng TopVNSport tại Hà Nội.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =======================================================================
+       TAB 2: GIAO DIỆN MOBILE 390PX (CHUẨN SP YONEXSHOP.JP)
+       ======================================================================= -->
+  <div id="panel-mobile" class="view-panel">
+    <div class="mobile-preview-stage">
+      <div style="text-align: center; max-width: 620px;">
+        <h2 style="font-family: var(--font-display); font-size: 22px; font-weight: 800; color: #000;">Khung nhìn Mobile (390px — Chuẩn SP YonexShop.jp)</h2>
+        <p style="font-size: 14px; font-weight: 500; color: var(--ink-secondary); margin-top: 4px;">
+          Thanh <code>.cate_select</code> cuộn ngang gạch chân đậm, Banner tỷ lệ vuông 1:1 (<code>700×700</code>) hé 2 mép 5%, Lưới sản phẩm &amp; danh mục 2 cột (<code>48%</code>), chữ <code>#000000</code> rõ nét.
+        </p>
+      </div>
+
+      <div class="phone-frame">
+        <div class="sp-header">
+          <span style="font-weight: 800; font-size: 18px;">☰</span>
+          <div style="font-family: var(--font-display); font-weight: 900; font-size: 17px;">TOPVN<span style="color: var(--brand-primary);">SPORT</span></div>
+          <span style="font-weight: 800; font-size: 13px; border: 1.5px solid #000; padding: 3px 9px; border-radius: 999px;">Giỏ (2)</span>
+        </div>
+
+        <div style="background: #f4f4f5; padding: 7px 10px; text-align: center; font-size: 11.5px; font-weight: 700; color: #000; border-bottom: 1px solid #e4e4e7;">
+          Cam kết 100% Chính Hãng · Đan vợt chuẩn quốc tế
+        </div>
+
+        <div class="sp-title-box">
+          <h2>BADMINTON</h2>
+        </div>
+
+        <div class="sp-cate-select">
+          <span class="active">Vợt cầu lông</span>
+          <span>Cước đan</span>
+          <span>Giày cầu lông</span>
+          <span>Trang phục</span>
+          <span>Bao vợt</span>
+          <span>Phụ kiện</span>
+        </div>
+
+        <!-- SP Square 1:1 Center Slider -->
+        <div class="sp-slider">
+          <div class="sp-slide-box peek">
+            <img src="https://yonexshop.jp/photo/contents_block/top_badminton_banner_sp/1.YNX_NF800_Banner_09_JP_700-700-min.jpg" alt="" referrerpolicy="no-referrer" />
+          </div>
+          <div class="sp-slide-box">
+            <img src="https://yonexshop.jp/photo/contents_block/top_badminton_banner_sp/250904_99_700.jpg" alt="Astrox 99" referrerpolicy="no-referrer" />
+          </div>
+          <div class="sp-slide-box peek">
+            <img src="https://yonexshop.jp/photo/contents_block/top_badminton_banner_sp/250820VAC_700.jpg" alt="" referrerpolicy="no-referrer" />
+          </div>
+        </div>
+
+        <div style="text-align: center; padding: 10px 0 4px; font-size: 11px; font-weight: 700;">
+          ● ○ ○ ○ ○ ○ &nbsp; <span style="border: 1px solid #d4d4d8; padding: 2px 6px;">❚❚</span>
+        </div>
+
+        <div style="text-align: center; padding: 24px 12px 16px;">
+          <h3 style="font-family: var(--font-display); font-size: 21px; font-weight: 800; color: #000;">SẢN PHẨM NỔI BẬT</h3>
+        </div>
+
+        <div class="sp-grid-2" id="mobile-product-grid">
+          <!-- Render 4 sản phẩm mẫu trên mobile -->
+        </div>
+
+        <div style="text-align: center; padding: 28px 12px 14px;">
+          <h3 style="font-family: var(--font-display); font-size: 21px; font-weight: 800; color: #000;">DANH MỤC</h3>
+        </div>
+
+        <div class="sp-grid-2" style="padding-bottom: 24px;">
+          <div>
+            <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_sp/250324cate_bad_SP1.jpg" alt="Vợt" style="width:100%; aspect-ratio:1/1; object-fit:cover; border:1px solid #e4e4e7;" referrerpolicy="no-referrer" />
+            <p style="text-align:center; font-size:13px; font-weight:700; color:#000; padding:6px 0;">Vợt Cầu Lông</p>
+          </div>
+          <div>
+            <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_sp/bad_2_PC_2605.jpg" alt="Giày" style="width:100%; aspect-ratio:1/1; object-fit:cover; border:1px solid #e4e4e7;" referrerpolicy="no-referrer" />
+            <p style="text-align:center; font-size:13px; font-weight:700; color:#000; padding:6px 0;">Giày Cầu Lông</p>
+          </div>
+          <div>
+            <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_sp/bad_6.jpg" alt="Cước" style="width:100%; aspect-ratio:1/1; object-fit:cover; border:1px solid #e4e4e7;" referrerpolicy="no-referrer" />
+            <p style="text-align:center; font-size:13px; font-weight:700; color:#000; padding:6px 0;">Cước Đan Vợt</p>
+          </div>
+          <div>
+            <img src="https://yonexshop.jp/photo/contents_block/top_category_badminton_sp/250324cate_bad_SP3.jpg" alt="Áo" style="width:100%; aspect-ratio:1/1; object-fit:cover; border:1px solid #e4e4e7;" referrerpolicy="no-referrer" />
+            <p style="text-align:center; font-size:13px; font-weight:700; color:#000; padding:6px 0;">Trang Phục</p>
+          </div>
+        </div>
+
+        <div style="padding: 0 16px 28px; text-align: center;">
+          <div style="background:#000; color:#fff; font-weight:700; font-size:14px; padding:13px; border-radius:4px;">XEM TẤT CẢ SẢN PHẨM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       TAB 3: ĐỐI CHIẾU FONT & MÀU CHỮ (TRƯỚC VS SAU)
+       ======================================================================= -->
+  <div id="panel-contrast" class="view-panel">
+    <div class="spec-container">
+      <div class="spec-hero">
+        <h2>Chẩn đoán &amp; Khắc phục lỗi "Font và màu chữ khá nhạt" trên TopVNSport</h2>
+        <p>Đối chiếu trực tiếp mã nguồn hiện tại của <code>topvnsport.com</code> với chuẩn hiển thị sắc nét của <code>yonexshop.jp/?category_id=1</code>.</p>
+      </div>
+
+      <div class="compare-grid">
+        <!-- BEFORE -->
+        <div class="compare-box">
+          <span class="compare-tag bad">Hiện tại trên topvnsport.com — Chữ nhạt, mỏng, khó đọc</span>
+          <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 12px;">Nguyên nhân gốc trong code hiện tại:</h3>
+          <ul style="padding-left: 18px; font-size: 14px; color: #27272a; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+            <li><strong>Lạm dụng <code>text-gray-400</code> (<code>#9ca3af</code>) trên nền trắng:</strong> Độ tương phản chỉ đạt <strong>2.54:1</strong> (rớt chuẩn WCAG AA 4.5:1) ở nhãn thương hiệu/ngành, thông số vợt, xu hướng tìm kiếm, phụ đề logo.</li>
+            <li><strong>Dùng <code>font-light</code> (weight 300) ở cỡ <code>10px</code>:</strong> Trong <code>TrustBadges.tsx</code>, dòng mô tả dùng <code>text-[10px] text-gray-500 font-light</code> làm chữ bị mảnh và chìm vào nền.</li>
+            <li><strong>Tên sản phẩm &amp; thông số quá nhỏ:</strong> <code>ProductCard.tsx</code> dùng <code>text-sm text-gray-800</code> và bảng thông số <code>text-[10px] text-gray-400</code>.</li>
+          </ul>
+
+          <!-- Mô phỏng thẻ hiện tại -->
+          <div style="border: 1px solid #f3f4f6; border-radius: 12px; padding: 16px; background: #fff;">
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; color:#9ca3af; font-weight:700;">
+              <span style="color:#005eb8;">YONEX</span>
+              <span>Vợt Cầu Lông</span>
+            </div>
+            <div style="font-size:14px; font-weight:600; color:#1f2937; margin-top:6px;">
+              Vợt cầu lông YONEX Astrox 77 Tour chính hãng
+            </div>
+            <div style="border-top:1px solid #f9fafb; border-bottom:1px solid #f9fafb; padding:8px 0; margin:8px 0; font-family:var(--font-mono); font-size:10px; color:#6b7280; display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+              <div><span style="color:#9ca3af;">Trọng lượng:</span> <span style="color:#374151;">4U</span></div>
+              <div><span style="color:#9ca3af;">Điểm CB:</span> <span style="color:#374151;">299mm</span></div>
+              <div style="grid-column:span 2;"><span style="color:#9ca3af;">Độ cứng:</span> <span style="color:#374151;">Trung bình</span></div>
+            </div>
+            <div style="font-size:16px; font-weight:800; color:#005eb8;">3.080.000đ</div>
+          </div>
+        </div>
+
+        <!-- AFTER -->
+        <div class="compare-box after">
+          <span class="compare-tag good">Thiết kế mới (Chuẩn YonexShop.jp) — Đen tuyền #000000, sắc nét</span>
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 12px; color: #000;">Giải pháp trong bản thiết kế mới:</h3>
+          <ul style="padding-left: 18px; font-size: 14px; color: #000; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+            <li><strong>Mực chính <code>#000000</code> (Contrast 21:1):</strong> Toàn bộ tiêu đề, thanh danh mục <code>.cate_select</code>, tên sản phẩm (<code>16px</code> weight <code>600</code>), giá bán (<code>17px</code> weight <code>800</code>) và tag thông số dùng màu đen tuyền như <code>yonexshop.jp</code>.</li>
+            <li><strong>Mực phụ <code>#18181b</code> (17.4:1) &amp; Mực xám tối thiểu <code>#52525b</code> (7.0:1):</strong> Cấm hoàn toàn <code>text-gray-400</code> và <code>font-light</code> trên nền sáng.</li>
+            <li><strong>Ô thông số <code>.feature_contents</code>:</strong> Đóng khung viền <code>1px solid #d4d4d8</code>, chữ <code>12px</code> SemiBold <code>#000000</code> đọc rõ ngay từ cái nhìn đầu tiên.</li>
+          </ul>
+
+          <!-- Mô phỏng thẻ mới -->
+          <div style="border: 1px solid #18181b; padding: 16px; background: #fff;">
+            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:12px; font-weight:700;">
+              <span style="color:#005eb8;">YONEX</span>
+              <span style="color:#18181b;">VỢT CẦU LÔNG</span>
+            </div>
+            <div style="font-size:16px; font-weight:600; color:#000000; margin-top:6px; line-height:1.4;">
+              Vợt cầu lông YONEX Astrox 77 Tour chính hãng
+            </div>
+            <div style="font-family:var(--font-display); font-size:17px; font-weight:800; color:#000000; margin:8px 0;">
+              3.080.000đ <span style="font-size:12px; font-weight:600; color:#18181b;">(Chính hãng)</span>
+            </div>
+            <div class="feature_table">
+              <span class="feature_contents">4U (80-84g)</span>
+              <span class="feature_contents">Điểm CB 299mm</span>
+              <span class="feature_contents">Thân cứng vừa</span>
+              <span class="feature_contents stringing">Đan cước theo yêu cầu</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       TAB 4: ĐẶC TẢ KỸ THUẬT & BẢNG TOKEN
+       ======================================================================= -->
+  <div id="panel-tokens" class="view-panel">
+    <div class="spec-container">
+      <div class="spec-hero">
+        <h2>Đặc tả Kỹ thuật &amp; Hệ thống Token (Ánh xạ từ yonexshop.jp/?category_id=1)</h2>
+        <p>Tài liệu chuẩn hóa bố cục, cỡ chữ, độ đậm và mã màu để làm căn cứ trước khi code vào <code>src/</code>.</p>
+      </div>
+
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">1. Bảng màu chữ &amp; nền (High-Contrast Ink Tokens)</h3>
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Giá trị mới</th>
+            <th>Tương phản trên #FFF</th>
+            <th>Thay thế cho (hiện tại)</th>
+            <th>Phạm vi áp dụng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--ink-primary</code></td>
+            <td><span class="swatch" style="background:#000000"></span><code>#000000</code></td>
+            <td><strong>21.0 : 1</strong> (AAA)</td>
+            <td><code>text-gray-800</code>, <code>text-gray-700</code></td>
+            <td>Tiêu đề <code>BADMINTON</code>, <code>SẢN PHẨM NỔI BẬT</code>, pill danh mục <code>.cate_select</code>, tên sản phẩm, giá chuẩn, nhãn <code>.feature_contents</code>, menu chính.</td>
+          </tr>
+          <tr>
+            <td><code>--ink-secondary</code></td>
+            <td><span class="swatch" style="background:#18181b"></span><code>#18181b</code> (zinc-900)</td>
+            <td><strong>17.4 : 1</strong> (AAA)</td>
+            <td><code>text-gray-500</code>, <code>text-gray-600</code></td>
+            <td>Mô tả dưới tiêu đề, cam kết <code>TrustBadges</code>, nhãn ngành phụ trên thẻ SP, thông tin chi nhánh.</td>
+          </tr>
+          <tr>
+            <td><code>--ink-muted</code></td>
+            <td><span class="swatch" style="background:#52525b"></span><code>#52525b</code> (zinc-600)</td>
+            <td><strong>7.0 : 1</strong> (AAA)</td>
+            <td><code>text-gray-400</code> (<code>#9ca3af</code> - 2.54:1)</td>
+            <td>Giá gốc gạch ngang, placeholder ô tìm kiếm, chú thích phụ. <strong>Cấm dùng màu nhạt hơn #52525b cho chữ trên nền sáng.</strong></td>
+          </tr>
+          <tr>
+            <td><code>--pill-bg</code></td>
+            <td><span class="swatch" style="background:#e5e5e5"></span><code>#e5e5e5</code></td>
+            <td>Nền pill danh mục</td>
+            <td>Thẻ gradient nhiều màu</td>
+            <td>Thanh <code>.cate_select</code> bo tròn <code>border-radius: 50px</code> dưới tiêu đề <code>BADMINTON</code> đúng chuẩn <code>yonexshop.jp</code>.</td>
+          </tr>
+          <tr>
+            <td><code>--brand-primary</code></td>
+            <td><span class="swatch" style="background:#005eb8"></span><code>#005eb8</code></td>
+            <td><strong>6.4 : 1</strong> (AA+)</td>
+            <td>Giữ nguyên</td>
+            <td>Điểm nhấn thương hiệu Yonex Blue, trạng thái active/hover, huy hiệu đan cước.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">2. Cấu trúc bố cục Trang chủ Badminton (Ánh xạ 1-1 với yonexshop.jp/?category_id=1)</h3>
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Thứ tự</th>
+            <th>Khối trên yonexshop.jp</th>
+            <th>Thiết kế trên TopVNSport</th>
+            <th>Thông số bố cục PC / Mobile</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1</strong></td>
+            <td><code>.title-box &gt; h2.title</code><br/>("BADMINTON")</td>
+            <td>Tiêu đề trung tâm <strong>BADMINTON</strong> + dòng định vị chuyên trang cầu lông</td>
+            <td>PC: <code>32px</code>, <code>font-weight: 800</code>, <code>padding: 38px 0 12px</code>, căn giữa.<br/>Mobile: <code>24px</code>, <code>padding: 22px 0 8px</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>2</strong></td>
+            <td><code>.cate_box &gt; .cate_select</code><br/>(ラケット · ストリング · シューズ...)</td>
+            <td>Thanh viên thuốc chọn nhanh ngành con cầu lông (Vợt, Cước đan, Giày, Quần áo, Bao vợt, Phụ kiện)</td>
+            <td>PC: Nền <code>#e5e5e5</code>, <code>border-radius: 50px</code>, chữ <code>15px</code> <code>font-weight: 700</code> <code>#000</code>, <code>padding: 14px 20px</code>.<br/>Mobile: Thanh cuộn ngang <code>white-space: nowrap</code>, chữ <code>13.5px</code> gạch chân đậm.</td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td><code>.slick-slider-pc</code> / <code>.slick-slider-sp</code></td>
+            <td><strong>Center-Mode Hero Slider</strong> + chấm tròn <code>.slick-dots</code> + nút dừng <code>.slick_pause</code></td>
+            <td>PC: Tỷ lệ <code>1400×600</code>, slide giữa <code>opacity: 1</code>, 2 slide hai bên <code>opacity: 0.4</code>.<br/>Mobile: Tỷ lệ vuông <code>700×700</code> (1:1), hé 2 bên 5%.</td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td><code>#top_rated-wrap</code><br/>(おすすめ商品 — Sản phẩm đề xuất)</td>
+            <td><strong>SẢN PHẨM NỔI BẬT</strong> — Lưới sản phẩm chủ lực kèm bảng tag thông số <code>.feature_table</code></td>
+            <td>PC: Lưới 4 cột (<code>repeat(4, 1fr)</code>), 8–12 sản phẩm.<br/>Mobile: Lưới 2 cột (<code>repeat(2, 1fr)</code>), khoảng cách <code>12px</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>5</strong></td>
+            <td><code>#main_img-wrap_c</code><br/>(カテゴリー — Danh mục hình ảnh)</td>
+            <td><strong>DANH MỤC CẦU LÔNG</strong> — Lưới ô ảnh trực quan theo nhóm thiết bị</td>
+            <td>PC: Lưới 4 cột, ảnh tỷ lệ <code>4:3</code> + nhãn chữ <code>15.5px</code> Bold <code>#000</code> căn giữa.<br/>Mobile: Lưới 2 cột vuông.</td>
+          </tr>
+          <tr>
+            <td><strong>6</strong></td>
+            <td><code>.center &gt; #top_btn</code><br/>(商品一覧を見る)</td>
+            <td>Nút đen đặc <strong>XEM TẤT CẢ SẢN PHẨM CẦU LÔNG</strong> dẫn sang <code>/catalog</code></td>
+            <td>PC: <code>width: 400px</code>, <code>height: 52px</code>, nền <code>#000000</code>, chữ <code>#ffffff</code> <code>16px</code> Bold, bo góc <code>5px</code>.<br/>Mobile: <code>width: 85%</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       SCRIPT TƯƠNG TÁC CHO SLIDER, LỌC DANH MỤC & CHUYỂN TAB TRONG BẢN DESIGN
+       ======================================================================= -->
+  <script>
+    const SLIDES = [
+      {
+        pc: "https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/250904_99_1400_600.jpg",
+        eyebrow: "YONEX BADMINTON · DÒNG TẤN CÔNG CHỦ LỰC",
+        title: "ASTROX SERIES — SỨC MẠNH ĐẬP CẦU ÁP ĐẢO",
+        sub: "Sẵn hàng đủ thông số 3U / 4U, tùy chọn đan cước BG66 Ultimax, Exbolt 63/65/68 ngay trên web."
+      },
+      {
+        pc: "https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/250820VAC_1400_700_4.jpg",
+        eyebrow: "LIMITED COLLECTION · VIKTOR AXELSEN",
+        title: "BỘ SƯU TẬP VIKTOR AXELSEN CHÍNH HÃNG",
+        sub: "Trọn bộ vợt, giày Power Cushion 65Z VA, bao vợt và trang phục thi đấu phiên bản giới hạn."
+      },
+      {
+        pc: "https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/1.YNX_NF800_Banner_08_JP_1400-600-min.jpg",
+        eyebrow: "YONEX NANOFLARE · PHẢN TẠT TỐC ĐỘ CAO",
+        title: "NANOFLARE 800 & 1000 — ĐIỀU CẦU CHỚP NHOÁNG",
+        sub: "Khung Aero Frame giảm cản gió tối đa, hỗ trợ phản tạt trên lưới nhanh và chính xác."
+      },
+      {
+        pc: "https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/wear2627_1400x600.jpg",
+        eyebrow: "BADMINTON APPAREL · 2026 COLLECTION",
+        title: "TRANG PHỤC THI ĐẤU CẦU LÔNG CHÍNH HÃNG",
+        sub: "Chất liệu thoáng khí, co giãn 4 chiều chuẩn giải đấu quốc tế cho nam và nữ."
+      },
+      {
+        pc: "https://yonexshop.jp/photo/contents_block/top_badminton_banner_pc/EC-site_1400x600.jpg",
+        eyebrow: "YONEX NANOFLARE 700 · TOÀN DIỆN LINH HOẠT",
+        title: "NANOFLARE 700 SERIES — NHẸ NHÀNG & BỀN BỈ",
+        sub: "Lựa chọn hàng đầu cho lối đánh công thủ toàn diện, thoát cầu nhẹ và êm tay."
+      }
+    ];
+
+    // Dữ liệu sản phẩm thật từ PIM của TopVNSport (pim.voma.vn)
+    const FEATURED_PRODUCTS = [
+      {
+        id: 551,
+        group: "RACKET",
+        brand: "YONEX",
+        categoryLabel: "VỢT CẦU LÔNG",
+        name: "Vợt cầu lông YONEX Astrox 77 Tour — Lối chơi Smash & Phông cầu",
+        price: "3.080.000đ",
+        oldPrice: null,
+        badge: "HOT",
+        badgeClass: "blue",
+        image: "https://pim.voma.vn/media/9d921279-a51d-4df4-9d4a-61460494fce2.jpg",
+        features: ["4U G5", "Điểm CB 298–300mm", "Tấn công Smash", "Tùy chọn đan cước"],
+        hasStringing: true
+      },
+      {
+        id: 546,
+        group: "RACKET",
+        brand: "LI-NING",
+        categoryLabel: "VỢT CẦU LÔNG",
+        name: "Vợt cầu lông LI-NING Halbertec 9000 — Công thủ toàn diện cao cấp",
+        price: "5.890.000đ",
+        oldPrice: null,
+        badge: "PRO",
+        badgeClass: "",
+        image: "https://pim.voma.vn/media/cb64851b-7fe0-4b39-9504-5c1bc259ddf5.jpg",
+        features: ["4U / 3U", "Điểm CB 295mm", "Kiểm soát toàn diện", "Tùy chọn đan cước"],
+        hasStringing: true
+      },
+      {
+        id: 585,
+        group: "RACKET",
+        brand: "LI-NING",
+        categoryLabel: "VỢT CẦU LÔNG",
+        name: "Vợt cầu lông LI-NING Halbertec 8000 (4U G5) Chính Hãng",
+        price: "5.320.000đ",
+        oldPrice: null,
+        badge: "HOT",
+        badgeClass: "blue",
+        image: "https://pim.voma.vn/media/decbb8fb-d6b1-47d5-9421-07bd9f489a4b.jpg",
+        features: ["4U G5", "Hấp thụ chấn HDF", "Đan sẵn hoặc khung rời"],
+        hasStringing: true
+      },
+      {
+        id: 564,
+        group: "RACKET",
+        brand: "LI-NING",
+        categoryLabel: "VỢT CẦU LÔNG",
+        name: "Vợt cầu lông LI-NING Bladex 800 Speed (4U) — Phản tạt tốc độ",
+        price: "4.750.000đ",
+        oldPrice: null,
+        badge: "SPEED",
+        badgeClass: "",
+        image: "https://pim.voma.vn/media/347dbdcf-c7d7-44ea-9c5c-85b791614edd.jpg",
+        features: ["4U", "Khung khí động học", "Phản tạt nhanh", "Tùy chọn đan cước"],
+        hasStringing: true
+      },
+      {
+        id: 595,
+        group: "RACKET",
+        brand: "YONEX",
+        categoryLabel: "VỢT CẦU LÔNG",
+        name: "Vợt cầu lông YONEX Nanoflare 1000 Play Chính Hãng",
+        price: "1.980.000đ",
+        oldPrice: "2.250.000đ",
+        badge: "-12%",
+        badgeClass: "red",
+        image: "https://pim.voma.vn/media/a74e8d6e-dd18-4710-af12-5e2b6d6c06fb.jpg",
+        features: ["4U G5", "Nhẹ đầu linh hoạt", "Dễ thuần", "Tùy chọn đan cước"],
+        hasStringing: true
+      },
+      {
+        id: 543,
+        group: "SHOE",
+        brand: "LI-NING",
+        categoryLabel: "GIÀY CẦU LÔNG",
+        name: "Giày cầu lông LI-NING Thunder II Pro (China Masters 2026)",
+        price: "4.000.000đ",
+        oldPrice: null,
+        badge: "NEW 2026",
+        badgeClass: "blue",
+        image: "https://pim.voma.vn/media/c9bae3cd-5cab-4220-85e8-03b543559a66.jpg",
+        features: ["Size 40 – 43", "Đệm giảm chấn Boom", "Chống lật cổ chân"],
+        hasStringing: false
+      },
+      {
+        id: 572,
+        group: "WEAR",
+        brand: "YONEX",
+        categoryLabel: "TRANG PHỤC",
+        name: "Áo đấu cầu lông YONEX Unisex YOB26002EX Chính Hãng",
+        price: "1.050.000đ",
+        oldPrice: null,
+        badge: "NEW",
+        badgeClass: "",
+        image: "https://pim.voma.vn/media/140ac238-8e51-4daa-8834-7a8b33734ea3.jpg",
+        features: ["Regular Fit", "Size L / XL", "Nhanh khô thoáng khí"],
+        hasStringing: false
+      },
+      {
+        id: 637,
+        group: "STRING",
+        brand: "YONEX",
+        categoryLabel: "CƯỚC ĐAN VỢT",
+        name: "Cước căng vợt YONEX BG80 / BG66 Ultimax / BG65 Titanium Chính Hãng",
+        price: "130.000đ",
+        oldPrice: null,
+        badge: "BEST SELLER",
+        badgeClass: "blue",
+        image: "https://pim.voma.vn/media/f44cb064-766d-46f6-b9f4-8059817019c8.jpg",
+        features: ["0.65mm – 0.70mm", "Độ nảy cao", "Made in Japan"],
+        hasStringing: false
+      }
+    ];
+
+    let currentSlide = 0;
+    let isPlaying = true;
+    let slideTimer = null;
+
+    function renderSlider() {
+      const prevIdx = (currentSlide - 1 + SLIDES.length) % SLIDES.length;
+      const nextIdx = (currentSlide + 1) % SLIDES.length;
+      document.getElementById("slider-prev-img").src = SLIDES[prevIdx].pc;
+      document.getElementById("slider-main-img").src = SLIDES[currentSlide].pc;
+      document.getElementById("slider-next-img").src = SLIDES[nextIdx].pc;
+      document.getElementById("slider-eyebrow").textContent = SLIDES[currentSlide].eyebrow;
+      document.getElementById("slider-title").textContent = SLIDES[currentSlide].title;
+      document.getElementById("slider-sub").textContent = SLIDES[currentSlide].sub;
+
+      const dotsEl = document.getElementById("slider-dots");
+      dotsEl.innerHTML = SLIDES.map((_, idx) =>
+        `<li><button type="button" class="${idx === currentSlide ? 'active' : ''}" onclick="goToSlide(${idx})" aria-label="Slide ${idx + 1}"></button></li>`
+      ).join("");
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % SLIDES.length;
+      renderSlider();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + SLIDES.length) % SLIDES.length;
+      renderSlider();
+    }
+
+    function goToSlide(idx) {
+      currentSlide = idx;
+      renderSlider();
+    }
+
+    function toggleAutoplay() {
+      isPlaying = !isPlaying;
+      document.getElementById("pause-icon").textContent = isPlaying ? "❚❚" : "▶";
+      document.getElementById("pause-label").textContent = isPlaying ? "Tạm dừng" : "Phát tiếp";
+      if (isPlaying) {
+        startAutoplay();
+      } else if (slideTimer) {
+        clearInterval(slideTimer);
+      }
+    }
+
+    function startAutoplay() {
+      if (slideTimer) clearInterval(slideTimer);
+      slideTimer = setInterval(() => {
+        if (isPlaying) nextSlide();
+      }, 4500);
+    }
+
+    function renderProducts(filterGroup = "ALL") {
+      const list = filterGroup === "ALL"
+        ? FEATURED_PRODUCTS
+        : FEATURED_PRODUCTS.filter(p => p.group === filterGroup);
+      const items = list.length > 0 ? list : FEATURED_PRODUCTS;
+
+      const grid = document.getElementById("featured-product-grid");
+      grid.innerHTML = items.map(p => `
+        <li class="yonex-product-card">
+          <div class="img-area">
+            <div class="card-badges">
+              ${p.badge ? `<span class="card-badge ${p.badgeClass}">${p.badge}</span>` : ""}
+            </div>
+            <img src="${p.image}" alt="${p.name}" referrerpolicy="no-referrer" />
+          </div>
+          <div class="text-area">
+            <div class="category-name">
+              <span>${p.brand}</span>
+              <span class="cat-type">${p.categoryLabel}</span>
+            </div>
+            <h3 class="item-name">${p.name}</h3>
+            <div class="price-row">
+              <span class="price ${p.oldPrice ? 'sale' : ''}">${p.price}</span>
+              ${p.oldPrice ? `<span class="price-old">${p.oldPrice}</span>` : `<span class="tax-note">(Chính hãng)</span>`}
+            </div>
+            <div class="feature_table">
+              ${p.features.map((f, i) => `
+                <div class="feature_contents ${p.hasStringing && i === p.features.length - 1 ? 'stringing' : ''}">
+                  <p>${f}</p>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </li>
+      `).join("");
+
+      const spGrid = document.getElementById("mobile-product-grid");
+      if (spGrid) {
+        spGrid.innerHTML = FEATURED_PRODUCTS.slice(0, 4).map(p => `
+          <div class="yonex-product-card">
+            <div class="img-area" style="padding: 10px;">
+              <div class="card-badges">
+                ${p.badge ? `<span class="card-badge ${p.badgeClass}" style="font-size:9.5px; padding:2px 6px;">${p.badge}</span>` : ""}
+              </div>
+              <img src="${p.image}" alt="${p.name}" referrerpolicy="no-referrer" />
+            </div>
+            <div class="text-area" style="padding: 8px 2px;">
+              <div class="category-name" style="font-size: 10.5px;">
+                <span>${p.brand}</span>
+                <span class="cat-type">${p.categoryLabel}</span>
+              </div>
+              <h4 class="item-name" style="font-size: 13.5px; min-height: 38px;">${p.name}</h4>
+              <div class="price-row">
+                <span class="price" style="font-size: 14.5px;">${p.price}</span>
+              </div>
+              <div class="feature_table" style="gap: 4px;">
+                ${p.features.slice(0, 2).map(f => `
+                  <div class="feature_contents" style="font-size: 10.5px; padding: 2px 5px;">
+                    <p>${f}</p>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+        `).join("");
+      }
+    }
+
+    function filterCategory(group, btn) {
+      document.querySelectorAll("#desktop-cate-pills button").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+      renderProducts(group);
+    }
+
+    function filterCategoryByCode(group) {
+      renderProducts(group);
+      document.getElementById("top_rated-wrap").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".design-tab").forEach(b => b.classList.remove("active"));
+      document.getElementById("panel-" + tabId).classList.add("active");
+      if (btn) btn.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    renderSlider();
+    renderProducts("ALL");
+    startAutoplay();
+  </script>
+</body>
+</html>
