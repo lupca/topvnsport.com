@@ -1,133 +1,53 @@
-# Thiết Kế Trang Chủ TopVNSport — Chuyên Trang BADMINTON (Theo mẫu `yonexshop.jp/?category_id=1`)
+# Bản Thiết Kế UI/UX v2.0 — Trang Chủ Badminton TopVNSport (Vượt Chuẩn `yonexshop.jp/?category_id=1`)
 
-> **Trạng thái:** Bản thiết kế (Design Spec & Interactive Prototype) — **Chưa can thiệp code ứng dụng (`src/`)**
-> **Tệp mẫu tương tác:** [`design/index.html`](./index.html) (gồm 4 chế độ xem: Desktop 1440px, Mobile 390px, Đối chiếu Chữ Trước/Sau, Bảng Token Kỹ thuật)
-> **Tham chiếu gốc:** [`https://yonexshop.jp/?category_id=1`](https://yonexshop.jp/?category_id=1) (Chuyên trang Cầu lông chính thức của Yonex Nhật Bản)
-
----
-
-## 1. Định hướng cốt lõi
-
-Vì **TopVNSport** là chuyên trang thiết bị cầu lông (*Badminton Specialty Store*), khách vào trang chủ (`/`) sẽ **đi thẳng vào không gian BADMINTON** giống hệt cấu trúc danh mục cầu lông của `yonexshop.jp/?category_id=1`, thay vì qua các khối giới thiệu chung chung:
-
-1. **Đầu trang đi thẳng vào `BADMINTON` + Thanh chọn nhanh danh mục con (`.cate_select`)** hình viên thuốc màu xám sáng (`#e5e5e5`), chữ đen đậm (`#000000`, `15px`, `font-weight: 700`).
-2. **Ngay bên dưới là Hero Slider kiểu Center-Mode (`.slick-slider-pc` / `.slick-slider-sp`)**:
-   - Slide trung tâm hiển thị rõ `100%` (`opacity: 1`, tỷ lệ `1400×600` trên PC và vuông `700×700` trên Mobile).
-   - Hai slide liền kề hé ở 2 mép trái/phải với `opacity: 0.4` tạo chiều sâu thị giác đặc trưng của Yonex Nhật Bản.
-   - Điều hướng dưới slider gồm hàng chấm tròn (`.slick-dots`: chấm đang chọn `#000000`, chấm chờ `#9ca3af`) và nút Tạm dừng / Phát tiếp (`.slick_pause`).
-3. **Tiếp nối ngay sau Slider là khối `SẢN PHẨM NỔI BẬT` (`#top_rated-wrap` — おすすめ商品)**:
-   - Tiêu đề căn giữa cỡ lớn (`30px` PC / `21px` Mobile, `font-weight: 800`, `#000000`).
-   - Lưới **4 cột trên PC** (`repeat(4, 1fr)`) và **2 cột trên Mobile** (`repeat(2, 1fr)`).
-   - Mỗi thẻ sản phẩm dùng nền ảnh vuông sáng sạch (`#f8f9fa`), chữ đen tuyền `#000000` sắc nét và **bảng tag thông số đóng khung viền vuông (`.feature_table > .feature_contents`)** đặt ngay dưới giá bán.
-4. **Khối `DANH MỤC CẦU LÔNG` bằng hình ảnh (`#main_img-wrap_c` — カテゴリー)** và nút đen đặc trung tâm **`XEM TẤT CẢ SẢN PHẨM` (`#top_btn`)**.
+> **Trạng thái:** Bản thiết kế tương tác Studio-Grade v2.0 (`design/index.html` & `public/design/index.html`) — Chưa can thiệp code ứng dụng trong `src/`.
+> **Link xem trực tiếp (Live Preview):**
+> - Production: [https://www.topvnsport.com/design/index.html](https://www.topvnsport.com/design/index.html)
+> - Vercel Preview: [https://topvnsport-com.vercel.app/design/index.html](https://topvnsport-com.vercel.app/design/index.html)
 
 ---
 
-## 2. Cấu trúc bố cục trang chủ (Wireframe đối chiếu 1–1 với `yonexshop.jp/?category_id=1`)
+## 1. Mục Tiêu Cốt Lõi & Định Hướng Nâng Cấp v2.0
 
-```text
-+-----------------------------------------------------------------------------------+
-| TOPBAR (#000000, chữ #FFFFFF): Hotline 097 6007006 | Cam kết 100% Chính Hãng      |
-+-----------------------------------------------------------------------------------+
-| HEADER STICKY (#FFFFFF, viền #D4D4D8)                                             |
-| [Logo TOPVNSPORT]   CẦU LÔNG | VỢT | GIÀY | CƯỚC | TRANG PHỤC   [Tìm kiếm] [Giỏ] |
-+-----------------------------------------------------------------------------------+
-| THANH THÔNG BÁO (.yonex-textbnr - nền #F4F4F5, chữ #000000 13.5px Bold)           |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|                                    BADMINTON                                      |
-|                           (32px Montserrat ExtraBold #000)                        |
-|                                                                                   |
-|        ( Tất cả | Vợt cầu lông | Cước đan vợt | Giày | Quần áo | Bao vợt )        |
-|             (.cate_select: nền #E5E5E5, bo tròn 50px, chữ 15px Bold #000)         |
-|                                                                                   |
-|  +---------+-------------------------------------------------------+---------+    |
-|  | Slide   |                                                       | Slide   |    |
-|  | Trước   |        HERO BANNER SLIDER TRUNG TÂM (1400x600)        | Kế tiếp |    |
-|  | ( mờ    |              (opacity: 1.0 - rõ nét 100%)             | ( mờ    |    |
-|  |  40% )  |                                                       |  40% )  |    |
-|  +---------+-------------------------------------------------------+---------+    |
-|                              [←]  ● ○ ○ ○ ○  [→]  [❚❚ Tạm dừng]                   |
-|                                                                                   |
-|                                SẢN PHẨM NỔI BẬT                                   |
-|                         (#top_rated-wrap - 30px Bold #000)                        |
-|                                                                                   |
-|  +-------------------+ +-------------------+ +-------------------+ +------------+ |
-|  | [Ảnh vuông 1:1]   | | [Ảnh vuông 1:1]   | | [Ảnh vuông 1:1]   | | [Ảnh 1:1]  | |
-|  | YONEX · VỢT       | | LI-NING · VỢT     | | LI-NING · VỢT     | | LI-NING    | |
-|  | Astrox 77 Tour    | | Halbertec 9000    | | Halbertec 8000    | | Bladex 800 | |
-|  | 3.080.000đ        | | 5.890.000đ        | | 5.320.000đ        | | 4.750.000đ | |
-|  | [4U][CB 299mm]    | | [4U/3U][CB 295mm] | | [4U G5][HDF]      | | [4U][Speed]| |
-|  | [Đan cước]        | | [Đan cước]        | | [Đan cước]        | | [Đan cước] | |
-|  +-------------------+ +-------------------+ +-------------------+ +------------+ |
-|  (Hàng 2: thêm 4 sản phẩm nổi bật: Vợt, Giày, Áo đấu, Cước đan...)                |
-|                                                                                   |
-|                                DANH MỤC CẦU LÔNG                                  |
-|                        (#main_img-wrap_c - 30px Bold #000)                        |
-|                                                                                   |
-|  +-------------------+ +-------------------+ +-------------------+ +------------+ |
-|  | [Ảnh Vợt]         | | [Ảnh Giày]        | | [Ảnh Trang phục]  | | [Ảnh Áo]   | |
-|  | Vợt Cầu Lông      | | Giày Cầu Lông     | | Trang Phục Tập    | | Áo Đấu Giải| |
-|  +-------------------+ +-------------------+ +-------------------+ +------------+ |
-|  +-------------------+ +-------------------+ +-------------------+ +------------+ |
-|  | [Ảnh Bao vợt]     | | [Ảnh Cước đan]    | | [Ảnh Quả cầu]     | | [Ảnh PK]   | |
-|  | Bao Vợt & Balo    | | Cước Đan Vợt      | | Quả Cầu Lông      | | Phụ Kiện   | |
-|  +-------------------+ +-------------------+ +-------------------+ +------------+ |
-|                                                                                   |
-|                      +---------------------------------------+                    |
-|                      |    XEM TẤT CẢ SẢN PHẨM CẦU LÔNG       |                    |
-|                      +---------------------------------------+                    |
-|                       (#top_btn: 400x52px, nền #000, chữ #FFF)                    |
-+-----------------------------------------------------------------------------------+
-```
+1. **Trang chủ (`/`) đi thẳng vào chuyên trang Cầu Lông (`BADMINTON`) theo khung 6 bước của `yonexshop.jp/?category_id=1`:**
+   - **Bước 1 (`.title-box`)**: Tiêu đề trung tâm `BADMINTON` (`Montserrat` `34px`, `font-weight: 900`, `#000000`, `21:1`).
+   - **Bước 2 (`.cate_select`)**: Thanh viên thuốc chọn nhanh ngành con cầu lông (`#e5e5e5`, `border-radius: 999px`, nút cao `44px`) kèm số lượng SKU (`tabular-nums`).
+   - **Bước 3 (`.center-slider-viewport`)**: **Center-Mode Hero Slider** (`1400×600` trên PC, `700×700` trên Mobile; slide giữa `opacity: 1`, 2 slide hai bên `opacity: 0.38`) + **Thẻ Sản Phẩm Tiêu Điểm (`.slide-product-chip`)** gắn trực tiếp vào SKU thật + chấm tiến trình tự động chạy (`4.5s`).
+   - **Bước 4 (`#top_rated-wrap`)**: Khối **SẢN PHẨM NỔI BẬT** kèm **Thanh lọc nhanh theo Lối đánh / Thương hiệu / Sắp xếp** và **Thẻ sản phẩm 6 tầng thông tin (`.yonex-product-card`)**.
+   - **Bước 5 (`#main_img-wrap_c`)**: Khối **DANH MỤC CẦU LÔNG** gồm 8 ô hình ảnh trực quan (4 cột PC / 2 cột Mobile).
+   - **Bước 6 (`#top_btn`)**: Nút đen đặc trung tâm **XEM TẤT CẢ SẢN PHẨM CẦU LÔNG** (`420×54px`, `#000000`).
+
+2. **Khắc phục triệt để lỗi "Font và màu chữ khá nhạt" trên `topvnsport.com` hiện tại:**
+   - Loại bỏ hoàn toàn `text-gray-400` (`#9ca3af` — tương phản chỉ đạt **2.54:1**, rớt chuẩn WCAG AA) và `font-light` (weight `300`) ở cỡ `10px–12px`.
+   - Áp dụng **Hệ màu mực in độ tương phản cao (High-Contrast Ink System)**:
+     - `--ink-primary: #000000` (**21.0:1 AAA**) cho tiêu đề, thanh `.cate_select`, tên sản phẩm (`15.5px–16px` SemiBold), giá bán (`17.5px–18px` ExtraBold `tabular-nums`), và ô `.feature_contents`.
+     - `--ink-secondary: #18181b` (**17.4:1 AAA**) cho nhãn phụ, mô tả ngắn, cam kết chính hãng.
+     - `--ink-muted: #52525b` (**7.0:1 AAA**) cho giá cũ gạch ngang và placeholder — **cấm dùng màu chữ nhạt hơn `#52525b` trên nền sáng**.
 
 ---
 
-## 3. Chẩn đoán & Giải pháp khắc phục lỗi "Font và màu chữ khá nhạt"
+## 2. 8 Điểm UI/UX Giúp Bản Thiết Kế v2.0 Vượt Qua `yonexshop.jp/?category_id=1`
 
-### 3.1. Nguyên nhân khiến chữ trên web hiện tại bị nhạt
-
-Qua kiểm tra trực tiếp mã nguồn hiện tại (`src/index.css`, `src/components/Header.tsx`, `src/features/home/HomePage.tsx`, `src/components/ProductCard.tsx`, `src/components/TrustBadges.tsx`):
-
-1. **Lạm dụng `text-gray-400` (`#9ca3af`) và `text-gray-500` (`#6b7280`) trên nền trắng:**
-   - Màu `#9ca3af` trên nền `#ffffff` chỉ có tỷ lệ tương phản **2.54 : 1** (thấp hơn rất nhiều so với ngưỡng tối thiểu WCAG AA là **4.5 : 1**).
-   - Đang được dùng ở: dòng phụ đề logo (`Header.tsx`), từ khóa xu hướng (`Header.tsx`), nhãn ngành hàng trên thẻ sản phẩm (`ProductCard.tsx`), nhãn thông số kỹ thuật `"Trọng lượng:"`, `"Điểm CB:"`, `"Độ cứng:"` (`ProductCard.tsx`), nhãn `"Danh mục"` (`HomePage.tsx`).
-2. **Dùng `font-light` (`font-weight: 300`) kèm cỡ chữ siêu nhỏ `10px` (`text-[10px]`):**
-   - Trong `TrustBadges.tsx`, cả 4 dòng mô tả cam kết đều dùng `text-[10px] text-gray-500 font-light`, khiến nét chữ cực mảnh và bợt màu.
-3. **Tên sản phẩm và bảng thông số vợt thiếu độ đậm khối:**
-   - `ProductCard.tsx` đang dùng `text-sm text-gray-800` (`14px`) cho tên sản phẩm và `text-[10px] text-gray-500` cho bảng thông số, trong khi `yonexshop.jp` dùng màu **đen tuyền `#000000`**, cỡ `16px` cho tên và đóng khung viền rõ nét cho từng thông số (`.feature_contents` `font-weight: 600`).
-
-### 3.2. Hệ thống Token Chữ & Màu mới (High-Contrast Ink System)
-
-| Token thiết kế | Mã màu mới | Độ tương phản trên `#FFFFFF` | Thay thế cho class cũ | Quy tắc áp dụng |
-| :--- | :--- | :--- | :--- | :--- |
-| `--ink-primary` | `#000000` | **21.0 : 1** (Chuẩn AAA) | `text-gray-900`, `text-gray-800`, `text-gray-700` | Toàn bộ tiêu đề (`BADMINTON`, `SẢN PHẨM NỔI BẬT`, `DANH MỤC`), chữ trong `.cate_select`, tên sản phẩm (`.item-name`), giá bán, chữ trong ô `.feature_contents`, liên kết điều hướng. |
-| `--ink-secondary` | `#18181b` (`zinc-900`) | **17.4 : 1** (Chuẩn AAA) | `text-gray-600`, `text-gray-500` | Dòng mô tả phụ dưới tiêu đề, nội dung cam kết `TrustBadges`, tên ngành phụ trên thẻ sản phẩm, nhãn lọc trong `CatalogPage`. |
-| `--ink-muted` | `#52525b` (`zinc-600`) | **7.0 : 1** (Chuẩn AAA) | `text-gray-400` (`#9ca3af`) | Giá gạch ngang khi khuyến mãi, placeholder ô tìm kiếm, chú thích phụ. **Tuyệt đối không dùng màu chữ nào nhạt hơn `#52525b` trên nền sáng.** |
-| `--brand-primary` | `#005eb8` | **6.4 : 1** (Chuẩn AA+) | Giữ nguyên | Nhãn thương hiệu (`YONEX`, `LI-NING`), gạch chân mục đang chọn, tag `"Đan cước theo yêu cầu"`. |
-| `--brand-sale` | `#c62828` | **5.9 : 1** (Chuẩn AA+) | `text-red-500` / `text-red-600` | Giá khuyến mãi và huy hiệu giảm giá `-X%`. |
-
-### 3.3. Quy chuẩn Font & Cỡ chữ mới
-
-| Thành phần giao diện | Font Family | Cỡ chữ (PC / Mobile) | Độ đậm (`font-weight`) | Màu chữ |
-| :--- | :--- | :--- | :--- | :--- |
-| Tiêu đề chuyên trang (`BADMINTON`) | `Montserrat` | `32px` / `24px` | `800` (ExtraBold) | `#000000` |
-| Tiêu đề khối (`SẢN PHẨM NỔI BẬT`, `DANH MỤC`) | `Montserrat` | `30px` / `21px` | `800` (ExtraBold) | `#000000` |
-| Thanh pill danh mục (`.cate_select button`) | `Be Vietnam Pro` | `15px` / `13.5px` | `700` (Bold) | `#000000` (Active: `#005eb8`) |
-| Nhãn Thương hiệu · Ngành (`.category-name`) | `JetBrains Mono` | `12px` / `10.5px` | `700` (Bold) | `#005eb8` & `#18181b` |
-| Tên sản phẩm trên thẻ (`.item-name`) | `Be Vietnam Pro` | `16px` / `13.5px` | `600` (SemiBold) | `#000000` |
-| Giá bán sản phẩm (`.price`) | `Montserrat` | `17px` / `14.5px` | `800` (ExtraBold) | `#000000` (Sale: `#c62828`) |
-| Tag thông số đóng khung (`.feature_contents`) | `Be Vietnam Pro` | `12px` / `10.5px` | `600` (SemiBold) | `#000000` (Viền `1px solid #d4d4d8`) |
-| Nhãn ô danh mục hình ảnh (`#main_img-wrap_c p`) | `Be Vietnam Pro` | `15.5px` / `13px` | `700` (Bold) | `#000000` |
-| Nút chính cuối trang (`#top_btn`) | `Montserrat` | `16px` / `14px` | `700` (Bold) | `#ffffff` trên nền `#000000` |
+| # | Hạng mục UI/UX | Hạn chế trên `yonexshop.jp/?category_id=1` | Nâng cấp trên TopVNSport v2.0 |
+|---|---|---|---|
+| **1** | **Thanh `.cate_select`** | Chỉ là liên kết tĩnh chuyển trang, không có trạng thái đang chọn hay số lượng sản phẩm. | Chuyển thành **Interactive Pill Filter** cao `44px`, hiển thị trạng thái active `#000000` chữ `#ffffff` và số lượng SKU `tabular-nums` lọc tức thì. |
+| **2** | **Center-Mode Hero Slider** | Chỉ là ảnh banner tĩnh, không biết sản phẩm trong ảnh giá bao nhiêu hay còn hàng không. | Giữ khung `1400×600` Center-Mode nhưng bổ sung **Thẻ Sản Phẩm Tiêu Điểm (`.slide-product-chip`)** ngay góc phải dưới banner + nút *"Đan cước ngay"* + chấm tiến trình `4.5s`. |
+| **3** | **Giải phẫu Thẻ 6 Tầng** | Trộn lẫn 5–6 mã công nghệ nội bộ trong các ô `.feature_contents` xám giống hệt nhau. | Tách bạch **6 tầng thông tin**: (1) Ảnh 1:1 + Nhãn Lối Đánh, (2) Hãng `#005eb8` + Tồn kho `#166534`, (3) Tên `#000000` 16px, (4) Chấm màu & Trọng lượng `3U/4U/5U`, (5) Giá `tabular-nums`, (6) Tag vật lý Monospace + Nút Đan Cước O2O. |
+| **4** | **Trình Cấu Hình Đan Cước O2O** | Không thể chọn loại cước đan và lực căng kg ngay từ trang chủ/danh mục. | Bấm vào bất kỳ thẻ vợt nào mở ngay **Slide-Over O2O Stringing Configurator Drawer**: chọn Tier 1 (`4U G5` / Màu) + chọn Tier 2 (`Khung rời`, `BG66 Ultimax`, `Exbolt 65`, `Kizuna Z61`) + kéo thanh lực căng `9.0–13.0 kg` (`20–29 LBS`) tính tổng tiền tức thì. |
+| **5** | **Bộ lọc Lối đánh (Play-Style)** | Người mới chơi không phân biệt được dòng vợt nào thiên công hay phản tạt. | Bổ sung thanh lọc nhanh (*Tấn công Smash*, *Phản tạt tốc độ*, *Công thủ toàn diện*, *Hãng YONEX*, *Hãng LI-NING*, *Có đan cước O2O*) và sắp xếp giá ngay trên lưới. |
+| **6** | **Instant Search (`/`) & Mega Menu** | Ô tìm kiếm phải tải lại trang; thanh menu không phân nhóm theo lối chơi. | Phím tắt `/` mở **Instant Search Dropdown** lọc trực tiếp 12 sản phẩm thật từ PIM; **Mega Menu** chia 3 cột trực quan (*Lối đánh*, *Thương hiệu*, *Dịch vụ Đan Vợt O2O*). |
+| **7** | **12 Sản Phẩm Thật Từ PIM** | Dữ liệu giả định không phản ánh cấu trúc biến thể 2 tầng của Việt Nam. | Sử dụng 12 sản phẩm thật từ `prod_products.fixture.json` và `pim.voma.vn` (Astrox 77 Tour, Halbertec 9000, Axforce Cannon 5U, Astrox Lite 45i, Halbertec 8000, Bladex 800, Nanoflare 1000 Play, ArcSaber 1, Giày Thunder II Pro, Áo Yonex 8T3G, Cước BG66U, Balo Ace Series 2). |
+| **8** | **Chế độ `[X-RAY]` Soi Thông Số** | Không có công cụ kiểm tra thông số trực tiếp trên bản mẫu. | Nút **`[X-RAY] Soi Thông Số UI/UX`** trên thanh công cụ bật/tắt lớp nhãn kỹ thuật (`px`, `font-weight`, `hex`, tỷ lệ tương phản) ngay trên từng thành phần. |
 
 ---
 
-## 4. Cách xem bản thiết kế tương tác (`design/index.html`)
+## 3. 8 Luật Thiết Kế Bắt Buộc (`L1` – `L8`)
 
-Mở trực tiếp tệp [`design/index.html`](./index.html) trên trình duyệt (hoặc qua máy chủ tĩnh bất kỳ):
-
-- **Tab 1 — Trang chủ Desktop (1440px):** Trải nghiệm đầy đủ bố cục `BADMINTON` giống `yonexshop.jp/?category_id=1`, có thể bấm chuyển slide hoặc tạm dừng Hero Slider, bấm lọc thử các viên thuốc danh mục trong `.cate_select`, và xem lưới 8 sản phẩm thật của TopVNSport với kiểu thẻ chữ đen sắc nét.
-- **Tab 2 — Trang chủ Mobile (390px):** Xem bố cục chuẩn Smartphone (`max-width: 750px` của Yonex): thanh `.cate_select` cuộn ngang có gạch chân, slider vuông `1:1` hé 2 cạnh, lưới sản phẩm và danh mục 2 cột.
-- **Tab 3 — Đối chiếu Font & Màu chữ (Trước / Sau):** Đặt cạnh nhau thẻ sản phẩm hiện tại (chữ xám nhạt) và thẻ sản phẩm mới (mực đen `#000000` + khung thông số `.feature_contents`).
-- **Tab 4 — Đặc tả Kỹ thuật & Token:** Bảng tra cứu đầy đủ mã màu, độ tương phản và thông số kích thước để sử dụng khi bắt đầu giai đoạn code.
+- **`L1` (Contrast Floor):** Cấm tuyệt đối `text-gray-400` (`#9ca3af`, 2.54:1) trên nền sáng. Độ tương phản tối thiểu cho chữ phụ là **7.0:1 AAA** (`#52525b` / `text-zinc-600`).
+- **`L2` (Weight & Size Floor):** Loại bỏ hoàn toàn `font-light` (`300`). Cỡ chữ nhỏ nhất cho nhãn phụ/huy hiệu là `11px–12px` SemiBold/Bold.
+- **`L3` (Badminton-First Entry):** Trang chủ đi thẳng vào chuyên trang `BADMINTON` theo đúng chuỗi 6 bước của `yonexshop.jp/?category_id=1`.
+- **`L4` (Tabular Numerals):** Mọi giá tiền, số lượng SKU, trọng lượng (`3U/4U/5U`), điểm cân bằng (`299mm`) và mức căng (`10.5 kg`) phải bật `font-variant-numeric: tabular-nums`.
+- **`L5` (6-Layer Card Alignment):** Khung ảnh cố định tỷ lệ `1:1` trên nền `#f8f9fa`, tên sản phẩm cố định 2 dòng (`min-height: 44px`), `.feature_table` neo đáy (`margin-top: auto`).
+- **`L6` (Physics vs. O2O Service Separation):** Tách biệt ô thông số vật lý viền `#d4d4d8` chữ `#000000` với nút hành động Đan Cước O2O nền `#e8f1fb` viền `#005eb8`.
+- **`L7` (Structural Hairlines):** Thay thế viền mờ `border-gray-100` bằng `border-zinc-200` (`#e4e4e7`) / `border-zinc-300` (`#d4d4d8`), khi hover chuyển sang `#18181b`.
+- **`L8` (Thumb-Zone & STOR-032 Compliance):** Vùng chạm trên Mobile tối thiểu `40px–44px`; không sử dụng ký tự trang trí kiểu AI theo đúng quy tắc `STOR-032`.
