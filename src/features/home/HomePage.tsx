@@ -1,18 +1,21 @@
-import { ChevronRight } from 'lucide-react';
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
 import TrustBadges from '../../components/TrustBadges';
-import { inferRacketPlayStyle } from '../../utils/badmintonReadiness';
+import { NO_IMAGE_URL } from '../../services/sport-api/constants';
+import { hasO2OStringing } from '../../utils/badmintonReadiness';
+import { getBrands } from '../../utils/brands';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
-import { sortProducts } from '../../utils/productSort';
+import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
 import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
 import BadmintonCenterSlider from './BadmintonCenterSlider';
-import { categoryTileThemes, getCategoryMonogram, getCategorySubtitle } from './categoryTileThemes';
 
+const ALL = 'ALL';
+const O2O = 'O2O';
+const ACTIVE_CHIP = 'bg-ink-primary text-white shadow-md';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -30,21 +33,19 @@ export default function HomePage() {
   const maxDiscount = discounts.length > 0 ? Math.max(...discounts) : undefined;
 
   const allInStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0);
-  const [selectedPlayStyle, setSelectedPlayStyle] = useState<string>('ALL');
+  const brands = getBrands(allInStock);
+  const [selectedCategory, setSelectedCategory] = useState<string>(ALL);
+  const [quickFilter, setQuickFilter] = useState<string>(ALL);
+  const [sortMode, setSortMode] = useState<SortMode>('in-stock-first');
 
-  const availablePlayStyles = Array.from(
-    new Set(
-      allInStock
-        .map(p => (inferRacketPlayStyle(p) ?? p.characteristics) as string | undefined)
-        .filter((s): s is string => Boolean(s))
-    )
-  );
-
-  const inStock = (
-    selectedPlayStyle === 'ALL'
-      ? allInStock
-      : allInStock.filter(p => (inferRacketPlayStyle(p) ?? p.characteristics) === selectedPlayStyle)
-  ).slice(0, 8);
+  // STOR-056: chỉ lọc theo dữ liệu VOMA thật (ngành, thương hiệu, tầng cước); lối đánh không có nguồn nên không lọc.
+  const matched = sortProducts(products, sortMode)
+    .filter(p => (p.stock ?? 0) > 0)
+    .filter(p => selectedCategory === ALL || p.categoryCode === selectedCategory)
+    .filter(p =>
+      quickFilter === ALL ? true : quickFilter === O2O ? hasO2OStringing(p) : `brand:${p.brand?.trim()}` === quickFilter
+    );
+  const shown = matched.slice(0, 8);
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {
     if (e) e.stopPropagation();
@@ -91,21 +92,27 @@ export default function HomePage() {
               BADMINTON
             </h1>
           </div>
-          <div data-testid="cate-select-bar" className="cate_select bg-pill-bg rounded-3xl p-2.5 md:p-3 flex flex-wrap items-center justify-center gap-2">
-            {sortedCategories.map(cat => {
-              const label = getCategoryLabel(cat, categories);
-              const count = categoryCounts[cat.code] || 0;
-
+          {/* STOR-056: chip lọc kệ ngay trên trang (không rời /), "Tất cả" đứng đầu. */}
+          <div
+            data-testid="cate-select-bar"
+            role="tablist"
+            aria-label="Danh mục"
+            className="cate_select mx-auto w-fit max-w-full bg-pill-bg border border-line-tag rounded-2xl md:rounded-full p-2 md:p-1.5 flex flex-wrap items-center justify-center gap-1"
+          >
+            {[{ code: ALL, id: ALL, label: 'Tất cả', count: products.length }, ...sortedCategories.map(cat => ({ code: cat.code, id: cat.id, label: getCategoryLabel(cat, categories), count: categoryCounts[cat.code] || 0 }))].map(chip => {
+              const active = selectedCategory === chip.code;
               return (
                 <button
                   type="button"
-                  key={cat.id}
-                  data-testid={`cate-pill-${cat.code}`}
-                  onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.code)}`)}
-                  className="bg-white text-ink-primary border border-line-tag hover:border-line-strong rounded-full px-4 py-1.5 text-xs md:text-sm font-bold transition flex items-center gap-1.5"
+                  role="tab"
+                  aria-selected={active}
+                  key={chip.id}
+                  data-testid={`cate-pill-${chip.code}`}
+                  onClick={() => setSelectedCategory(chip.code)}
+                  className={`min-h-11 rounded-full px-3 md:px-[18px] py-1.5 md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 ${active ? ACTIVE_CHIP : 'bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
-                  <span>{label}</span>
-                  <span className="text-ink-muted font-mono tabular-nums">({count})</span>
+                  <span>{chip.label}</span>
+                  <span className="font-mono text-[11.5px] tabular-nums opacity-90">({chip.count})</span>
                 </button>
               );
             })}
@@ -117,51 +124,49 @@ export default function HomePage() {
 
       {allInStock.length > 0 && (
         <section data-testid="instock-shelf" className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between gap-4 mb-4">
-            <h2 className="font-display font-black text-lg md:text-2xl text-ink-primary tracking-tight uppercase">Sản phẩm còn hàng</h2>
-            <button
-              type="button"
-              onClick={() => navigate('/catalog')}
-              className="text-xs font-bold text-brand-primary hover:underline flex items-center gap-0.5"
-            >
-              Xem tất cả <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5 pb-6">SẢN PHẨM NỔI BẬT</h2>
 
-          {availablePlayStyles.length > 0 && (
-            <div data-testid="playstyle-filter-bar" className="flex flex-wrap items-center gap-2 mb-4">
-              <button
-                type="button"
-                data-testid="playstyle-chip-ALL"
-                onClick={() => setSelectedPlayStyle('ALL')}
-                className={`rounded-full px-3.5 py-1 text-xs font-bold border transition ${
-                  selectedPlayStyle === 'ALL'
-                    ? 'bg-ink-primary text-white border-ink-primary'
-                    : 'bg-white text-ink-primary border-line-tag hover:border-line-strong'
-                }`}
-              >
-                Tất cả
-              </button>
-              {availablePlayStyles.map(style => (
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-brand-light border border-line-tag rounded-[10px] px-4 py-3 mb-7">
+            <div data-testid="quick-filter-bar" className="flex flex-wrap items-center gap-2">
+              <span className="font-mono text-[11.5px] font-bold uppercase text-ink-secondary mr-1">Lọc nhanh:</span>
+              {[
+                { key: ALL, label: 'Tất cả' },
+                ...brands.map(b => ({ key: `brand:${b}`, label: b })),
+                ...(allInStock.some(hasO2OStringing) ? [{ key: O2O, label: 'Có đan cước O2O' }] : []),
+              ].map(chip => (
                 <button
                   type="button"
-                  key={style}
-                  data-testid={`playstyle-chip-${style}`}
-                  onClick={() => setSelectedPlayStyle(style)}
-                  className={`rounded-full px-3.5 py-1 text-xs font-bold border transition ${
-                    selectedPlayStyle === style
-                      ? 'bg-ink-primary text-white border-ink-primary'
-                      : 'bg-white text-ink-primary border-line-tag hover:border-line-strong'
-                  }`}
+                  key={chip.key}
+                  data-testid={`quick-chip-${chip.key}`}
+                  aria-pressed={quickFilter === chip.key}
+                  onClick={() => setQuickFilter(chip.key)}
+                  className={`rounded-md border px-3 py-1.5 text-[12.5px] font-bold transition ${quickFilter === chip.key ? 'bg-brand-primary border-brand-primary text-white' : 'bg-white border-line-tag text-ink-primary hover:border-ink-primary'}`}
                 >
-                  {style}
+                  {chip.label}
                 </button>
               ))}
             </div>
-          )}
+            <div className="flex flex-wrap items-center gap-3">
+              <span data-testid="result-counter" className="font-mono text-xs font-bold text-ink-secondary tabular-nums">
+                Hiển thị {shown.length} / {matched.length} sản phẩm
+              </span>
+              <select
+                data-testid="sort-select"
+                aria-label="Sắp xếp sản phẩm"
+                value={sortMode}
+                onChange={e => setSortMode(e.target.value as SortMode)}
+                className="bg-white border-[1.5px] border-ink-primary text-ink-primary text-[13px] font-bold px-3 py-1.5 rounded-md cursor-pointer"
+              >
+                {SORT_OPTIONS.map(o => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {inStock.map(p => (
+          {shown.length === 0 && <p role="status" className="text-center text-sm font-medium text-ink-muted py-8">Không có sản phẩm còn hàng phù hợp bộ lọc.</p>}
+          <div data-testid="featured-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+            {shown.map(p => (
               <ProductCard
                 key={p.id}
                 product={p}
@@ -174,61 +179,47 @@ export default function HomePage() {
       )}
 
       {sortedCategories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 md:px-8">
-          <h2 className="font-display font-black text-lg md:text-2xl text-ink-primary tracking-tight uppercase mb-6 flex items-center gap-2">
-            Danh mục trang thiết bị cầu lông
-          </h2>
+        <section data-testid="category-tiles" className="max-w-7xl mx-auto px-4 md:px-8">
+          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5 pb-6">Danh mục cầu lông</h2>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 md:gap-4">
-            {sortedCategories.map((cat, index) => {
-              const theme = categoryTileThemes[index % categoryTileThemes.length];
+          <div data-testid="category-tile-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-[18px] lg:gap-x-6 lg:gap-y-7">
+            {sortedCategories.slice(0, 8).map(cat => {
               const label = getCategoryLabel(cat, categories);
-              const count = categoryCounts[cat.code] || 0;
-
+              // Ảnh ngành = ảnh bìa thật của một sản phẩm còn hàng trong ngành (VOMA không có ảnh ngành).
+              const image = allInStock.find(p => p.categoryCode === cat.code && p.image && p.image !== NO_IMAGE_URL)?.image;
               return (
                 <button
                   type="button"
                   key={cat.id}
+                  data-testid={`cat-tile-${cat.code}`}
                   onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.code)}`)}
                   aria-label={`Mở danh mục ${label}`}
-                  className="group relative overflow-hidden rounded-2xl border border-line-tag bg-white p-3 md:p-5 text-left shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                  className="group flex flex-col bg-white border border-line-tag text-left transition hover:border-ink-primary hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${theme.accent} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
-                  <div className={`absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r ${theme.shell}`} />
-
-                  <div className="relative flex h-full min-h-0 md:min-h-[180px] flex-col gap-2 md:gap-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.28em] ${theme.chip}`}>
-                        {count} sản phẩm
-                      </span>
-                      <ChevronRight className={`w-4 h-4 ${theme.badge} transition-transform duration-300 group-hover:translate-x-1`} />
-                    </div>
-
-                    <div className="flex items-end justify-between gap-4">
-                      <div className="min-w-0">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-ink-muted group-hover:text-brand-primary transition">Danh mục</p>
-                        <h3 className="mt-1 font-display text-sm md:text-xl font-black tracking-tight text-ink-primary line-clamp-2 group-hover:text-brand-primary transition">
-                          {label}
-                        </h3>
-                        <p className="hidden md:block mt-2 text-sm leading-relaxed text-ink-muted line-clamp-3">
-                          {getCategorySubtitle(cat)}
-                        </p>
-                      </div>
-
-                      <div className={`hidden md:flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br ${theme.shell} shadow-inner`}>
-                        <span className={`font-display text-xl font-black tracking-tight ${theme.monogram}`}>
-                          {getCategoryMonogram(label)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="mt-auto flex items-center justify-between text-[11px] font-medium text-ink-muted">
-                      <span className="font-bold text-brand-primary">Khám phá</span>
-                    </div>
+                  <div className="w-full aspect-[4/3] overflow-hidden bg-brand-light border-b border-line-tag">
+                    {image ? (
+                      <img src={image} alt={label} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    ) : (
+                      <div data-testid="cat-tile-placeholder" aria-hidden="true" className="w-full h-full bg-brand-light" />
+                    )}
+                  </div>
+                  <div className="px-3 py-3.5 text-center">
+                    <h3 className="text-sm md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition">{label}</h3>
                   </div>
                 </button>
               );
             })}
+          </div>
+
+          <div className="text-center pt-5 pb-9">
+            <button
+              type="button"
+              data-testid="view-all-catalog"
+              onClick={() => navigate('/catalog')}
+              className="inline-flex items-center justify-center w-[420px] max-w-[90%] h-[54px] bg-black text-white border-2 border-black rounded-[5px] font-display text-[15.5px] font-extrabold tracking-wider uppercase transition hover:bg-brand-primary hover:border-brand-primary"
+            >
+              XEM TẤT CẢ SẢN PHẨM CẦU LÔNG
+            </button>
           </div>
         </section>
       )}
