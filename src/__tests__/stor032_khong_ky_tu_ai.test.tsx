@@ -69,7 +69,7 @@ describe('STOR-032 giao diện không có icon Sparkles', () => {
       reducer: { appData: (state = { products: [{ id: '1', name: 'SP 1', brand: 'B', image: '', price: 100000, specs: {}, stock: 1, categoryCode: 'c1' }], categories: [{ id: 1, name: 'Cầu Lông', code: 'c1', parent_id: null, display_name: 'Thể Thao > Cầu Lông' }] }) => state, cart: cartReducer, catalog: catalogReducer },
     } as any);
     const { container } = render(<Provider store={store}><MemoryRouter><HomePage /></MemoryRouter></Provider>);
-    expect(container.textContent).toContain('Danh mục trang thiết bị cầu lông');
+    expect(container.textContent).toContain('Danh mục cầu lông');
     noSparkles(container);
   });
 

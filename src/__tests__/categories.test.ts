@@ -4,7 +4,6 @@ import {
   getCategoryLabel,
   getProductCategoryCounts
 } from '../utils/categories';
-import { getCategorySubtitle } from '../features/home/categoryTileThemes';
 import { Category, Product } from '../types';
 
 function makeProduct(overrides: Partial<Product>): Product {
@@ -116,14 +115,4 @@ describe('utils/categories', () => {
     });
   });
 
-  describe('getCategorySubtitle', () => {
-    it('trả về đường dẫn tổ tiên, bỏ đoạn cuối (chính là tên ngành)', () => {
-      expect(getCategorySubtitle(racket)).toBe('Thể Thao & Dã Ngoại > Dụng Cụ Thể Thao & Dã Ngoại > Cầu Lông');
-    });
-
-    it('trả về rỗng khi ngành nằm ở gốc (không có đoạn cha)', () => {
-      const rootCategory: Category = { id: 9, name: 'Gốc', code: 'VC000001', parent_id: null, display_name: 'Gốc' };
-      expect(getCategorySubtitle(rootCategory)).toBe('');
-    });
-  });
 });

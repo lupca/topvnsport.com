@@ -176,40 +176,21 @@ describe('STOR-052 HomePage.tsx chuẩn Yonex Hub', () => {
     expect(h1.textContent).toBe('BADMINTON');
   });
 
-  it('Bấm nút data-testid="cate-pill-<code>" điều hướng tới /catalog?category=<code>', () => {
+  it('STOR-056: bấm cate-pill-<code> lọc kệ ngay trên trang, URL vẫn là /', () => {
     renderHome();
     const pill = screen.getByTestId('cate-pill-VC001491');
     expect(pill.textContent).toContain('Vợt');
     fireEvent.click(pill);
-    expect(screen.getByTestId('loc').textContent).toBe('/catalog?category=VC001491');
-  });
-
-  it('HomePage.tsx chỉ render data-testid="playstyle-filter-bar" khi availablePlayStyles khác rỗng', () => {
-    renderHome([sampleShuttleNoPlayStyle]);
-    expect(screen.queryByTestId('playstyle-filter-bar')).toBeNull();
-
-    cleanup();
-    renderHome([sampleRacketAttack, sampleRacketSpeed]);
-    expect(screen.getByTestId('playstyle-filter-bar')).toBeTruthy();
-  });
-
-  it('Bấm chip lối đánh trong playstyle-filter-bar lọc đúng sản phẩm trên instock-shelf', () => {
-    renderHome([sampleRacketAttack, sampleRacketSpeed]);
+    expect(screen.queryByTestId('loc')).toBeNull();
     const shelf = screen.getByTestId('instock-shelf');
+    expect(within(shelf).queryByText('Quả cầu lông AS50')).toBeNull();
     expect(within(shelf).getByText('Vợt Astrox 88D Pro')).toBeTruthy();
-    expect(within(shelf).getByText('Vợt Nanoflare 800')).toBeTruthy();
+  });
 
-    const speedChip = screen.getByTestId('playstyle-chip-Phản Tạt');
-    fireEvent.click(speedChip);
-
-    expect(within(shelf).getByText('Vợt Nanoflare 800')).toBeTruthy();
-    expect(within(shelf).queryByText('Vợt Astrox 88D Pro')).toBeNull();
-
-    const allChip = screen.getByTestId('playstyle-chip-ALL');
-    fireEvent.click(allChip);
-
-    expect(within(shelf).getByText('Vợt Astrox 88D Pro')).toBeTruthy();
-    expect(within(shelf).getByText('Vợt Nanoflare 800')).toBeTruthy();
+  it('STOR-056: không còn playstyle-filter-bar dù sản phẩm có lối đánh', () => {
+    renderHome([sampleRacketAttack, sampleRacketSpeed]);
+    expect(screen.queryByTestId('playstyle-filter-bar')).toBeNull();
+    expect(screen.queryByTestId(/^playstyle-chip-/)).toBeNull();
   });
 
   it('Thẻ danh mục trong HomePage.tsx dùng class text-ink-primary cho tiêu đề h3 của ngành', () => {
