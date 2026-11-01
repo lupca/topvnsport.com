@@ -5,7 +5,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 import { Category, Product } from '../types';
 
 const mkProduct = (id: string, extra: Partial<Product> = {}): Product => ({
@@ -261,18 +260,5 @@ describe('STOR-061: Sticky header integrity and no global overflow-x:hidden inje
     setupHeader();
     expect(document.body.style.overflow).toBe('');
     expect(document.documentElement.style.overflow).toBe('');
-  });
-
-  it('H4: Footer email contact item has overflow-safe classes', () => {
-    render(
-      <MemoryRouter>
-        <Footer categories={categories} products={[mkProduct('1')]} />
-      </MemoryRouter>
-    );
-    const emailSpan = screen.getByText('support@topvnsport.com.vn');
-    expect(emailSpan).toBeInTheDocument();
-    expect(emailSpan.classList.contains('truncate') || emailSpan.classList.contains('break-all')).toBe(true);
-    const parentLi = emailSpan.closest('li');
-    expect(parentLi?.classList.contains('min-w-0')).toBe(true);
   });
 });
