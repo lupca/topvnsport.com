@@ -60,12 +60,12 @@ describe('Challenger 2 - ProductCard & productMappers Adversarial Stress Tests',
       const originalPriceEl = screen.getByTestId('original-price');
 
       expect(salePriceEl.textContent).toContain('1.000.000');
-      expect(salePriceEl.className).toContain('font-bold');
-      expect(salePriceEl.className).toContain('text-red-600');
+      expect(salePriceEl.className).toContain('font-extrabold');
+      expect(salePriceEl.className).toContain('text-brand-sale');
 
       expect(originalPriceEl.textContent).toContain('1.000.000');
       expect(originalPriceEl.className).toContain('line-through');
-      expect(originalPriceEl.className).toContain('text-gray-400');
+      expect(originalPriceEl.className).toContain('text-ink-muted');
     });
 
     it('2. Handles 100% discount (computedPrice === 0 with originalPrice > 0)', () => {
@@ -87,12 +87,12 @@ describe('Challenger 2 - ProductCard & productMappers Adversarial Stress Tests',
       const discountBadgeEl = screen.getByTestId('discount-badge');
       expect(discountBadgeEl).toBeTruthy();
       expect(discountBadgeEl.textContent).toBe('-100%');
-      expect(discountBadgeEl.className).toContain('bg-red-600');
+      expect(discountBadgeEl.className).toContain('bg-brand-sale');
       expect(discountBadgeEl.className).toContain('text-white');
 
       const salePriceEl = screen.getByTestId('sale-price');
       expect(salePriceEl.textContent).toContain('0');
-      expect(salePriceEl.className).toContain('text-red-600');
+      expect(salePriceEl.className).toContain('text-brand-sale');
 
       const originalPriceEl = screen.getByTestId('original-price');
       expect(originalPriceEl.textContent).toContain('1.000.000');
@@ -116,7 +116,7 @@ describe('Challenger 2 - ProductCard & productMappers Adversarial Stress Tests',
       const regularPriceEl = screen.getByTestId('regular-price');
       expect(regularPriceEl.textContent).toContain('0');
       expect(regularPriceEl.className).toContain('font-extrabold');
-      expect(regularPriceEl.className).toContain('text-brand-primary');
+      expect(regularPriceEl.className).toContain('text-ink-primary');
       unmount();
 
       // Promoted 0 price
@@ -262,17 +262,17 @@ describe('Challenger 2 - ProductCard & productMappers Adversarial Stress Tests',
 
       const salePriceEl = screen.getByTestId('sale-price');
       expect(salePriceEl.getAttribute('data-testid')).toBe('sale-price');
-      expect(salePriceEl.className).toContain('font-bold');
-      expect(salePriceEl.className).toContain('text-red-600');
+      expect(salePriceEl.className).toContain('font-extrabold');
+      expect(salePriceEl.className).toContain('text-brand-sale');
 
       const originalPriceEl = screen.getByTestId('original-price');
       expect(originalPriceEl.getAttribute('data-testid')).toBe('original-price');
       expect(originalPriceEl.className).toContain('line-through');
-      expect(originalPriceEl.className).toContain('text-gray-400');
+      expect(originalPriceEl.className).toContain('text-ink-muted');
 
       const discountBadgeEl = screen.getByTestId('discount-badge');
       expect(discountBadgeEl.getAttribute('data-testid')).toBe('discount-badge');
-      expect(discountBadgeEl.className).toContain('bg-red-600');
+      expect(discountBadgeEl.className).toContain('bg-brand-sale');
       expect(discountBadgeEl.className).toContain('text-white');
     });
   });
