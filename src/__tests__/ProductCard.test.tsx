@@ -393,10 +393,10 @@ describe('ProductCard component', () => {
       expect(container.innerHTML).not.toContain('font-light');
     });
 
-    it('khẳng định TrustBadges.tsx hết "font-light" và mô tả là text-xs text-ink-muted font-medium', () => {
+    it('khẳng định TrustBadges.tsx hết "font-light" và mô tả là text-ink-secondary font-medium (STOR-058)', () => {
       const trustBadgesSource = readFileSync(resolve(__dirname, '../components/TrustBadges.tsx'), 'utf8');
       expect(trustBadgesSource).not.toContain('font-light');
-      expect(trustBadgesSource).toContain('text-xs text-ink-muted font-medium');
+      expect(trustBadgesSource).toContain('text-[13.5px] leading-[1.45] text-ink-secondary font-medium');
       expect(trustBadgesSource).toContain('text-ink-primary');
     });
 

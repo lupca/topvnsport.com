@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
-import TrustBadges from '../../components/TrustBadges';
 import { NO_IMAGE_URL } from '../../services/sport-api/constants';
 import { hasO2OStringing } from '../../utils/badmintonReadiness';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
@@ -89,8 +88,6 @@ export default function HomePage() {
 
   return (
     <div className="space-y-12 animate-in fade-in duration-300">
-      <TrustBadges />
-
       {sortedCategories.length > 0 && (
         <section data-testid="badminton-hub-header" className="max-w-7xl mx-auto px-4 md:px-8 pt-2">
           <div className="title-box text-center mb-4">

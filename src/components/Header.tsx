@@ -11,6 +11,7 @@ import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categorie
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
 import { getPriceDisplay } from '../utils/priceDisplay';
+import MainNav from './MainNav';
 
 export const normalizeSearchText = (value: string) =>
   value
@@ -446,29 +447,20 @@ export default function Header({ cartCount, openCart, products, categories, cate
         )}
       </AnimatePresence>
 
-      {/* Mega Menu Navigation */}
-      <nav className="hidden md:block bg-gray-50 border-t border-gray-100 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-sm font-medium">
-          {/* Main Links */}
-          <div className="flex items-center gap-6 overflow-x-auto scrollbar-hide py-3 pr-4">
-            {sortedCategories.map(category => (
-              <button key={category.id} onClick={() => navigate(`/catalog?category=${encodeURIComponent(category.code)}`)} className="text-gray-800 hover:text-brand-primary transition shrink-0 py-1">{getCategoryLabel(category, categories)}</button>
-            ))}
-            {sortedCategories.length === 0 && hasCatalogLoadError && (
-              <div className="flex items-center gap-3 text-xs">
-                <span className="text-red-700 font-medium">Chưa tải được danh mục sản phẩm.</span>
-                <button
-                  type="button"
-                  onClick={handleRetryCatalog}
-                  className="font-bold text-white bg-brand-primary hover:bg-brand-secondary px-3 py-1 rounded-md transition shrink-0"
-                >
-                  Thử lại
-                </button>
-              </div>
-            )}
+      <MainNav categories={sortedCategories}>
+        {sortedCategories.length === 0 && hasCatalogLoadError && (
+          <div className="flex items-center justify-center gap-3 text-xs pb-3">
+            <span className="text-red-700 font-medium">Chưa tải được danh mục sản phẩm.</span>
+            <button
+              type="button"
+              onClick={handleRetryCatalog}
+              className="font-bold text-white bg-brand-primary hover:bg-brand-secondary px-3 py-1 rounded-md transition shrink-0"
+            >
+              Thử lại
+            </button>
           </div>
-        </div>
-      </nav>
+        )}
+      </MainNav>
     </header>
   );
 }

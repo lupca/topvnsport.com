@@ -1,31 +1,25 @@
 import React from 'react';
-import { ShieldCheck, Trophy, ShoppingBag, MapPin } from 'lucide-react';
+
+// Dải cam kết đầu footer (bản thiết kế /design/index.html .trust-strip).
+// Bỏ Victor/Kizuna và "Giao Hỏa Tốc": không có dữ liệu chứng minh (spec 37f60f5b).
+const TRUST_ITEMS = [
+  { title: '100% Chính Hãng', text: 'Phân phối chính thức Yonex, Li-Ning. Đền gấp 10 lần nếu phát hiện hàng giả.' },
+  { title: 'Đan Vợt Điện Tử O2O', text: 'Tùy chọn cước và mức căng 9.0–13.0kg ngay khi đặt vợt.' },
+  { title: 'Đồng Kiểm', text: 'Kiểm tra khung vợt, mã tem chống giả và độ căng mặt lưới trước khi thanh toán.' },
+  { title: 'Showroom Trải Nghiệm', text: 'Cầm thử trực tiếp trọng lượng 3U / 4U / 5U và đo điểm cân bằng tại cửa hàng Hà Nội.' }
+];
 
 export default function TrustBadges() {
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8" id="trust-badges-ribbon">
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-xs grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        <div className="space-y-1">
-          <ShieldCheck className="w-8 h-8 text-brand-primary mx-auto" />
-          <h4 className="font-bold text-ink-primary text-xs uppercase">100% Chính Hãng</h4>
-          <p className="text-xs text-ink-muted font-medium">Hoàn tiền 1000% nếu phát hiện giả nhái.</p>
-        </div>
-        <div className="space-y-1 border-l border-gray-100">
-          <Trophy className="w-8 h-8 text-brand-primary mx-auto" />
-          <h4 className="font-bold text-ink-primary text-xs uppercase font-display">Lỗi 1 đổi 1</h4>
-          <p className="text-xs text-ink-muted font-medium">Đổi mới miễn phí lên tới 90 ngày.</p>
-        </div>
-        <div className="space-y-1 border-l border-gray-100">
-          <ShoppingBag className="w-8 h-8 text-brand-primary mx-auto" />
-          <h4 className="font-bold text-ink-primary text-xs uppercase">COD toàn quốc</h4>
-          <p className="text-xs text-ink-muted font-medium">Kiểm tra cầm nắm thử trước khi thanh toán.</p>
-        </div>
-        <div className="space-y-1 border-l border-gray-100">
-          <MapPin className="w-8 h-8 text-brand-primary mx-auto" />
-          <h4 className="font-bold text-ink-primary text-xs uppercase font-display">Cửa hàng Hà Nội</h4>
-          <p className="text-xs text-ink-muted font-medium">Địa chỉ trải nghiệm & đan vợt lấy ngay.</p>
-        </div>
+    <section data-testid="trust-row" className="bg-[#f8f9fa] border-y border-zinc-200 px-[24px] py-[36px]">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[24px]">
+        {TRUST_ITEMS.map(item => (
+          <div key={item.title} className="border-l-[3px] border-ink-primary pl-[16px]">
+            <h4 className="font-display font-extrabold uppercase text-[14px] leading-[1.5] text-ink-primary mb-[4px]">{item.title}</h4>
+            <p className="text-[13.5px] leading-[1.45] text-ink-secondary font-medium">{item.text}</p>
+          </div>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
