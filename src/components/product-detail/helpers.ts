@@ -1,4 +1,43 @@
-import { Product, StringOption } from '../../types';
+import type { Product, StringOption } from '../../types';
+
+export const formatVnd = (n: number) => `${n.toLocaleString('vi-VN')}đ`;
+
+export function getPdpPrice(product: Product, tier1: string, tier2: string) {
+  const matchedVariant = product.variants?.find((v) => {
+    const t1Match = !product.tier_variations?.some(tv => tv.tier_index === 1) || v.tier_1_option === tier1;
+    const t2Match = !product.tier_variations?.some(tv => tv.tier_index === 2) || v.tier_2_option === tier2;
+    return t1Match && t2Match;
+  });
+
+  // Giá thật quyết định theo biến thể đang chọn (giá 0 = chưa có giá); chưa chọn
+  // được biến thể thì theo giá thật của sản phẩm.
+  const hasPrice = matchedVariant ? matchedVariant.price > 0 : product.price !== undefined;
+  const baseOriginalPrice = product.originalPrice ?? product.price ?? 0;
+  const baseSalePrice = product.computedPrice ?? product.salePrice ?? product.price ?? 0;
+
+  const originalPriceToUse = matchedVariant?.originalPrice ?? matchedVariant?.price ?? baseOriginalPrice;
+  const salePriceToUse = matchedVariant?.computedPrice ?? matchedVariant?.price ?? baseSalePrice;
+
+  const displayBasePrice = salePriceToUse;
+  const displayOriginalPrice = originalPriceToUse;
+
+  const hasDiscount = Boolean(
+    (matchedVariant?.hasActivePromotion || product.hasActivePromotion) ||
+    (displayBasePrice < displayOriginalPrice)
+  );
+
+  const discountPercent = matchedVariant?.percentageDiscount ?? product.percentageDiscount ?? 
+    (hasDiscount && displayOriginalPrice > 0 ? Math.round(((displayOriginalPrice - displayBasePrice) / displayOriginalPrice) * 100) : 0);
+
+  return {
+    matchedVariant,
+    hasPrice,
+    salePrice: displayBasePrice,
+    originalPrice: displayOriginalPrice,
+    hasDiscount,
+    discountPercent,
+  };
+}
 
 export const isNoStringOption = (value: string): boolean => {
   const normalized = value.toLowerCase();

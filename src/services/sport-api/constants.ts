@@ -1,4 +1,4 @@
-export const SIMULATED_LATENCY = import.meta.env.DEV && import.meta.env.MODE !== 'test' ? 200 : 0;
+export const SIMULATED_LATENCY = (import.meta as any).env?.DEV && (import.meta as any).env?.MODE !== 'test' ? 200 : 0;
 export const PMI_API_URL = (import.meta as any).env?.VITE_PMI_API_URL || 'http://localhost:18100';
 export const WMS_API_URL = (import.meta as any).env?.VITE_WMS_API_URL || 'http://localhost:18102';
 export const NO_IMAGE_URL = 'https://via.placeholder.com/300?text=No+Image';

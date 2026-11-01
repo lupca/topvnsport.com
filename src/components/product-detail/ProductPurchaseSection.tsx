@@ -3,7 +3,7 @@ import { ArrowLeft, Phone, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product, StringOption, TierVariation } from '../../types';
 import StringingAssistant from './StringingAssistant';
-import { StockState, isStringingTier } from './helpers';
+import { StockState, formatVnd, isStringingTier } from './helpers';
 
 interface ProductPurchaseSectionProps {
   product: Product;
@@ -99,11 +99,11 @@ export default function ProductPurchaseSection({
             <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Giá bán hiện tại</p>
             <div className="flex items-end gap-2.5 mt-1">
               <span className="text-2xl md:text-3xl font-extrabold text-brand-primary font-display" data-testid="purchase-price">
-                {hasPrice ? `${totalDisplayPrice.toLocaleString('vi-VN')}đ` : 'Liên hệ để biết giá'}
+                {hasPrice ? formatVnd(totalDisplayPrice) : 'Liên hệ để biết giá'}
               </span>
               {hasPrice && hasDiscount && (
                 <span className="text-sm text-gray-400 line-through mb-1.5 font-medium">
-                  {displayOriginalPrice.toLocaleString('vi-VN')}đ
+                  {formatVnd(displayOriginalPrice)}
                 </span>
               )}
             </div>

@@ -1,7 +1,7 @@
-import { Category, Product, ProductAttribute, ProductVariant, ProductVomaAttribute } from '../../types';
-import { slugifyProductName } from '../../utils/productSlug';
-import { NO_IMAGE_URL } from './constants';
-import { ApiListResponse, PmiAttributeValue, PmiProduct, PmiVariant, PmiVomaAttributeValue } from './types';
+import type { Category, Product, ProductAttribute, ProductVariant, ProductVomaAttribute } from '../../types';
+import { slugifyProductName } from '../../utils/productSlug.js';
+import { NO_IMAGE_URL } from './constants.js';
+import type { ApiListResponse, PmiAttributeValue, PmiProduct, PmiVariant, PmiVomaAttributeValue } from './types.js';
 
 export function extractItems<T>(data: unknown): T[] {
   if (Array.isArray(data)) {

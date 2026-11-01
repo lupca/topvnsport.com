@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
+import { formatVnd } from './helpers';
 
 interface MobilePurchaseBarProps {
   productName: string;
@@ -31,7 +32,7 @@ export default function MobilePurchaseBar({
         />
         <div className="min-w-0">
           <h4 className="font-bold text-xs text-gray-900 truncate">{productName}</h4>
-          <p className="text-brand-primary font-bold text-xs font-mono">{hasPrice ? `${totalDisplayPrice.toLocaleString('vi-VN')}đ` : 'Liên hệ để biết giá'}</p>
+          <p className="text-brand-primary font-bold text-xs font-mono">{hasPrice ? formatVnd(totalDisplayPrice) : 'Liên hệ để biết giá'}</p>
         </div>
       </div>
       <button
