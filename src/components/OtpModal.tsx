@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, ShieldAlert, CheckCircle } from 'lucide-react';
 import { sportApi } from '../services/sportApi';
+import { zaloAuthDone, zaloAuthStart } from '../lib/tracking.ts';
 
 interface OtpModalProps {
   isOpen: boolean;
@@ -120,6 +121,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, need
       markOtpSent(phoneNumber);
       setOtpCode('');
       onResent?.();
+      zaloAuthStart();
     } catch (err: any) {
       setErrorMessage(mapApiError(err.status, err.message));
     } finally {
@@ -142,6 +144,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, need
       if (res.success && res.verification_token) {
         setStoredOtpCode(phoneNumber, '');
         setOtpCode('');
+        zaloAuthDone();
         onSuccess(res.verification_token);
       } else {
         setErrorMessage('Xác thực chưa hoàn tất: hệ thống không trả về mã xác thực. Vui lòng thử lại hoặc gửi lại mã.');

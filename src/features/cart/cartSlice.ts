@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product, ProductVariant, StringOption } from '../../types';
 import { CartItem } from '../../components/CartModal';
+import { addToCart } from '../../lib/tracking.ts';
 
 interface CartState {
   items: CartItem[];
@@ -127,7 +128,15 @@ export const addCartItemAndOpen =
   (dispatch: (a: unknown) => unknown, getState: () => { cart: CartState }): void => {
     const before = getState().cart.items;
     dispatch(addCartItem(item));
-    if (getState().cart.items !== before) dispatch(openCart());
+    if (getState().cart.items !== before) {
+      dispatch(openCart());
+      addToCart({
+        id: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      });
+    }
   };
 
 export type SkuSelectionDescription =

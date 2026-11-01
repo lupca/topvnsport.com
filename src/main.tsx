@@ -6,6 +6,11 @@ import App from './App.tsx';
 import { store } from './app/store.ts';
 import './index.css';
 import { SystemPopupProvider } from '@topvnsport/ui-kit';
+import { initTracking } from './lib/tracking.ts';
+import { captureAttribution } from './lib/attribution.ts';
+
+initTracking();
+captureAttribution();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
