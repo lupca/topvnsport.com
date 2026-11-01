@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { ReactReduxContext } from 'react-redux';
 import { popupService } from '@topvnsport/ui-kit';
 import { clearStockNotice } from '../features/cart/cartSlice';
-import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Trophy, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Menu, X } from 'lucide-react';
+import { TopBar, MobileTopStrip } from './TopBar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';
@@ -112,89 +113,64 @@ export default function Header({ cartCount, openCart, products, categories }: He
   };
 
   const sortedCategories = getCategoriesSortedByCount(categories, products);
-  const trendCategories = sortedCategories
-    .slice(0, 4)
-    .map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs" id="topvnsport-header">
-      {/* Top Bar */}
-      <div className="hidden md:flex bg-gray-900 text-gray-300 text-xs py-2 px-8 flex-row justify-between items-center gap-2">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
-            <Phone className="w-3 h-3 text-brand-primary" />
-            Hotline: <strong className="text-white">097 6007006</strong> (08:00 - 22:00)
-          </span>
-          <span className="hidden md:inline text-gray-500">|</span>
-          <span className="hidden md:flex items-center gap-1 text-brand-primary">
-            <ShieldCheck className="w-3 h-3" /> Cam kết 100% chính hãng - Đền gấp 10 nếu giả
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => navigate('/stores')} 
-            className={`hover:text-brand-primary transition flex items-center gap-1 ${currentView === 'store-locator' ? 'text-brand-primary font-medium' : ''}`}
-          >
-            <MapPin className="w-3 h-3" /> Cửa hàng trải nghiệm TopVNSport
-          </button>
-          <span>|</span>
-          <button className="hover:text-brand-primary transition">Tra cứu bảo hành</button>
-          <span>|</span>
-          <button className="hover:text-brand-primary transition">Kiểm tra đơn hàng</button>
-        </div>
-      </div>
+      <TopBar />
 
       {/* Main Header */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-2 md:py-4 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
-        {/* Brand Logo & Mobile Trigger & Mobile Quick Cart */}
-        <div className="w-full md:w-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-2 md:py-4 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-6">
+        {/* Mobile: [menu][Đan cước] logo [Giỏ (N)]; desktop: chỉ logo */}
+        <div className="w-full md:w-auto flex items-center justify-between gap-2 md:gap-3">
+          <div className="flex items-center gap-1.5 md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-1.5 -ml-1.5 text-gray-700 hover:text-brand-primary hover:bg-gray-100 rounded-lg transition md:hidden"
+              className="p-1.5 -ml-1.5 text-ink-primary hover:text-brand-primary rounded-lg transition"
               aria-label="Open mobile menu"
             >
               <Menu className="w-6 h-6" />
             </button>
-            <div 
-              onClick={() => navigate('/')} 
-              className="flex items-center gap-2 cursor-pointer group"
+            <button
+              type="button"
+              onClick={() => navigate('/stores')}
+              className="border-[1.5px] border-ink-primary rounded-sm px-2 py-1 text-xs font-extrabold text-ink-primary bg-white"
             >
-              <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg border border-gray-100 shadow-xs flex items-center justify-center overflow-hidden group-hover:border-brand-primary/50 transition shrink-0">
-                <img 
-                  src="https://down-zl-vn.img.susercontent.com/vn-11134004-820l4-mdxbg9gyt81z6e_tn.webp" 
-                  alt="TopVNSport Logo" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div>
-                <span className="font-display font-extrabold text-lg md:text-2xl tracking-tight text-gray-900 block leading-none">
-                  TOPVN<span className="text-brand-primary">SPORT</span>
-                </span>
-                <p className="text-[8px] md:text-[9px] text-gray-400 tracking-widest uppercase font-semibold mt-0.5">Badminton Speciality Store</p>
-              </div>
+              Đan cước
+            </button>
+          </div>
+          <div
+            onClick={() => navigate('/')}
+            className="flex items-center gap-3 cursor-pointer group shrink-0"
+          >
+            <div className="hidden md:flex w-11 h-11 bg-white rounded-md border-[1.5px] border-ink-primary items-center justify-center overflow-hidden group-hover:border-brand-primary transition shrink-0">
+              <img
+                src="https://down-zl-vn.img.susercontent.com/vn-11134004-820l4-mdxbg9gyt81z6e_tn.webp"
+                alt="TopVNSport Logo"
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div>
+              <span className="font-display font-extrabold text-lg md:text-2xl tracking-tight text-ink-primary block leading-none">
+                TOPVN<span className="text-brand-primary">SPORT</span>
+              </span>
+              <p className="hidden md:block text-[10.5px] text-ink-secondary font-mono font-bold tracking-widest uppercase mt-1">Badminton Specialty Store</p>
             </div>
           </div>
-
-          {/* Quick Cart on top right for mobile */}
-          <button 
+          <button
+            type="button"
             onClick={openCart}
             aria-label="Giỏ hàng"
-            className="md:hidden text-gray-700 hover:text-brand-primary transition relative flex items-center gap-1.5 p-2 bg-gray-50 hover:bg-brand-light rounded-full"
+            className="md:hidden bg-ink-primary text-white rounded-full px-2.5 py-1 text-xs font-extrabold tabular-nums"
           >
-            <ShoppingBag className="w-5 h-5 text-gray-800" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold">
-                {cartCount}
-              </span>
-            )}
+            Giỏ ({cartCount})
           </button>
         </div>
 
-        {/* Search Bar Widget with suggestions */}
-        <div className="w-full md:max-w-xl relative" ref={dropdownRef}>
-          <div className="relative">
+        {/* Ô tìm kiếm + nút Tìm kiếm + gợi ý */}
+        <div className="w-full md:flex-1 md:max-w-xl relative" ref={dropdownRef}>
+          <div className="flex items-center gap-2 border-[1.5px] border-ink-primary rounded-full pl-3.5 pr-1.5 py-1 bg-white focus-within:border-brand-primary transition">
+            <Search className="w-4 h-4 text-ink-muted shrink-0" />
             <input
               type="text"
               placeholder="Tìm vợt Yonex, Lining, cước đan, giày cầu lông..."
@@ -202,38 +178,26 @@ export default function Header({ cartCount, openCart, products, categories }: He
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.trim().length >= 2 && setShowSearchDropdown(true)}
               onKeyDown={(e) => { if (e.key === 'Enter') submitSearch(); }}
-              className="w-full pl-10 pr-9 py-1.5 md:py-2 bg-gray-50 border border-gray-200 rounded-full text-xs md:text-sm text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
+              className="flex-1 min-w-0 py-1 bg-transparent text-xs md:text-sm font-semibold text-ink-primary placeholder:text-ink-muted placeholder:font-medium focus:outline-hidden"
             />
-            <Search className="absolute left-3.5 top-2 md:top-2.5 w-4 h-4 md:w-4.5 md:h-4.5 text-gray-400" />
             {searchQuery !== '' && (
               <button
                 type="button"
                 aria-label="Xoá từ khoá"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1.5 md:top-2 p-0.5 text-gray-400 hover:text-gray-700"
+                className="p-0.5 text-ink-muted hover:text-ink-primary shrink-0"
               >
                 <X className="w-4 h-4" />
               </button>
             )}
+            <button
+              type="button"
+              onClick={submitSearch}
+              className="bg-ink-primary hover:bg-brand-primary text-white text-xs font-bold px-3 py-1.5 rounded-full shrink-0 transition"
+            >
+              Tìm kiếm
+            </button>
           </div>
-
-          {/* Quick Trends under Search Bar */}
-          <div className="hidden md:flex mt-1.5 flex-wrap items-center gap-1.5 text-[11px] text-gray-500 px-2">
-            <span className="font-medium text-gray-400">Xu hướng:</span>
-            {trendCategories.map((cat) => (
-              <button
-                key={cat.code}
-                onClick={() => {
-                  setSearchQuery(cat.label);
-                  navigate(`/catalog?category=${encodeURIComponent(cat.code)}`);
-                }}
-                className="hover:text-brand-primary hover:underline transition"
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
           {/* Dynamic Dropdown Search Results (AJAX Mockup) */}
           {showSearchDropdown && (
             <div className="absolute top-full left-0 right-0 mt-3 bg-white border border-gray-100 rounded-xl shadow-sm z-50 overflow-hidden divide-y divide-gray-50 animate-in fade-in slide-in-from-top-2 duration-150">
@@ -277,35 +241,28 @@ export default function Header({ cartCount, openCart, products, categories }: He
           )}
         </div>
 
-        {/* Icons Right Side */}
-        <div className="hidden md:flex items-center gap-5">
-          <button 
-            onClick={() => navigate('/catalog')}
-            className={`hidden lg:flex items-center gap-1.5 text-sm font-medium hover:text-brand-primary transition ${currentView === 'catalog' ? 'text-brand-primary' : 'text-gray-700'}`}
+        {/* Desktop: Tư vấn Đan Cước + giỏ đen */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => navigate('/stores')}
+            className="border-[1.5px] border-ink-primary rounded-full px-4 py-2 text-[13.5px] font-bold text-ink-primary bg-white hover:bg-ink-primary hover:text-white transition"
           >
-            <Trophy className="w-4.5 h-4.5" />
-            <span>Sản Phẩm</span>
+            Tư vấn Đan Cước
           </button>
-          
-          <button className="text-gray-600 hover:text-brand-primary transition relative">
-            <Heart className="w-5 h-5" />
-          </button>
-
-          <button 
+          <button
+            type="button"
             onClick={openCart}
             aria-label="Giỏ hàng"
-            className="text-gray-600 hover:text-brand-primary transition relative flex items-center gap-1 p-2 bg-gray-50 hover:bg-brand-light rounded-full"
+            className="bg-ink-primary hover:bg-brand-primary text-white border-[1.5px] border-ink-primary hover:border-brand-primary rounded-full px-4 py-2 text-[13.5px] font-bold inline-flex items-center gap-2 transition"
           >
-            <ShoppingBag className="w-5 h-5 text-gray-800 group-hover:text-brand-primary" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-brand-primary text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold">
-                {cartCount}
-              </span>
-            )}
+            <span>Giỏ hàng</span>
+            <span className="bg-brand-primary text-white font-mono tabular-nums text-[11.5px] font-bold px-2 py-0.5 rounded-full">{cartCount}</span>
           </button>
         </div>
       </div>
 
+      <MobileTopStrip />
       {/* Mobile Sidebar Navigation Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
