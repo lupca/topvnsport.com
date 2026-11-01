@@ -6,7 +6,6 @@ import ProductCard from '../../components/ProductCard';
 import TrustBadges from '../../components/TrustBadges';
 import { NO_IMAGE_URL } from '../../services/sport-api/constants';
 import { hasO2OStringing } from '../../utils/badmintonReadiness';
-import { getBrands } from '../../utils/brands';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
 import { fetchAppData } from '../appData/appDataSlice';
@@ -24,8 +23,6 @@ export default function HomePage() {
   const categories = useAppSelector(state => state.appData.categories ?? []);
   const productsError = useAppSelector(state => state.appData.productsError);
 
-  const sortedCategories = getCategoriesSortedByCount(categories, products);
-  const categoryCounts = getProductCategoryCounts(products);
 
   // Chỉ sản phẩm có khuyến mãi thật (mapper đặt hasActivePromotion); không có thì không hiện khối nào.
   const promoProducts = products.filter(p => p.hasActivePromotion);
@@ -33,7 +30,16 @@ export default function HomePage() {
   const maxDiscount = discounts.length > 0 ? Math.max(...discounts) : undefined;
 
   const allInStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0);
-  const brands = getBrands(allInStock);
+  // Chip ngành đếm hàng còn hàng để khớp kệ và bộ đếm; ngành 0 còn hàng thì ẩn.
+  const categoryCounts = getProductCategoryCounts(allInStock);
+  const sortedCategories = getCategoriesSortedByCount(categories, products).filter(cat => (categoryCounts[cat.code] || 0) > 0);
+  // Thương hiệu gộp không phân biệt hoa thường; nhãn là chuỗi gốc gặp đầu tiên.
+  const brands = new Map<string, string>();
+  for (const p of allInStock) {
+    const raw = p.brand?.trim();
+    if (raw && !brands.has(raw.toLowerCase())) brands.set(raw.toLowerCase(), raw);
+  }
+  const [brokenTiles, setBrokenTiles] = useState<Record<string, boolean>>({});
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL);
   const [quickFilter, setQuickFilter] = useState<string>(ALL);
   const [sortMode, setSortMode] = useState<SortMode>('in-stock-first');
@@ -43,7 +49,7 @@ export default function HomePage() {
     .filter(p => (p.stock ?? 0) > 0)
     .filter(p => selectedCategory === ALL || p.categoryCode === selectedCategory)
     .filter(p =>
-      quickFilter === ALL ? true : quickFilter === O2O ? hasO2OStringing(p) : `brand:${p.brand?.trim()}` === quickFilter
+      quickFilter === ALL ? true : quickFilter === O2O ? hasO2OStringing(p) : `brand:${p.brand?.trim().toLowerCase()}` === quickFilter
     );
   const shown = matched.slice(0, 8);
 
@@ -99,7 +105,7 @@ export default function HomePage() {
             aria-label="Danh mục"
             className="cate_select mx-auto w-fit max-w-full bg-pill-bg border border-line-tag rounded-2xl md:rounded-full p-2 md:p-1.5 flex flex-wrap items-center justify-center gap-1"
           >
-            {[{ code: ALL, id: ALL, label: 'Tất cả', count: products.length }, ...sortedCategories.map(cat => ({ code: cat.code, id: cat.id, label: getCategoryLabel(cat, categories), count: categoryCounts[cat.code] || 0 }))].map(chip => {
+            {[{ code: ALL, id: ALL, label: 'Tất cả', count: allInStock.length }, ...sortedCategories.map(cat => ({ code: cat.code, id: cat.id, label: getCategoryLabel(cat, categories), count: categoryCounts[cat.code] || 0 }))].map(chip => {
               const active = selectedCategory === chip.code;
               return (
                 <button
@@ -120,7 +126,7 @@ export default function HomePage() {
         </section>
       )}
 
-      <BadmintonCenterSlider products={allInStock.slice(0, 5)} />
+      <BadmintonCenterSlider products={allInStock.filter(p => Boolean(p.image) && p.image !== NO_IMAGE_URL).slice(0, 5)} />
 
       {allInStock.length > 0 && (
         <section data-testid="instock-shelf" className="max-w-7xl mx-auto px-4 md:px-8">
@@ -131,7 +137,7 @@ export default function HomePage() {
               <span className="font-mono text-[11.5px] font-bold uppercase text-ink-secondary mr-1">Lọc nhanh:</span>
               {[
                 { key: ALL, label: 'Tất cả' },
-                ...brands.map(b => ({ key: `brand:${b}`, label: b })),
+                ...[...brands].map(([key, label]) => ({ key: `brand:${key}`, label })),
                 ...(allInStock.some(hasO2OStringing) ? [{ key: O2O, label: 'Có đan cước O2O' }] : []),
               ].map(chip => (
                 <button
@@ -186,7 +192,7 @@ export default function HomePage() {
             {sortedCategories.slice(0, 8).map(cat => {
               const label = getCategoryLabel(cat, categories);
               // Ảnh ngành = ảnh bìa thật của một sản phẩm còn hàng trong ngành (VOMA không có ảnh ngành).
-              const image = allInStock.find(p => p.categoryCode === cat.code && p.image && p.image !== NO_IMAGE_URL)?.image;
+              const image = brokenTiles[cat.code] ? undefined : allInStock.find(p => p.categoryCode === cat.code && p.image && p.image !== NO_IMAGE_URL)?.image;
               return (
                 <button
                   type="button"
@@ -198,7 +204,7 @@ export default function HomePage() {
                 >
                   <div className="w-full aspect-[4/3] overflow-hidden bg-brand-light border-b border-line-tag">
                     {image ? (
-                      <img src={image} alt={label} loading="lazy" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      <img src={image} alt={label} loading="lazy" onError={() => setBrokenTiles(b => ({ ...b, [cat.code]: true }))} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     ) : (
                       <div data-testid="cat-tile-placeholder" aria-hidden="true" className="w-full h-full bg-brand-light" />
                     )}

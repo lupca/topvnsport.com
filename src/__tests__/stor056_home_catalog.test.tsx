@@ -12,7 +12,6 @@ import HomePage from '../features/home/HomePage';
 import cartReducer from '../features/cart/cartSlice';
 import catalogReducer from '../features/catalog/catalogSlice';
 import { NO_IMAGE_URL } from '../services/sport-api/constants';
-import { getBrands } from '../utils/brands';
 import { SORT_OPTIONS, sortProducts } from '../utils/productSort';
 
 const STRING_TIER = { tier_index: 2, name: 'Loại Cước', options: ['Khung không dây', 'BG 65'] };
@@ -57,13 +56,27 @@ const names = () => within(screen.getByTestId('featured-grid')).queryAllByText(/
 const counter = () => screen.getByTestId('result-counter').textContent;
 
 describe('STOR-056 chip danh mục', () => {
-  const ps = [prod('1'), prod('2', { categoryCode: 'c2' }), prod('3', { categoryCode: 'c2', stock: 0 }), prod('4', { categoryCode: undefined })];
+  const ps = [
+    prod('1'),
+    prod('2', { categoryCode: 'c2' }),
+    prod('3', { categoryCode: 'c2', stock: 0 }),
+    prod('4', { categoryCode: undefined }),
+    prod('5', { categoryCode: 'c3', stock: 0 }),
+  ];
 
-  it('chip đầu là "Tất cả" với số products.length', () => {
+  it('chip đầu là "Tất cả", số = SP còn hàng = Y của bộ đếm lúc đầu', () => {
     renderHome(ps);
     const first = within(screen.getByTestId('cate-select-bar')).getAllByRole('tab')[0];
     expect(first).toBe(screen.getByTestId('cate-pill-ALL'));
-    expect(first.textContent).toBe(`Tất cả(${ps.length})`);
+    expect(first.textContent).toBe('Tất cả(3)');
+    expect(counter()).toBe('Hiển thị 3 / 3 sản phẩm');
+  });
+
+  it('chip ngành đếm SP còn hàng; ngành 0 còn hàng bị ẩn', () => {
+    renderHome(ps);
+    expect(screen.getByTestId('cate-pill-c1').textContent).toBe('Vợt(1)');
+    expect(screen.getByTestId('cate-pill-c2').textContent).toBe('Giày(1)');
+    expect(screen.queryByTestId('cate-pill-c3')).toBeNull();
   });
 
   it('"Tất cả" đang chọn lúc đầu, kiểu đen active; chip khác không', () => {
@@ -105,17 +118,18 @@ describe('STOR-056 kệ SẢN PHẨM NỔI BẬT', () => {
     expect(readFileSync('src/features/home/HomePage.tsx', 'utf8')).not.toMatch(/inferRacketPlayStyle/);
   });
 
-  it('chip thương hiệu đúng getBrands() trên SP còn hàng', () => {
-    const ps = [prod('1', { brand: 'Yonex' }), prod('2', { brand: ' LI-NING ' }), prod('3', { brand: 'VICTOR', stock: 0 }), prod('4', { brand: undefined })];
+  it('chip thương hiệu từ SP còn hàng, gộp khác hoa thường (nhãn = chuỗi gặp đầu)', () => {
+    const ps = [prod('1', { brand: 'Yonex' }), prod('2', { brand: ' LI-NING ' }), prod('3', { brand: 'VICTOR', stock: 0 }), prod('4', { brand: undefined }), prod('5', { brand: 'YONEX' })];
     renderHome(ps);
     const chips = screen.queryAllByTestId(/^quick-chip-brand:/).map(e => e.textContent);
-    expect(chips).toEqual(getBrands(ps.filter(p => p.stock > 0)));
-    expect(chips).toEqual(['LI-NING', 'Yonex']);
+    expect(chips).toEqual(['Yonex', 'LI-NING']);
   });
 
-  it('bấm chip thương hiệu: chỉ SP thương hiệu đó', () => {
-    renderHome([prod('1', { brand: 'Yonex' }), prod('2', { brand: 'LI-NING' }), prod('3', { brand: 'Yonex' })]);
-    fireEvent.click(screen.getByTestId('quick-chip-brand:LI-NING'));
+  it('bấm chip thương hiệu: lọc không phân biệt hoa thường', () => {
+    renderHome([prod('1', { brand: 'Yonex' }), prod('2', { brand: 'LI-NING' }), prod('3', { brand: 'YONEX' })]);
+    fireEvent.click(screen.getByTestId('quick-chip-brand:yonex'));
+    expect(names()).toEqual(['SP 1', 'SP 3']);
+    fireEvent.click(screen.getByTestId('quick-chip-brand:li-ning'));
     expect(names()).toEqual(['SP 2']);
     fireEvent.click(screen.getByTestId('quick-chip-ALL'));
     expect(names()).toEqual(['SP 1', 'SP 2', 'SP 3']);
@@ -191,6 +205,14 @@ describe('STOR-056 ô danh mục', () => {
       expect(within(tile).queryByRole('img')).toBeNull();
       expect(within(tile).getByTestId('cat-tile-placeholder')).toBeTruthy();
     }
+  });
+
+  it('ảnh lỗi tải (onError) -> placeholder trung tính', () => {
+    renderHome([prod('1', { image: '/img/404.jpg' })]);
+    const tile = screen.getByTestId('cat-tile-c1');
+    fireEvent.error(within(tile).getByRole('img'));
+    expect(within(tile).queryByRole('img')).toBeNull();
+    expect(within(tile).getByTestId('cat-tile-placeholder')).toBeTruthy();
   });
 
   it('ô không có phụ đề, pill số lượng, chữ monogram: chỉ ảnh + tên', () => {
