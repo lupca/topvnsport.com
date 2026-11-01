@@ -19,7 +19,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
     if (isPaused || products.length <= 1) return;
     const timer = setInterval(() => {
       setActiveIndex(prev => (prev + 1) % products.length);
-    }, 5000);
+    }, 4500);
     return () => clearInterval(timer);
   }, [isPaused, products.length]);
 
@@ -27,185 +27,223 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
     return null;
   }
 
-  const safeIndex = ((activeIndex % products.length) + products.length) % products.length;
+  const count = products.length;
+  const safeIndex = ((activeIndex % count) + count) % count;
   const activeProduct = products[safeIndex];
+  const prevIndex = (safeIndex - 1 + count) % count;
+  const nextIndex = (safeIndex + 1) % count;
+  const showPrevPeek = count > 2;
+  const showNextPeek = count > 1;
+
   const playStyle = inferRacketPlayStyle(activeProduct) ?? activeProduct.characteristics;
   const { salePrice, originalPrice, hasActivePromotion } = getPriceDisplay(activeProduct);
+  const productPath = getProductPath(activeProduct);
 
   const handlePrev = () => {
-    setActiveIndex(prev => (prev - 1 + products.length) % products.length);
+    setActiveIndex(prev => (prev - 1 + count) % count);
   };
 
   const handleNext = () => {
-    setActiveIndex(prev => (prev + 1) % products.length);
+    setActiveIndex(prev => (prev + 1) % count);
+  };
+
+  const renderPeekSlide = (idx: number) => {
+    const peekProduct = products[idx];
+    return (
+      <div
+        key={peekProduct.id || idx}
+        data-testid={`center-slide-${idx}`}
+        onClick={() => setActiveIndex(idx)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setActiveIndex(idx);
+          }
+        }}
+        className="center-slide-peek relative w-full h-full max-h-[338px] md:h-[454px] md:max-h-[454px] overflow-hidden bg-brand-light border border-line-tag opacity-40 hover:opacity-60 transition-opacity duration-300 cursor-pointer flex items-center justify-center p-1 md:p-6"
+      >
+        {peekProduct.image && (
+          <img
+            src={peekProduct.image}
+            alt={peekProduct.name}
+            className="max-h-full max-w-full object-contain"
+            referrerPolicy="no-referrer"
+          />
+        )}
+      </div>
+    );
   };
 
   return (
-    <section data-testid="badminton-center-slider" className="max-w-7xl mx-auto px-4 md:px-8">
-      <div className="relative overflow-hidden">
-        {/* Slides Track */}
-        <div className="flex items-center justify-center gap-3 md:gap-6 py-2">
-          {products.map((product, idx) => {
-            const isActive = idx === safeIndex;
-            if (isActive) {
-              return (
-                <div
-                  key={product.id || idx}
-                  data-testid="center-slide-active"
-                  className="w-full max-w-4xl rounded-3xl border border-line-strong bg-white p-5 md:p-8 opacity-100 scale-100 shadow-md transition-all duration-300 flex flex-col md:flex-row gap-6 items-center"
-                >
-                  <div className="w-full md:w-1/2 aspect-square max-h-72 rounded-2xl bg-gray-50 flex items-center justify-center p-4 overflow-hidden border border-line-tag">
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-300"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <div className="text-ink-muted font-bold text-sm">{product.name}</div>
-                    )}
-                  </div>
+    <section data-testid="badminton-center-slider" className="hero-slider-section w-full overflow-hidden">
+      <div className="center-slider-viewport grid grid-cols-[18px_minmax(0,1fr)_18px] gap-[8px] md:grid-cols-[1fr_minmax(0,1060px)_1fr] md:gap-[18px] items-start w-full overflow-hidden">
+        {showPrevPeek ? renderPeekSlide(prevIndex) : <div aria-hidden="true" />}
 
-                  <div className="w-full md:w-1/2 flex flex-col gap-3 justify-center">
-                    <div className="flex flex-wrap items-center gap-2">
-                      {(product.brand || product.category) && (
-                        <div className="text-ink-muted font-mono font-bold uppercase text-xs tracking-wider">
-                          {product.brand && <span>{product.brand}</span>}
-                          {product.brand && product.category && <span className="mx-1">•</span>}
-                          {product.category && <span>{product.category}</span>}
-                        </div>
-                      )}
-                      {playStyle && (
-                        <span
-                          data-testid="slider-playstyle-badge"
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border border-line-tag bg-pill-bg text-ink-primary"
-                        >
-                          {playStyle}
-                        </span>
-                      )}
-                    </div>
+        <div
+          data-testid="center-slide-active"
+          className="center-slide-active col-start-2 relative w-full min-w-0 overflow-hidden border border-line-strong bg-surface opacity-100 scale-100"
+        >
+          <div
+            data-testid="slider-visual-wrap"
+            className="slide-visual-wrap relative w-full aspect-square md:aspect-[1400/600] overflow-hidden bg-brand-light flex items-center justify-center p-4 md:p-6"
+          >
+            {activeProduct.image ? (
+              <img
+                src={activeProduct.image}
+                alt={activeProduct.name}
+                className="hero-main-img max-h-full max-w-full object-contain transition-transform duration-300"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="text-ink-muted font-bold text-sm truncate max-w-full">{activeProduct.name}</div>
+            )}
 
-                    <h2
-                      data-testid="slider-active-title"
-                      className="font-display font-black text-xl md:text-3xl text-ink-primary tracking-tight"
+            <div
+              data-testid="slider-product-chip"
+              className="slide-product-chip absolute inset-x-[8px] bottom-[8px] md:inset-x-auto md:right-[20px] md:bottom-[20px] md:w-[350px] md:max-w-[350px] bg-surface/95 border border-line-strong rounded-[6px] md:rounded-[10px] px-[9px] py-[5px] md:px-[14px] md:py-[9px] flex items-center gap-[12px] shadow-md z-10 overflow-hidden min-w-0"
+            >
+              {activeProduct.image && (
+                <img
+                  src={activeProduct.image}
+                  alt={activeProduct.name}
+                  className="hidden md:block w-[52px] h-[52px] shrink-0 rounded-[6px] border border-line-tag bg-brand-light p-[4px] object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              )}
+
+              <div className="slide-chip-meta min-w-0 flex-1 flex flex-col gap-[2px] overflow-hidden">
+                <div className="flex items-center gap-1.5 md:flex-col md:items-start md:gap-[2px] min-w-0 overflow-hidden">
+                  {playStyle && (
+                    <span
+                      data-testid="slider-playstyle-badge"
+                      className="shrink-0 inline-flex items-center px-1.5 py-0 md:px-2 md:py-[1px] rounded-full font-mono text-[9px] leading-[12px] md:text-[10px] md:leading-[12px] font-bold uppercase tracking-wider border border-line-tag bg-pill-bg text-ink-primary max-w-full truncate"
                     >
-                      {product.name}
-                    </h2>
-
-                    {product.price !== undefined ? (
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-display font-extrabold text-brand-primary tabular-nums text-xl md:text-3xl">
-                          {(salePrice ?? originalPrice ?? 0).toLocaleString('vi-VN')}đ
-                        </span>
-                        {hasActivePromotion && originalPrice && originalPrice > (salePrice ?? 0) && (
-                          <span className="text-sm text-gray-400 line-through tabular-nums">
-                            {originalPrice.toLocaleString('vi-VN')}đ
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <span className="text-sm font-medium text-ink-muted">Liên hệ để biết giá</span>
-                    )}
-
-                    <div className="pt-2">
-                      <button
-                        type="button"
-                        data-testid="slider-cta"
-                        onClick={() => navigate(getProductPath(product))}
-                        className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-ink-primary hover:bg-brand-primary text-white font-bold text-sm transition-colors duration-200 shadow-sm"
-                      >
-                        Xem chi tiết
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-
-            return (
-              <div
-                key={product.id || idx}
-                data-testid={`center-slide-${idx}`}
-                onClick={() => setActiveIndex(idx)}
-                className="w-36 md:w-48 shrink-0 rounded-2xl border border-line-tag bg-gray-50 p-3 opacity-40 scale-95 transition-all duration-300 cursor-pointer hover:opacity-75 flex flex-col items-center justify-center text-center gap-2"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setActiveIndex(idx);
-                  }
-                }}
-              >
-                <div className="w-full aspect-square rounded-xl bg-white flex items-center justify-center p-2 overflow-hidden border border-line-tag">
-                  {product.image ? (
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="max-h-full max-w-full object-contain"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <div className="text-ink-muted text-xs font-bold line-clamp-2">{product.name}</div>
+                      {playStyle}
+                    </span>
                   )}
+
+                  <h2
+                    data-testid="slider-active-title"
+                    className="slide-chip-name font-display font-extrabold text-[11px] leading-[14px] md:text-[13px] md:leading-[16px] text-ink-primary min-w-0 flex-1 md:w-full break-words line-clamp-1 md:line-clamp-2"
+                  >
+                    {activeProduct.name}
+                  </h2>
                 </div>
-                <p className="font-display font-bold text-xs text-ink-primary truncate w-full">
-                  {product.name}
-                </p>
+
+                <div className="slide-chip-bottom flex items-center justify-between gap-[8px] min-w-0 md:mt-[1px] overflow-hidden">
+                  {activeProduct.price !== undefined ? (
+                    <div className="flex items-baseline gap-[6px] min-w-0 overflow-hidden">
+                      <span className="slide-chip-price font-display font-black text-[12px] leading-[15px] md:text-[14px] md:leading-[18px] text-brand-sale tabular-nums truncate">
+                        {(salePrice ?? originalPrice ?? 0).toLocaleString('vi-VN')}đ
+                      </span>
+                      {hasActivePromotion && (
+                        <span
+                          data-testid="slider-original-price"
+                          className="text-[10px] leading-none text-ink-muted line-through tabular-nums shrink-0"
+                        >
+                          {(originalPrice ?? 0).toLocaleString('vi-VN')}đ
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-[11px] leading-[14px] font-bold text-ink-muted truncate">
+                      Liên hệ để biết giá
+                    </span>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => navigate(productPath)}
+                    className="slide-chip-btn shrink-0 bg-ink-primary hover:bg-brand-primary text-white text-[10.5px] leading-[13px] md:text-[11px] md:leading-[14px] font-bold px-[7px] py-[3px] md:px-[9px] md:py-[4px] rounded-[4px] transition-colors duration-150"
+                  >
+                    Xem chi tiết
+                  </button>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          <div
+            data-testid="slider-caption-bar"
+            className="slide-caption-bar hidden md:flex items-center justify-between gap-5 px-6 py-3.5 bg-surface border-t border-line-strong min-w-0 overflow-hidden"
+          >
+            <div className="min-w-0 flex-1 overflow-hidden">
+              {(activeProduct.brand || activeProduct.category) && (
+                <div className="slide-caption-eyebrow font-mono text-xs font-bold uppercase tracking-wider text-brand-primary truncate">
+                  {activeProduct.brand && <span>{activeProduct.brand}</span>}
+                  {activeProduct.brand && activeProduct.category && <span className="mx-1.5">•</span>}
+                  {activeProduct.category && <span>{activeProduct.category}</span>}
+                </div>
+              )}
+            </div>
+
+            <button
+              type="button"
+              data-testid="slider-cta"
+              onClick={() => navigate(productPath)}
+              className="slide-caption-cta shrink-0 bg-ink-primary hover:bg-brand-primary text-white border border-line-strong px-5 py-2.5 font-display text-xs font-extrabold uppercase tracking-wider rounded-[4px] transition-colors duration-150"
+            >
+              Xem chi tiết
+            </button>
+          </div>
         </div>
 
-        {/* Controls */}
-        <div className="flex items-center justify-center gap-4 mt-4">
-          <button
-            type="button"
-            data-testid="slider-prev"
-            aria-label="Slide trước"
-            onClick={handlePrev}
-            className="p-2 rounded-full border border-line-tag hover:border-line-strong bg-white text-ink-primary transition"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
+        {showNextPeek ? renderPeekSlide(nextIndex) : <div aria-hidden="true" />}
+      </div>
 
-          <div data-testid="slider-dots" className="slick-dots flex items-center gap-2">
-            {products.map((_, idx) => (
+      <div className={count <= 1 ? 'hidden' : 'slider-controls flex items-center justify-center gap-3.5 mt-4'}>
+        <button
+          type="button"
+          data-testid="slider-prev"
+          aria-label="Sản phẩm trước"
+          onClick={handlePrev}
+          className="slider-arrow w-[34px] h-[34px] rounded-full border border-line-strong bg-surface hover:bg-ink-primary text-ink-primary hover:text-white inline-flex items-center justify-center transition"
+        >
+          <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+        </button>
+
+        <div data-testid="slider-dots" className="slick-dots flex items-center gap-2.5">
+          {products.map((_, idx) => {
+            const isCurrent = idx === safeIndex;
+            return (
               <button
                 key={idx}
                 type="button"
                 data-testid={`slider-dot-${idx}`}
-                aria-label={`Slide ${idx + 1}`}
+                aria-label={`Xem sản phẩm ${idx + 1}/${count}`}
+                aria-current={isCurrent ? 'true' : undefined}
                 onClick={() => setActiveIndex(idx)}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  idx === safeIndex ? 'w-8 bg-ink-primary' : 'w-2.5 bg-line-tag hover:bg-ink-muted'
+                className={`h-[11px] rounded-full border border-line-strong transition-all duration-200 ${
+                  isCurrent ? 'w-[38px] bg-ink-primary' : 'w-[11px] bg-line-tag hover:bg-ink-muted'
                 }`}
               />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            data-testid="slider-pause-toggle"
-            aria-pressed={isPaused}
-            aria-label={isPaused ? 'Phát trình chiếu' : 'Tạm dừng trình chiếu'}
-            onClick={() => setIsPaused(p => !p)}
-            className="p-2 rounded-full border border-line-tag hover:border-line-strong bg-white text-ink-primary transition"
-          >
-            {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
-          </button>
-
-          <button
-            type="button"
-            data-testid="slider-next"
-            aria-label="Slide tiếp"
-            onClick={handleNext}
-            className="p-2 rounded-full border border-line-tag hover:border-line-strong bg-white text-ink-primary transition"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
+            );
+          })}
         </div>
+
+        <button
+          type="button"
+          data-testid="slider-next"
+          aria-label="Sản phẩm tiếp theo"
+          onClick={handleNext}
+          className="slider-arrow w-[34px] h-[34px] rounded-full border border-line-strong bg-surface hover:bg-ink-primary text-ink-primary hover:text-white inline-flex items-center justify-center transition"
+        >
+          <ChevronRight className="w-4 h-4" aria-hidden="true" />
+        </button>
+
+        <button
+          type="button"
+          data-testid="slider-pause-toggle"
+          aria-pressed={isPaused}
+          aria-label={isPaused ? 'Phát tiếp' : 'Tạm dừng'}
+          onClick={() => setIsPaused(p => !p)}
+          className="slick-pause-btn inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-ink-primary bg-surface hover:bg-surface-hover border border-line-strong rounded-[4px] transition"
+        >
+          {isPaused ? <Play className="w-3.5 h-3.5" aria-hidden="true" /> : <Pause className="w-3.5 h-3.5" aria-hidden="true" />}
+          <span>{isPaused ? 'Phát tiếp' : 'Tạm dừng'}</span>
+        </button>
       </div>
     </section>
   );
