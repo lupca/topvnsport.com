@@ -5,7 +5,7 @@ import TrustSealsPanel from './TrustSealsPanel';
 import ProductPurchaseSection from './product-detail/ProductPurchaseSection';
 import ProductDetailTabs, { DetailTab } from './product-detail/ProductDetailTabs';
 import MobilePurchaseBar from './product-detail/MobilePurchaseBar';
-import { StockState, aggregateStock, initialTierValue, inferStringMeta, isNoStringOption, isStringingTier } from './product-detail/helpers';
+import { StockState, aggregateStock, getPdpPrice, initialTierValue, inferStringMeta, isNoStringOption, isStringingTier } from './product-detail/helpers';
 import { isRacketCategoryCode } from '../config/storefront';
 
 interface ProductDetailPageProps {
@@ -54,12 +54,6 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
     setTension(10.5);
   }, [product]);
 
-  const matchedVariant = product.variants?.find((v) => {
-    const t1Match = !product.tier_variations?.some(tv => tv.tier_index === 1) || v.tier_1_option === selectedTier1;
-    const t2Match = !product.tier_variations?.some(tv => tv.tier_index === 2) || v.tier_2_option === selectedTier2;
-    return t1Match && t2Match;
-  });
-
   const getVariantStock = (tier1: string, tier2: string): StockState =>
     aggregateStock(product, tier1, tier2);
 
@@ -69,25 +63,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
   const stockUnknown = currentStockState.kind === 'unknown';
   const isOutOfStock = currentStockState.kind === 'known' && currentStockState.stock <= 0;
 
-  // Giá thật quyết định theo biến thể đang chọn (giá 0 = chưa có giá); chưa chọn
-  // được biến thể thì theo giá thật của sản phẩm.
-  const hasPrice = matchedVariant ? matchedVariant.price > 0 : product.price !== undefined;
-  const baseOriginalPrice = product.originalPrice ?? product.price ?? 0;
-  const baseSalePrice = product.computedPrice ?? product.salePrice ?? product.price ?? 0;
-
-  const originalPriceToUse = matchedVariant?.originalPrice ?? matchedVariant?.price ?? baseOriginalPrice;
-  const salePriceToUse = matchedVariant?.computedPrice ?? matchedVariant?.price ?? baseSalePrice;
-
-  const displayBasePrice = salePriceToUse;
-  const displayOriginalPrice = originalPriceToUse;
-  
-  const hasDiscount = Boolean(
-    (matchedVariant?.hasActivePromotion || product.hasActivePromotion) ||
-    (displayBasePrice < displayOriginalPrice)
-  );
-
-  const discountPercent = matchedVariant?.percentageDiscount ?? product.percentageDiscount ?? 
-    (hasDiscount && displayOriginalPrice > 0 ? Math.round(((displayOriginalPrice - displayBasePrice) / displayOriginalPrice) * 100) : 0);
+  const { hasPrice, salePrice, originalPrice, hasDiscount, discountPercent } = getPdpPrice(product, selectedTier1, selectedTier2);
 
 
   const resolvedColor = product.tier_variations && product.tier_variations.length > 0
@@ -173,9 +149,9 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
         <div className="lg:col-span-7">
           <ProductPurchaseSection
             product={product}
-            totalDisplayPrice={displayBasePrice}
+            totalDisplayPrice={salePrice}
             hasPrice={hasPrice}
-            displayOriginalPrice={displayOriginalPrice}
+            displayOriginalPrice={originalPrice}
             hasDiscount={hasDiscount}
             discountPercent={discountPercent}
             selectedTier1={selectedTier1}
@@ -210,7 +186,7 @@ export default function ProductDetailPage({ product, stringOptions, onAddToCartW
       <MobilePurchaseBar
         productName={product.name}
         productImage={product.image}
-        totalDisplayPrice={displayBasePrice}
+        totalDisplayPrice={salePrice}
         hasPrice={hasPrice}
         isOutOfStock={isOutOfStock}
         stockUnknown={stockUnknown}
