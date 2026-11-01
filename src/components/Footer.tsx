@@ -124,9 +124,9 @@ export default function Footer({ categories, products }: FooterProps) {
               <Phone className="w-4 h-4 text-brand-primary shrink-0" />
               <span>097 6007006 (08:00 - 22:00)</span>
             </li>
-            <li className="flex items-center gap-2">
+            <li className="flex items-center gap-2 min-w-0">
               <Mail className="w-4 h-4 text-brand-primary shrink-0" />
-              <span>support@topvnsport.com.vn</span>
+              <span className="truncate break-all">support@topvnsport.com.vn</span>
             </li>
           </ul>
         </div>
