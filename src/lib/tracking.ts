@@ -97,8 +97,9 @@ export function initTracking(gaIdOverride?: string, pixelIdOverride?: string): v
     }
 
     window.dataLayer = window.dataLayer || [];
-    function gtagImpl(...args: any[]) {
-      window.dataLayer.push(args);
+    // gtag.js only runs dataLayer entries that are Arguments objects: keep the stock snippet
+    function gtagImpl() {
+      window.dataLayer.push(arguments);
     }
     window.gtag = window.gtag || gtagImpl;
     window.gtag('js', new Date());

@@ -154,6 +154,9 @@ describe('Tracking Module Specification (STOR-065)', () => {
     // gtag was called with config, gaId, { send_page_view: false }
     const configCall = window.dataLayer.find(call => call[0] === 'config' && call[1] === 'G-ABCXYZ');
     expect(configCall).toBeDefined();
+    // gtag.js ignores plain arrays; entries must be Arguments objects
+    expect(Object.prototype.toString.call(configCall)).toBe('[object Arguments]');
+    expect(window.dataLayer.every(e => Object.prototype.toString.call(e) === '[object Arguments]')).toBe(true);
     expect(configCall[2]).toEqual({ send_page_view: false });
   });
 
