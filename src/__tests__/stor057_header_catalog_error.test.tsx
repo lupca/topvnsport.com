@@ -16,8 +16,8 @@ import App from '../App';
 const CATALOG_ERR = 'Chưa tải được danh mục sản phẩm.';
 
 const CATS = [
-  { id: 10, code: 'VC000010', name: 'Vợt Cầu Lông', parent_id: null, display_name: 'Thể Thao > Cầu Lông > Vợt Cầu Lông' },
-  { id: 11, code: 'VC000011', name: 'Giày Cầu Lông', parent_id: null, display_name: 'Thể Thao > Cầu Lông > Giày Cầu Lông' },
+  { id: 10, code: 'VC001491', name: 'Vợt Cầu Lông', parent_id: null, display_name: 'Thể Thao > Cầu Lông > Vợt Cầu Lông' },
+  { id: 11, code: 'VC001427', name: 'Giày Cầu Lông', parent_id: null, display_name: 'Thể Thao > Cầu Lông > Giày Cầu Lông' },
   { id: 12, code: 'VC000012', name: 'Phụ Kiện Cầu Lông', parent_id: null, display_name: 'Thể Thao > Cầu Lông > Phụ Kiện Cầu Lông' }
 ];
 
@@ -99,7 +99,7 @@ describe('STOR-057 Header menu danh mục: trạng thái lỗi tải (500 / netw
     const nav = await waitFor(() => getDesktopNav(container));
     expect(within(nav).getByText(CATALOG_ERR)).toBeInTheDocument();
     expect(within(nav).getByRole('button', { name: 'Thử lại' })).toBeInTheDocument();
-    expect(within(nav).queryByRole('button', { name: 'Vợt Cầu Lông' })).toBeNull();
+    expect(within(nav).queryByRole('link', { name: 'VỢT CẦU LÔNG' })).toBeNull();
 
     const drawer = openMobileDrawer();
     expect(within(drawer).getByText(CATALOG_ERR)).toBeInTheDocument();
@@ -175,7 +175,7 @@ describe('STOR-057 Header menu danh mục: trạng thái lỗi tải (500 / netw
 
     await waitFor(() => {
       const updatedNav = getDesktopNav(container);
-      expect(within(updatedNav).getByRole('button', { name: 'Vợt Cầu Lông' })).toBeInTheDocument();
+      expect(within(updatedNav).getByRole('link', { name: 'VỢT CẦU LÔNG' })).toBeInTheDocument();
     });
     expect(getProductsSpy).toHaveBeenCalledTimes(2);
     const updatedNav = getDesktopNav(container);
@@ -198,7 +198,7 @@ describe('STOR-057 Header menu danh mục: trạng thái lỗi tải (500 / netw
     await waitFor(() => expect(getProductsSpy).toHaveBeenCalledTimes(2));
     const updatedNav = getDesktopNav(container);
     await waitFor(() => {
-      expect(within(updatedNav).getByRole('button', { name: 'Vợt Cầu Lông' })).toBeInTheDocument();
+      expect(within(updatedNav).getByRole('link', { name: 'VỢT CẦU LÔNG' })).toBeInTheDocument();
     });
   });
 });
@@ -227,9 +227,9 @@ describe('STOR-057 Header menu danh mục: 200-empty và 200-with-items', () => 
     const { container } = renderApp('/catalog');
 
     const nav = await waitFor(() => getDesktopNav(container));
-    const navButtons = within(nav).getAllByRole('button').map(b => b.textContent);
-    expect(navButtons).toEqual(['Vợt Cầu Lông', 'Giày Cầu Lông']);
-    expect(within(nav).queryByRole('button', { name: 'Phụ Kiện Cầu Lông' })).toBeNull();
+    const navLinks = within(nav).getAllByRole('link').map(a => a.textContent);
+    expect(navLinks).toEqual(['BADMINTON (TRANG CHỦ)', 'VỢT CẦU LÔNG', 'GIÀY CẦU LÔNG']);
+    expect(within(nav).queryAllByRole('button')).toHaveLength(0);
     expect(within(nav).queryByText(CATALOG_ERR)).toBeNull();
     expect(within(nav).queryByRole('button', { name: 'Thử lại' })).toBeNull();
 
