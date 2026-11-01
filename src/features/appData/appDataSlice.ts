@@ -79,6 +79,8 @@ const appDataSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(fetchAppData.rejected, state => {
+        // Thunk ném = không biết danh sách sản phẩm; không để [] đọc thành "shop trống".
+        state.productsError = true;
         state.isLoading = false;
       });
   }
