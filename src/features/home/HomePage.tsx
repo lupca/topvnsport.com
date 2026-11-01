@@ -8,6 +8,7 @@ import TrustBadges from '../../components/TrustBadges';
 import { inferRacketPlayStyle } from '../../utils/badmintonReadiness';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { sortProducts } from '../../utils/productSort';
+import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
 import BadmintonCenterSlider from './BadmintonCenterSlider';
 import { categoryTileThemes, getCategoryMonogram, getCategorySubtitle } from './categoryTileThemes';
@@ -18,6 +19,7 @@ export default function HomePage() {
   const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.appData.products ?? []);
   const categories = useAppSelector(state => state.appData.categories ?? []);
+  const productsError = useAppSelector(state => state.appData.productsError);
 
   const sortedCategories = getCategoriesSortedByCount(categories, products);
   const categoryCounts = getProductCategoryCounts(products);
@@ -56,6 +58,27 @@ export default function HomePage() {
     }
     dispatch(addCartItemAndOpen(item));
   };
+
+  // STOR-053: lỗi tải sản phẩm và shop chưa có sản phẩm là hai câu khác nhau.
+  if (productsError || products.length === 0) {
+    return (
+      <section className="max-w-xl mx-auto px-4 py-16 text-center">
+        {productsError && (
+          <div role="alert" className="space-y-4">
+            <p className="text-base font-medium text-ink-primary">Cửa hàng chưa tải được sản phẩm lúc này. Vui lòng thử lại sau.</p>
+            <button
+              type="button"
+              onClick={() => dispatch(fetchAppData())}
+              className="rounded-full bg-ink-primary text-white px-5 py-2 text-sm font-bold hover:opacity-90 transition"
+            >
+              Thử lại
+            </button>
+          </div>
+        )}
+        {!productsError && <p role="status" className="text-base font-medium text-ink-primary">Cửa hàng chưa có sản phẩm nào đang bán.</p>}
+      </section>
+    );
+  }
 
   return (
     <div className="space-y-12 animate-in fade-in duration-300">

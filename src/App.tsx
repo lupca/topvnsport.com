@@ -52,6 +52,10 @@ export default function App() {
   const { items: cartItems, isOpen: isCartOpen, quickViewProduct } = useAppSelector(state => state.cart);
   const [hasOpenedCart, setHasOpenedCart] = useState(isCartOpen);
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
+  // STOR-053: trên '/' HomePage tự báo lỗi tải sản phẩm (kèm Thử lại) -> banner bỏ dòng danh mục/sản phẩm, giữ dòng tồn kho.
+  const isHome = location.pathname === '/';
+  const showCategoriesError = categoriesError && !isHome;
+  const showProductsError = productsError && !isHome;
 
   useEffect(() => {
     if (isCartOpen) setHasOpenedCart(true);
@@ -115,10 +119,10 @@ export default function App() {
         categories={categories}
       />
 
-      {(categoriesError || productsError || stockError) && (
+      {(showCategoriesError || showProductsError || stockError) && (
         <div role="alert" id="load-error-banner" className="bg-red-50 border-b border-red-200 text-red-700 text-sm font-medium px-4 py-2.5 text-center space-y-0.5">
-          {categoriesError && <p>Không tải được danh mục sản phẩm. Vui lòng tải lại trang.</p>}
-          {productsError && <p>Không tải được danh sách sản phẩm. Vui lòng tải lại trang.</p>}
+          {showCategoriesError && <p>Không tải được danh mục sản phẩm. Vui lòng tải lại trang.</p>}
+          {showProductsError && <p>Không tải được danh sách sản phẩm. Vui lòng tải lại trang.</p>}
           {stockError && <p>Không tải được tồn kho. Vui lòng tải lại trang.</p>}
         </div>
       )}
