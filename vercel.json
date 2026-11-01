@@ -6,6 +6,6 @@
     { "source": "/api/oms/:path*", "destination": "/api/oms/[...path]?path=:path*" },
     { "source": "/robots.txt", "destination": "/api/robots" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/((?!api/|robots\\.txt|sitemap\\.xml).*)", "destination": "/index.html" }
+    { "source": "/((?!api/|robots\\.txt(?:/|$)|sitemap\\.xml(?:/|$)).*)", "destination": "/index.html" }
   ]
 }

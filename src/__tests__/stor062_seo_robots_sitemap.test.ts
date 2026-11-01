@@ -113,14 +113,18 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
 
     function setupMockFetch(options?: {
       categoriesStatus?: number;
+      categoriesBody?: any;
       productsStatus?: number;
+      productsBody?: any;
       reject?: boolean;
       totalMismatch?: boolean;
       singlePageOnly?: boolean;
     }) {
       const {
         categoriesStatus = 200,
+        categoriesBody,
         productsStatus = 200,
+        productsBody,
         reject = false,
         totalMismatch = false,
         singlePageOnly = false,
@@ -136,7 +140,7 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
             status: categoriesStatus,
             ok: categoriesStatus === 200,
             headers: new Map([['content-type', 'application/json']]),
-            json: async () => mockCategories,
+            json: async () => categoriesBody ?? mockCategories,
           } as any;
         }
 
@@ -146,7 +150,22 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
               status: productsStatus,
               ok: false,
               headers: new Map([['content-type', 'application/json']]),
-              json: async () => ({ detail: 'error' }),
+              json: async () => productsBody ?? ({
+                items: mockProductsPage1,
+                total: 2,
+                pages: 1,
+                page: 1,
+                limit: 100,
+              }),
+            } as any;
+          }
+
+          if (productsBody !== undefined) {
+            return {
+              status: 200,
+              ok: true,
+              headers: new Map([['content-type', 'application/json']]),
+              json: async () => productsBody,
             } as any;
           }
 
@@ -370,7 +389,7 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
       expect(res.headers['Cache-Control']).toBe('no-store');
     });
 
-    it('if /public/products returns non-200, sitemap returns 502 or 503 with no <urlset', async () => {
+    it('if /public/products returns non-200 with valid shaped body, sitemap returns 502 or 503 with no <urlset', async () => {
       setupMockFetch({ productsStatus: 500 });
       const res = makeRes();
       await sitemapHandler(req(), res);
@@ -379,8 +398,26 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
       expect(res.headers['Cache-Control']).toBe('no-store');
     });
 
-    it('if /public/voma-categories returns non-200, sitemap returns 502 or 503 with no <urlset', async () => {
+    it('if /public/products returns malformed body shape, sitemap returns 502 or 503 with no <urlset', async () => {
+      setupMockFetch({ productsBody: { detail: 'error' } });
+      const res = makeRes();
+      await sitemapHandler(req(), res);
+      expect([502, 503]).toContain(res.statusCode);
+      expect(res.body).not.toContain('<urlset');
+      expect(res.headers['Cache-Control']).toBe('no-store');
+    });
+
+    it('if /public/voma-categories returns non-200 with valid shaped body, sitemap returns 502 or 503 with no <urlset', async () => {
       setupMockFetch({ categoriesStatus: 500 });
+      const res = makeRes();
+      await sitemapHandler(req(), res);
+      expect([502, 503]).toContain(res.statusCode);
+      expect(res.body).not.toContain('<urlset');
+      expect(res.headers['Cache-Control']).toBe('no-store');
+    });
+
+    it('if /public/voma-categories returns malformed non-array body, sitemap returns 502 or 503 with no <urlset', async () => {
+      setupMockFetch({ categoriesBody: { detail: 'not an array' } });
       const res = makeRes();
       await sitemapHandler(req(), res);
       expect([502, 503]).toContain(res.statusCode);
@@ -445,7 +482,9 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
       expect(regex.test('/checkout/success')).toBe(true);
 
       expect(regex.test('/robots.txt')).toBe(false);
+      expect(regex.test('/robots.txtfoo')).toBe(true);
       expect(regex.test('/sitemap.xml')).toBe(false);
+      expect(regex.test('/sitemap.xml-old')).toBe(true);
       expect(regex.test('/api/pmi/public/products')).toBe(false);
     });
   });
