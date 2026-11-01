@@ -4,6 +4,8 @@
     { "source": "/api/pmi/:path*", "destination": "/api/pmi/[...path]?path=:path*" },
     { "source": "/api/wms/:path*", "destination": "/api/wms/[...path]?path=:path*" },
     { "source": "/api/oms/:path*", "destination": "/api/oms/[...path]?path=:path*" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/robots.txt", "destination": "/api/robots" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/((?!api/|robots\\.txt|sitemap\\.xml).*)", "destination": "/index.html" }
   ]
 }
