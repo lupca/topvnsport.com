@@ -203,7 +203,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
       </div>
 
       {/* Main Header Row */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-2 md:py-4 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+      <div className="max-w-7xl mx-auto px-[16px] md:px-6 lg:px-8 py-2 md:py-4 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
         {/* Desktop Brand Logo */}
         <div 
           onClick={() => navigate('/')} 
@@ -463,7 +463,6 @@ export default function Header({ cartCount, openCart, products, categories, cate
           </div>
         </div>
       </nav>
-      <style>{'html, body { overflow-x: hidden; }'}</style>
     </header>
   );
 }

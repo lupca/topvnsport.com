@@ -237,3 +237,28 @@ describe('STOR-061: Removed legacy elements absence', () => {
     expect(container.querySelector('.live-dot')).toBeNull();
   });
 });
+
+describe('STOR-061: Sticky header integrity and no global overflow-x:hidden injection', () => {
+  it('H1: Header root element has sticky top-0 classes', () => {
+    const { container } = setupHeader();
+    const header = container.querySelector('#topvnsport-header');
+    expect(header).not.toBeNull();
+    expect(header?.classList.contains('sticky')).toBe(true);
+    expect(header?.classList.contains('top-0')).toBe(true);
+  });
+
+  it('H2: Header does not contain injected <style> setting overflow-x: hidden on html or body', () => {
+    const { container } = setupHeader();
+    const styles = container.querySelectorAll('style');
+    for (const style of styles) {
+      expect(style.textContent).not.toMatch(/html.*body.*overflow-x:\s*hidden/i);
+      expect(style.textContent).not.toMatch(/overflow-x:\s*hidden/i);
+    }
+  });
+
+  it('H3: Document body and html have clean overflow when drawer is closed', () => {
+    setupHeader();
+    expect(document.body.style.overflow).toBe('');
+    expect(document.documentElement.style.overflow).toBe('');
+  });
+});
