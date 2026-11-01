@@ -22,7 +22,7 @@ export default function Footer({ categories, products }: FooterProps) {
       <TrustBadges />
 
       <section className="bg-footer-bg text-white px-[24px] pt-[56px] pb-[36px]">
-        <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-[36px]">
+        <div className={`max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-[36px] ${categoryLinks.length > 0 ? 'lg:grid-cols-[1.5fr_1fr_1fr]' : 'lg:grid-cols-[1.5fr_1fr]'}`}>
           <div>
             <h5 className={HEADING}>TOPVNSPORT — BADMINTON SPECIALTY STORE</h5>
             <p className={TEXT}>Hệ thống bán lẻ và đan vợt cầu lông chuyên nghiệp O2O. Đồng bộ tồn kho và biến thể thời gian thực từ hệ thống VOMA PIM.</p>

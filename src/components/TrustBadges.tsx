@@ -1,10 +1,11 @@
 import React from 'react';
 
 // Dải cam kết đầu footer (bản thiết kế /design/index.html .trust-strip).
+// Bỏ Victor/Kizuna và "Giao Hỏa Tốc": không có dữ liệu chứng minh (spec 37f60f5b).
 const TRUST_ITEMS = [
-  { title: '100% Chính Hãng', text: 'Phân phối chính thức Yonex, Li-Ning, Victor, Kizuna. Đền gấp 10 lần nếu phát hiện hàng giả.' },
+  { title: '100% Chính Hãng', text: 'Phân phối chính thức Yonex, Li-Ning. Đền gấp 10 lần nếu phát hiện hàng giả.' },
   { title: 'Đan Vợt Điện Tử O2O', text: 'Tùy chọn cước và mức căng 9.0–13.0kg ngay khi đặt vợt.' },
-  { title: 'Giao Hỏa Tốc & Đồng Kiểm', text: 'Kiểm tra khung vợt, mã tem chống giả và độ căng mặt lưới trước khi thanh toán.' },
+  { title: 'Đồng Kiểm', text: 'Kiểm tra khung vợt, mã tem chống giả và độ căng mặt lưới trước khi thanh toán.' },
   { title: 'Showroom Trải Nghiệm', text: 'Cầm thử trực tiếp trọng lượng 3U / 4U / 5U và đo điểm cân bằng tại cửa hàng Hà Nội.' }
 ];
 
