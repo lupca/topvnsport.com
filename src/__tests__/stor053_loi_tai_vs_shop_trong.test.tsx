@@ -110,9 +110,9 @@ describe('STOR-053 trang chủ: lỗi tải sản phẩm', () => {
     const getProducts = vi.spyOn(sportApi, 'getProducts');
     products = [{ status: 500 }, PRODUCTS_ITEMS];
     renderApp('/');
-    await screen.findByText(ERR);
+    const alert = (await screen.findByText(ERR)).closest('[role="alert"]') as HTMLElement;
     expect(getProducts).toHaveBeenCalledTimes(1);
-    fireEvent.click(screen.getByRole('button', { name: 'Thử lại' }));
+    fireEvent.click(within(alert).getByRole('button', { name: 'Thử lại' }));
     expect((await screen.findAllByText(ITEMS[0].name)).length).toBeGreaterThan(0);
     expect(getProducts).toHaveBeenCalledTimes(2);
     expect(screen.queryByText(ERR)).toBeNull();

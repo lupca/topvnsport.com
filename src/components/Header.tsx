@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { ReactReduxContext } from 'react-redux';
 import { popupService } from '@topvnsport/ui-kit';
 import { clearStockNotice } from '../features/cart/cartSlice';
+import { fetchAppData } from '../features/appData/appDataSlice';
 import { Search, ShoppingBag, MapPin, Phone, ShieldCheck, Heart, User, Trophy, ChevronRight, Check, Trash, Menu, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -35,25 +36,48 @@ interface HeaderProps {
   openCart: () => void;
   products: Product[];
   categories: Category[];
+  categoriesError?: boolean;
+  productsError?: boolean;
 }
 
-export default function Header({ cartCount, openCart, products, categories }: HeaderProps) {
+export default function Header({ cartCount, openCart, products, categories, categoriesError, productsError }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
   // Báo khách khi thêm vượt tồn (cartSlice ghi stockNotice). Header luôn có mặt
   // nên là chỗ chung cho mọi nơi thêm giỏ; không có store (test riêng) thì bỏ qua.
   const store = useContext(ReactReduxContext)?.store;
+  const [, setStoreVersion] = useState(0);
   useEffect(() => {
     if (!store) return;
+    let prevCategoriesError = Boolean(store.getState().appData?.categoriesError);
+    let prevProductsError = Boolean(store.getState().appData?.productsError);
     return store.subscribe(() => {
-      const notice = store.getState().cart?.stockNotice;
+      const state = store.getState();
+      const notice = state.cart?.stockNotice;
       if (notice) {
         store.dispatch(clearStockNotice());
         void popupService.alert(notice);
       }
+      const nextCategoriesError = Boolean(state.appData?.categoriesError);
+      const nextProductsError = Boolean(state.appData?.productsError);
+      if (nextCategoriesError !== prevCategoriesError || nextProductsError !== prevProductsError) {
+        prevCategoriesError = nextCategoriesError;
+        prevProductsError = nextProductsError;
+        setStoreVersion(v => v + 1);
+      }
     });
   }, [store]);
+
+  const appDataState = store?.getState()?.appData;
+  const resolvedCategoriesError = categoriesError ?? Boolean(appDataState?.categoriesError);
+  const resolvedProductsError = productsError ?? Boolean(appDataState?.productsError);
+  const hasCatalogLoadError = Boolean(resolvedCategoriesError || resolvedProductsError);
+
+  const handleRetryCatalog = () => {
+    if (!store) return;
+    store.dispatch(fetchAppData() as unknown as Parameters<typeof store.dispatch>[0]);
+  };
   const currentView = location.pathname.includes('catalog') ? 'catalog' : location.pathname.includes('store') ? 'store-locator' : location.pathname === '/' ? 'home' : '';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -367,6 +391,21 @@ export default function Header({ cartCount, openCart, products, categories }: He
                       </div>
                     </div>
                   )}
+                  {sortedCategories.length === 0 && hasCatalogLoadError && (
+                    <div className="space-y-2">
+                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Danh Mục Sản Phẩm</h4>
+                      <div className="rounded-lg bg-red-50 border border-red-200 p-3 space-y-2">
+                        <p className="text-xs font-medium text-red-700">Chưa tải được danh mục sản phẩm.</p>
+                        <button
+                          type="button"
+                          onClick={handleRetryCatalog}
+                          className="text-xs font-bold text-white bg-brand-primary hover:bg-brand-secondary px-3 py-1.5 rounded-md transition"
+                        >
+                          Thử lại
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Hot Brands Section */}
                   <div className="space-y-2">
@@ -415,6 +454,18 @@ export default function Header({ cartCount, openCart, products, categories }: He
             {sortedCategories.map(category => (
               <button key={category.id} onClick={() => navigate(`/catalog?category=${encodeURIComponent(category.code)}`)} className="text-gray-800 hover:text-brand-primary transition shrink-0 py-1">{getCategoryLabel(category, categories)}</button>
             ))}
+            {sortedCategories.length === 0 && hasCatalogLoadError && (
+              <div className="flex items-center gap-3 text-xs">
+                <span className="text-red-700 font-medium">Chưa tải được danh mục sản phẩm.</span>
+                <button
+                  type="button"
+                  onClick={handleRetryCatalog}
+                  className="font-bold text-white bg-brand-primary hover:bg-brand-secondary px-3 py-1 rounded-md transition shrink-0"
+                >
+                  Thử lại
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </nav>
