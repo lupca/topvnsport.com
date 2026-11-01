@@ -20,7 +20,7 @@
 // ponytail: untyped req/res (no @vercel/node dependency) -- Vercel's builder
 // doesn't require the package, and this file isn't in tsconfig's `include`.
 
-function resolveCatalogGrantToken(): string | undefined {
+export function resolveCatalogGrantToken(): string | undefined {
   const raw = process.env.CATALOG_GRANT_TOKENS;
   const sellerId = process.env.STOREFRONT_SELLER_ID;
   if (!raw || !sellerId) return undefined;
