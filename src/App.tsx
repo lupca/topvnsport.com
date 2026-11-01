@@ -28,6 +28,8 @@ import {
 import HomePage from './features/home/HomePage';
 import MobileBottomNav from './features/navigation/MobileBottomNav';
 import CheckoutCallbackPage from './features/checkout/CheckoutCallbackPage';
+import { pageView } from './lib/tracking.ts';
+import { captureAttribution } from './lib/attribution.ts';
 
 const CartModal = lazy(() => import('./components/CartModal'));
 const ProductDetailRoute = lazy(() => import('./features/product/ProductDetailRoute'));
@@ -56,6 +58,11 @@ export default function App() {
   const isHome = location.pathname === '/';
   const showCategoriesError = categoriesError && !isHome;
   const showProductsError = productsError && !isHome;
+
+  useEffect(() => {
+    captureAttribution(location.search);
+    pageView(location.pathname + location.search);
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     if (isCartOpen) setHasOpenedCart(true);

@@ -92,6 +92,7 @@ export type CreateOrderPayload = {
   receiver_ward_code: string;
   delivery_option: DeliveryOption;
   payment_method: 'COD' | 'SEPAY';
+  attribution?: Record<string, string>;
 };
 
 

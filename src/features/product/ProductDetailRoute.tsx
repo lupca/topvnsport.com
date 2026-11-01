@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -5,6 +6,7 @@ import ProductDetailPage from '../../components/ProductDetailPage';
 import { addCartItemAndOpen, buildConfiguredCartItem, describeSkuSelection } from '../cart/cartSlice';
 import { StringOption } from '../../types';
 import { findProductBySlug } from '../../utils/productSlug';
+import { viewItem } from '../../lib/tracking.ts';
 
 export default function ProductDetailRoute() {
   const dispatch = useAppDispatch();
@@ -12,6 +14,16 @@ export default function ProductDetailRoute() {
   const products = useAppSelector(state => state.appData.products);
   const stringOptions = useAppSelector(state => state.appData.stringOptions);
   const product = findProductBySlug(products, slug);
+
+  useEffect(() => {
+    if (product) {
+      viewItem({
+        id: product.id,
+        name: product.name,
+        price: product.price ?? 0,
+      });
+    }
+  }, [product?.id]);
 
   if (!product) {
     return (

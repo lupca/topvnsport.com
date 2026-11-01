@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal, { getStoredCooldown, markOtpSent } from './OtpModal';
 import AdminUnitPicker from './AdminUnitPicker';
 import { AdminUnit, DeliveryOption, ShippingQuote, ShippingQuoteOption } from '../services/sport-api/types';
+import { beginCheckout, purchase, zaloAuthStart } from '../lib/tracking.ts';
+import { readAttribution } from '../lib/attribution.ts';
 
 
 export interface CartItem {
@@ -303,6 +305,20 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   // mới báo. Đang tải dữ liệu sản phẩm -> cũng khoá (chưa kết luận được gì).
   const canCheckout = !isLoadingProducts && !productsError && cartItems.every(item => isCartItemSkuValid(item, products));
 
+  const handleProceedToCheckout = () => {
+    if (!canCheckout) return;
+    beginCheckout({
+      items: cartItems.map(item => ({
+        id: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      value: itemsTotal ?? 0,
+    });
+    setStep(2);
+  };
+
   const handleCheckoutSubmit = async (e?: React.FormEvent, tokenOverride?: string) => {
     if (e) e.preventDefault();
     if (orderUncertain || isSubmitting) return;
@@ -352,6 +368,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         markOtpSent(phoneNormalized);
         setOtpNeedsResend(false);
         setIsOtpModalOpen(true);
+        zaloAuthStart();
       } catch (err: any) {
         await popupService.alert(err.message);
       } finally {
@@ -380,6 +397,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         .map(item => ` | Đan cước ${item.skuCode}: ${item.stringOption!.name} ${item.tension} Kg`)
         .join('');
 
+      const attribution = readAttribution();
+
       order = await sportApi.createOrder({
         customer: { name: fullName.trim(), phone: phoneNormalized, address: shippingAddress },
         items,
@@ -391,6 +410,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         receiver_ward_code: ward.code,
         delivery_option: deliveryOption,
         payment_method: paymentMethod === 'cod' ? 'COD' : 'SEPAY',
+        ...(attribution ? { attribution } : {}),
       });
     } catch (err: any) {
       console.error(err);
@@ -451,6 +471,17 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       method: paymentMethod,
     };
     setPlacedOrder(placed);
+
+    purchase({
+      order_number: order.order_number,
+      value: serverTotal ?? clientTotal ?? 0,
+      items: cartItems.map(item => ({
+        id: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    });
 
     // Đơn đã tạo trên OMS -> xoá giỏ NGAY, chống đặt trùng (kể cả khi bước thanh toán lỗi).
     onClearCart();
@@ -900,7 +931,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
             {step === 1 ? (
               <button
-                onClick={() => canCheckout && setStep(2)}
+                onClick={handleProceedToCheckout}
                 disabled={!canCheckout}
                 className={`w-full text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${
                   canCheckout ? 'btn-primary' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
