@@ -117,6 +117,8 @@ export default function App() {
         openCart={() => dispatch(openCart())}
         products={products}
         categories={categories}
+        categoriesError={categoriesError}
+        productsError={productsError}
       />
 
       {(showCategoriesError || showProductsError || stockError) && (
