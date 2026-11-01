@@ -8,6 +8,7 @@ import TrustBadges from '../../components/TrustBadges';
 import { inferRacketPlayStyle } from '../../utils/badmintonReadiness';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { sortProducts } from '../../utils/productSort';
+import { NO_IMAGE_URL } from '../../services/sport-api/constants';
 import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
 import BadmintonCenterSlider from './BadmintonCenterSlider';
@@ -113,7 +114,7 @@ export default function HomePage() {
         </section>
       )}
 
-      <BadmintonCenterSlider products={allInStock.slice(0, 5)} />
+      <BadmintonCenterSlider products={allInStock.filter(p => Boolean(p.image) && p.image !== NO_IMAGE_URL).slice(0, 5)} />
 
       {allInStock.length > 0 && (
         <section data-testid="instock-shelf" className="max-w-7xl mx-auto px-4 md:px-8">
