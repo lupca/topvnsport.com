@@ -1,15 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { resolveCatalogGrantToken } from './_catalogProxy.js';
+import { CDN_CACHE_CONTROL, resolveCatalogGrantToken } from './_catalogProxy.js';
 import { SITE_ORIGIN } from '../src/config/storefront.js';
 import { productHeadValues, PRODUCT_HEAD_MARK, PRODUCT_HEAD_TAGS, PRODUCT_SHELL_VALUE } from '../src/utils/productHead.js';
 import { buildProductSlugById, getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
 import { mapPmiProduct } from '../src/services/sport-api/productMappers.js';
-import { getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
+import { applyWmsStock, parseWmsStock } from '../src/services/sport-api/wmsStock.js';
+import { aggregateStock, getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
 import type { Product } from '../src/types.js';
 
 const PRODUCTS_PAGE_SIZE = 100;
 const NO_PRICE_TEXT = 'Liên hệ để biết giá';
+const WMS_TIMEOUT_MS = 4000;
 
 export function escapeHtml(unsafe: string): string {
   return unsafe.replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '\'': '&#39;', '"': '&quot;' })[c] as string);
@@ -28,6 +30,11 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
   const head = productHeadValues(product, canonicalUrl);
   const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));
   const priced = price.hasPrice && price.salePrice > 0;
+  // Availability only from WMS stock at the PDP's initial tiers; 'unknown' and 'none' omit it, never invented.
+  const stock = aggregateStock(product, initialTierValue(product, 1), initialTierValue(product, 2));
+  const availability = stock.kind === 'known'
+    ? { availability: stock.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }
+    : {};
 
   // schema.org Product from the values the page shows. offers only when a price is shown, never on NO_PRICE_TEXT.
   const sku = price.matchedVariant?.sku_code ?? product.defaultSku;
@@ -40,7 +47,7 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
     ...(head.image && { image: head.image }),
     ...(sku && { sku }),
     ...(brand && !/^no\s*brand$/i.test(brand) && { brand: { '@type': 'Brand', name: brand } }),
-    ...(priced && { offers: { '@type': 'Offer', price: price.salePrice, priceCurrency: 'VND', url: canonicalUrl } }),
+    ...(priced && { offers: { '@type': 'Offer', price: price.salePrice, priceCurrency: 'VND', url: canonicalUrl, ...availability } }),
   });
 
   // A product tag replaces the shell's own copy (one canonical for crawlers); the shell value rides along in
@@ -95,6 +102,24 @@ async function fetchAllProducts(baseUrl: string, token: string): Promise<Product
   return items.map((p) => mapPmiProduct(p, [])).filter((p): p is Product => p !== null);
 }
 
+// WMS stock map, or null on any failure. Malformed (neither stock object nor items array) is a failure, never zero stock.
+async function fetchWmsStockMap(token: string): Promise<Record<string, number> | null> {
+  const wmsUrl = process.env.WMS_API_URL;
+  if (!wmsUrl) return null;
+  try {
+    const resp = await fetch(`${wmsUrl}/public/stock`, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(WMS_TIMEOUT_MS),
+    });
+    if (resp.status !== 200) return null;
+    const data = await resp.json();
+    const wellFormed = data && ((typeof data.stock === 'object' && data.stock !== null) || Array.isArray(data.items));
+    return wellFormed ? parseWmsStock(data) : null;
+  } catch (_error) {
+    return null;
+  }
+}
+
 export default async function handler(req: any, res: any) {
   if (req?.method && req.method !== 'GET' && req.method !== 'HEAD') {
     res.setHeader('Cache-Control', 'no-store');
@@ -108,6 +133,8 @@ export default async function handler(req: any, res: any) {
   // PIM down / env missing: shoppers still get the plain SPA, crawlers are told not to cache.
   if (!baseUrl || !token) return sendHtml(res, 200, 'no-store', shell);
 
+  // WMS starts alongside the PIM pages; fetchWmsStockMap never throws.
+  const stockPromise = fetchWmsStockMap(token);
   let products: Product[] | null;
   try {
     products = await fetchAllProducts(baseUrl, token);
@@ -126,5 +153,11 @@ export default async function handler(req: any, res: any) {
   if (!product) return sendHtml(res, 404, 'no-store', shell);
 
   const canonicalUrl = `${SITE_ORIGIN}${getProductPath(product, buildProductSlugById(products))}`;
-  sendHtml(res, 200, 'public, max-age=0, s-maxage=300', renderProductPage(shell, product, canonicalUrl));
+  // A null map gives stock=undefined (never the PIM variant.stock) and a short/no-store response.
+  const stockMap = await stockPromise;
+  const [withStock] = applyWmsStock([product], stockMap);
+  const html = renderProductPage(shell, withStock, canonicalUrl);
+  if (!stockMap) return sendHtml(res, 200, 'no-store', html);
+  res.setHeader('Vercel-CDN-Cache-Control', CDN_CACHE_CONTROL);
+  sendHtml(res, 200, 'public, max-age=0, s-maxage=300', html);
 }
