@@ -11,6 +11,7 @@ import { getCategoriesSortedByCount, getCategoryLabel, getInStockCategories } fr
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
 import { getPriceDisplay } from '../utils/priceDisplay';
+import { getTrustBrands } from './TrustBadges';
 import MainNav from './MainNav';
 
 export const normalizeSearchText = (value: string) =>
@@ -85,6 +86,26 @@ export default function Header({ cartCount, openCart, products, categories, cate
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Phím '/' focus vào ô tìm kiếm nếu không đang gõ trong input/textarea/select/contentEditable
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === '/') {
+        const target = (e.target as HTMLElement | null) || (document.activeElement as HTMLElement | null);
+        const tag = target?.tagName?.toUpperCase();
+        const isEditable = Boolean(target?.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT');
+        if (!isEditable) {
+          e.preventDefault();
+          searchInputRef.current?.focus();
+        }
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   // Close search dropdown on click outside
   useEffect(() => {
@@ -136,25 +157,26 @@ export default function Header({ cartCount, openCart, products, categories, cate
     setShowSearchDropdown(false);
   };
 
+  const brands = getTrustBrands(products || []);
   const sortedCategories = getCategoriesSortedByCount(categories, products);
   const navItems = getInStockCategories(categories, products).map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs" id="topvnsport-header">
       {/* Top Bar */}
-      <div className="hidden md:flex bg-ink-primary text-white text-xs font-semibold py-2 px-4 md:px-8">
+      <div className="hidden md:flex bg-ink-primary text-white text-xs font-semibold leading-[1.5] py-[7px] px-4 md:px-8">
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3 flex-wrap">
             <button
               type="button"
               onClick={() => navigate('/stores')}
-              className="inline-flex items-center gap-2 bg-ink-secondary border border-zinc-700 px-2.5 py-0.5 rounded-full text-[11.5px] font-bold text-white hover:border-zinc-500 transition cursor-pointer"
+              className="inline-flex items-center gap-2 bg-ink-secondary border border-zinc-700 px-2.5 py-[3px] rounded-full text-[11.5px] font-bold text-white hover:border-zinc-500 transition cursor-pointer"
             >
               Showroom Hà Nội · Đan vợt lấy ngay 30p
             </button>
-            <span>Cam kết 100% chính hãng - Đền gấp 10 nếu giả</span>
+            <span>Cam kết 100% Chính Hãng{brands.length ? ` ${brands.join(', ')}` : ''} — Đền 1000% nếu phát hiện hàng giả</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 basis-full">
             <Link to="/stores" className="text-white hover:underline transition">
               Đặt lịch đan vợt O2O
             </Link>
@@ -216,13 +238,8 @@ export default function Header({ cartCount, openCart, products, categories, cate
           onClick={() => navigate('/')} 
           className="hidden md:flex items-center gap-3 cursor-pointer group shrink-0"
         >
-          <div className="w-10 h-10 bg-white rounded-lg border border-gray-100 shadow-xs flex items-center justify-center overflow-hidden group-hover:border-brand-primary/50 transition shrink-0">
-            <img 
-              src="https://down-zl-vn.img.susercontent.com/vn-11134004-820l4-mdxbg9gyt81z6e_tn.webp" 
-              alt="TopVNSport Logo" 
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
+          <div className="w-[44px] h-[44px] bg-brand-primary text-white font-display font-black text-[20px] tracking-[-0.03em] rounded-[6px] border-[1.5px] border-black flex items-center justify-center shrink-0">
+            TVN
           </div>
           <div>
             <span className="font-display font-extrabold text-2xl tracking-tight text-gray-900 block leading-none">
@@ -237,6 +254,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
           <div className="flex items-center border border-ink-primary rounded-full pl-3.5 pr-1.5 py-1 bg-white focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-brand-primary/20 transition">
             <Search className="w-4 h-4 md:w-4.5 md:h-4.5 text-gray-400 shrink-0 mr-2" />
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Tìm vợt Yonex, Lining, cước đan, giày cầu lông..."
               value={searchQuery}
@@ -255,6 +273,9 @@ export default function Header({ cartCount, openCart, products, categories, cate
                 <X className="w-4 h-4" />
               </button>
             )}
+            <kbd className="hidden md:inline-block font-mono text-[11px] font-bold text-ink-secondary bg-zinc-100 border border-line-tag rounded-[4px] px-1.5 py-0.5 mr-2 shrink-0">
+              /
+            </kbd>
             <button
               type="button"
               onClick={submitSearch}

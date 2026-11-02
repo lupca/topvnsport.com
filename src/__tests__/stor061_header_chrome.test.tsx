@@ -76,8 +76,15 @@ afterEach(() => {
 
 describe('STOR-061: Top bar chrome & contracts', () => {
   it('T1: Cam kết text exact match', () => {
-    setupHeader();
-    expect(screen.getByText('Cam kết 100% chính hãng - Đền gấp 10 nếu giả')).toBeTruthy();
+    setupHeader({
+      products: [
+        mkProduct('1', { brand: 'Yonex' }),
+        mkProduct('2', { brand: 'Li-Ning' }),
+        mkProduct('3', { brand: 'Victor' }),
+        mkProduct('4', { brand: 'Kizuna' }),
+      ],
+    });
+    expect(screen.getByText('Cam kết 100% Chính Hãng Yonex, Li-Ning, Victor, Kizuna — Đền 1000% nếu phát hiện hàng giả')).toBeTruthy();
   });
 
   it('T2: Showroom Hà Nội pill navigates to /stores', () => {
