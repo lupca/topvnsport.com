@@ -70,7 +70,7 @@ describe('STOR-087 hero 290px dưới md theo tab Mobile', () => {
   it('viewport lưới: cột giữa max 290px, cả khối căn giữa dưới md; md+ trả về justify thường', () => {
     const { container } = renderSlider();
     const viewport = container.querySelector('.center-slider-viewport')!;
-    expect(cls(viewport)).toEqual(expect.arrayContaining(['grid-cols-[18px_minmax(0,290px)_18px]', 'justify-center', 'md:justify-normal']));
+    expect(cls(viewport)).toEqual(expect.arrayContaining(['grid-cols-[26px_minmax(0,290px)_26px]', 'justify-center', 'md:justify-normal']));
     expect(cls(viewport)).not.toContain('grid-cols-[18px_minmax(0,1fr)_18px]');
   });
 

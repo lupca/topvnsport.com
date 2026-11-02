@@ -92,7 +92,7 @@ export default function HomePage() {
   return (
     <div className="space-y-12 animate-in fade-in duration-300">
       {sortedCategories.length > 0 && (
-        <section data-testid="badminton-hub-header" className="max-w-[1280px] mx-auto px-4 md:px-[24px] pt-2">
+        <section data-testid="badminton-hub-header" className="max-w-[1280px] mx-auto px-4 md:px-[24px] pt-2 max-md:mb-0">
           <div className="title-box text-center mb-4">
             <p data-testid="hub-eyebrow-mobile" className="md:hidden font-mono text-[10px] font-bold tracking-[0.12em] uppercase text-brand-primary mb-1.5">
               SPECIALTY STORE
@@ -121,10 +121,10 @@ export default function HomePage() {
                   key={chip.id}
                   data-testid={`cate-pill-${chip.code}`}
                   onClick={() => setSelectedCategory(chip.code)}
-                  className={`min-h-11 rounded-full px-3 md:px-[18px] py-1.5 md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
+                  className={`min-h-11 max-md:min-h-[40px] rounded-full px-3 max-md:px-[14px] md:px-[18px] py-1.5 max-md:py-[8px] md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
                   <span>{chip.label}</span>
-                  <span className="font-mono text-[11.5px] tabular-nums opacity-90">({chip.count})</span>
+                  <span className="md:font-mono md:text-[11.5px] tabular-nums md:opacity-90">({chip.count})</span>
                 </button>
               );
             })}
@@ -136,14 +136,14 @@ export default function HomePage() {
 
       {allInStock.length > 0 && (
         <section data-testid="instock-shelf" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
-          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5">SẢN PHẨM NỔI BẬT</h2>
+          <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
           {/* Số thật = SP còn hàng; vế đan cước chỉ khi có SP còn hàng có tầng cước (cùng luật với giỏ). */}
           <p data-testid="featured-subtitle" className={`hidden md:block text-center ${SECTION_SUB} pb-6`}>
             {`${allInStock.length} sản phẩm thật từ hệ thống PIM TopVNSport`}
             {allInStock.some(hasO2OStringing) && ' — Tích hợp cấu hình đan cước 2 tầng (Khung vợt + Loại cước & Số KG)'}
           </p>
           {allInStock.some(hasO2OStringing) && (
-            <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-xs font-semibold text-ink-secondary mt-0.5 pb-6">
+            <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-xs font-semibold text-ink-secondary mt-0.5 pb-6 max-md:mt-[2px] max-md:pb-[14px]">
               Chạm vào thẻ sản phẩm để chọn loại cước &amp; số kg
             </p>
           )}
@@ -202,8 +202,8 @@ export default function HomePage() {
 
       {sortedCategories.length > 0 && (
         <section data-testid="category-tiles" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
-          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5">Danh mục cầu lông</h2>
-          <p data-testid="category-subtitle" className={`text-center ${SECTION_SUB} pb-6`}>Đi thẳng vào từng nhóm trang thiết bị cầu lông chuyên dụng</p>
+          <h2 className="text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 max-md:pb-[12px]">Danh mục cầu lông</h2>
+          <p data-testid="category-subtitle" className={`hidden md:block text-center ${SECTION_SUB} pb-6`}>Đi thẳng vào từng nhóm trang thiết bị cầu lông chuyên dụng</p>
 
           <div data-testid="category-tile-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-[18px] lg:gap-x-6 lg:gap-y-7">
             {sortedCategories.slice(0, 8).map(cat => {
@@ -217,9 +217,9 @@ export default function HomePage() {
                   data-testid={`cat-tile-${cat.code}`}
                   onClick={() => navigate(`/catalog?category=${encodeURIComponent(cat.code)}`)}
                   aria-label={`Mở danh mục ${label}`}
-                  className="group flex flex-col bg-white border border-line-tag text-left transition hover:border-ink-primary hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
+                  className="group flex flex-col bg-white max-md:bg-transparent border max-md:border-0 border-line-tag text-left transition hover:border-ink-primary hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
                 >
-                  <div className="w-full aspect-square md:aspect-[4/3] overflow-hidden bg-brand-light border-b border-line-tag">
+                  <div className="w-full aspect-square md:aspect-[4/3] overflow-hidden bg-brand-light max-md:border max-md:border-line-strong md:border-b md:border-line-tag">
                     {image ? (
                       <img src={image} alt={label} loading="lazy" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     ) : (
@@ -228,8 +228,8 @@ export default function HomePage() {
                       </div>
                     )}
                   </div>
-                  <div className="px-3 py-3.5 text-center">
-                    <h3 className="text-sm md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition">{label}</h3>
+                  <div className="px-3 py-3.5 max-md:px-0 max-md:py-[6px] text-center">
+                    <h3 className="text-sm max-md:text-[13px] md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition">{label}</h3>
                   </div>
                 </button>
               );
