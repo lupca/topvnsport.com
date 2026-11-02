@@ -7,7 +7,7 @@ import { Search, ChevronRight, Menu, X, MapPin } from 'lucide-react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';
-import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
+import { getCategoriesSortedByCount, getCategoryLabel, getInStockCategories } from '../utils/categories';
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
 import { getPriceDisplay } from '../utils/priceDisplay';
@@ -137,6 +137,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
   };
 
   const sortedCategories = getCategoriesSortedByCount(categories, products);
+  const navItems = getInStockCategories(categories, products).map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs" id="topvnsport-header">
@@ -446,7 +447,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
         )}
       </AnimatePresence>
 
-      <MainNav categories={sortedCategories}>
+      <MainNav items={navItems}>
         {sortedCategories.length === 0 && hasCatalogLoadError && (
           <div className="flex items-center justify-center gap-3 text-xs pb-3">
             <span className="text-red-700 font-medium">Chưa tải được danh mục sản phẩm.</span>

@@ -1,33 +1,48 @@
 import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getVisibleMainNav, STRINGING_CTA_PATH } from '../config/storefront';
+import { STRINGING_CTA_PATH } from '../config/storefront';
+
+export interface MainNavItem {
+  code: string;
+  label: string;
+}
 
 interface MainNavProps {
-  categories: { code: string }[];
+  // Ngành VOMA còn hàng, đúng thứ tự và nhãn của chip trang chủ (Header truyền vào).
+  items: MainNavItem[];
   // Dòng báo lỗi tải danh mục (STOR-057) -- nằm trong <nav>.
   children?: ReactNode;
 }
 
 const ACTIVE_UNDERLINE = 'text-brand-primary after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:bg-brand-primary';
 
-export default function MainNav({ categories, children }: MainNavProps) {
+const linkClass = (active: boolean) =>
+  `relative inline-flex items-center py-[13px] font-display font-extrabold text-[13.5px] leading-[1.5] tracking-[0.03em] uppercase hover:text-brand-primary ${active ? ACTIVE_UNDERLINE : 'text-ink-primary'}`;
+
+export default function MainNav({ items, children }: MainNavProps) {
   const { pathname, search } = useLocation();
   const activeCategory = pathname === '/catalog' ? new URLSearchParams(search).get('category') : null;
+  const homeActive = pathname === '/';
 
   return (
     <>
       <nav aria-label="Điều hướng chính" className="bg-white border-t border-zinc-200">
         <ul className="max-w-[1280px] mx-auto px-[24px] flex flex-wrap items-center justify-center gap-[32px]">
-          {getVisibleMainNav(categories).map(entry => {
-            const active = entry.codes ? entry.codes.includes(activeCategory ?? '') : pathname === entry.to;
+          <li>
+            <Link to="/" aria-current={homeActive ? 'page' : undefined} className={linkClass(homeActive)}>
+              BADMINTON (TRANG CHỦ)
+            </Link>
+          </li>
+          {items.map(item => {
+            const active = activeCategory === item.code;
             return (
-              <li key={entry.menuLabel}>
+              <li key={item.code}>
                 <Link
-                  to={entry.to}
+                  to={`/catalog?category=${encodeURIComponent(item.code)}`}
                   aria-current={active ? 'page' : undefined}
-                  className={`relative inline-flex items-center py-[13px] font-display font-extrabold text-[13.5px] leading-[1.5] tracking-[0.03em] uppercase hover:text-brand-primary ${active ? ACTIVE_UNDERLINE : 'text-ink-primary'}`}
+                  className={linkClass(active)}
                 >
-                  {entry.menuLabel}
+                  {item.label}
                 </Link>
               </li>
             );

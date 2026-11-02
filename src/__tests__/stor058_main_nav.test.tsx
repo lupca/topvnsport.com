@@ -34,10 +34,16 @@ const LIVE: Category[] = [
   { id: 1491, code: 'VC001491', name: 'Vợt Cầu Lông', parent_id: null, display_name: 'Thể Thao > Cầu Lông > Vợt Cầu Lông' }
 ];
 
+// STOR-076: menu lấy nhãn ngành VOMA thật (không còn mục cố định 'VỢT CẦU LÔNG').
+const NAV_ITEMS = [
+  { code: 'VC001489', label: 'Lưới Cầu Lông' },
+  { code: 'VC001491', label: 'Vợt Cầu Lông' }
+];
+
 function renderNav(path = '/') {
   return render(
     <MemoryRouter initialEntries={[path]}>
-      <MainNav categories={LIVE} />
+      <MainNav items={NAV_ITEMS} />
     </MemoryRouter>
   );
 }
@@ -48,12 +54,12 @@ const menuLabels = () =>
 describe('STOR-058 MainNav', () => {
   afterEach(cleanup);
 
-  it('với bốn ngành live: chỉ BADMINTON (TRANG CHỦ) và VỢT CẦU LÔNG', () => {
+  it('BADMINTON (TRANG CHỦ) đứng đầu, sau đó là đúng nhãn ngành truyền vào theo thứ tự', () => {
     renderNav();
-    expect(menuLabels()).toEqual(['BADMINTON (TRANG CHỦ)', 'VỢT CẦU LÔNG']);
+    expect(menuLabels()).toEqual(['BADMINTON (TRANG CHỦ)', 'Lưới Cầu Lông', 'Vợt Cầu Lông']);
   });
 
-  it('link menu: uppercase font-display font-extrabold; VỢT CẦU LÔNG trỏ ngành vợt theo mã', () => {
+  it('link menu: uppercase font-display font-extrabold; Vợt Cầu Lông trỏ ngành vợt theo mã', () => {
     renderNav();
     const links = within(screen.getByRole('navigation', { name: 'Điều hướng chính' })).getAllByRole('link');
     for (const link of links) {
@@ -61,13 +67,13 @@ describe('STOR-058 MainNav', () => {
       expect(link.className).toContain('font-display');
       expect(link.className).toContain('font-extrabold');
     }
-    expect(screen.getByRole('link', { name: 'VỢT CẦU LÔNG' }).getAttribute('href')).toBe('/catalog?category=VC001491');
+    expect(screen.getByRole('link', { name: 'Vợt Cầu Lông' }).getAttribute('href')).toBe('/catalog?category=VC001491');
   });
 
   it.each([
     ['/', 'BADMINTON (TRANG CHỦ)'],
-    ['/catalog?category=VC001491', 'VỢT CẦU LÔNG'],
-    ['/catalog?category=VC001489', null],
+    ['/catalog?category=VC001491', 'Vợt Cầu Lông'],
+    ['/catalog?category=VC000005', null],
     ['/stores', null]
   ])('ở %s chỉ link khớp vị trí có gạch chân active', (path, activeLabel) => {
     renderNav(path);
@@ -130,10 +136,10 @@ describe('STOR-058 trang chủ không còn dải cam kết dưới menu', () => 
       </Provider>
     );
     await waitFor(() => expect(container.querySelector('#topvnsport-header nav')).not.toBeNull());
-    await waitFor(() => expect(screen.getByRole('link', { name: 'VỢT CẦU LÔNG' })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Vợt Cầu Lông' })).toBeInTheDocument());
     expect(container.querySelector('#trust-badges-ribbon')).toBeNull();
     const nav = container.querySelector('#topvnsport-header nav') as HTMLElement;
-    expect(within(nav).getAllByRole('link').map(a => a.textContent)).toEqual(['BADMINTON (TRANG CHỦ)', 'VỢT CẦU LÔNG']);
+    expect(within(nav).getAllByRole('link').map(a => a.textContent)).toEqual(['BADMINTON (TRANG CHỦ)', 'Lưới Cầu Lông', 'Vợt Cầu Lông']);
     expect(container.querySelector('footer')?.firstElementChild?.getAttribute('data-testid')).toBe('trust-row');
   });
 });
