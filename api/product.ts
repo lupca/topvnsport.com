@@ -15,9 +15,10 @@ export function escapeHtml(unsafe: string): string {
   return unsafe.replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '\'': '&#39;', '"': '&quot;' })[c] as string);
 }
 
-function priceText(product: Product): string {
-  const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));
-  return price.hasPrice && price.salePrice > 0 ? formatVnd(price.salePrice) : NO_PRICE_TEXT;
+// JSON for an inline <script>: '<' and U+2028/2029 are \u-escaped so a value can neither close the
+// script element nor break a JS parser. JSON.parse returns the original text.
+function inlineJson(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 }
 
 // Pure: shell + product -> HTML. Missing data is omitted, never composed.
@@ -25,6 +26,22 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
   const name = escapeHtml(product.name);
   const description = (product.description ?? '').trim();
   const head = productHeadValues(product, canonicalUrl);
+  const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));
+  const priced = price.hasPrice && price.salePrice > 0;
+
+  // schema.org Product from the values the page shows. offers only when a price is shown, never on NO_PRICE_TEXT.
+  const sku = price.matchedVariant?.sku_code ?? product.defaultSku;
+  const brand = product.brand?.trim();
+  const jsonLd = inlineJson({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    ...(description && { description }),
+    ...(head.image && { image: head.image }),
+    ...(sku && { sku }),
+    ...(brand && !/^no\s*brand$/i.test(brand) && { brand: { '@type': 'Brand', name: brand } }),
+    ...(priced && { offers: { '@type': 'Offer', price: price.salePrice, priceCurrency: 'VND', url: canonicalUrl } }),
+  });
 
   // A product tag replaces the shell's own copy (one canonical for crawlers); the shell value rides along in
   // data-shell-value so the SPA can restore it off product pages. A field the product lacks keeps the shell tag.
@@ -44,7 +61,7 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
 
   const body = [
     `<h1>${name}</h1>`,
-    `<p>${escapeHtml(priceText(product))}</p>`,
+    `<p>${escapeHtml(priced ? formatVnd(price.salePrice) : NO_PRICE_TEXT)}</p>`,
     description && `<p>${escapeHtml(description)}</p>`,
   ].filter(Boolean).join('');
 
@@ -53,7 +70,7 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
     // data-shell-title keeps the shell title in the document so the SPA restores it off product pages.
     .replace(/<title>([\s\S]*?)<\/title>/, (_m, shellTitle: string) =>
       `<title data-shell-title="${shellTitle.replace(/"/g, '&quot;')}">${name}</title>`)
-    .replace('</head>', () => `  ${headTags}\n  </head>`)
+    .replace('</head>', () => `  <script type="application/ld+json">${jsonLd}</script>\n    ${headTags}\n  </head>`)
     .replace('<div id="root"></div>', () => `<div id="root">${body}</div>`);
 }
 
