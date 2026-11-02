@@ -207,9 +207,13 @@ describe('STOR-061: Removed legacy elements absence', () => {
     expect(screen.queryByText(/Xu hướng/i)).toBeNull();
   });
 
-  it('R2: Header contains no "Tra cứu bảo hành"', () => {
+  it('R2: Top bar has "Tra cứu bảo hành" linking to /stores, between O2O and hotline with | on each side', () => {
     setupHeader();
-    expect(screen.queryByText(/Tra cứu bảo hành/i)).toBeNull();
+    const link = screen.getByRole('link', { name: 'Tra cứu bảo hành' });
+    expect(link.getAttribute('href')).toBe('/stores');
+    const row = Array.from(link.parentElement!.children).map(el => el.textContent?.trim());
+    const i = row.indexOf('Tra cứu bảo hành');
+    expect(row.slice(i - 2, i + 3)).toEqual(['Đặt lịch đan vợt O2O', '|', 'Tra cứu bảo hành', '|', 'Hotline: 097 6007006']);
   });
 
   it('R3: Header contains no "Kiểm tra đơn hàng"', () => {
