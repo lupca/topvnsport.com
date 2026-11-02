@@ -1,0 +1,66 @@
+## topbar outer: MUTATED -> RED
+    × top bar: 12px, py 8px, lề 24px (ẩn dưới md, giữ leading 1.5) 43ms
+    Tests  1 failed | 9 passed (10)
+## topbar outer: REVERTED -> GREEN
+    Tests  10 passed (10)
+## topbar inner: MUTATED -> RED
+    × top bar inner: khung 1280px 13ms
+    Tests  1 failed | 9 passed (10)
+## topbar inner: REVERTED -> GREEN
+    Tests  10 passed (10)
+## header row: MUTATED -> RED
+    × hàng header: md 1280px, lề 24px, py 16px, gap 24px; token mobile giữ nguyên 31ms
+    Tests  1 failed | 9 passed (10)
+## header row: REVERTED -> GREEN
+    Tests  10 passed (10)
+## wordmark: MUTATED -> RED
+    × wordmark: 24px / 900 / -0.03em / đen 32ms
+    Tests  1 failed | 9 passed (10)
+## wordmark: REVERTED -> GREEN
+    Tests  10 passed (10)
+## tagline: MUTATED -> RED
+    × tagline: mono 10.5px / 700 / 0.12em / ink-secondary / mt 4px 12ms
+    Tests  1 failed | 9 passed (10)
+## tagline: REVERTED -> GREEN
+    Tests  10 passed (10)
+## search wrap: MUTATED -> RED
+    × ô tìm: wrap md 540px 12ms
+    Tests  1 failed | 9 passed (10)
+## search wrap: REVERTED -> GREEN
+    Tests  10 passed (10)
+## search box: MUTATED -> RED
+    × ô tìm: viền 1.5px, py 8px, lề 18/14px ở md; token mobile giữ nguyên 11ms
+    Tests  1 failed | 9 passed (10)
+## search box: REVERTED -> GREEN
+    Tests  10 passed (10)
+## search input: MUTATED -> RED
+    × input: md 14px (mobile text-xs), placeholder không đổi trên mọi tuyến 11ms
+    Tests  1 failed | 9 passed (10)
+## search input: REVERTED -> GREEN
+    Tests  10 passed (10)
+## search button: MUTATED -> RED
+    × nút Tìm kiếm: md 12px, line-height normal, px 12px, py 6px; token mobile giữ nguyên 52ms
+    Tests  1 failed | 9 passed (10)
+## search button: REVERTED -> GREEN
+    Tests  10 passed (10)
+## pill copy: MUTATED -> RED
+    × pill showroom giữ nguyên chữ, không .live-dot, không "Đang mở cửa" 10ms
+    Tests  1 failed | 9 passed (10)
+## pill copy: REVERTED -> GREEN
+    Tests  10 passed (10)
+## live-dot: MUTATED -> RED
+    × pill showroom giữ nguyên chữ, không .live-dot, không "Đang mở cửa" 12ms
+    Tests  1 failed | 9 passed (10)
+## live-dot: REVERTED -> GREEN
+    Tests  10 passed (10)
+## placeholder: MUTATED -> RED
+    × input: md 14px (mobile text-xs), placeholder không đổi trên mọi tuyến 14ms
+    Tests  1 failed | 9 passed (10)
+## placeholder: REVERTED -> GREEN
+    Tests  10 passed (10)
+## mobile tokens (row): MUTATED -> RED
+    × hàng header: md 1280px, lề 24px, py 16px, gap 24px; token mobile giữ nguyên 14ms
+    Tests  1 failed | 9 passed (10)
+## mobile tokens (row): REVERTED -> GREEN
+    Tests  10 passed (10)
+MUTATION OK
