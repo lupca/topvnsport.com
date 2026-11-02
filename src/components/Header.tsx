@@ -164,8 +164,8 @@ export default function Header({ cartCount, openCart, products, categories, cate
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs" id="topvnsport-header">
       {/* Top Bar */}
-      <div className="hidden md:flex bg-ink-primary text-white text-xs font-semibold leading-[1.5] py-[7px] px-4 md:px-8">
-        <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-4 flex-wrap">
+      <div data-testid="topbar" className="hidden md:flex bg-ink-primary text-white text-[12px] font-semibold leading-[1.5] py-[8px] px-[24px]">
+        <div data-testid="topbar-inner" className="max-w-[1280px] mx-auto w-full flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3 flex-wrap">
             <button
               type="button"
@@ -232,7 +232,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
       </div>
 
       {/* Main Header Row */}
-      <div className={`max-w-7xl mx-auto px-[16px] md:px-6 lg:px-8 py-2 md:py-4 ${currentView === 'home' ? 'hidden md:flex' : 'flex'} flex-col md:flex-row items-center justify-between gap-2 md:gap-4`}>
+      <div data-testid="header-main-row" className={`max-w-7xl md:max-w-[1280px] mx-auto px-[16px] md:px-[24px] py-2 md:py-[16px] ${currentView === 'home' ? 'hidden md:flex' : 'flex'} flex-col md:flex-row items-center justify-between gap-2 md:gap-[24px]`}>
         {/* Desktop Brand Logo */}
         <div 
           onClick={() => navigate('/')} 
@@ -242,16 +242,16 @@ export default function Header({ cartCount, openCart, products, categories, cate
             TVN
           </div>
           <div>
-            <span className="font-display font-extrabold text-2xl tracking-tight text-gray-900 block leading-none">
+            <span data-testid="brand-wordmark" className="font-display font-black text-[24px] tracking-[-0.03em] text-ink-primary block leading-none">
               TOPVN<span className="text-brand-primary">SPORT</span>
             </span>
-            <p className="text-[9px] text-gray-400 tracking-widest uppercase font-semibold mt-0.5">Badminton Specialty Store</p>
+            <p data-testid="brand-tagline" className="font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-ink-secondary mt-[4px]">Badminton Specialty Store</p>
           </div>
         </div>
 
         {/* Search Bar Widget with suggestions */}
-        <div className="w-full min-w-0 flex-1 md:max-w-xl relative" ref={dropdownRef}>
-          <div className="flex items-center border border-ink-primary rounded-full pl-3.5 pr-1.5 py-1 bg-white focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-brand-primary/20 transition">
+        <div id="search-wrap" className="w-full min-w-0 flex-1 md:max-w-[540px] relative" ref={dropdownRef}>
+          <div data-testid="search-box" className="flex items-center border border-ink-primary md:border-[1.5px] rounded-full pl-3.5 pr-1.5 py-1 md:py-[8px] md:pl-[18px] md:pr-[14px] bg-white focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-brand-primary/20 transition">
             <Search className="w-4 h-4 md:w-4.5 md:h-4.5 text-gray-400 shrink-0 mr-2" />
             <input
               ref={searchInputRef}
@@ -261,7 +261,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.trim().length >= 2 && setShowSearchDropdown(true)}
               onKeyDown={(e) => { if (e.key === 'Enter') submitSearch(); }}
-              className={`${currentView === 'home' ? 'hidden md:block ' : ''}w-full min-w-0 bg-transparent text-xs md:text-sm font-semibold text-ink-primary placeholder:text-ink-muted placeholder:font-normal focus:outline-hidden`}
+              className={`${currentView === 'home' ? 'hidden md:block ' : ''}w-full min-w-0 bg-transparent text-xs md:text-[14px] font-semibold text-ink-primary placeholder:text-ink-muted placeholder:font-normal focus:outline-hidden`}
             />
             {searchQuery !== '' && (
               <button
@@ -279,7 +279,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
             <button
               type="button"
               onClick={submitSearch}
-              className="bg-ink-primary hover:bg-brand-primary text-white text-xs font-bold px-3 py-1.5 rounded-full transition shrink-0"
+              className="bg-ink-primary hover:bg-brand-primary text-white text-xs md:text-[12px] md:leading-[normal] font-bold px-3 md:px-[12px] py-1.5 md:py-[6px] rounded-full transition shrink-0"
             >
               Tìm kiếm
             </button>
