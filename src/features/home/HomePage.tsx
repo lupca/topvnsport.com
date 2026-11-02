@@ -106,7 +106,7 @@ export default function HomePage() {
             data-testid="cate-select-bar"
             role="tablist"
             aria-label="Danh mục"
-            className="cate_select mx-auto w-fit max-w-full bg-pill-bg border border-line-tag rounded-2xl md:rounded-full p-2 md:p-1.5 flex flex-wrap items-center justify-center gap-1"
+            className="cate_select mx-auto w-fit max-w-full bg-pill-bg border border-line-tag rounded-2xl md:rounded-full p-2 md:p-1.5 flex flex-nowrap overflow-x-auto justify-start md:flex-wrap md:overflow-visible md:justify-center items-center gap-1"
           >
             {[{ code: ALL, id: ALL, label: 'Tất cả', count: allInStock.length }, ...sortedCategories.map(cat => ({ code: cat.code, id: cat.id, label: getCategoryLabel(cat, categories), count: categoryCounts[cat.code] || 0 }))].map(chip => {
               const active = selectedCategory === chip.code;
@@ -140,7 +140,7 @@ export default function HomePage() {
             {allInStock.some(hasO2OStringing) && ' — Tích hợp cấu hình đan cước 2 tầng (Khung vợt + Loại cước & Số KG)'}
           </p>
 
-          <div className="flex flex-col items-start gap-3 bg-brand-light border border-line-tag rounded-[10px] px-4 py-3 mb-7">
+          <div className="hidden md:flex flex-col items-start gap-3 bg-brand-light border border-line-tag rounded-[10px] px-4 py-3 mb-7">
             <div data-testid="quick-filter-bar" className="flex flex-wrap items-center gap-2">
               <span className="font-mono text-[11.5px] font-bold uppercase text-ink-secondary mr-1">Lọc nhanh:</span>
               {[
@@ -179,7 +179,7 @@ export default function HomePage() {
           </div>
 
           {shown.length === 0 && <p role="status" className="text-center text-sm font-medium text-ink-muted py-8">Không có sản phẩm còn hàng phù hợp bộ lọc.</p>}
-          <div data-testid="featured-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+          <div data-testid="featured-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-[16px] md:gap-6">
             {shown.map(p => (
               <ProductCard
                 key={p.id}
@@ -211,7 +211,7 @@ export default function HomePage() {
                   aria-label={`Mở danh mục ${label}`}
                   className="group flex flex-col bg-white border border-line-tag text-left transition hover:border-ink-primary hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
                 >
-                  <div className="w-full aspect-[4/3] overflow-hidden bg-brand-light border-b border-line-tag">
+                  <div className="w-full aspect-square md:aspect-[4/3] overflow-hidden bg-brand-light border-b border-line-tag">
                     {image ? (
                       <img src={image} alt={label} loading="lazy" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     ) : (
@@ -233,7 +233,7 @@ export default function HomePage() {
               type="button"
               data-testid="view-all-catalog"
               onClick={() => navigate('/catalog')}
-              className="inline-flex items-center justify-center w-[420px] max-w-[90%] h-[54px] bg-black text-white border-2 border-black rounded-[5px] font-display text-[15.5px] font-extrabold tracking-wider uppercase transition hover:bg-brand-primary hover:border-brand-primary"
+              className="inline-flex items-center justify-center w-full md:w-[420px] md:max-w-[90%] h-[54px] bg-black text-white border-2 border-black rounded-[5px] font-display text-[15.5px] font-extrabold tracking-wider uppercase transition hover:bg-brand-primary hover:border-brand-primary"
             >
               XEM TẤT CẢ SẢN PHẨM CẦU LÔNG
             </button>
