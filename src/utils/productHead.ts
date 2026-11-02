@@ -26,18 +26,34 @@ export const PRODUCT_HEAD_TAGS = [
   ['meta', 'property', 'og:image', 'content', 'image'],
 ] as const;
 
-// The shell title as index.html wrote it: api/product.ts keeps it in data-shell-title on a product landing.
-export function readShellTitle(doc: Document): string {
-  return doc.querySelector('title')?.dataset.shellTitle ?? doc.title;
+// Server-inserted head tags carry this attribute, so the SPA can tell them from the shell's own.
+export const PRODUCT_HEAD_MARK = 'data-product-head';
+
+export interface ShellHead {
+  title: string;
+  tags: Partial<Record<(typeof PRODUCT_HEAD_TAGS)[number][2], string>>;
 }
 
-// head = null restores the shell: shell title, none of the product tags.
-// ponytail: index.html has none of PRODUCT_HEAD_TAGS, so removing them restores the shell; snapshot them at load if it ever gets one.
-export function syncHead(doc: Document, head: ProductHead | null, shellTitle: string): void {
-  doc.title = head?.title ?? shellTitle;
+// The shell head as index.html wrote it, read once at load. On a product landing api/product.ts keeps the
+// shell title in data-shell-title and marks its own tags, so neither is mistaken for a shell value.
+export function readShellHead(doc: Document): ShellHead {
+  const tags: ShellHead['tags'] = {};
+  for (const [tag, keyAttr, key, valueAttr] of PRODUCT_HEAD_TAGS) {
+    const value = doc.head.querySelector(`${tag}[${keyAttr}="${key}"]:not([${PRODUCT_HEAD_MARK}])`)?.getAttribute(valueAttr);
+    if (value) tags[key] = value;
+  }
+  return { title: doc.querySelector('title')?.dataset.shellTitle ?? doc.title, tags };
+}
+
+// head = null restores the shell. A product value wins; a field the product lacks falls back to the shell's
+// own tag, as in the server render (it only appends). One copy per tag survives; none if neither has a value.
+export function syncHead(doc: Document, head: ProductHead | null, shell: ShellHead): void {
+  doc.title = head?.title ?? shell.title;
   for (const [tag, keyAttr, key, valueAttr, field] of PRODUCT_HEAD_TAGS) {
-    const value = head?.[field];
-    let el = doc.head.querySelector(`${tag}[${keyAttr}="${key}"]`);
+    const value = head?.[field] ?? shell.tags[key];
+    const copies = Array.from(doc.head.querySelectorAll(`${tag}[${keyAttr}="${key}"]`));
+    copies.slice(1).forEach((d) => d.remove());
+    let el = copies[0];
     if (!value) {
       el?.remove();
       continue;

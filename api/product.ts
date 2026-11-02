@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { resolveCatalogGrantToken } from './_catalogProxy.js';
 import { SITE_ORIGIN } from '../src/config/storefront.js';
-import { productHeadValues, PRODUCT_HEAD_TAGS } from '../src/utils/productHead.js';
+import { productHeadValues, PRODUCT_HEAD_MARK, PRODUCT_HEAD_TAGS } from '../src/utils/productHead.js';
 import { buildProductSlugById, getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
 import { mapPmiProduct } from '../src/services/sport-api/productMappers.js';
 import { getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
@@ -28,7 +28,7 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
 
   const headTags = PRODUCT_HEAD_TAGS
     .filter(([, , , , field]) => head[field])
-    .map(([tag, keyAttr, key, valueAttr, field]) => `<${tag} ${keyAttr}="${key}" ${valueAttr}="${escapeHtml(head[field]!)}" />`)
+    .map(([tag, keyAttr, key, valueAttr, field]) => `<${tag} ${keyAttr}="${key}" ${valueAttr}="${escapeHtml(head[field]!)}" ${PRODUCT_HEAD_MARK} />`)
     .join('\n    ');
 
   const body = [

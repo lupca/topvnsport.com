@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { renderProductPage } from '../../api/product';
 import { SITE_ORIGIN } from '../config/storefront';
-import { readShellTitle } from '../utils/productHead';
+import { productHeadValues, readShellHead, syncHead } from '../utils/productHead';
 
 const A = {
   id: 'a1', name: 'Vợt Yonex Astrox 99', description: 'Mô tả A', gallery: ['https://cdn.voma.vn/a.jpg'],
@@ -148,12 +148,52 @@ describe('STOR-072 head sync on client-side navigation', () => {
     });
 });
 
-describe('STOR-072 readShellTitle', () => {
+describe('STOR-072 readShellHead', () => {
   it('prefers data-shell-title, falls back to document.title', () => {
     const doc = new DOMParser().parseFromString('<html><head><title>X</title></head></html>', 'text/html');
-    expect(readShellTitle(doc)).toBe('X');
+    expect(readShellHead(doc).title).toBe('X');
     doc.querySelector('title')!.dataset.shellTitle = 'Shell';
-    expect(readShellTitle(doc)).toBe('Shell');
+    expect(readShellHead(doc).title).toBe('Shell');
+  });
+});
+
+describe('STOR-072 shell-owned head tags (finding 3c02e75f)', () => {
+  // A shell that already has four of the six tags; a product landing appends a second, marked copy of each.
+  const SHELL = INDEX_HTML.replace('</head>', () => [
+    '<link rel="canonical" href="https://shell/" />',
+    '<meta name="description" content="shell desc" />',
+    '<meta property="og:title" content="shell og" />',
+    '<meta property="og:image" content="https://shell/og.jpg" />',
+    '</head>'].join('\n'));
+  const SHELL_TAGS = {
+    title: SHELL_TITLE, canonical: 'https://shell/', description: 'shell desc', ogTitle: 'shell og', ogUrl: null, ogDescription: null, ogImage: 'https://shell/og.jpg',
+  };
+  const COUNT_SEL = 'link[rel="canonical"], meta[name="description"], meta[property^="og:"]';
+  const urlA = `${SITE_ORIGIN}/product/vot-yonex-astrox-99`;
+  const urlB = `${SITE_ORIGIN}/product/giay-lining`;
+
+  it('landing on A -> shell restores the shell values, one copy each; -> B falls back to shell only where B lacks data', () => {
+    const doc = new DOMParser().parseFromString(renderProductPage(SHELL, A, urlA), 'text/html');
+    document.head.innerHTML = doc.head.innerHTML;
+    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(10); // 4 shell + 6 product
+    const shell = readShellHead(document);
+    expect(shell).toEqual({ title: SHELL_TITLE, tags: {
+      canonical: 'https://shell/', description: 'shell desc', 'og:title': 'shell og', 'og:image': 'https://shell/og.jpg',
+    } });
+
+    syncHead(document, null, shell);
+    expect(head()).toEqual(SHELL_TAGS);
+    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(4);
+
+    syncHead(document, productHeadValues(B, urlB), shell);
+    expect(head()).toEqual({
+      title: B.name, canonical: urlB, description: 'shell desc', ogTitle: B.name, ogUrl: urlB, ogDescription: null, ogImage: 'https://shell/og.jpg',
+    });
+    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(5);
+
+    syncHead(document, null, shell);
+    expect(head()).toEqual(SHELL_TAGS);
+    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(4);
   });
 });
 

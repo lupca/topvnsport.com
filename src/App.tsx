@@ -32,10 +32,10 @@ import { pageView } from './lib/tracking.ts';
 import { captureAttribution } from './lib/attribution.ts';
 import { SITE_ORIGIN } from './config/storefront';
 import { buildProductSlugById, findProductBySlug, getProductPath } from './utils/productSlug';
-import { productHeadValues, readShellTitle, syncHead } from './utils/productHead';
+import { productHeadValues, readShellHead, syncHead } from './utils/productHead';
 
-// Read once at load, before any route change rewrites document.title.
-const SHELL_TITLE = readShellTitle(document);
+// Read once at load, before any route change rewrites the head.
+const SHELL_HEAD = readShellHead(document);
 
 const CartModal = lazy(() => import('./components/CartModal'));
 const ProductDetailRoute = lazy(() => import('./features/product/ProductDetailRoute'));
@@ -82,7 +82,7 @@ export default function App() {
     }
     syncHead(document, product
       ? productHeadValues(product, `${SITE_ORIGIN}${getProductPath(product, buildProductSlugById(products))}`)
-      : null, SHELL_TITLE);
+      : null, SHELL_HEAD);
   }, [location.pathname, products]);
 
   useEffect(() => {
