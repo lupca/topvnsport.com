@@ -121,10 +121,10 @@ export default function HomePage() {
                   key={chip.id}
                   data-testid={`cate-pill-${chip.code}`}
                   onClick={() => setSelectedCategory(chip.code)}
-                  className={`min-h-11 max-md:min-h-[40px] rounded-full px-3 max-md:px-[14px] md:px-[18px] py-1.5 max-md:py-[8px] md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
+                  className={`min-h-11 max-md:min-h-[40px] rounded-full px-3 max-md:px-[14px] md:px-[18px] py-1.5 max-md:py-[8px] md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 max-md:!font-sans ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
                   <span>{chip.label}</span>
-                  <span className="md:font-mono md:text-[11.5px] tabular-nums md:opacity-90">({chip.count})</span>
+                  <span className="max-md:font-sans md:font-mono md:text-[11.5px] tabular-nums md:opacity-90">({chip.count})</span>
                 </button>
               );
             })}
@@ -229,7 +229,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <div className="px-3 py-3.5 max-md:px-0 max-md:py-[6px] text-center">
-                    <h3 className="text-sm max-md:text-[13px] md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition">{label}</h3>
+                    <h3 className="text-sm max-md:text-[13px] md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition max-md:!font-sans">{label}</h3>
                   </div>
                 </button>
               );
