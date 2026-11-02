@@ -200,6 +200,7 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
   return {
     id: String(pmiProduct.id),
     slug: slugifyProductName(name),
+    vomaSlug: pmiProduct.slug?.trim().toLowerCase() || undefined,
     name,
     brand,
     image,

@@ -1,0 +1,527 @@
+[
+  {
+    "id": 638,
+    "product_code": "VCLYA1F1CAHQTBVCVCC-DB78",
+    "slug": "vot-cau-long-yonex-arcsaber-1-feel-1-clear-abilitychinh-hang-qua-tang-bao-vot-cot-vot-cuon-can-vclya1f1cahqtbvcvcc-db78",
+    "name": "Vợt cầu lông Yonex Arcsaber 1 Feel,1 Clear, Abilitychính hãng. Quà tặng bao vợt, cốt vợt, cuốn cán",
+    "description": "🌟 Giới thiệu vợt Yonex ArcSaber 1\n\nYonex ArcSaber 1 là cây vợt thuộc dòng ArcSaber – dòng vợt nổi tiếng của Yonex tập trung vào khả năng điều cầu chính xác, phản tạt nhanh và cảm giác cầu ổn định. Đây là lựa chọn lý tưởng cho người mới chơi đến trung cấp, những ai cần một cây vợt dễ làm quen, bền bỉ và đa dụng.\n\n⚙️ Thông số kỹ thuật Yonex ArcSaber 1\n\nThương hiệu: Yonex\nĐộ cứng: Siêu dẻo (Flexible Shaft)\nChất liệu: HM Graphite cao cấp\nTrọng lượng: 5U (rất nhẹ)\nChu vi cán vợt: G5\nMức căng dây khuyến nghị: 20 – 30 lbs (tương đương khoảng 9 – 13.5 kg)\nĐiểm cân bằng: khoảng 295 – 300 mm, thuộc loại cân bằng\nCông nghệ khung: ISOMETRIC mở rộng điểm ngọt, AERO-BOX FRAME giúp giảm lực cản không khí và tăng độ bền\n\n🎯 Ưu điểm nổi bật\n\nKhung Isometric: Mở rộng điểm ngọt, giúp đánh cầu ổn định và chuẩn xác hơn.\nĐộ cứng trung bình: Không quá cứng nên dễ điều khiển, giảm chấn động khi tiếp xúc cầu.\nThiết kế thanh thoát, hiện đại: Màu sắc trẻ trung, dễ phối hợp với phụ kiện.\n\n👌 Đối tượng nên chọn ArcSaber 1\n\nNgười mới chơi cầu lông muốn tập luyện với một cây vợt chất lượng, dễ kiểm soát.\nNgười chơi phong trào cần vợt đa dụng, vừa tấn công được, vừa thủ chắc chắn.\nHọc sinh – sinh viên, người chơi phong cách điều cầu, phản tạt nhanh, phòng thủ linh hoạt.\n\n👉 Với mức giá hợp lý trong dòng Yonex, ArcSaber 1 là một lựa chọn đáng cân nhắc cho bất kỳ ai muốn sở hữu một cây vợt dễ chơi, bền bỉ, ổn định và chính xác ngay từ khi bắt đầu.",
+    "category_id": null,
+    "voma_category_id": 1491,
+    "family_id": null,
+    "weight": 1000.0,
+    "status": "Published",
+    "tier_variations": [
+      {
+        "id": 967,
+        "product_id": 638,
+        "tier_index": 1,
+        "name": "Chủng loại",
+        "options": [
+          "ArcSaber 1 Clear",
+          "ArcSaber 1 Feel",
+          "ArcSaber 1 Ability"
+        ]
+      },
+      {
+        "id": 968,
+        "product_id": 638,
+        "tier_index": 2,
+        "name": "Độ Căng Cước",
+        "options": [
+          "Khung không dây",
+          "Cước trợ lực",
+          "BG 65Ti",
+          "Cước khác inbox shop"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": 6891,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Clear",
+        "tier_2_option": "BG 65Ti",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-ARCSABER-1-CLEAR-BG-65TI",
+        "price": 790000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 790000.0,
+        "has_active_promotion": false,
+        "original_price": 790000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6892,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Feel",
+        "tier_2_option": "Cước trợ lực",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1F-CTL",
+        "price": 680000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 680000.0,
+        "has_active_promotion": false,
+        "original_price": 680000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6893,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Ability",
+        "tier_2_option": "BG 65Ti",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1A-B65TI",
+        "price": 790000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 790000.0,
+        "has_active_promotion": false,
+        "original_price": 790000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6894,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Ability",
+        "tier_2_option": "Khung không dây",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1A-KKD",
+        "price": 620000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 620000.0,
+        "has_active_promotion": false,
+        "original_price": 620000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6895,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Feel",
+        "tier_2_option": "BG 65Ti",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-ARCSABER-1-FEEL-BG-65TI",
+        "price": 790000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 790000.0,
+        "has_active_promotion": false,
+        "original_price": 790000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6896,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Clear",
+        "tier_2_option": "Cước trợ lực",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1C-CTL",
+        "price": 680000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 680000.0,
+        "has_active_promotion": false,
+        "original_price": 680000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6897,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Feel",
+        "tier_2_option": "Khung không dây",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1F-KKD",
+        "price": 620000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 620000.0,
+        "has_active_promotion": false,
+        "original_price": 620000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6898,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Clear",
+        "tier_2_option": "Khung không dây",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1C-KKD",
+        "price": 620000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 620000.0,
+        "has_active_promotion": false,
+        "original_price": 620000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6899,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Feel",
+        "tier_2_option": "Cước khác inbox shop",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1F-CKIS",
+        "price": 840000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 840000.0,
+        "has_active_promotion": false,
+        "original_price": 840000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6900,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Ability",
+        "tier_2_option": "Cước trợ lực",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1A-CTL",
+        "price": 680000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 680000.0,
+        "has_active_promotion": false,
+        "original_price": 680000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6901,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Clear",
+        "tier_2_option": "Cước khác inbox shop",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1C-CKIS",
+        "price": 840000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 840000.0,
+        "has_active_promotion": false,
+        "original_price": 840000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6902,
+        "product_id": 638,
+        "tier_1_option": "ArcSaber 1 Ability",
+        "tier_2_option": "Cước khác inbox shop",
+        "sku_code": "VCLYA1F1CAHQTBVCVCC-66BF-A1A-CKIS",
+        "price": 840000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 840000.0,
+        "has_active_promotion": false,
+        "original_price": 840000.0,
+        "percentage_discount": 0.0
+      }
+    ],
+    "media": [
+      {
+        "id": 4870,
+        "product_id": 638,
+        "variant_id": null,
+        "image_url": "https://pim.voma.vn/media/a8611612-02bf-437d-ab10-3faccc05fba6.jpg",
+        "is_cover": true,
+        "display_order": 1
+      },
+      {
+        "id": 4871,
+        "product_id": 638,
+        "variant_id": null,
+        "image_url": "https://pim.voma.vn/media/fd5f04f5-3f4e-48a9-ae02-c458d3070062.jpg",
+        "is_cover": false,
+        "display_order": 2
+      },
+      {
+        "id": 4872,
+        "product_id": 638,
+        "variant_id": null,
+        "image_url": "https://pim.voma.vn/media/06de33de-7ba1-4341-bad6-cf9fcf88bd64.jpg",
+        "is_cover": false,
+        "display_order": 3
+      },
+      {
+        "id": 4873,
+        "product_id": 638,
+        "variant_id": null,
+        "image_url": "https://pim.voma.vn/media/cdc69805-2c10-4325-897f-33a1b3555945.jpg",
+        "is_cover": false,
+        "display_order": 4
+      }
+    ],
+    "attribute_values": [
+      {
+        "id": 708,
+        "product_id": 638,
+        "attribute_id": 1,
+        "value_string": "Yonex",
+        "value_decimal": null,
+        "attribute": {
+          "id": 1,
+          "code": "brand",
+          "name": "Thương hiệu",
+          "type": "text"
+        }
+      }
+    ],
+    "voma_attribute_values": [],
+    "min_price": 620000.0,
+    "max_price": 840000.0
+  },
+  {
+    "id": 632,
+    "product_code": "TVMDVYCH-PDBD",
+    "slug": "tui-vai-men-dung-vot-yonex-chinh-hang-tvmdvych-pdbd",
+    "name": "Túi vải mền đựng vợt yonex chính hãng",
+    "description": "- Túi vải dù mỏng (Polyester): Thường đi kèm với các dòng vợt phân khúc tầm trung hoặc giá rẻ (như dòng Tour, Game, Play). Loại này nhẹ, kháng nước nhẹ và chống bám bụi tốt.\nBao vải dài có dây đeo: Dạng bao vải bố hoặc vải dù mềm có khoá kéo dọc thân vợt và có thêm dây đeo chéo, phù hợp cho những ai chỉ mang 1-2 cây vợt đi sân mà không muốn xách theo balo, túi lớn.\n- Công dụng chính\nChống trầy xước tối đa: Khi gom nhiều cây vợt vào cùng một ngăn trong túi hoặc balo lớn, các khung vợt dễ va chạm vào nhau gây bong tróc sơn. Bọc từng cây vợt bằng túi vải mềm sẽ giải quyết triệt để vấn đề này.\nBảo vệ gen và cước: Hạn chế bụi bẩn bám vào hệ thống gen vợt và bảo vệ sợi cước khỏi các tác nhân cọ xát bên ngoài khi chưa thi đấu.\nTiện lợi, gọn nhẹ: Có thể dùng để đựng riêng lẻ từng cây vợt khi di chuyển nhanh.",
+    "category_id": null,
+    "voma_category_id": null,
+    "family_id": null,
+    "weight": 200.0,
+    "status": "Published",
+    "tier_variations": [],
+    "variants": [
+      {
+        "id": 6861,
+        "product_id": 632,
+        "tier_1_option": null,
+        "tier_2_option": null,
+        "sku_code": "TVMDVYCH-2TFY-DEFAULT",
+        "price": 150000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 150000.0,
+        "has_active_promotion": false,
+        "original_price": 150000.0,
+        "percentage_discount": 0.0
+      }
+    ],
+    "media": [],
+    "attribute_values": [],
+    "voma_attribute_values": [],
+    "min_price": 150000.0,
+    "max_price": 150000.0
+  },
+  {
+    "id": 630,
+    "product_code": "VCLLB5003UCHTTQCDC-ECG9",
+    "slug": "hoa-toc-vot-cau-long-lining-bladex-500-3u-chinh-hang-tang-tui-quan-can-dan-cuoc-vcllb5003uchttqcdc-ecg9",
+    "name": "[Hỏa Tốc] Vợt cầu lông Lining Bladex 500 - 3U Chính Hãng, Tặng túi+Quấn Cán -Đan cước",
+    "description": "- Vợt Cầu Lông Li-Ning Bladex 500 chính hãng (3U) - Vợt Phản Tạt, Đập Tốt, Khung Sharp Wind Siêu Nhanh\n- MÔ TẢ SẢN PHẨM\nVợt cầu lông Li-Ning Bladex 500 (3U) là siêu phẩm phân khúc cận cao cấp, được thiết kế chuyên biệt cho lối chơi tốc độ, phản tạt nhanh và điều cầu chuẩn xác, đồng thời bản 3U mang lại lực đập vô cùng đầm tay. Nếu bạn là một tay vợt ưa thích lối đánh ôm lưới, phản tạt nhanh gọn nhưng vẫn muốn những cú đập gõ uy lực thì Bladex 500 3U chính là \"vũ khí\" không thể bỏ qua.\n🔥 ĐẶC ĐIỂM NỔI BẬT CỦA BLADEX 500 (3U)\nThiết kế Khung Sharp Wind: Cấu trúc khung vát búa giúp giảm tối đa lực cản không khí, tăng tốc độ vung vợt lên mức tối đa. Cho bạn lợi thế tuyệt đối trong các pha đôi công, phản tạt sát lưới.\nTrục Mỏng 6.8mm High-Flexible: Trục vợt mỏng giúp tăng độ đàn hồi, hỗ trợ trợ lực tốt trong các pha thoát cầu, giảm áp lực lên cổ tay.\nBản 3U Đầm Tay & Uy Lực: Khác với bản 4U thiên về thủ, bản 3U (Trọng lượng ~88g) mang lại cảm giác đầm tay chắc chắn, giúp các pha phông cầu sâu xuống cuối sân và những cú đập gõ, đập cắm có uy lực cực kỳ đáng sợ.\nHệ thống hấp thụ sốc HDF Shock Absorption: Giúp giảm chấn tối đa khi tiếp xúc cầu, bảo vệ cổ tay và khuỷu tay khỏi chấn thương, mang lại cảm giác đánh êm ái.\n📊 THÔNG SỐ KỸ THUẬT\nTrọng lượng: 3U (Khối lượng thực tế khoảng 85-89g)\nĐộ cứng: Trung bình (Hơi dẻo, dễ thuần, trợ lực tốt)\nĐiểm cân bình: ~295mm (Cân bằng, hơi nhẹ đầu một chút giúp xoay trở cực linh hoạt)\nMức căng tối đa: 28 lbs (Tương đương 12.7kg) - Khung cực khỏe cho anh em thoải mái căng cao.\nChu vi cán cầm: G5\nMàu sắc: Phối màu hiện đại, mạnh mẽ, nước sơn lì cao cấp đặc trưng của Li-Ning.\n🎁 ƯU ĐÃI ĐẶC BIỆT KHI MUA HÀNG TẠI SHOP\nCam kết sản phẩm chính hãng 100%, phát hiện hàng giả đền gấp 10 lần.\nChính sách bảo hành khung vợt 3 tháng theo tiêu chuẩn nhà sản xuất.\nHỗ trợ căng cước máy điện tử chuẩn xác theo số kg yêu cầu.\nTặng kèm: 01 Quấn cán + 01 Bao đựng vợt chuyên dụng",
+    "category_id": null,
+    "voma_category_id": null,
+    "family_id": null,
+    "weight": 1000.0,
+    "status": "Published",
+    "tier_variations": [
+      {
+        "id": 976,
+        "product_id": 630,
+        "tier_index": 1,
+        "name": "Loại cước",
+        "options": [
+          "Khung không dây",
+          "Cước trợ lực",
+          "BG65Ti",
+          "Cước khác ib shop"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": 6853,
+        "product_id": 630,
+        "tier_1_option": "Cước khác ib shop",
+        "tier_2_option": null,
+        "sku_code": "VCLLB5003UCHTTQCDC-NQBG-CUOC-KHAC-IB-SHOP",
+        "price": 2160000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2160000.0,
+        "has_active_promotion": false,
+        "original_price": 2160000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6854,
+        "product_id": 630,
+        "tier_1_option": "Khung không dây",
+        "tier_2_option": null,
+        "sku_code": "VCLLB5003UCHTTQCDC-NQBG-KHUNG-KHONG-DAY",
+        "price": 1940000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 1940000.0,
+        "has_active_promotion": false,
+        "original_price": 1940000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6855,
+        "product_id": 630,
+        "tier_1_option": "Cước trợ lực",
+        "tier_2_option": null,
+        "sku_code": "VCLLB5003UCHTTQCDC-NQBG-CUOC-TRO-LUC",
+        "price": 2000000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2000000.0,
+        "has_active_promotion": false,
+        "original_price": 2000000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6856,
+        "product_id": 630,
+        "tier_1_option": "BG65Ti",
+        "tier_2_option": null,
+        "sku_code": "VCLLB5003UCHTTQCDC-NQBG-BG65TI",
+        "price": 2110000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2110000.0,
+        "has_active_promotion": false,
+        "original_price": 2110000.0,
+        "percentage_discount": 0.0
+      }
+    ],
+    "media": [],
+    "attribute_values": [],
+    "voma_attribute_values": [],
+    "min_price": 1940000.0,
+    "max_price": 2160000.0
+  },
+  {
+    "id": 626,
+    "product_code": "VCLLB5003UCHTTQCDC-AZGA",
+    "slug": "hoa-toc-vot-cau-long-lining-bladex-500-3u-chinh-hang-tang-tui-quan-can-dan-cuoc-vcllb5003uchttqcdc-azga",
+    "name": "[HỎA TỐC] Vợt Cầu Lông Lining Bladex 500 3u Chính Hãng, Tặng túi+Quấn Cán -Đan cước",
+    "description": "🏸 Vợt Cầu Lông Li-Ning Bladex 500 (3U) – \"Kiếm Thần\" Phản Tạt, Đè Cầu Cực Đỉnh\nBạn đang tìm kiếm một cây vợt phân khúc tầm trung nhưng mang lại trải nghiệm chuyên nghiệp? Bạn đam mê lối đánh tốc độ, phản tạt nhanh và muốn áp đảo đối thủ ngay từ những pha bắt lưới? Li-Ning Bladex 500 (3U) chính là vũ khí tối thượng dành cho bạn!\nThuộc dòng vợt Bladex danh tiếng của nhà Li-Ning – dòng vợt thiên về Tốc độ và Kiểm soát (Speed & Control), Bladex 500 hội tụ đầy đủ những công nghệ tân tiến nhất để biến bạn thành một \"tay đập\" linh hoạt trên sân đấu.\n⚡ Thông Số Kỹ Thuật Ấn Tượng\nTrọng lượng: 3U (Khoảng 85 - 89g)\nĐộ cứng đũa: Trung bình - Cứng (Đũa vợt mỏng 6.8mm tối ưu khí động học)\nĐiểm cânหนัก: ~292mm (Nhẹ đầu / Cân bằng, thiên về tốc độ)\nMức căng tối đa: 28 lbs (Tương đương 12.7 kg) – Khung cực kỳ khỏe và chịu lực tốt.\nChất liệu: Carbon Fiber phân tử cao (High Modulus Graphite)\nMàu sắc: Phối màu hiện đại, mạnh mẽ và đậm chất thể thao.\n🔥 Điểm Nổi Bật Tăng Tỷ Lệ \"Chốt Đơn\"\nBản 3U Đầm Tay, Uy Lực: Khác với bản 4U, phiên bản 3U mang lại cảm giác đầm tay chắc chắn. Khi vung vợt, lực phát ra từ tay được truyền tải trọn vẹn vào quả cầu, giúp những cú đập cầu chéo sân hay đè lưới có độ cắm và uy lực hơn hẳn.\nThiết Kế Khung Sharp Wind: Cấu trúc khung vợt vát sắc bén giúp giảm tối đa lực cản không khí. Bạn sẽ cảm nhận được tốc độ vung vợt nhanh đến chóng mặt, cực kỳ lợi thế trong các pha đôi công, phản tạt cự ly gần.\nHấp Thụ Sốc Siêu Cấp (HDF Shock Absorption System): Công nghệ độc quyền giúp giảm thiểu độ rung lắc khi tiếp xúc cầu. Vợt trả về trạng thái ổn định ngay lập tức, bảo vệ cổ tay và khuỷu tay của bạn khỏi chấn thương.\nĐũa Vợt Mỏng 6.8mm: Giúp tăng tính linh hoạt, cho phép người chơi xoay chuyển từ tư thế tấn công sang phòng thủ chỉ trong chớp mắt.\n🎯 Vợt Li-Ning Bladex 500 (3U) Phù Hợp Với Ai?\nPhù hợp cho đánh đôi, đặc biệt là vị trí trên lưới hoặc đánh ngang ngang (phản tạt, tì đè, bắt lưới).\nYêu cầu người chơi có lực cổ tay từ trung bình khá đến tốt (do là bản 3U đầm tay) để có thể thuần thục và phát huy hết sức mạnh của vợt.\nThích hợp cho người chơi phong trào trình độ trung bình, khá, hoặc các lông thủ muốn nâng cấp lên một cây vợt chất lượng cao.\n🎁 Ưu Đãi Khi Mua Hàng Tại Shop\nCam kết chính hãng 100% (Phát hiện hàng giả đền bù gấp đôi).\nHỗ trợ căng cước theo số kg yêu cầu (Sử dụng máy căng điện tử hiện đại).\nQuà tặng kèm hấp dẫn: 01 Quấn cán chống trơn + 01 Bao vợt cao cấp đi kèm.\nChính sách bảo hành chính hãng từ nhà sản xuất.",
+    "category_id": null,
+    "voma_category_id": null,
+    "family_id": null,
+    "weight": 1000.0,
+    "status": "Published",
+    "tier_variations": [
+      {
+        "id": 979,
+        "product_id": 626,
+        "tier_index": 1,
+        "name": "Loại cước",
+        "options": [
+          "Khung không dây",
+          "BG 65T",
+          "Lining No1",
+          "BG 66U",
+          "Exbolt 63",
+          "Exbolt 65",
+          "Exbolt 68"
+        ]
+      },
+      {
+        "id": 980,
+        "product_id": 626,
+        "tier_index": 2,
+        "name": "Màu sắc",
+        "options": [
+          "Trắng"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": 6833,
+        "product_id": 626,
+        "tier_1_option": "Exbolt 63",
+        "tier_2_option": "Trắng",
+        "sku_code": "VCLLB5003UCHTTQCDC-VQC2-EXBOLT-63-TRANG",
+        "price": 2450000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2450000.0,
+        "has_active_promotion": false,
+        "original_price": 2450000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6834,
+        "product_id": 626,
+        "tier_1_option": "Exbolt 68",
+        "tier_2_option": "Trắng",
+        "sku_code": "VCLLB5003UCHTTQCDC-VQC2-EXBOLT-68-TRANG",
+        "price": 2450000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2450000.0,
+        "has_active_promotion": false,
+        "original_price": 2450000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6835,
+        "product_id": 626,
+        "tier_1_option": "Khung không dây",
+        "tier_2_option": "Trắng",
+        "sku_code": "VCLLB5003UCHTTQCDC-VQC2-KHUNG-KHONG-DAY-TRANG",
+        "price": 2250000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2250000.0,
+        "has_active_promotion": false,
+        "original_price": 2250000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6836,
+        "product_id": 626,
+        "tier_1_option": "Lining No1",
+        "tier_2_option": "Trắng",
+        "sku_code": "VCLLB5003UCHTTQCDC-VQC2-KIZUNA-Z61-TRANG",
+        "price": 2410000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2410000.0,
+        "has_active_promotion": false,
+        "original_price": 2410000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6837,
+        "product_id": 626,
+        "tier_1_option": "BG 65T",
+        "tier_2_option": "Trắng",
+        "sku_code": "VCLLB5003UCHTTQCDC-VQC2-BG-65T-TRANG",
+        "price": 2410000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2410000.0,
+        "has_active_promotion": false,
+        "original_price": 2410000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6838,
+        "product_id": 626,
+        "tier_1_option": "Exbolt 65",
+        "tier_2_option": "Trắng",
+        "sku_code": "VCLLB5003UCHTTQCDC-VQC2-EXBOLT-65-TRANG",
+        "price": 2450000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2450000.0,
+        "has_active_promotion": false,
+        "original_price": 2450000.0,
+        "percentage_discount": 0.0
+      },
+      {
+        "id": 6839,
+        "product_id": 626,
+        "tier_1_option": "BG 66U",
+        "tier_2_option": "Trắng",
+        "sku_code": "VCLLB5003UCHTTQCDC-VQC2-BG-66U-TRANG",
+        "price": 2450000.0,
+        "barcode": null,
+        "default_tax_rate": null,
+        "computed_price": 2450000.0,
+        "has_active_promotion": false,
+        "original_price": 2450000.0,
+        "percentage_discount": 0.0
+      }
+    ],
+    "media": [],
+    "attribute_values": [],
+    "voma_attribute_values": [],
+    "min_price": 2250000.0,
+    "max_price": 2450000.0
+  }
+]

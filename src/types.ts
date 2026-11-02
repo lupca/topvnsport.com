@@ -47,6 +47,8 @@ export interface ProductMedia {
 export interface Product {
   id: string;
   slug?: string;
+  // VOMA PIM's own slug: accepted as a /product/ URL alias only, never emitted (STOR-085).
+  vomaSlug?: string;
   name: string;
   // Nguyên chuỗi người bán nhập (đã trim); undefined = không có thương hiệu.
   brand?: string;

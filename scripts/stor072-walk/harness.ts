@@ -13,7 +13,8 @@ const pmi = (id: number, name: string, extra: Record<string, unknown> = {}) => (
   id, name, voma_category_id: 1, variants: [{ id: id * 10, price: 500000, stock: 3, sku_code: `S${id}` }], ...extra,
 });
 const ITEMS = [
-  pmi(101, 'Vợt Yonex Astrox 99', { description: 'Mô tả vợt A', media: [{ image_url: 'https://cdn.voma.vn/a.jpg' }] }),
+  // STOR-085: `slug` is VOMA PIM's own slug (alias URL only; canonical stays /product/vot-yonex-astrox-99).
+  pmi(101, 'Vợt Yonex Astrox 99', { slug: 'vot-yonex-astrox-99-vyax99-k7q2', description: 'Mô tả vợt A', media: [{ image_url: 'https://cdn.voma.vn/a.jpg' }] }),
   pmi(103, 'Cước BG65 Titanium', { description: 'Cước bền' }),
   pmi(104, 'Giày Lining'),
 ];
