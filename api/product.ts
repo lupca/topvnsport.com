@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { resolveCatalogGrantToken } from './_catalogProxy.js';
-import { SITE_ORIGIN } from './sitemap.js';
+import { SITE_ORIGIN } from '../src/config/storefront.js';
+import { productHeadValues, PRODUCT_HEAD_MARK, PRODUCT_HEAD_TAGS, PRODUCT_SHELL_VALUE } from '../src/utils/productHead.js';
 import { buildProductSlugById, getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
 import { mapPmiProduct } from '../src/services/sport-api/productMappers.js';
 import { getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
@@ -22,19 +23,24 @@ function priceText(product: Product): string {
 // Pure: shell + product -> HTML. Missing data is omitted, never composed.
 export function renderProductPage(shell: string, product: Product, canonicalUrl: string): string {
   const name = escapeHtml(product.name);
-  const url = escapeHtml(canonicalUrl);
   const description = (product.description ?? '').trim();
-  const metaDescription = escapeHtml(description.replace(/\s+/g, ' ').slice(0, 160).trim());
-  const image = product.gallery?.find((src) => /^https?:\/\/\S+$/i.test(src));
+  const head = productHeadValues(product, canonicalUrl);
 
-  const headTags = [
-    `<link rel="canonical" href="${url}" />`,
-    metaDescription && `<meta name="description" content="${metaDescription}" />`,
-    `<meta property="og:title" content="${name}" />`,
-    `<meta property="og:url" content="${url}" />`,
-    metaDescription && `<meta property="og:description" content="${metaDescription}" />`,
-    image && `<meta property="og:image" content="${escapeHtml(image)}" />`,
-  ].filter(Boolean).join('\n    ');
+  // A product tag replaces the shell's own copy (one canonical for crawlers); the shell value rides along in
+  // data-shell-value so the SPA can restore it off product pages. A field the product lacks keeps the shell tag.
+  let page = shell;
+  const headTags = PRODUCT_HEAD_TAGS
+    .filter(([, , , , field]) => head[field])
+    .map(([tag, keyAttr, key, valueAttr, field]) => {
+      let shellValue: string | undefined;
+      page = page.replace(new RegExp(`[ \\t]*<${tag}\\b[^>]*\\b${keyAttr}=["']${key}["'][^>]*>\\s*`, 'gi'), (m) => {
+        shellValue ??= m.match(new RegExp(`\\b${valueAttr}=(?:"([^"]*)"|'([^']*)')`, 'i'))?.slice(1).find((v) => v !== undefined);
+        return '';
+      });
+      const carry = shellValue ? ` ${PRODUCT_SHELL_VALUE}="${shellValue.replace(/"/g, '&quot;')}"` : '';
+      return `<${tag} ${keyAttr}="${key}" ${valueAttr}="${escapeHtml(head[field]!)}" ${PRODUCT_HEAD_MARK}${carry} />`;
+    })
+    .join('\n    ');
 
   const body = [
     `<h1>${name}</h1>`,
@@ -43,8 +49,10 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
   ].filter(Boolean).join('');
 
   // Function replacers: product strings may contain `$&`-style patterns.
-  return shell
-    .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${name}</title>`)
+  return page
+    // data-shell-title keeps the shell title in the document so the SPA restores it off product pages.
+    .replace(/<title>([\s\S]*?)<\/title>/, (_m, shellTitle: string) =>
+      `<title data-shell-title="${shellTitle.replace(/"/g, '&quot;')}">${name}</title>`)
     .replace('</head>', () => `  ${headTags}\n  </head>`)
     .replace('<div id="root"></div>', () => `<div id="root">${body}</div>`);
 }

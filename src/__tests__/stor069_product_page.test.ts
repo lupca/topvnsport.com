@@ -35,25 +35,28 @@ const baseProduct = (over: Partial<Product> = {}): Product => ({
 } as Product);
 
 const headBlock = (html: string) => html.slice(html.indexOf('</title>'), html.indexOf('</head>'));
+const titleText = (html: string) => html.match(/<title[^>]*>([^<]*)<\/title>/)![1];
 const rootDiv = (html: string) => html.match(/<div id="root">([\s\S]*?)<\/div>/)![1];
 
 describe('STOR-069 renderProductPage', () => {
   it('sets the bare escaped product name as title, no site suffix', () => {
     const html = renderProductPage(SHELL, baseProduct({ name: 'A & B "C"' }), CANONICAL);
-    expect(html).toContain('<title>A &amp; B &quot;C&quot;</title>');
-    expect(html.match(/<title>/g)).toHaveLength(1);
-    expect(html).not.toContain('TopVNSport');
+    expect(titleText(html)).toBe('A &amp; B &quot;C&quot;');
+    expect(html.match(/<title[ >]/g)).toHaveLength(1);
+    expect(titleText(html)).not.toContain('TopVNSport');
+    // STOR-072: the shell title rides along in data-shell-title for the SPA, never as visible text.
+    expect(html).toContain('<title data-shell-title="TopVNSport - Shell">');
   });
 
   it('adds exactly one head block right before </head> with canonical, og:title, og:url', () => {
     const html = renderProductPage(SHELL, baseProduct(), CANONICAL);
     expect(html.match(/<\/head>/g)).toHaveLength(1);
     expect(html.match(/rel="canonical"/g)).toHaveLength(1);
-    expect(html).toMatch(/<meta property="og:[a-z]+" content="[^"]*" \/>\n {2}<\/head>/);
+    expect(html).toMatch(/<meta property="og:[a-z]+" content="[^"]*" data-product-head \/>\n {2}<\/head>/);
     const head = headBlock(html);
-    expect(head).toContain(`<link rel="canonical" href="${CANONICAL}" />`);
-    expect(head).toContain('<meta property="og:title" content="Vợt Yonex Astrox 99" />');
-    expect(head).toContain(`<meta property="og:url" content="${CANONICAL}" />`);
+    expect(head).toContain(`<link rel="canonical" href="${CANONICAL}" data-product-head />`);
+    expect(head).toContain('<meta property="og:title" content="Vợt Yonex Astrox 99" data-product-head />');
+    expect(head).toContain(`<meta property="og:url" content="${CANONICAL}" data-product-head />`);
     // head tags sit together as one contiguous block
     expect(html.indexOf('rel="canonical"')).toBeGreaterThan(html.indexOf('</title>'));
   });
@@ -61,12 +64,25 @@ describe('STOR-069 renderProductPage', () => {
   it('description present: meta description collapsed and <=160 chars, og:description, <p>', () => {
     const desc = 'Dòng   vợt\n\ncông thủ   ' + 'x'.repeat(300);
     const html = renderProductPage(SHELL, baseProduct({ description: desc }), CANONICAL);
-    const meta = html.match(/<meta name="description" content="([^"]*)" \/>/)![1];
+    const meta = html.match(/<meta name="description" content="([^"]*)" data-product-head \/>/)![1];
     expect(meta.startsWith('Dòng vợt công thủ x')).toBe(true);
     expect(meta.length).toBeLessThanOrEqual(160);
     expect(meta).not.toMatch(/\s{2,}|\n/);
-    expect(html).toMatch(/<meta property="og:description" content="Dòng vợt công thủ x+" \/>/);
+    expect(html).toMatch(/<meta property="og:description" content="Dòng vợt công thủ x+" data-product-head \/>/);
     expect(rootDiv(html)).toContain(`<p>${desc}</p>`);
+  });
+
+  it('STOR-072: emoji at code points 159-160 is cut whole, never U+FFFD or a lone surrogate', () => {
+    const desc = '  a \n\t b  ' + 'x'.repeat(155) + '\u{1F3F8}\u{1F3F8}' + 'y'.repeat(20);
+    const html = renderProductPage(SHELL, baseProduct({ description: desc }), CANONICAL);
+    const meta = html.match(/<meta name="description" content="([^"]*)" data-product-head \/>/)![1];
+    // collapsed "a b " = 4 code points, 155 x -> 159, first emoji is code point 160
+    expect(meta).toBe('a b ' + 'x'.repeat(155) + '\u{1F3F8}');
+    expect(Array.from(meta).length).toBe(160);
+    expect(meta).not.toContain('\uFFFD');
+    expect(meta).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/);
+    expect(new TextDecoder().decode(new TextEncoder().encode(meta))).not.toContain('\uFFFD');
+    expect(html).toContain(`<meta property="og:description" content="${meta}" data-product-head />`);
   });
 
   it('description absent: no meta description, no og:description, no description <p>', () => {
@@ -82,7 +98,7 @@ describe('STOR-069 renderProductPage', () => {
     const html = renderProductPage(SHELL, baseProduct({
       gallery: ['/relative.jpg', 'data:image/png;base64,x', 'https://cdn.voma.vn/a.jpg?x=1&y=2', 'https://cdn.voma.vn/b.jpg'],
     }), CANONICAL);
-    expect(html).toContain('<meta property="og:image" content="https://cdn.voma.vn/a.jpg?x=1&amp;y=2" />');
+    expect(html).toContain('<meta property="og:image" content="https://cdn.voma.vn/a.jpg?x=1&amp;y=2" data-product-head />');
     expect(html.match(/og:image/g)).toHaveLength(1);
   });
 
@@ -121,11 +137,11 @@ describe('STOR-069 renderProductPage', () => {
     const html = renderProductPage(SHELL, baseProduct({ name: hostile, description: hostile }), CANONICAL);
     expect(html).not.toContain('<script>alert');
     const esc = '&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;&#39;&amp;$&amp;';
-    expect(html).toContain(`<title>${esc}</title>`);
+    expect(titleText(html)).toBe(esc);
     expect(html).toContain(`<h1>${esc}</h1>`);
     expect(html).toContain(`<p>${esc}</p>`);
-    expect(html).toContain(`<meta property="og:title" content="${esc}" />`);
-    expect(html).toContain(`<meta name="description" content="${esc}" />`);
+    expect(html).toContain(`<meta property="og:title" content="${esc}" data-product-head />`);
+    expect(html).toContain(`<meta name="description" content="${esc}" data-product-head />`);
   });
 
   it('has no JSON-LD, Offer, availability or Vercel-CDN-Cache-Control', () => {

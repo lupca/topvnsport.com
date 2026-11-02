@@ -48,3 +48,6 @@ export function getVisibleMainNav(categories: { code: string }[]): VisibleMainNa
     return code ? [{ ...entry, to: `/catalog?category=${encodeURIComponent(code)}` }] : [];
   });
 }
+
+// Gốc canonical duy nhất cho sitemap, robots, api/product và đồng bộ head phía SPA.
+export const SITE_ORIGIN = 'https://www.topvnsport.com';

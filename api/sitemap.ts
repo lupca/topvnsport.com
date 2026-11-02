@@ -3,7 +3,9 @@ import { slugifyProductName, buildProductSlugById, getProductPath } from '../src
 import { getCategoriesSortedByCount } from '../src/utils/categories.js';
 import type { Category, Product } from '../src/types.js';
 
-export const SITE_ORIGIN = 'https://www.topvnsport.com';
+import { SITE_ORIGIN } from '../src/config/storefront.js';
+
+export { SITE_ORIGIN };
 
 const PRODUCTS_PAGE_SIZE = 100;
 
