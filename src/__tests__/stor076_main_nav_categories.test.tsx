@@ -2,6 +2,8 @@
 // STOR-076: menu chính dựng từ ngành VOMA thật (còn hàng, cùng thứ tự và nhãn với chip trang chủ).
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -181,5 +183,17 @@ describe('STOR-076 menu chính lấy từ ngành VOMA thật', () => {
     await loadedNavLinks();
     expect(container.querySelector('#trust-badges-ribbon')).toBeNull();
     expect(container.querySelector('[data-testid="trust-badges"]')).toBeNull();
+  });
+});
+
+describe('STOR-076 MainNav.tsx không còn danh sách cứng', () => {
+  const source = readFileSync(resolve(__dirname, '../components/MainNav.tsx'), 'utf8');
+
+  it('không dùng getVisibleMainNav hay MAIN_NAV (đưa lại -> đỏ)', () => {
+    expect(source).not.toMatch(/getVisibleMainNav|MAIN_NAV/);
+  });
+
+  it('không có tên ngành cứng (Giày, Bao vợt, Vợt Cầu Lông)', () => {
+    expect(source).not.toMatch(/Giày|Bao vợt|Vợt Cầu Lông/i);
   });
 });
