@@ -84,10 +84,21 @@ describe('STOR-058 MainNav', () => {
     expect(current).toEqual(activeLabel ? [activeLabel] : []);
   });
 
-  it('nav không bị ẩn ở mobile (không có lớp hidden)', () => {
-    renderNav();
-    const nav = screen.getByRole('navigation', { name: 'Điều hướng chính' });
-    expect(nav.className.split(/\s+/)).not.toContain('hidden');
+  // STOR-084: ở '/' ẩn dưới md (hidden md:block) để khớp tab Mobile của bản thiết kế;
+  // các trang khác (/catalog, /stores) giữ nguyên hiển thị ở mobile (không có lớp hidden).
+  it('nav không bị ẩn ở mobile trên các trang ngoài trang chủ (/catalog, /stores); ở / chỉ hiện từ md+', () => {
+    const { unmount } = renderNav('/catalog');
+    expect(screen.getByRole('navigation', { name: 'Điều hướng chính' }).className.split(/\s+/)).not.toContain('hidden');
+    unmount();
+
+    const { unmount: unmountStores } = renderNav('/stores');
+    expect(screen.getByRole('navigation', { name: 'Điều hướng chính' }).className.split(/\s+/)).not.toContain('hidden');
+    unmountStores();
+
+    renderNav('/');
+    const homeNavTokens = screen.getByRole('navigation', { name: 'Điều hướng chính' }).className.split(/\s+/);
+    expect(homeNavTokens).toContain('hidden');
+    expect(homeNavTokens).toContain('md:block');
   });
 
   it('thanh đan cước: bg-zinc-100, nằm ngoài nav, CTA -> /catalog?category=VC001491', () => {

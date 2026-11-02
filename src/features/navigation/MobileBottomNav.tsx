@@ -1,7 +1,8 @@
 import { Home, MapPin, ShoppingBag, Trophy } from 'lucide-react';
 import { NavigateFunction } from 'react-router-dom';
+import { STRINGING_CTA_PATH } from '../../config/storefront';
 
-// STOR-081: nhãn theo tab Mobile của design (11px đậm, chưa chọn #18181b, viền trên đen 1.5px).
+// STOR-081 / STOR-084: nhãn theo tab Mobile của design (11px đậm, chưa chọn #18181b, viền trên đen 1.5px).
 // Giá trị md: giữ nguyên style tính toán cũ ở md+ (thanh này md:hidden) để diff 1440 bằng 0.
 const ACTIVE = 'text-brand-primary font-extrabold md:font-bold';
 const INACTIVE = 'text-ink-secondary font-bold md:text-gray-400 md:font-normal';
@@ -22,15 +23,15 @@ export default function MobileBottomNav({ pathname, navigate, cartCount, onOpenC
         className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/' ? ACTIVE : INACTIVE}`}
       >
         <Home className="w-5 h-5" />
-        <span className={LABEL}>Trang chủ</span>
+        <span className={LABEL}>BADMINTON</span>
       </button>
 
       <button
-        onClick={() => navigate('/catalog')}
+        onClick={() => navigate(STRINGING_CTA_PATH)}
         className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/catalog' ? ACTIVE : INACTIVE}`}
       >
         <Trophy className="w-5 h-5" />
-        <span className={LABEL}>Sản phẩm</span>
+        <span className={LABEL}>Vợt &amp; Cước</span>
       </button>
 
       <button
@@ -38,7 +39,7 @@ export default function MobileBottomNav({ pathname, navigate, cartCount, onOpenC
         className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/stores' ? ACTIVE : INACTIVE}`}
       >
         <MapPin className="w-5 h-5" />
-        <span className={LABEL}>Cửa hàng</span>
+        <span className={LABEL}>Đan Vợt O2O</span>
       </button>
 
       <button

@@ -210,7 +210,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
       </div>
 
       {/* Main Header Row */}
-      <div className="max-w-7xl mx-auto px-[16px] md:px-6 lg:px-8 py-2 md:py-4 flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+      <div className={`max-w-7xl mx-auto px-[16px] md:px-6 lg:px-8 py-2 md:py-4 ${currentView === 'home' ? 'hidden md:flex' : 'flex'} flex-col md:flex-row items-center justify-between gap-2 md:gap-4`}>
         {/* Desktop Brand Logo */}
         <div 
           onClick={() => navigate('/')} 
@@ -243,7 +243,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.trim().length >= 2 && setShowSearchDropdown(true)}
               onKeyDown={(e) => { if (e.key === 'Enter') submitSearch(); }}
-              className="w-full min-w-0 bg-transparent text-xs md:text-sm font-semibold text-ink-primary placeholder:text-ink-muted placeholder:font-normal focus:outline-hidden"
+              className={`${currentView === 'home' ? 'hidden md:block ' : ''}w-full min-w-0 bg-transparent text-xs md:text-sm font-semibold text-ink-primary placeholder:text-ink-muted placeholder:font-normal focus:outline-hidden`}
             />
             {searchQuery !== '' && (
               <button
