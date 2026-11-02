@@ -184,7 +184,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
         </button>
         <div 
           onClick={() => navigate('/')} 
-          className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none shrink-0"
+          className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none min-w-0 truncate"
         >
           TOPVN<span className="text-brand-primary">SPORT</span>
         </div>
