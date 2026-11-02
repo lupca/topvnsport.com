@@ -166,7 +166,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
       </div>
 
       {/* Mobile Top Row */}
-      <div className="md:hidden flex items-center justify-between gap-2 px-4 py-2">
+      <div className="md:hidden flex items-center justify-between gap-2 px-4 py-2 max-[399px]:gap-1 max-[399px]:px-3">
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(true)}
@@ -178,7 +178,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
         <button
           type="button"
           onClick={() => navigate('/stores')}
-          className="border border-ink-primary text-ink-primary text-xs font-bold px-2.5 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
+          className="border border-ink-primary text-ink-primary text-xs font-bold px-2.5 max-[399px]:px-2 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
         >
           Đan cước
         </button>

@@ -87,3 +87,22 @@ describe('STOR-068: Mobile header row fits viewport and guards class tokens', ()
     expect(mobileCartPill.classList.contains('shrink-0')).toBe(true);
   });
 });
+
+describe('STOR-071: wordmark stays whole at 375/390px via max-[399px] spacing', () => {
+  it('G1: mobile row tightens gap and padding below 400px', () => {
+    const { container } = setupHeader(12);
+    const { mobileRow } = getMobileRowElements(container);
+    expect(mobileRow.classList.contains('max-[399px]:gap-1')).toBe(true);
+    expect(mobileRow.classList.contains('max-[399px]:px-3')).toBe(true);
+    // md+ spacing unchanged
+    expect(mobileRow.classList.contains('gap-2')).toBe(true);
+    expect(mobileRow.classList.contains('px-4')).toBe(true);
+  });
+
+  it('G2: Đan cước button tightens padding below 400px', () => {
+    const { container } = setupHeader(12);
+    const { danCuocBtn } = getMobileRowElements(container);
+    expect(danCuocBtn.classList.contains('max-[399px]:px-2')).toBe(true);
+    expect(danCuocBtn.classList.contains('px-2.5')).toBe(true);
+  });
+});
