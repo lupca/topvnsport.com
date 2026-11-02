@@ -87,7 +87,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
         >
           <div
             data-testid="slider-visual-wrap"
-            className="slide-visual-wrap relative w-full aspect-[16/9] md:aspect-[1400/600] overflow-hidden bg-brand-light flex items-center justify-center p-4 md:p-6"
+            className="slide-visual-wrap relative w-full aspect-square md:aspect-[1400/600] overflow-hidden bg-brand-light flex items-center justify-center p-4 md:p-6"
           >
             {activeProduct.image ? (
               <img

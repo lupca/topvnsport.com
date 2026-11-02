@@ -1,6 +1,12 @@
 import { Home, MapPin, ShoppingBag, Trophy } from 'lucide-react';
 import { NavigateFunction } from 'react-router-dom';
 
+// STOR-081: nhãn theo tab Mobile của design (11px đậm, chưa chọn #18181b, viền trên đen 1.5px).
+// Giá trị md: giữ nguyên style tính toán cũ ở md+ (thanh này md:hidden) để diff 1440 bằng 0.
+const ACTIVE = 'text-brand-primary font-extrabold md:font-bold';
+const INACTIVE = 'text-ink-secondary font-bold md:text-gray-400 md:font-normal';
+const LABEL = 'text-[11px] md:text-[10px]';
+
 type MobileBottomNavProps = {
   pathname: string;
   navigate: NavigateFunction;
@@ -10,34 +16,34 @@ type MobileBottomNavProps = {
 
 export default function MobileBottomNav({ pathname, navigate, cartCount, onOpenCart }: MobileBottomNavProps) {
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-100 flex justify-around items-center py-2 px-2 shadow-sm rounded-t-2xl">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t-[1.5px] border-ink-primary md:border-t md:border-gray-100 flex justify-around items-center py-2 px-2 shadow-sm rounded-t-2xl">
       <button
         onClick={() => navigate('/')}
-        className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/' ? 'text-brand-primary font-bold' : 'text-gray-400'}`}
+        className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/' ? ACTIVE : INACTIVE}`}
       >
         <Home className="w-5 h-5" />
-        <span className="text-[10px]">Trang chủ</span>
+        <span className={LABEL}>Trang chủ</span>
       </button>
 
       <button
         onClick={() => navigate('/catalog')}
-        className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/catalog' ? 'text-brand-primary font-bold' : 'text-gray-400'}`}
+        className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/catalog' ? ACTIVE : INACTIVE}`}
       >
         <Trophy className="w-5 h-5" />
-        <span className="text-[10px]">Sản phẩm</span>
+        <span className={LABEL}>Sản phẩm</span>
       </button>
 
       <button
         onClick={() => navigate('/stores')}
-        className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/stores' ? 'text-brand-primary font-bold' : 'text-gray-400'}`}
+        className={`flex flex-col items-center gap-1 p-1 transition ${pathname === '/stores' ? ACTIVE : INACTIVE}`}
       >
         <MapPin className="w-5 h-5" />
-        <span className="text-[10px]">Cửa hàng</span>
+        <span className={LABEL}>Cửa hàng</span>
       </button>
 
       <button
         onClick={onOpenCart}
-        className="flex flex-col items-center gap-1 p-1 text-gray-400 hover:text-brand-primary transition relative"
+        className={`flex flex-col items-center gap-1 p-1 ${INACTIVE} hover:text-brand-primary transition relative`}
       >
         <div className="relative">
           <ShoppingBag className="w-5 h-5 text-gray-500" />
@@ -47,7 +53,7 @@ export default function MobileBottomNav({ pathname, navigate, cartCount, onOpenC
             </span>
           )}
         </div>
-        <span className="text-[10px]">Giỏ hàng</span>
+        <span className={LABEL}>Giỏ hàng</span>
       </button>
     </div>
   );
