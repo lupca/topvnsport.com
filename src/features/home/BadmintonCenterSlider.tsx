@@ -78,7 +78,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
 
   return (
     <section data-testid="badminton-center-slider" className="hero-slider-section w-full overflow-hidden">
-      <div className="center-slider-viewport grid grid-cols-[18px_minmax(0,1fr)_18px] gap-[8px] md:grid-cols-[1fr_minmax(0,1060px)_1fr] md:gap-[18px] items-start w-full overflow-hidden">
+      <div className="center-slider-viewport grid grid-cols-[18px_minmax(0,290px)_18px] justify-center md:justify-normal gap-[8px] md:grid-cols-[1fr_minmax(0,1060px)_1fr] md:gap-[18px] items-start w-full overflow-hidden">
         {showPrevPeek ? renderPeekSlide(prevIndex) : <div aria-hidden="true" />}
 
         <div
@@ -167,7 +167,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
 
           <div
             data-testid="slider-caption-bar"
-            className="slide-caption-bar flex flex-row items-center md:flex-row md:items-center justify-between gap-2.5 md:gap-5 px-3 py-2 md:px-6 md:py-4 bg-surface border-t-[1.5px] border-ink-primary min-w-0 overflow-hidden"
+            className="slide-caption-bar hidden md:flex flex-row items-center md:flex-row md:items-center justify-between gap-2.5 md:gap-5 px-3 py-2 md:px-6 md:py-4 bg-surface border-t-[1.5px] border-ink-primary min-w-0 overflow-hidden"
           >
             <div className="slide-caption-left min-w-0 flex-1 flex flex-col gap-1 overflow-hidden">
               {(activeProduct.brand || activeProduct.category) && (
@@ -207,7 +207,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
           data-testid="slider-prev"
           aria-label="Sản phẩm trước"
           onClick={handlePrev}
-          className="slider-arrow w-[34px] h-[34px] rounded-full border border-line-strong bg-surface hover:bg-ink-primary text-ink-primary hover:text-white inline-flex items-center justify-center transition"
+          className="slider-arrow w-[34px] h-[34px] rounded-full border border-line-strong bg-surface hover:bg-ink-primary text-ink-primary hover:text-white hidden md:inline-flex items-center justify-center transition"
         >
           <ChevronLeft className="w-4 h-4" aria-hidden="true" />
         </button>
@@ -236,7 +236,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
           data-testid="slider-next"
           aria-label="Sản phẩm tiếp theo"
           onClick={handleNext}
-          className="slider-arrow w-[34px] h-[34px] rounded-full border border-line-strong bg-surface hover:bg-ink-primary text-ink-primary hover:text-white inline-flex items-center justify-center transition"
+          className="slider-arrow w-[34px] h-[34px] rounded-full border border-line-strong bg-surface hover:bg-ink-primary text-ink-primary hover:text-white hidden md:inline-flex items-center justify-center transition"
         >
           <ChevronRight className="w-4 h-4" aria-hidden="true" />
         </button>
@@ -250,7 +250,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
           className="slick-pause-btn inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-ink-primary bg-surface hover:bg-surface-hover border border-line-strong rounded-[4px] transition"
         >
           {isPaused ? <Play className="w-3.5 h-3.5" aria-hidden="true" /> : <Pause className="w-3.5 h-3.5" aria-hidden="true" />}
-          <span>{isPaused ? 'Phát tiếp' : 'Tạm dừng'}</span>
+          <span className="hidden md:inline">{isPaused ? 'Phát tiếp' : 'Tạm dừng'}</span>
         </button>
       </div>
     </section>
