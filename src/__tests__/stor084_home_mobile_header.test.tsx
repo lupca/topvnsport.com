@@ -76,7 +76,7 @@ describe('STOR-084 Home page 390px header block, bottom nav, and hero size', () 
       expect(cls(input)).toContain('hidden');
       expect(cls(input)).toContain('md:block');
 
-      const mainHeaderRow = input.closest('div.max-w-7xl')!;
+      const mainHeaderRow = input.closest('[data-testid="header-main-row"]')!;
       expect(cls(mainHeaderRow)).toContain('hidden');
       expect(cls(mainHeaderRow)).toContain('md:flex');
       expect(cls(mainHeaderRow)).not.toContain('flex');
@@ -91,7 +91,7 @@ describe('STOR-084 Home page 390px header block, bottom nav, and hero size', () 
       expect(cls(input)).not.toContain('hidden');
       expect(cls(input)).not.toContain('md:block');
 
-      const mainHeaderRow = input.closest('div.max-w-7xl')!;
+      const mainHeaderRow = input.closest('[data-testid="header-main-row"]')!;
       expect(cls(mainHeaderRow)).toContain('flex');
       expect(cls(mainHeaderRow)).not.toContain('hidden');
       expect(cls(mainHeaderRow)).not.toContain('md:flex');

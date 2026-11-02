@@ -143,7 +143,7 @@ describe('STOR-087 eyebrow SPECIALTY STORE và chip tách viên theo tab Mobile'
     const c = cls(screen.getByTestId('cate-select-bar'));
     expect(c).toEqual(expect.arrayContaining([
       'w-full', 'md:w-fit', 'border-b', 'border-[#e4e4e7]', 'md:border', 'md:border-line-tag',
-      'md:bg-pill-bg', 'md:rounded-full', 'px-0', 'pt-1', 'pb-3', 'md:p-1.5', 'gap-2', 'md:gap-1',
+      'md:bg-pill-bg', 'md:rounded-full', 'px-0', 'pt-1', 'pb-3', 'md:p-[6px]', 'gap-2', 'md:gap-[4px]',
     ]));
     expect(c).not.toContain('bg-pill-bg');
     expect(c).not.toContain('rounded-2xl');

@@ -14,7 +14,7 @@ import BadmintonCenterSlider from './BadmintonCenterSlider';
 
 const ALL = 'ALL';
 const O2O = 'O2O';
-const ACTIVE_CHIP = 'bg-ink-primary text-white shadow-md max-md:border max-md:border-ink-primary';
+const ACTIVE_CHIP = 'bg-ink-primary text-white shadow-md md:shadow-[0_2px_8px_rgba(0,0,0,0.18)] max-md:border max-md:border-ink-primary';
 const SECTION_SUB = 'text-[15px] font-medium text-ink-secondary mt-2';
 
 export default function HomePage() {
@@ -109,7 +109,7 @@ export default function HomePage() {
             data-testid="cate-select-bar"
             role="tablist"
             aria-label="Danh mục"
-            className="cate_select mx-auto w-full md:w-fit max-w-full md:bg-pill-bg border-b border-[#e4e4e7] md:border md:border-line-tag md:rounded-full px-0 pt-1 pb-3 md:p-1.5 flex flex-nowrap overflow-x-auto justify-start md:flex-wrap md:overflow-visible md:justify-center items-center gap-2 md:gap-1"
+            className="cate_select mx-auto w-full md:w-fit max-w-full md:max-w-[1160px] md:bg-pill-bg border-b border-[#e4e4e7] md:border md:border-line-tag md:rounded-full px-0 pt-1 pb-3 md:p-[6px] flex flex-nowrap overflow-x-auto justify-start md:flex-wrap md:overflow-visible md:justify-center items-center gap-2 md:gap-[4px]"
           >
             {[{ code: ALL, id: ALL, label: 'Tất cả', count: allInStock.length }, ...sortedCategories.map(cat => ({ code: cat.code, id: cat.id, label: getCategoryLabel(cat, categories), count: categoryCounts[cat.code] || 0 }))].map(chip => {
               const active = selectedCategory === chip.code;
@@ -121,10 +121,10 @@ export default function HomePage() {
                   key={chip.id}
                   data-testid={`cate-pill-${chip.code}`}
                   onClick={() => setSelectedCategory(chip.code)}
-                  className={`min-h-11 rounded-full px-3 md:px-[18px] py-1.5 md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
+                  className={`min-h-11 md:min-h-[44px] rounded-full px-3 md:px-[18px] py-1.5 md:py-[8px] text-[13px] md:text-[14.5px] md:font-sans! font-bold whitespace-nowrap transition flex items-center gap-1.5 md:gap-[7px] ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
                   <span>{chip.label}</span>
-                  <span className="font-mono text-[11.5px] tabular-nums opacity-90">({chip.count})</span>
+                  <span className="font-mono text-[11.5px] tabular-nums opacity-90 md:opacity-[0.88]">({chip.count})</span>
                 </button>
               );
             })}

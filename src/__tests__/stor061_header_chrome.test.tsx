@@ -125,7 +125,7 @@ describe('STOR-061: Search bar & Tìm kiếm button', () => {
 
   it('S2: Search wrapper has min-w-0 token for flex-shrink safety', () => {
     const { container } = setupHeader();
-    const searchWrapper = container.querySelector('#search-wrap, [class*="min-w-0 flex-1 md:max-w-xl"]');
+    const searchWrapper = container.querySelector('#search-wrap');
     expect(searchWrapper).not.toBeNull();
     expect(searchWrapper?.classList.contains('min-w-0')).toBe(true);
   });
