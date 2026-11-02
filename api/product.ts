@@ -57,8 +57,8 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
     .filter(([, , , , field]) => head[field])
     .map(([tag, keyAttr, key, valueAttr, field]) => {
       let shellValue: string | undefined;
-      // Attribute-aware tag body: a quoted '>' stays inside its value; the key may be quoted or an unquoted token.
-      const ATTRS = `(?:"[^"]*"|'[^']*'|[^'">])*`;
+      // Attribute-aware tag body: a quoted '>' stays inside its value; "'" only opens a quote right after '=' so an unquoted apostrophe stays plain.
+      const ATTRS = `(?:"[^"]*"|(?<==\\s*)'[^']*'|[^'">]|(?<!=\\s*)')*`;
       page = page.replace(new RegExp(`[ \\t]*<${tag}\\b${ATTRS}?\\s${keyAttr}=(?:"${key}"|'${key}'|${key}(?=[\\s>]|/>))${ATTRS}>\\s*`, 'gi'), (m) => {
         shellValue ??= m.match(new RegExp(`^[ \\t]*<${tag}\\b${ATTRS}?\\s${valueAttr}=(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i'))?.slice(1).find((v) => v !== undefined);
         return '';
