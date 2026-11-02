@@ -294,8 +294,32 @@ const pmi = (id: number, name: string, extra: Record<string, unknown> = {}) => (
 const PAGE1 = [pmi(101, 'Vợt Yonex Astrox 99'), pmi(102, 'Vợt Yonex Astrox 99')];
 const PAGE2 = [pmi(103, 'Cước BG65 Titanium', { description: 'Cước bền' }), pmi(104, 'Giày Lining')];
 
-function mockFetch(opts: { reject?: boolean; status?: number; body?: any } = {}) {
-  global.fetch = vi.fn().mockImplementation(async (url: string) => {
+// Verbatim voma-wms /public/stock body: {stock:{sku:qty}} plus items[]. S102 and S104 have no stock row.
+const row = (sku_code: string, qty: number) => ({
+  sku_code, qty_available: qty, qty_on_hand: qty, qty_reserved: 0,
+  stock_status: qty > 0 ? 'in_stock' : 'out_of_stock', low_stock_threshold: 5, threshold_source: 'default',
+});
+const WMS_BODY = { stock: { S101: 5, S103: 0 }, items: [row('S101', 5), row('S103', 0)] };
+
+type StockOpt = { status?: number; body?: any; reject?: boolean; hang?: boolean };
+
+function mockFetch(opts: { reject?: boolean; status?: number; body?: any; stock?: StockOpt } = {}) {
+  global.fetch = vi.fn().mockImplementation(async (url: string, init?: any) => {
+    if (url.includes('/public/stock')) {
+      const st = opts.stock ?? {};
+      if (st.reject) throw new Error('wms down');
+      if (st.hang) {
+        // Settles only when the caller's signal aborts, like real fetch.
+        return new Promise((_resolve, reject) => {
+          const sig: AbortSignal | undefined = init?.signal;
+          if (!sig) return;
+          const abort = () => reject(new Error('aborted'));
+          if (sig.aborted) abort(); else sig.addEventListener('abort', abort);
+        });
+      }
+      if (st.status && st.status !== 200) return { status: st.status, json: async () => WMS_BODY } as any;
+      return { status: 200, json: async () => (st.body !== undefined ? st.body : WMS_BODY) } as any;
+    }
     if (opts.reject) throw new Error('timeout');
     if (url.includes('/public/voma-categories')) {
       return { status: 200, json: async () => [{ id: 1, code: 'vot', name: 'Vợt' }] } as any;
@@ -318,6 +342,7 @@ describe('STOR-069 api/product handler', () => {
     vi.spyOn(fs, 'readFileSync').mockImplementation(((p: any, ...rest: any[]) =>
       String(p).endsWith(path.join('dist', 'index.html')) ? SHELL : (realRead as any)(p, ...rest)) as any);
     process.env.PMI_API_URL = 'https://api-pim.voma.vn/api/v1/site';
+    process.env.WMS_API_URL = 'https://api-wms.voma.vn/api/v1/site';
     process.env.STOREFRONT_SELLER_ID = 'seller-stor069';
     process.env.CATALOG_GRANT_TOKENS = JSON.stringify({ 'seller-stor069': TOKEN });
     mockFetch();
@@ -333,14 +358,14 @@ describe('STOR-069 api/product handler', () => {
     expect(res.statusCode).toBe(200);
     expect(res.headers['Content-Type']).toMatch(/^text\/html/);
     expect(res.headers['Cache-Control']).toBe('public, max-age=0, s-maxage=300');
-    expect(res.headers['Vercel-CDN-Cache-Control']).toBeUndefined();
+    expect(res.headers['Vercel-CDN-Cache-Control']).toBe('max-age=60, stale-while-revalidate=300');
     expect(res.body).toContain('<h1>Vợt Yonex Astrox 99</h1>');
     // STOR-070: one JSON-LD Product in head, sku and price from the PIM variant.
     expect(res.body.match(/application\/ld\+json/g)).toHaveLength(1);
     expect(res.body.indexOf('application/ld+json')).toBeLessThan(res.body.indexOf('</head>'));
     const data = jsonLd(res.body);
     expect(data.sku).toBe('S101');
-    expect(data.offers).toEqual({ '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: 'https://www.topvnsport.com/product/vot-yonex-astrox-99' });
+    expect(data.offers).toEqual({ '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: 'https://www.topvnsport.com/product/vot-yonex-astrox-99', availability: 'https://schema.org/InStock' });
   });
 
   it('serves a product from page 2 of the PIM list', async () => {
@@ -409,6 +434,9 @@ describe('STOR-069 api/product handler', () => {
       [get('khong-ton-tai'), () => mockFetch()],
       [get('vot-yonex-astrox-99'), () => mockFetch({ reject: true })],
       [{ method: 'POST', query: {} }, () => mockFetch()],
+      [get('vot-yonex-astrox-99'), () => mockFetch({ stock: { status: 503 } })],
+      [get('vot-yonex-astrox-99'), () => mockFetch({ stock: { reject: true } })],
+      [get('vot-yonex-astrox-99'), () => mockFetch({ stock: { body: { nope: true } } })],
     ];
     for (const [req, setup] of cases) {
       setup();
@@ -417,6 +445,181 @@ describe('STOR-069 api/product handler', () => {
       expect(String(res.body)).not.toContain(TOKEN);
       expect(JSON.stringify(res.headers)).not.toContain(TOKEN);
     }
+  });
+});
+
+describe('STOR-078 WMS stock, availability and cache headers', () => {
+  const ORIGINAL_ENV = { ...process.env };
+  const get = (slug: string) => ({ method: 'GET', query: { slug }, headers: {} });
+  const SLUG = 'vot-yonex-astrox-99';
+  const OFFER = { '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: `https://www.topvnsport.com/product/${SLUG}` };
+  const KNOWN_HEADERS = { 'Cache-Control': 'public, max-age=0, s-maxage=300', 'Vercel-CDN-Cache-Control': 'max-age=60, stale-while-revalidate=300' };
+  const stockCalls = () => (global.fetch as any).mock.calls.filter((c: any[]) => String(c[0]).includes('/public/stock'));
+  const run = async (slug: string, opts: Parameters<typeof mockFetch>[0] = {}) => {
+    mockFetch(opts);
+    const res = makeRes();
+    await productHandler(get(slug), res);
+    return res;
+  };
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const realRead = fs.readFileSync;
+    vi.spyOn(fs, 'readFileSync').mockImplementation(((p: any, ...rest: any[]) =>
+      String(p).endsWith(path.join('dist', 'index.html')) ? SHELL : (realRead as any)(p, ...rest)) as any);
+    process.env.PMI_API_URL = 'https://api-pim.voma.vn/api/v1/site';
+    process.env.WMS_API_URL = 'https://api-wms.voma.vn/api/v1/site';
+    process.env.STOREFRONT_SELLER_ID = 'seller-stor069';
+    process.env.CATALOG_GRANT_TOKENS = JSON.stringify({ 'seller-stor069': TOKEN });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    process.env = { ...ORIGINAL_ENV };
+  });
+
+  it('stock > 0 in the verbatim {stock, items} body gives InStock and the known-stock header pair', async () => {
+    const res = await run(SLUG);
+    expect(res.statusCode).toBe(200);
+    expect(jsonLd(res.body).offers).toEqual({ ...OFFER, availability: 'https://schema.org/InStock' });
+    expect(res.headers).toMatchObject(KNOWN_HEADERS);
+  });
+
+  it('an items-only body gives InStock when qty_available > 0', async () => {
+    const res = await run(SLUG, { stock: { body: { items: [row('S101', 7)] } } });
+    expect(jsonLd(res.body).offers.availability).toBe('https://schema.org/InStock');
+    expect(res.headers).toMatchObject(KNOWN_HEADERS);
+  });
+
+  it('qty 0 gives OutOfStock', async () => {
+    const res = await run('cuoc-bg65-titanium');
+    expect(jsonLd(res.body).offers.availability).toBe('https://schema.org/OutOfStock');
+    expect(res.headers).toMatchObject(KNOWN_HEADERS);
+  });
+
+  it('a SKU absent from a loaded stock map gives OutOfStock', async () => {
+    const res = await run('vot-yonex-astrox-99-2'); // S102 has no WMS row
+    expect(jsonLd(res.body).offers).toEqual({ ...OFFER, url: 'https://www.topvnsport.com/product/vot-yonex-astrox-99-2', availability: 'https://schema.org/OutOfStock' });
+  });
+
+  it('the PIM variant stock never supplies availability (PIM stock 3, WMS qty 0 -> OutOfStock)', async () => {
+    const res = await run('cuoc-bg65-titanium', { stock: { body: { stock: { S103: 0 } } } });
+    expect(jsonLd(res.body).offers.availability).toBe('https://schema.org/OutOfStock');
+  });
+
+  it("kind 'none' keeps the Offer, omits availability and gets the known-stock header pair", async () => {
+    const none = pmi(105, 'Vợt Lining None', {
+      tier_1_name: 'Màu', variants: [{ id: 1050, price: 500000, stock: 3, sku_code: 'S105', tier_1_option: 'Đỏ' }],
+    });
+    const body = { items: [{ ...none, tier_variations: [{ name: 'Màu', tier_index: 1, options: ['Xanh'] }] }], total: 1, pages: 1 };
+    const res = await run('vot-lining-none', { body, stock: { body: { stock: { S105: 9 } } } });
+    expect(res.statusCode).toBe(200);
+    const { offers } = jsonLd(res.body);
+    expect(offers).toMatchObject({ '@type': 'Offer', priceCurrency: 'VND' });
+    expect(offers).not.toHaveProperty('availability');
+    expect(res.headers).toMatchObject(KNOWN_HEADERS);
+  });
+
+  it("an unpriced product with WMS 200 gets the known-stock header pair and no Offer", async () => {
+    const body = { items: [pmi(106, 'Vợt Không Giá', { variants: [{ id: 1060, price: 0, stock: 3, sku_code: 'S106' }] })], total: 1, pages: 1 };
+    const res = await run('vot-khong-gia', { body });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toContain('<p>Liên hệ để biết giá</p>');
+    expect(jsonLd(res.body)).not.toHaveProperty('offers');
+    expect(res.headers).toMatchObject(KNOWN_HEADERS);
+  });
+
+  it('one request makes exactly one /public/stock GET with the Bearer token and a 4000 ms AbortSignal.timeout', async () => {
+    const timeoutSpy = vi.spyOn(AbortSignal, 'timeout');
+    await run(SLUG);
+    const calls = stockCalls();
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0]).toBe('https://api-wms.voma.vn/api/v1/site/public/stock');
+    expect(calls[0][1].headers).toEqual({ Authorization: `Bearer ${TOKEN}` });
+    expect(calls[0][1].signal).toBeInstanceOf(AbortSignal);
+    expect(timeoutSpy).toHaveBeenCalledWith(4000);
+  });
+
+  it('the /public/stock call starts while the PIM page-1 fetch is still pending', async () => {
+    let releasePim!: () => void;
+    const held = new Promise<void>((r) => { releasePim = r; });
+    mockFetch();
+    const inner = (global.fetch as any).getMockImplementation();
+    let stockStartedWhileHeld = false;
+    global.fetch = vi.fn().mockImplementation(async (url: string, init?: any) => {
+      if (String(url).includes('/public/products') && String(url).includes('page=1')) {
+        await held;
+      } else if (String(url).includes('/public/stock')) {
+        stockStartedWhileHeld = true;
+        releasePim();
+      }
+      return inner(url, init);
+    });
+    // If WMS were awaited after PIM, page 1 would never release and this would time out.
+    const res = makeRes();
+    await productHandler(get(SLUG), res);
+    expect(stockStartedWhileHeld).toBe(true);
+    expect(res.statusCode).toBe(200);
+  });
+
+  const failures: Array<[string, () => Parameters<typeof mockFetch>[0], (() => void)?]> = [
+    ['non-200', () => ({ stock: { status: 503 } })],
+    ['throw', () => ({ stock: { reject: true } })],
+    ['missing WMS_API_URL', () => ({}), () => { delete process.env.WMS_API_URL; }],
+    ['malformed body', () => ({ stock: { body: { nope: true } } })],
+    ['null body', () => ({ stock: { body: null } })],
+  ];
+  for (const [label, opts, env] of failures) {
+    it(`WMS ${label}: 200, product rendered, Offer kept, no availability, no-store, no CDN header, no token`, async () => {
+      env?.();
+      const res = await run(SLUG, opts());
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toContain('<h1>Vợt Yonex Astrox 99</h1>');
+      const data = jsonLd(res.body);
+      expect(data.offers).toEqual(OFFER);
+      expect(data.offers).not.toHaveProperty('availability');
+      expect(res.body).not.toContain('availability');
+      expect(res.headers['Cache-Control']).toBe('no-store');
+      expect(res.headers).not.toHaveProperty('Vercel-CDN-Cache-Control');
+      expect(String(res.body)).not.toContain(TOKEN);
+      expect(JSON.stringify(res.headers)).not.toContain(TOKEN);
+    });
+  }
+
+  it('WMS timeout (never-resolving fetch aborted by AbortSignal.timeout(4000)): 200, no availability, no-store', async () => {
+    const controller = new AbortController();
+    const timeoutSpy = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(controller.signal);
+    mockFetch({ stock: { hang: true } });
+    const res = makeRes();
+    const done = productHandler(get(SLUG), res);
+    setTimeout(() => controller.abort(), 50);
+    await done;
+    expect(timeoutSpy).toHaveBeenCalledWith(4000);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toContain('<h1>Vợt Yonex Astrox 99</h1>');
+    expect(jsonLd(res.body).offers).toEqual(OFFER);
+    expect(res.body).not.toContain('availability');
+    expect(res.headers['Cache-Control']).toBe('no-store');
+    expect(res.headers).not.toHaveProperty('Vercel-CDN-Cache-Control');
+  }, 2000);
+
+  it('PIM failure, 404 and 405 keep their STOR-069 status and headers with WMS up', async () => {
+    const pimDown = await run(SLUG, { reject: true });
+    expect([pimDown.statusCode, pimDown.headers['Cache-Control'], pimDown.body]).toEqual([200, 'no-store', SHELL]);
+    const notFound = await run('khong-ton-tai');
+    expect([notFound.statusCode, notFound.headers['Cache-Control'], notFound.body]).toEqual([404, 'no-store', SHELL]);
+    expect(notFound.headers).not.toHaveProperty('Vercel-CDN-Cache-Control');
+    const res = makeRes();
+    await productHandler({ method: 'POST', query: { slug: SLUG } }, res);
+    expect([res.statusCode, res.headers['Cache-Control']]).toEqual([405, 'no-store']);
+    expect(res.headers).not.toHaveProperty('Vercel-CDN-Cache-Control');
+  });
+
+  it('never leaks the token in body or headers on WMS success', async () => {
+    const res = await run(SLUG);
+    expect(String(res.body)).not.toContain(TOKEN);
+    expect(JSON.stringify(res.headers)).not.toContain(TOKEN);
   });
 });
 

@@ -41,7 +41,7 @@ export function resolveCatalogGrantToken(): string | undefined {
 // duyệt vẫn max-age=0. Độ cũ tối đa giá/tồn khách thấy ≈ 360s (60s tươi + 300s
 // stale-while-revalidate) cộng thời gian revalidate; OMS vẫn tính tiền theo giá
 // PIM lúc đặt. Mọi nhánh khác 200 gắn no-store (không cache lỗi).
-const CDN_CACHE_CONTROL = 'max-age=60, stale-while-revalidate=300';
+export const CDN_CACHE_CONTROL = 'max-age=60, stale-while-revalidate=300';
 
 export async function proxyToVoma(req: any, res: any, baseUrl: string | undefined) {
   // This proxy exists only to attach a read-scoped catalog-grant token to
