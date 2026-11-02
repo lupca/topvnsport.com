@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Eye, ShoppingCart, ImageOff } from 'lucide-react';
 import { getProductPath } from '../utils/productSlug';
-import { isRacketCategoryCode } from '../config/storefront';
 import { getPriceDisplay } from '../utils/priceDisplay';
 import { getSingleSellableSku } from '../features/cart/cartSlice';
 import { hasO2OStringing, getPrimaryTierPreview } from '../utils/badmintonReadiness';
@@ -67,8 +66,6 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
     ? colorOptions.filter((o) => !COLOR_HEX[o]).slice(0, 2)
     : getPrimaryTierPreview(product, 2);
 
-  const showSpecs = isRacketCategoryCode(product.categoryCode);
-  const { weight, balance, stiffness } = product.specs;
   const goToDetail = () => navigate(getProductPath(product));
 
   return (
@@ -243,13 +240,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           )}
         </div>
 
-        {/* Tầng 6: chip thông số thật + nút đan cước O2O */}
+        {/* Tầng 6: nút đan cước O2O, chỉ khi sản phẩm có tầng cước (PO 2026-11-02: không còn chip thông số) */}
         <div className="mt-auto flex flex-wrap gap-1 sm:gap-[5px]">
-          {showSpecs && weight && <SpecChip testId="spec-weight">{weight}</SpecChip>}
-          {showSpecs && typeof balance === 'number' && <SpecChip testId="spec-balance">CB {balance}mm</SpecChip>}
-          {showSpecs && stiffness && <SpecChip testId="spec-stiffness">{stiffness}</SpecChip>}
-          {/* Form chân bè theo isWide thật, không theo tên ngành */}
-          {product.isWide === true && <SpecChip testId="wide-fit">Form chân bè (Wide Fit)</SpecChip>}
           {supportsO2OStringing && (
             <button
               type="button"
@@ -268,16 +260,5 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
         </div>
       </div>
     </div>
-  );
-}
-
-function SpecChip({ testId, children }: { testId: string; children: React.ReactNode }) {
-  return (
-    <span
-      data-testid={testId}
-      className="border border-line-tag bg-white px-1 sm:px-[7px] py-0.5 sm:py-[3px] font-mono text-[10px] sm:text-[11px] font-bold leading-[1.3] text-ink-primary"
-    >
-      {children}
-    </span>
   );
 }
