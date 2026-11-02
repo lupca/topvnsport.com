@@ -111,9 +111,9 @@ describe('STOR-090 chip, tiêu đề nổi bật, ô ngành dưới md', () => {
   it('chip cao 40 px 14 py 8 dưới md; số đếm cùng font nhãn dưới md, md+ mono 11.5px', () => {
     renderHome([prod('1'), prod('2', { categoryCode: 'c2' })]);
     const pill = screen.getByTestId('cate-pill-ALL');
-    expect(cls(pill)).toEqual(expect.arrayContaining(['max-md:min-h-[40px]', 'max-md:px-[14px]', 'max-md:py-[8px]', 'min-h-11', 'md:px-[18px]', 'md:py-2']));
+    expect(cls(pill)).toEqual(expect.arrayContaining(['max-md:min-h-[40px]', 'max-md:px-[14px]', 'max-md:py-[8px]', 'min-h-11', 'md:px-[18px]', 'md:py-[8px]']));
     const count = cls(pill.querySelectorAll('span')[1]);
-    expect(count).toEqual(expect.arrayContaining(['md:font-mono', 'md:text-[11.5px]', 'md:opacity-90']));
+    expect(count).toEqual(expect.arrayContaining(['md:font-mono', 'md:text-[11.5px]', 'md:opacity-[0.88]']));
     expect(count).not.toContain('font-mono');
     expect(count).not.toContain('opacity-90');
   });
