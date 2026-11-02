@@ -57,8 +57,10 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
     .filter(([, , , , field]) => head[field])
     .map(([tag, keyAttr, key, valueAttr, field]) => {
       let shellValue: string | undefined;
-      page = page.replace(new RegExp(`[ \\t]*<${tag}\\b[^>]*\\b${keyAttr}=["']${key}["'][^>]*>\\s*`, 'gi'), (m) => {
-        shellValue ??= m.match(new RegExp(`\\b${valueAttr}=(?:"([^"]*)"|'([^']*)')`, 'i'))?.slice(1).find((v) => v !== undefined);
+      // Attribute-aware tag body: a quoted '>' stays inside its value; the key may be quoted or an unquoted token.
+      const ATTRS = `(?:"[^"]*"|'[^']*'|[^'">])*`;
+      page = page.replace(new RegExp(`[ \\t]*<${tag}\\b${ATTRS}?\\s${keyAttr}=(?:"${key}"|'${key}'|${key}(?=[\\s>]|/>))${ATTRS}>\\s*`, 'gi'), (m) => {
+        shellValue ??= m.match(new RegExp(`^[ \\t]*<${tag}\\b${ATTRS}?\\s${valueAttr}=(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i'))?.slice(1).find((v) => v !== undefined);
         return '';
       });
       const carry = shellValue ? ` ${PRODUCT_SHELL_VALUE}="${shellValue.replace(/"/g, '&quot;')}"` : '';
