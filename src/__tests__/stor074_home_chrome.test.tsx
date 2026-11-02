@@ -65,7 +65,7 @@ describe('STOR-074 trust row lọc theo dữ liệu', () => {
       product('b4', { brand: 'Kizuna' })
     ];
     render(<TrustBadges products={products} />);
-    expect(trustText(0)).toBe('Phân phối chính thức Yonex, Li-Ning, Victor, Kizuna. Đền gấp 10 lần nếu phát hiện hàng giả.');
+    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise, cam kết chính hãng Li-Ning, Victor, Kizuna. Đền gấp 10 lần nếu phát hiện hàng giả.');
     expect(trustText(1)).toBe('Tùy chọn cước BG66U, Exbolt 65, Kizuna Z61 và mức căng 9.0–13.0kg ngay khi đặt vợt.');
     expect(screen.getByRole('heading', { name: 'Giao Hỏa Tốc & Đồng Kiểm' })).toBeTruthy();
   });
@@ -75,13 +75,13 @@ describe('STOR-074 trust row lọc theo dữ liệu', () => {
       product('c1', { brand: 'Li-Ning', tier_variations: [stringingTier(['Exbolt 65']), { tier_index: 0, name: 'Màu', options: ['BG66U'] }] })
     ];
     render(<TrustBadges products={products} />);
-    expect(trustText(0)).toBe('Phân phối chính thức Li-Ning. Đền gấp 10 lần nếu phát hiện hàng giả.');
+    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise, cam kết chính hãng Li-Ning. Đền gấp 10 lần nếu phát hiện hàng giả.');
     expect(trustText(1)).toBe('Tùy chọn cước Exbolt 65 và mức căng 9.0–13.0kg ngay khi đặt vợt.');
   });
 
   it('không có dữ liệu -> không nêu tên nào', () => {
     render(<TrustBadges products={[product('d1', { brand: 'Gowin' })]} />);
-    expect(trustText(0)).toBe('Phân phối chính thức. Đền gấp 10 lần nếu phát hiện hàng giả.');
+    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise. Đền gấp 10 lần nếu phát hiện hàng giả.');
     expect(trustText(1)).toBe('Tùy chọn cước và mức căng 9.0–13.0kg ngay khi đặt vợt.');
   });
 });

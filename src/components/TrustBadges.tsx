@@ -23,10 +23,11 @@ export function getTrustStrings(products: Product[]): string[] {
 }
 
 export default function TrustBadges({ products }: { products: Product[] }) {
-  const brands = getTrustBrands(products);
+  const others = getTrustBrands(products).filter(b => b !== 'Yonex');
   const strings = getTrustStrings(products);
   const items = [
-    { title: '100% Chính Hãng', text: `Phân phối chính thức${brands.length ? ` ${brands.join(', ')}` : ''}. Đền gấp 10 lần nếu phát hiện hàng giả.` },
+    // Shop chỉ là đại lý uỷ quyền của Yonex Sunrise; hãng khác chỉ được cam kết chính hãng, không ghi "phân phối chính thức".
+    { title: '100% Chính Hãng', text: `Đại lý uỷ quyền Yonex Sunrise${others.length ? `, cam kết chính hãng ${others.join(', ')}` : ''}. Đền gấp 10 lần nếu phát hiện hàng giả.` },
     { title: 'Đan Vợt Điện Tử O2O', text: `Tùy chọn cước${strings.length ? ` ${strings.join(', ')}` : ''} và mức căng 9.0–13.0kg ngay khi đặt vợt.` },
     { title: 'Giao Hỏa Tốc & Đồng Kiểm', text: 'Kiểm tra khung vợt, mã tem chống giả và độ căng mặt lưới trước khi thanh toán.' },
     { title: 'Showroom Trải Nghiệm', text: 'Cầm thử trực tiếp trọng lượng 3U / 4U / 5U và đo điểm cân bằng tại cửa hàng Hà Nội.' }
