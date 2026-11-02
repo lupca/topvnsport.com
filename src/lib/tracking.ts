@@ -47,6 +47,7 @@ let metaScriptInjected = false;
 let _configuredGaId: string | null = null;
 let _configuredPixelId: string | null = null;
 let lastTrackedPath: string | null = null;
+let gaPageViewSent = false;
 
 const PURCHASE_GUARD_KEY_PREFIX = 'purchase_tracked_';
 
@@ -56,6 +57,7 @@ export function _resetTrackingForTesting(): void {
   _configuredGaId = null;
   _configuredPixelId = null;
   lastTrackedPath = null;
+  gaPageViewSent = false;
 }
 
 function safeGtag(...args: any[]): void {
@@ -144,9 +146,13 @@ export function pageView(path?: string): void {
   }
   lastTrackedPath = currentPath;
 
-  safeGtag('event', 'page_view', {
-    page_path: currentPath,
-  });
+  // GA4 page_view only on full load; in-app route changes rely on GA4 Enhanced Measurement history-event page_view.
+  if (!gaPageViewSent) {
+    gaPageViewSent = true;
+    safeGtag('event', 'page_view', {
+      page_path: currentPath,
+    });
+  }
   safeFbq('track', 'PageView');
 }
 
