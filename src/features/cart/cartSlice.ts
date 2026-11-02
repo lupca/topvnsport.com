@@ -273,12 +273,29 @@ export function describeCartItemSkuStatus(item: CartItem, products: Product[]): 
   return 'ok';
 }
 
+export interface CartItemPriceDisplay {
+  unit: number | null;
+  original: number | null;
+}
+
+// Cặp đơn giá bán (theo variantUnitPrice) và đơn giá gốc gạch ngang (từ
+// original_price PIM của đúng biến thể). Chỉ trả original khi PIM có trả
+// original_price (không fallback sang variant.price / product.price) và
+// originalPrice > unit (đang có KM thật).
+export function getCartItemPriceDisplay(item: CartItem, products: Product[]): CartItemPriceDisplay {
+  const product = products.find(p => p.id === item.productId);
+  const variant = item.skuCode ? product && sellableVariantsOf(product).find(v => v.sku_code === item.skuCode) : undefined;
+  const unit = variant ? variantUnitPrice(variant) : null;
+  if (unit === null || !variant) return { unit: null, original: null };
+  const orig = variant.originalPrice;
+  const original = typeof orig === 'number' && orig > unit ? orig : null;
+  return { unit, original };
+}
+
 // Đơn giá của món theo biến thể ĐÃ TẢI (không tin CartItem.price lưu
 // localStorage). Không tìm được sản phẩm/biến thể/giá thật -> null.
 export function getCartItemUnitPrice(item: CartItem, products: Product[]): number | null {
-  const product = products.find(p => p.id === item.productId);
-  const variant = item.skuCode ? product && sellableVariantsOf(product).find(v => v.sku_code === item.skuCode) : undefined;
-  return variant ? variantUnitPrice(variant) : null;
+  return getCartItemPriceDisplay(item, products).unit;
 }
 
 // Biến thể đã chọn không có giá thật -> không tạo món, báo rõ product id + sku.

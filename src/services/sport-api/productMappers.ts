@@ -86,17 +86,18 @@ export function mapProductVariant(variant: PmiVariant, productId: number): Produ
   const price = Number(variant.price || 0);
   const originalPrice = variant.original_price !== undefined && variant.original_price !== null
     ? Number(variant.original_price)
-    : price;
+    : undefined;
+  const baseOriginal = originalPrice ?? price;
   const computedPrice = variant.computed_price !== undefined && variant.computed_price !== null
     ? Number(variant.computed_price)
-    : originalPrice;
+    : baseOriginal;
   const hasActivePromotion = Boolean(
     variant.has_active_promotion ||
     (variant.computed_price !== undefined && variant.original_price !== undefined && Number(variant.computed_price) < Number(variant.original_price))
   );
   const percentageDiscount = variant.percentage_discount !== undefined && variant.percentage_discount !== null
     ? Number(variant.percentage_discount)
-    : (hasActivePromotion && originalPrice > 0 ? Math.round(((originalPrice - computedPrice) / originalPrice) * 100) : 0);
+    : (hasActivePromotion && baseOriginal > 0 ? Math.round(((baseOriginal - computedPrice) / baseOriginal) * 100) : 0);
 
   return {
     id: variant.id,
@@ -186,7 +187,7 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
 
   const originalPrice = productLevel
     ? (pmiProduct.original_price !== undefined && pmiProduct.original_price !== null ? Number(pmiProduct.original_price) : resolvedPrice)
-    : cheapest?.originalPrice ?? resolvedPrice;
+    : cheapest?.originalPrice ?? cheapest?.price ?? resolvedPrice;
 
   const computedPrice = productLevel
     ? Number(pmiProduct.computed_price)
