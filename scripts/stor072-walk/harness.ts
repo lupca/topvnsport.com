@@ -18,9 +18,18 @@ const ITEMS = [
   pmi(104, 'Giày Lining'),
 ];
 const CATS = [{ id: 1, code: 'vot', name: 'Vợt', display_name: 'Vợt' }];
-const STOCK = { stock: { S101: 3, S103: 3, S104: 3 } };
+// Verbatim voma-wms /public/stock body from stor069_product_page.test.ts:296-302 (row() helper).
+const row = (sku_code: string, qty: number) => ({
+  sku_code, qty_available: qty, qty_on_hand: qty, qty_reserved: 0,
+  stock_status: qty > 0 ? 'in_stock' : 'out_of_stock', low_stock_threshold: 5, threshold_source: 'default',
+});
+const STOCK = {
+  stock: { S101: 3, S103: 0, S104: 3 },
+  items: [row('S101', 3), row('S103', 0), row('S104', 3)],
+};
 
 process.env.PMI_API_URL = `http://127.0.0.1:${PORT}/pim`;
+process.env.WMS_API_URL = `http://127.0.0.1:${PORT}/api/wms`;
 process.env.STOREFRONT_SELLER_ID = 'seller-harness';
 process.env.CATALOG_GRANT_TOKENS = JSON.stringify({ 'seller-harness': 'fake-harness-token' });
 
@@ -55,6 +64,8 @@ http.createServer(async (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(fs.readFileSync(path.join(process.cwd(), 'dist/index.html')));
 }).listen(PORT, '127.0.0.1', () => {
-  fs.writeFileSync(process.env.PIDFILE || '/tmp/stor072/harness.pid', String(process.pid));
+  const pidFile = process.env.PIDFILE || '/tmp/stor072/harness.pid';
+  fs.mkdirSync(path.dirname(pidFile), { recursive: true });
+  fs.writeFileSync(pidFile, String(process.pid));
   console.log('harness on', PORT, 'pid', process.pid);
 });

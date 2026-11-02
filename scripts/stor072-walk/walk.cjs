@@ -5,7 +5,7 @@ const { chromium } = require(process.env.PLAYWRIGHT || 'playwright');
 const fs = require('fs');
 const SHOTS = process.env.SHOTS || '/tmp/stor072/shots';
 fs.mkdirSync(SHOTS, { recursive: true });
-const BASE = 'http://127.0.0.1:4372', ORIGIN = 'https://www.topvnsport.com';
+const BASE = 'http://127.0.0.1:' + (process.env.PORT || 4372), ORIGIN = 'https://www.topvnsport.com';
 const SHELL = fs.readFileSync('dist/index.html', 'utf8').match(/<title>([^<]*)<\/title>/)[1];
 let n = 0, fails = 0;
 const check = (label, got, want) => { const ok = got === want; if (!ok) fails++; console.log(`${ok ? 'PASS' : 'FAIL'} ${label}: ${JSON.stringify(got)}${ok ? '' : ' want ' + JSON.stringify(want)}`); };
@@ -76,8 +76,15 @@ const check = (label, got, want) => { const ok = got === want; if (!ok) fails++;
   await page.getByRole('button', { name: 'Thêm vào giỏ hàng' }).click();
   await snap('added-to-cart');
   const cartHeading = page.getByText('Giỏ Hàng Của Bạn');
-  if (!(await cartHeading.isVisible())) await page.getByRole('button', { name: 'Giỏ hàng' }).first().click();
-  await cartHeading.waitFor();
+  const auto = await cartHeading.waitFor({ timeout: 3000 }).then(() => true, () => false);
+  if (auto) {
+    console.log('CART PATH: auto-open');
+  } else {
+    console.log('CART PATH: cart-icon click');
+    await page.getByRole('button', { name: 'Giỏ hàng' }).first().click();
+    await cartHeading.waitFor();
+  }
+  check('Giày Lining in #cart-drawer-modal', await page.locator('#cart-drawer-modal').getByText('Giày Lining').first().isVisible(), true);
   await snap('cart');
   await page.getByRole('button', { name: /Tiến hành thanh toán/ }).click();
   await page.getByText('Thanh Toán Đơn Hàng').waitFor();
