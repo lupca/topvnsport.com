@@ -14,7 +14,7 @@ import BadmintonCenterSlider from './BadmintonCenterSlider';
 
 const ALL = 'ALL';
 const O2O = 'O2O';
-const ACTIVE_CHIP = 'bg-ink-primary text-white shadow-md';
+const ACTIVE_CHIP = 'bg-ink-primary text-white shadow-md max-md:border max-md:border-ink-primary';
 const SECTION_SUB = 'text-[15px] font-medium text-ink-secondary mt-2';
 
 export default function HomePage() {
@@ -94,7 +94,10 @@ export default function HomePage() {
       {sortedCategories.length > 0 && (
         <section data-testid="badminton-hub-header" className="max-w-[1280px] mx-auto px-4 md:px-[24px] pt-2">
           <div className="title-box text-center mb-4">
-            <p data-testid="hub-eyebrow" className="font-mono text-xs font-bold tracking-[0.14em] uppercase text-brand-primary mb-1.5">
+            <p data-testid="hub-eyebrow-mobile" className="md:hidden font-mono text-[10px] font-bold tracking-[0.12em] uppercase text-brand-primary mb-1.5">
+              SPECIALTY STORE
+            </p>
+            <p data-testid="hub-eyebrow" className="hidden md:block font-mono text-xs font-bold tracking-[0.14em] uppercase text-brand-primary mb-1.5">
               TOPVNSPORT OFFICIAL SPECIALTY HUB
             </p>
             <h1 className="font-display font-black text-2xl md:text-4xl tracking-tight text-ink-primary uppercase">
@@ -106,7 +109,7 @@ export default function HomePage() {
             data-testid="cate-select-bar"
             role="tablist"
             aria-label="Danh mục"
-            className="cate_select mx-auto w-fit max-w-full bg-pill-bg border border-line-tag rounded-2xl md:rounded-full p-2 md:p-1.5 flex flex-nowrap overflow-x-auto justify-start md:flex-wrap md:overflow-visible md:justify-center items-center gap-1"
+            className="cate_select mx-auto w-full md:w-fit max-w-full md:bg-pill-bg border-b border-[#e4e4e7] md:border md:border-line-tag md:rounded-full px-0 pt-1 pb-3 md:p-1.5 flex flex-nowrap overflow-x-auto justify-start md:flex-wrap md:overflow-visible md:justify-center items-center gap-2 md:gap-1"
           >
             {[{ code: ALL, id: ALL, label: 'Tất cả', count: allInStock.length }, ...sortedCategories.map(cat => ({ code: cat.code, id: cat.id, label: getCategoryLabel(cat, categories), count: categoryCounts[cat.code] || 0 }))].map(chip => {
               const active = selectedCategory === chip.code;
@@ -118,7 +121,7 @@ export default function HomePage() {
                   key={chip.id}
                   data-testid={`cate-pill-${chip.code}`}
                   onClick={() => setSelectedCategory(chip.code)}
-                  className={`min-h-11 rounded-full px-3 md:px-[18px] py-1.5 md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 ${active ? ACTIVE_CHIP : 'bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
+                  className={`min-h-11 rounded-full px-3 md:px-[18px] py-1.5 md:py-2 text-[13px] md:text-sm font-bold whitespace-nowrap transition flex items-center gap-1.5 ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
                   <span>{chip.label}</span>
                   <span className="font-mono text-[11.5px] tabular-nums opacity-90">({chip.count})</span>
@@ -135,10 +138,15 @@ export default function HomePage() {
         <section data-testid="instock-shelf" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
           <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5">SẢN PHẨM NỔI BẬT</h2>
           {/* Số thật = SP còn hàng; vế đan cước chỉ khi có SP còn hàng có tầng cước (cùng luật với giỏ). */}
-          <p data-testid="featured-subtitle" className={`text-center ${SECTION_SUB} pb-6`}>
+          <p data-testid="featured-subtitle" className={`hidden md:block text-center ${SECTION_SUB} pb-6`}>
             {`${allInStock.length} sản phẩm thật từ hệ thống PIM TopVNSport`}
             {allInStock.some(hasO2OStringing) && ' — Tích hợp cấu hình đan cước 2 tầng (Khung vợt + Loại cước & Số KG)'}
           </p>
+          {allInStock.some(hasO2OStringing) && (
+            <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-xs font-semibold text-ink-secondary mt-0.5 pb-6">
+              Chạm vào thẻ sản phẩm để chọn loại cước &amp; số kg
+            </p>
+          )}
 
           <div className="hidden md:flex flex-col items-start gap-3 bg-brand-light border border-line-tag rounded-[10px] px-4 py-3 mb-7">
             <div data-testid="quick-filter-bar" className="flex flex-wrap items-center gap-2">

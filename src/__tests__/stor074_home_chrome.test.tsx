@@ -50,9 +50,9 @@ describe('STOR-074 hero caption', () => {
     expect(container.querySelector('.slide-caption-sub')).toBeNull();
   });
 
-  it('caption bar không bị ẩn dưới md (không còn class hidden)', () => {
+  it('caption bar ẩn dưới md (hidden md:flex), hiện lại ở md+ theo STOR-087', () => {
     renderSlider(product('a3'));
-    expect(screen.getByTestId('slider-caption-bar').className.split(' ')).not.toContain('hidden');
+    expect(screen.getByTestId('slider-caption-bar').className.split(' ')).toEqual(expect.arrayContaining(['hidden', 'md:flex']));
   });
 });
 

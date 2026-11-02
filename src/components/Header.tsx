@@ -176,7 +176,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(true)}
-          className="p-1 -ml-1 text-gray-700 hover:text-brand-primary rounded-lg transition shrink-0"
+          className={`${currentView === 'home' ? 'hidden ' : ''}p-1 -ml-1 text-gray-700 hover:text-brand-primary rounded-lg transition shrink-0`}
           aria-label="Open mobile menu"
         >
           <Menu className="w-6 h-6" />
