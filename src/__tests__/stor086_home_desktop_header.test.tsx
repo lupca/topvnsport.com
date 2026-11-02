@@ -6,8 +6,13 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen, cleanup } from '@testing-library/react';
 import Header from '../components/Header';
+import HomePage from '../features/home/HomePage';
+import cartReducer from '../features/cart/cartSlice';
+import catalogReducer from '../features/catalog/catalogSlice';
 import { Product, Category } from '../types';
 import * as TrustBadgesModule from '../components/TrustBadges';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 
 const mkProduct = (id: string, brand?: string): Product => ({
   id,
@@ -211,4 +216,70 @@ describe('STOR-086: Home desktop header (1440px)', () => {
       removeEventListenerSpy.mockRestore();
     });
   });
+});
+
+describe('STOR-095: home category tile images use object-contain (defect 039ed31b)', () => {
+  afterEach(cleanup);
+
+  const tileProduct = (id: string, categoryCode: string): Product =>
+    ({ id, name: `SP ${id}`, brand: 'Yonex', image: `/img/${id}.jpg`, price: 100000, specs: {}, stock: 1, categoryCode }) as Product;
+
+  const tileCategories: Category[] = [
+    { id: 1, name: 'Vợt', code: 'c1', parent_id: null, display_name: 'Thể Thao > Vợt' },
+    { id: 2, name: 'Giày', code: 'c2', parent_id: null, display_name: 'Thể Thao > Giày' },
+  ];
+
+  function renderHomeWithTiles() {
+    const store = configureStore({
+      reducer: { appData: (state = { products: [tileProduct('1', 'c1'), tileProduct('2', 'c2')], categories: tileCategories }) => state, cart: cartReducer, catalog: catalogReducer },
+      preloadedState: {
+        cart: { items: [], isOpen: false, quickViewProduct: null },
+        catalog: { selectedCategory: null, searchKeyword: '', priceRange: [0, 10000000], sortBy: 'featured' },
+      },
+    } as any);
+    return render(
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/']}>
+          <HomePage />
+        </MemoryRouter>
+      </Provider>,
+    );
+  }
+
+  it('every cat-tile img has object-contain and no object-cover', () => {
+    const { container } = renderHomeWithTiles();
+    const imgs = Array.from(container.querySelectorAll('[data-testid^="cat-tile-"] img'));
+    expect(imgs.length).toBeGreaterThanOrEqual(2);
+    for (const img of imgs) {
+      const classes = img.className.split(/\s+/).filter(Boolean);
+      expect(classes).toContain('object-contain');
+      expect(classes).not.toContain('object-cover');
+    }
+  });
+});
+
+describe("STOR-095: '/' shortcut ignores Ctrl/Meta/Alt modifiers", () => {
+  afterEach(cleanup);
+
+  const modifierCases = [
+    { name: 'Ctrl+/', init: { ctrlKey: true } },
+    { name: 'Meta+/', init: { metaKey: true } },
+    { name: 'Alt+/', init: { altKey: true } },
+  ] as const;
+
+  for (const { name, init } of modifierCases) {
+    it(`${name} does not call preventDefault and does not focus the search input`, () => {
+      renderHeader([]);
+      const input = screen.getByPlaceholderText(/Tìm vợt/);
+      const focusSpy = vi.spyOn(input, 'focus');
+
+      const event = new KeyboardEvent('keydown', { key: '/', bubbles: true, cancelable: true, ...init });
+      const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
+
+      document.body.dispatchEvent(event);
+
+      expect(preventDefaultSpy).not.toHaveBeenCalled();
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+  }
 });
