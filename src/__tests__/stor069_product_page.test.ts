@@ -144,12 +144,136 @@ describe('STOR-069 renderProductPage', () => {
     expect(html).toContain(`<meta name="description" content="${esc}" data-product-head />`);
   });
 
-  it('has no JSON-LD, Offer, availability or Vercel-CDN-Cache-Control', () => {
+  // STOR-070 adds the JSON-LD Offer; availability and CDN headers belong to the follow-up task.
+  it('has no availability or Vercel-CDN-Cache-Control', () => {
     const html = renderProductPage(SHELL, baseProduct({ description: 'd', gallery: ['https://x/a.jpg'] }), CANONICAL);
-    expect(html).not.toContain('application/ld+json');
-    expect(html).not.toContain('Offer');
     expect(html).not.toContain('availability');
     expect(html).not.toContain('Vercel-CDN-Cache-Control');
+  });
+});
+
+// The browser ends a script element at the first </script>, so this regex reads what a crawler reads.
+const ldScripts = (html: string) =>
+  [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+const jsonLd = (html: string) => {
+  const scripts = ldScripts(html);
+  expect(scripts).toHaveLength(1);
+  return JSON.parse(scripts[0]);
+};
+const ld = (over: Partial<Product> = {}) => jsonLd(renderProductPage(SHELL, baseProduct(over), CANONICAL));
+
+describe('STOR-070 JSON-LD', () => {
+  it('one ld+json Product in head with name, full description, image, sku, brand and a VND Offer', () => {
+    const description = '  Vợt công thủ\n' + 'x'.repeat(300) + '  ';
+    const html = renderProductPage(SHELL, baseProduct({
+      description,
+      gallery: ['/relative.jpg', 'https://cdn.voma.vn/a.jpg', 'https://cdn.voma.vn/b.jpg'],
+      brand: 'Yonex',
+      defaultSku: 'SKU-DEF',
+    }), CANONICAL);
+    expect(html.match(/application\/ld\+json/g)).toHaveLength(1);
+    const at = html.indexOf('<script type="application/ld+json">');
+    expect(at).toBeGreaterThan(html.indexOf('<head>'));
+    expect(at).toBeLessThan(html.indexOf('</head>'));
+    const data = jsonLd(html);
+    expect(data).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: 'Vợt Yonex Astrox 99',
+      description: description.trim(),
+      image: 'https://cdn.voma.vn/a.jpg',
+      sku: 'SKU-DEF',
+      brand: { '@type': 'Brand', name: 'Yonex' },
+      offers: { '@type': 'Offer', price: 1500000, priceCurrency: 'VND', url: CANONICAL },
+    });
+    expect(typeof data.offers.price).toBe('number');
+    expect(rootDiv(html)).toContain(`<p>${formatVnd(data.offers.price)}</p>`);
+  });
+
+  it('no description key when description is missing, empty or whitespace', () => {
+    for (const description of [undefined, '', '   \n ']) {
+      expect(ld({ description })).not.toHaveProperty('description');
+    }
+  });
+
+  it('no image key without an absolute http(s) gallery URL, never NO_IMAGE_URL', () => {
+    for (const gallery of [[], undefined, ['/only-relative.jpg', 'data:image/png;base64,x']]) {
+      const html = renderProductPage(SHELL, baseProduct({ gallery, image: NO_IMAGE_URL }), CANONICAL);
+      expect(jsonLd(html)).not.toHaveProperty('image');
+      expect(ldScripts(html)[0]).not.toContain(NO_IMAGE_URL);
+    }
+  });
+
+  it('sku and offers.price come from the variant getPdpPrice matches at the initial tiers', () => {
+    const product = baseProduct({
+      price: 900000,
+      salePrice: 900000,
+      defaultSku: 'SKU-DEF',
+      tier_variations: [{ name: 'Màu', tier_index: 1, options: ['Đỏ'] }],
+      variants: [{ id: 1, tier_1_option: 'Đỏ', price: 1200000, stock: 1, sku_code: 'SKU-RED' } as any],
+    } as any);
+    const html = renderProductPage(SHELL, product, CANONICAL);
+    const data = jsonLd(html);
+    expect(data.sku).toBe('SKU-RED');
+    expect(data.offers.price).toBe(1200000);
+    expect(rootDiv(html)).toContain(`<p>${formatVnd(data.offers.price)}</p>`);
+  });
+
+  it('sku falls back to product.defaultSku when no variant matches', () => {
+    const data = ld({
+      defaultSku: 'SKU-DEF',
+      tier_variations: [{ name: 'Màu', tier_index: 1, options: ['Đỏ', 'Xanh'] }],
+      variants: [{ id: 1, tier_1_option: 'Đỏ', price: 1200000, stock: 1, sku_code: 'SKU-RED' } as any],
+    } as any);
+    expect(data.sku).toBe('SKU-DEF');
+    expect(data.offers.price).toBe(1500000);
+  });
+
+  it('no sku key when no SKU exists', () => {
+    expect(ld({ defaultSku: undefined })).not.toHaveProperty('sku');
+    expect(ld({
+      tier_variations: [{ name: 'Màu', tier_index: 1, options: ['Đỏ'] }],
+      variants: [{ id: 1, tier_1_option: 'Đỏ', price: 1200000, stock: 1, sku_code: '' } as any],
+    } as any)).not.toHaveProperty('sku');
+  });
+
+  it('brand is a Brand object; no brand key when absent or No Brand', () => {
+    expect(ld({ brand: 'Yonex' }).brand).toEqual({ '@type': 'Brand', name: 'Yonex' });
+    for (const brand of [undefined, '', '  ', 'No Brand', 'no brand', 'NoBrand', ' NO  BRAND ']) {
+      expect(ld({ brand })).not.toHaveProperty('brand');
+    }
+  });
+
+  it("no offers key when the page shows 'Liên hệ để biết giá'", () => {
+    const cases: Array<Partial<Product>> = [
+      { price: undefined, salePrice: undefined },
+      {
+        tier_variations: [{ name: 'Màu', tier_index: 1, options: ['Đỏ'] }],
+        variants: [{ id: 1, tier_1_option: 'Đỏ', price: 0, stock: 1, sku_code: 'SKU-RED' } as any],
+      } as any,
+    ];
+    for (const over of cases) {
+      const html = renderProductPage(SHELL, baseProduct(over), CANONICAL);
+      expect(rootDiv(html)).toContain('<p>Liên hệ để biết giá</p>');
+      expect(jsonLd(html)).not.toHaveProperty('offers');
+      expect(ldScripts(html)[0]).not.toContain('Offer');
+    }
+  });
+
+  it('escapes <, U+2028 and U+2029 so a hostile description cannot leave the script and parses back', () => {
+    const hostile = 'a</script><script>alert(1)</script>\u2028b\u2029c<!--d';
+    const html = renderProductPage(SHELL, baseProduct({ name: hostile, description: hostile }), CANONICAL);
+    const raw = ldScripts(html)[0];
+    expect(raw).not.toContain('<');
+    expect(raw).toContain('a\\u003c/script>\\u003cscript>');
+    expect(raw).not.toContain('\u2028');
+    expect(raw).not.toContain('\u2029');
+    expect(raw).toContain('\\u2028b\\u2029c');
+    const element = html.slice(html.indexOf('<script type="application/ld+json">'), html.indexOf('</head>'));
+    expect(element.match(/<\/script>/g)).toHaveLength(1);
+    const data = jsonLd(html);
+    expect(data.name).toBe(hostile);
+    expect(data.description).toBe(hostile);
   });
 });
 
@@ -211,6 +335,12 @@ describe('STOR-069 api/product handler', () => {
     expect(res.headers['Cache-Control']).toBe('public, max-age=0, s-maxage=300');
     expect(res.headers['Vercel-CDN-Cache-Control']).toBeUndefined();
     expect(res.body).toContain('<h1>Vợt Yonex Astrox 99</h1>');
+    // STOR-070: one JSON-LD Product in head, sku and price from the PIM variant.
+    expect(res.body.match(/application\/ld\+json/g)).toHaveLength(1);
+    expect(res.body.indexOf('application/ld+json')).toBeLessThan(res.body.indexOf('</head>'));
+    const data = jsonLd(res.body);
+    expect(data.sku).toBe('S101');
+    expect(data.offers).toEqual({ '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: 'https://www.topvnsport.com/product/vot-yonex-astrox-99' });
   });
 
   it('serves a product from page 2 of the PIM list', async () => {
