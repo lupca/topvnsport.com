@@ -158,7 +158,7 @@ describe('STOR-072 readShellHead', () => {
 });
 
 describe('STOR-072 shell-owned head tags (finding 3c02e75f)', () => {
-  // A shell that already has four of the six tags; a product landing appends a second, marked copy of each.
+  // A shell that already has four of the six tags; a product landing replaces each, keeping the shell value.
   const SHELL = INDEX_HTML.replace('</head>', () => [
     '<link rel="canonical" href="https://shell/" />',
     '<meta name="description" content="shell desc" />',
@@ -173,9 +173,16 @@ describe('STOR-072 shell-owned head tags (finding 3c02e75f)', () => {
   const urlB = `${SITE_ORIGIN}/product/giay-lining`;
 
   it('landing on A -> shell restores the shell values, one copy each; -> B falls back to shell only where B lacks data', () => {
-    const doc = new DOMParser().parseFromString(renderProductPage(SHELL, A, urlA), 'text/html');
+    const html = renderProductPage(SHELL, A, urlA);
+    // Crawler-visible HTML (no JavaScript): one copy per tag, the product's (finding 11283670).
+    for (const re of [/rel="canonical"/g, /name="description"/g, /property="og:title"/g, /property="og:image"/g]) {
+      expect(html.match(re)).toHaveLength(1);
+    }
+    expect(html).not.toMatch(/(href|content)="(https:\/\/shell\/|shell desc|shell og|https:\/\/shell\/og\.jpg)"/);
+    const doc = new DOMParser().parseFromString(html, 'text/html');
     document.head.innerHTML = doc.head.innerHTML;
-    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(10); // 4 shell + 6 product
+    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(6); // product tags replaced the 4 shell tags
+    expect(document.querySelector('link[rel="canonical"]')!.getAttribute('href')).toBe(urlA);
     const shell = readShellHead(document);
     expect(shell).toEqual({ title: SHELL_TITLE, tags: {
       canonical: 'https://shell/', description: 'shell desc', 'og:title': 'shell og', 'og:image': 'https://shell/og.jpg',

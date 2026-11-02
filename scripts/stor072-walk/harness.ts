@@ -1,6 +1,7 @@
 // STOR-072 local harness, run from the repo root after npm run build: dist/ + /product/:slug through the real
 // api/product handler, fixture PIM/WMS on /api/pmi, /api/wms (and /pim for the handler). No real token, no network.
 // Unstubbed /api/* (admin-units, branches) answer 404 on purpose. Usage: npx tsx scripts/stor072-walk/harness.ts
+// Stop it by the PID it writes to $PIDFILE (the server's own pid, not the npx/tsx wrapper's) or by port: ss -ltnp 'sport = :4372'.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -53,4 +54,7 @@ http.createServer(async (req, res) => {
   }
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(fs.readFileSync(path.join(process.cwd(), 'dist/index.html')));
-}).listen(PORT, '127.0.0.1', () => console.log('harness on', PORT));
+}).listen(PORT, '127.0.0.1', () => {
+  fs.writeFileSync(process.env.PIDFILE || '/tmp/stor072/harness.pid', String(process.pid));
+  console.log('harness on', PORT, 'pid', process.pid);
+});

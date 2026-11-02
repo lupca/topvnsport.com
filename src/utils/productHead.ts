@@ -28,6 +28,8 @@ export const PRODUCT_HEAD_TAGS = [
 
 // Server-inserted head tags carry this attribute, so the SPA can tell them from the shell's own.
 export const PRODUCT_HEAD_MARK = 'data-product-head';
+// A marked tag that replaced a shell tag keeps the shell's value here.
+export const PRODUCT_SHELL_VALUE = 'data-shell-value';
 
 export interface ShellHead {
   title: string;
@@ -35,11 +37,12 @@ export interface ShellHead {
 }
 
 // The shell head as index.html wrote it, read once at load. On a product landing api/product.ts keeps the
-// shell title in data-shell-title and marks its own tags, so neither is mistaken for a shell value.
+// shell title in data-shell-title, marks its own tags and keeps a replaced shell tag's value in data-shell-value.
 export function readShellHead(doc: Document): ShellHead {
   const tags: ShellHead['tags'] = {};
   for (const [tag, keyAttr, key, valueAttr] of PRODUCT_HEAD_TAGS) {
-    const value = doc.head.querySelector(`${tag}[${keyAttr}="${key}"]:not([${PRODUCT_HEAD_MARK}])`)?.getAttribute(valueAttr);
+    const value = doc.head.querySelector(`${tag}[${keyAttr}="${key}"]:not([${PRODUCT_HEAD_MARK}])`)?.getAttribute(valueAttr)
+      ?? doc.head.querySelector(`${tag}[${keyAttr}="${key}"][${PRODUCT_SHELL_VALUE}]`)?.getAttribute(PRODUCT_SHELL_VALUE);
     if (value) tags[key] = value;
   }
   return { title: doc.querySelector('title')?.dataset.shellTitle ?? doc.title, tags };
