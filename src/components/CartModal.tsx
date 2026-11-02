@@ -5,7 +5,7 @@ import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
 import { ReceiverAddressField, isFinalPaymentError, isReceiverAddressError, receiverAddressField } from '../features/checkout/omsErrors';
-import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemUnitPrice, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
+import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemPriceDisplay, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
 import { isStringingTier } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal, { getStoredCooldown, markOtpSent } from './OtpModal';
@@ -271,12 +271,16 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
   // Giá TÍNH LẠI từ biến thể đã tải (không tin item.price lưu localStorage).
   // Đang tải/tải lỗi hoặc biến thể không có giá -> null: không hiện số.
-  const lineAmount = (item: CartItem): number | null => {
-    if (isLoadingProducts || productsError) return null;
-    const unit = getCartItemUnitPrice(item, products);
-    return unit === null ? null : unit * item.quantity;
+  const linePrice = (item: CartItem): { sale: number | null; original: number | null } => {
+    if (isLoadingProducts || productsError) return { sale: null, original: null };
+    const { unit, original } = getCartItemPriceDisplay(item, products);
+    return {
+      sale: unit === null ? null : unit * item.quantity,
+      original: original === null ? null : original * item.quantity,
+    };
   };
-  const lineAmounts = cartItems.map(lineAmount);
+  const linePrices = cartItems.map(linePrice);
+  const lineAmounts = linePrices.map(p => p.sale);
   const itemsTotal = lineAmounts.some(a => a === null) ? null : (lineAmounts as number[]).reduce((acc, a) => acc + a, 0);
 
   const productOf = (item: CartItem) => products.find(p => String(p.id) === String(item.productId));
@@ -586,7 +590,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                         ? PRODUCTS_LOAD_ERROR_MESSAGE
                         : cartItemWarningMessage(describeCartItemSkuStatus(item, products), variantStock(item));
                       return (
-                        <div key={item.id} className="py-4 flex gap-3.5">
+                        <div key={item.id} className="py-4 flex gap-3.5" data-testid="cart-line">
                           <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
                           <div className="flex-1 space-y-1">
                             <span className="text-[10px] font-mono font-bold text-brand-primary uppercase">{item.brand}</span>
@@ -638,9 +642,16 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                                   <Plus className="w-3 h-3" />
                                 </button>
                               </div>
-                              <span className="text-sm font-bold text-brand-primary font-mono">
-                                {formatMoney(lineAmounts[index])}
-                              </span>
+                              <div className="flex flex-wrap items-baseline justify-end gap-x-1.5 font-mono">
+                                {linePrices[index].original !== null && (
+                                  <span className="text-xs text-gray-400 line-through">
+                                    {formatMoney(linePrices[index].original)}
+                                  </span>
+                                )}
+                                <span className="text-sm font-bold text-brand-primary">
+                                  {formatMoney(lineAmounts[index])}
+                                </span>
+                              </div>
                             </div>
                           </div>
 
@@ -684,6 +695,31 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   </button>
                 </div>
               )}
+              <div className="space-y-2" data-testid="checkout-order-summary">
+                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary border-b border-gray-100 pb-1.5">Đơn hàng của bạn</h3>
+                <div className="divide-y divide-gray-100">
+                  {cartItems.map((item, index) => (
+                    <div key={item.id} className="py-2 flex items-start justify-between gap-3 text-xs" data-testid="checkout-summary-line">
+                      <div className="min-w-0 flex-1 space-y-0.5">
+                        <p className="font-bold text-gray-900 line-clamp-1">{item.name}</p>
+                        <p className="text-[10px] text-gray-500 font-mono">
+                          {item.variantLabel ? `Phân loại: ${item.variantLabel} · ` : ''}SL: <strong className="text-gray-800">{item.quantity}</strong>
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-baseline justify-end gap-x-1.5 font-mono shrink-0">
+                        {linePrices[index].original !== null && (
+                          <span className="text-xs text-gray-400 line-through">
+                            {formatMoney(linePrices[index].original)}
+                          </span>
+                        )}
+                        <span className="text-sm font-bold text-brand-primary">
+                          {formatMoney(lineAmounts[index])}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="space-y-3">
                 <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary border-b border-gray-100 pb-1.5">Thông tin nhận hàng</h3>
                 
