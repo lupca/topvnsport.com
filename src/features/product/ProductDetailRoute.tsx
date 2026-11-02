@@ -7,6 +7,7 @@ import { addCartItemAndOpen, buildConfiguredCartItem, describeSkuSelection } fro
 import { StringOption } from '../../types';
 import { findProductBySlug } from '../../utils/productSlug';
 import { viewItem } from '../../lib/tracking.ts';
+import { getPdpPrice, initialTierValue } from '../../components/product-detail/helpers';
 
 export default function ProductDetailRoute() {
   const dispatch = useAppDispatch();
@@ -20,7 +21,8 @@ export default function ProductDetailRoute() {
       viewItem({
         id: product.id,
         name: product.name,
-        price: product.price ?? 0,
+        // Giá hiển thị lúc mở trang (biến thể chọn sẵn, hoặc giá sản phẩm nếu không có).
+        price: getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2)).salePrice,
       });
     }
   }, [product?.id]);
