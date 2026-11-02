@@ -238,7 +238,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
           onClick={() => navigate('/')} 
           className="hidden md:flex items-center gap-3 cursor-pointer group shrink-0"
         >
-          <div className="w-11 h-11 bg-brand-primary text-white font-display font-black text-[20px] tracking-[-0.03em] rounded-[6px] border-[1.5px] border-black flex items-center justify-center shrink-0">
+          <div className="w-[44px] h-[44px] bg-brand-primary text-white font-display font-black text-[20px] tracking-[-0.03em] rounded-[6px] border-[1.5px] border-black flex items-center justify-center shrink-0">
             TVN
           </div>
           <div>

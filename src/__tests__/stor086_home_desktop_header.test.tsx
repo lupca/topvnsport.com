@@ -115,8 +115,8 @@ describe('STOR-086: Home desktop header (1440px)', () => {
       renderHeader([]);
       const logoMark = screen.getByText('TVN');
       expect(logoMark).toBeTruthy();
-      expect(logoMark.className).toContain('w-11');
-      expect(logoMark.className).toContain('h-11');
+      expect(logoMark.className).toContain('w-[44px]');
+      expect(logoMark.className).toContain('h-[44px]');
       expect(logoMark.className).toContain('bg-brand-primary');
       expect(logoMark.className).toContain('text-white');
       expect(logoMark.className).toContain('rounded-[6px]');
