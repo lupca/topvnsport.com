@@ -167,21 +167,21 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
 
           <div
             data-testid="slider-caption-bar"
-            className="slide-caption-bar flex flex-col items-stretch md:flex-row md:items-center justify-between gap-3 md:gap-5 px-4 py-3 md:px-6 md:py-4 bg-surface border-t-[1.5px] border-ink-primary min-w-0 overflow-hidden"
+            className="slide-caption-bar flex flex-row items-center md:flex-row md:items-center justify-between gap-2.5 md:gap-5 px-3 py-2 md:px-6 md:py-4 bg-surface border-t-[1.5px] border-ink-primary min-w-0 overflow-hidden"
           >
             <div className="slide-caption-left min-w-0 flex-1 flex flex-col gap-1 overflow-hidden">
               {(activeProduct.brand || activeProduct.category) && (
-                <div className="slide-caption-eyebrow font-mono text-[11.5px] font-bold uppercase tracking-[0.08em] text-brand-primary truncate">
+                <div className="slide-caption-eyebrow hidden md:block font-mono text-[11.5px] font-bold uppercase tracking-[0.08em] text-brand-primary truncate">
                   {activeProduct.brand && <span>{activeProduct.brand}</span>}
                   {activeProduct.brand && activeProduct.category && <span className="mx-1.5">·</span>}
                   {activeProduct.category && <span>{activeProduct.category}</span>}
                 </div>
               )}
-              <div className="slide-caption-title font-display font-black text-[17px] leading-[1.3] md:text-[19px] text-ink-primary min-w-0 break-words line-clamp-2 md:line-clamp-1">
+              <div className="slide-caption-title font-display font-black text-[13px] leading-[1.3] md:text-[19px] text-ink-primary min-w-0 break-words line-clamp-1 md:line-clamp-1">
                 {activeProduct.name}
               </div>
               {activeProduct.description?.trim() && (
-                <div className="slide-caption-sub text-[13.5px] leading-[1.45] font-medium text-ink-secondary min-w-0 break-words whitespace-normal line-clamp-2 md:line-clamp-1">
+                <div className="slide-caption-sub hidden text-[13.5px] leading-[1.45] font-medium text-ink-secondary min-w-0 break-words whitespace-normal line-clamp-2 md:line-clamp-1">
                   {activeProduct.description}
                 </div>
               )}
@@ -191,7 +191,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
               type="button"
               data-testid="slider-cta"
               onClick={() => navigate(productPath)}
-              className="slide-caption-cta shrink-0 w-full md:w-auto bg-ink-primary hover:bg-brand-primary text-white border-[1.5px] border-ink-primary hover:border-brand-primary px-5 py-[11px] font-display text-[13px] font-extrabold uppercase tracking-[0.04em] whitespace-nowrap rounded-[4px] transition-colors duration-150"
+              className="slide-caption-cta shrink-0 w-auto md:w-auto bg-ink-primary hover:bg-brand-primary text-white border-[1.5px] border-ink-primary hover:border-brand-primary px-3 py-1.5 md:px-5 md:py-[11px] font-display text-[11.5px] md:text-[13px] font-extrabold uppercase tracking-[0.04em] whitespace-nowrap rounded-[4px] transition-colors duration-150"
             >
               Xem chi tiết
             </button>
@@ -201,7 +201,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
         {showNextPeek ? renderPeekSlide(nextIndex) : <div aria-hidden="true" />}
       </div>
 
-      <div className={count <= 1 ? 'hidden' : 'slider-controls flex items-center justify-center gap-3.5 mt-4'}>
+      <div className={count <= 1 ? 'hidden' : 'slider-controls flex items-center justify-center gap-3.5 mt-2 md:mt-4'}>
         <button
           type="button"
           data-testid="slider-prev"

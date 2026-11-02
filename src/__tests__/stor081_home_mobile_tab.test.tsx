@@ -93,7 +93,8 @@ describe('STOR-081 trang chủ 390px theo tab Mobile', () => {
 });
 
 describe('STOR-081 MobileBottomNav theo tab Mobile', () => {
-  const LABELS = ['Trang chủ', 'Sản phẩm', 'Cửa hàng', 'Giỏ hàng'];
+  // STOR-084: cập nhật nhãn theo đúng tab Mobile của bản thiết kế (.sp-bottom-nav)
+  const LABELS = ['BADMINTON', 'Vợt & Cước', 'Đan Vợt O2O', 'Giỏ hàng'];
   const renderNav = () =>
     render(<MobileBottomNav pathname="/" navigate={vi.fn() as any} cartCount={0} onOpenCart={vi.fn()} />);
 
@@ -113,7 +114,7 @@ describe('STOR-081 MobileBottomNav theo tab Mobile', () => {
       expect(cls(btn)).toEqual(expect.arrayContaining(['text-ink-secondary', 'font-bold']));
       expect(cls(btn)).not.toContain('text-gray-400');
     }
-    const active = screen.getByText('Trang chủ').closest('button')!;
+    const active = screen.getByText('BADMINTON').closest('button')!;
     expect(cls(active)).toContain('text-brand-primary');
     expect(cls(active)).not.toContain('text-ink-secondary');
   });
