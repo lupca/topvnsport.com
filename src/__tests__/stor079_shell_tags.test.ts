@@ -14,6 +14,7 @@ const PRODUCT = {
 } as unknown as Product;
 
 const withShell = (tag: string, indent = '') => INDEX_HTML.replace('  </head>', () => `  ${indent}${tag}\n  </head>`);
+const withBody = (tag: string, body: string) => withShell(tag).replace('<body>', () => `<body>\n    ${body}`);
 const render = (shell: string) => renderProductPage(shell, PRODUCT, CANONICAL);
 const norm = (html: string) => html.replace(/\s+/g, ' ');
 const noCarry = (html: string) => html.replace(/ data-shell-value="[^"]*"/g, '');
@@ -46,5 +47,24 @@ describe('STOR-079 shell head tags', () => {
     expect(html).toContain(tag);
     const desc = headOf(html).querySelector('[name="description"][data-product-head]')!;
     expect(desc.hasAttribute('data-shell-value')).toBe(false);
+  });
+
+  it("unquoted value with apostrophe followed by body apostrophes does not eat </head> (STOR-083)", () => {
+    const html = render(withBody("<meta name=description content=Shop's>", "<p class='x'>it's</p>"));
+    expect(html).toContain('</head>');
+    const head = headOf(html);
+    const els = head.querySelectorAll('[name="description"]');
+    expect(els).toHaveLength(1);
+    expect(els[0].hasAttribute('data-product-head')).toBe(true);
+    expect(els[0].getAttribute('data-shell-value')).toBe("Shop's");
+    expect(head.querySelector('script[type="application/ld+json"]')).not.toBeNull();
+  });
+
+  it("unquoted value with odd apostrophe count still removes the shell duplicate (STOR-083)", () => {
+    const html = render(withShell("<meta name=description content=Shop's>"));
+    const els = headOf(html).querySelectorAll('[name="description"]');
+    expect(els).toHaveLength(1);
+    expect(els[0].hasAttribute('data-product-head')).toBe(true);
+    expect(els[0].getAttribute('data-shell-value')).toBe("Shop's");
   });
 });
