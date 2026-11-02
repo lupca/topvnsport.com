@@ -56,6 +56,7 @@ export type PmiTierVariation = {
 export type PmiProduct = {
   id: string | number;
   name?: string;
+  slug?: string;
   description?: string;
   weight?: string | number;
   category_id?: number;

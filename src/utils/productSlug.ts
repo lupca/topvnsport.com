@@ -47,5 +47,6 @@ export function findProductBySlug(products: Product[], slugOrId?: string): Produ
   const productBySlug = products.find(product => slugById[product.id] === decoded);
   if (productBySlug) return productBySlug;
 
-  return products.find(product => product.id.toLowerCase() === decoded);
+  return products.find(product => product.id.toLowerCase() === decoded)
+    ?? products.find(product => product.vomaSlug === decoded);
 }
