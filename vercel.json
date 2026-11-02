@@ -1,11 +1,15 @@
 {
   "regions": ["hkg1"],
+  "functions": {
+    "api/product.ts": { "includeFiles": "dist/index.html" }
+  },
   "rewrites": [
     { "source": "/api/pmi/:path*", "destination": "/api/pmi/[...path]?path=:path*" },
     { "source": "/api/wms/:path*", "destination": "/api/wms/[...path]?path=:path*" },
     { "source": "/api/oms/:path*", "destination": "/api/oms/[...path]?path=:path*" },
     { "source": "/robots.txt", "destination": "/api/robots" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/product/:slug", "destination": "/api/product?slug=:slug" },
     { "source": "/((?!api/|robots\\.txt(?:/|$)|sitemap\\.xml(?:/|$)).*)", "destination": "/index.html" }
   ]
 }
