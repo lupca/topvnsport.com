@@ -77,13 +77,13 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
   };
 
   return (
-    <section data-testid="badminton-center-slider" className="hero-slider-section w-full overflow-hidden">
-      <div className="center-slider-viewport grid grid-cols-[18px_minmax(0,290px)_18px] justify-center md:justify-normal gap-[8px] md:grid-cols-[1fr_minmax(0,1060px)_1fr] md:gap-[18px] items-start w-full overflow-hidden">
+    <section data-testid="badminton-center-slider" className="hero-slider-section w-full overflow-hidden max-md:!mt-0 max-md:mb-0 max-md:pt-[12px]">
+      <div className="center-slider-viewport grid grid-cols-[26px_minmax(0,290px)_26px] justify-center md:justify-normal gap-[8px] md:grid-cols-[1fr_minmax(0,1060px)_1fr] md:gap-[18px] items-start w-full overflow-hidden">
         {showPrevPeek ? renderPeekSlide(prevIndex) : <div aria-hidden="true" />}
 
         <div
           data-testid="center-slide-active"
-          className="center-slide-active col-start-2 relative w-full min-w-0 overflow-hidden border border-line-strong bg-surface opacity-100 scale-100"
+          className="center-slide-active col-start-2 relative w-full min-w-0 overflow-hidden border max-md:border-0 border-line-strong bg-surface opacity-100 scale-100"
         >
           <div
             data-testid="slider-visual-wrap"
@@ -201,7 +201,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
         {showNextPeek ? renderPeekSlide(nextIndex) : <div aria-hidden="true" />}
       </div>
 
-      <div className={count <= 1 ? 'hidden' : 'slider-controls flex items-center justify-center gap-3.5 mt-2 md:mt-4'}>
+      <div className={count <= 1 ? 'hidden' : 'slider-controls flex items-center justify-center gap-3.5 max-md:gap-[10px] mt-2 md:mt-4 max-md:mt-0 max-md:pt-[8px] max-md:pb-[4px]'}>
         <button
           type="button"
           data-testid="slider-prev"
@@ -223,7 +223,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
                 aria-label={`Xem sản phẩm ${idx + 1}/${count}`}
                 aria-current={isCurrent ? 'true' : undefined}
                 onClick={() => setActiveIndex(idx)}
-                className={`h-[11px] rounded-full border border-line-strong transition-all duration-200 ${
+                className={`h-[11px] max-md:relative max-md:h-[7px] max-md:w-[7px] max-md:before:absolute max-md:before:-inset-[10px] max-md:before:content-[''] rounded-full border border-line-strong transition-all duration-200 ${
                   isCurrent ? 'w-[38px] bg-ink-primary' : 'w-[11px] bg-line-tag hover:bg-ink-muted'
                 }`}
               />
@@ -247,9 +247,9 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
           aria-pressed={isPaused}
           aria-label={isPaused ? 'Phát tiếp' : 'Tạm dừng'}
           onClick={() => setIsPaused(p => !p)}
-          className="slick-pause-btn inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-bold text-ink-primary bg-surface hover:bg-surface-hover border border-line-strong rounded-[4px] transition"
+          className="slick-pause-btn inline-flex items-center justify-center gap-1.5 px-3 py-1.5 max-md:px-[6px] max-md:py-[2px] text-xs font-bold text-ink-primary bg-surface hover:bg-surface-hover border border-line-strong rounded-[4px] max-md:rounded-none transition"
         >
-          {isPaused ? <Play className="w-3.5 h-3.5" aria-hidden="true" /> : <Pause className="w-3.5 h-3.5" aria-hidden="true" />}
+          {isPaused ? <Play className="w-3.5 h-3.5 max-md:w-[14px] max-md:h-[14px]" aria-hidden="true" /> : <Pause className="w-3.5 h-3.5 max-md:w-[14px] max-md:h-[14px]" aria-hidden="true" />}
           <span className="hidden md:inline">{isPaused ? 'Phát tiếp' : 'Tạm dừng'}</span>
         </button>
       </div>
