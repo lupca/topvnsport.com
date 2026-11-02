@@ -8,6 +8,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
 import { getProductPath } from '../utils/productSlug';
+import { hasO2OStringing } from '../utils/badmintonReadiness';
 
 const mockUnpromotedProduct: Product = {
   id: 'prod-1',
@@ -143,7 +144,7 @@ describe('ProductCard component', () => {
     expect(onAddToCartMock).not.toHaveBeenCalled();
   });
 
-  it('renders racket spec chips and no play-style text (STOR-059)', () => {
+  it('renders no spec chips and no play-style text on a racket with weight, balance, stiffness (STOR-077)', () => {
     render(
       <MemoryRouter>
         <ProductCard
@@ -154,14 +155,17 @@ describe('ProductCard component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByTestId('spec-weight').textContent).toBe('4U');
-    expect(screen.getByTestId('spec-balance').textContent).toBe('CB 300mm');
-    expect(screen.getByTestId('spec-stiffness').textContent).toBe('Cứng');
+    expect(screen.queryByTestId('spec-weight')).toBeNull();
+    expect(screen.queryByTestId('spec-balance')).toBeNull();
+    expect(screen.queryByTestId('spec-stiffness')).toBeNull();
+    expect(screen.queryByText('4U')).toBeNull();
+    expect(screen.queryByText('CB 300mm')).toBeNull();
+    expect(screen.queryByText('Cứng')).toBeNull();
     expect(screen.queryByText('Tấn Công')).toBeNull();
     expect(screen.queryByTestId('playstyle-badge')).toBeNull();
   });
 
-  it('renders shoe wide fit indicator when category is Giày and isWide is true', () => {
+  it('renders no wide fit chip on a shoe with isWide true (STOR-077)', () => {
     render(
       <MemoryRouter>
         <ProductCard
@@ -172,10 +176,11 @@ describe('ProductCard component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Form chân bè \(Wide Fit\)/)).toBeTruthy();
+    expect(screen.queryByTestId('wide-fit')).toBeNull();
+    expect(screen.queryByText(/Form chân bè \(Wide Fit\)/)).toBeNull();
   });
 
-  it('renders wide fit indicator based on isWide alone, regardless of category name', () => {
+  it('renders no wide fit chip on a racket with isWide true (STOR-077)', () => {
     const wideRacket: Product = { ...mockUnpromotedProduct, isWide: true };
     render(
       <MemoryRouter>
@@ -183,16 +188,18 @@ describe('ProductCard component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Form chân bè \(Wide Fit\)/)).toBeTruthy();
+    expect(screen.queryByTestId('wide-fit')).toBeNull();
+    expect(screen.queryByText(/Form chân bè \(Wide Fit\)/)).toBeNull();
   });
 
-  it('does not render wide fit indicator when isWide is not true', () => {
+  it('does not render wide fit chip when isWide is not true', () => {
     render(
       <MemoryRouter>
         <ProductCard product={mockUnpromotedProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
       </MemoryRouter>
     );
 
+    expect(screen.queryByTestId('wide-fit')).toBeNull();
     expect(screen.queryByText(/Form chân bè \(Wide Fit\)/)).toBeNull();
   });
 
@@ -380,10 +387,6 @@ describe('ProductCard component', () => {
       expect(nameEl.className).toContain('line-clamp-2');
       expect(nameEl.className).toContain('text-ink-primary');
 
-      const weightChip = screen.getByTestId('spec-weight');
-      expect(weightChip.className).toContain('border-line-tag');
-      expect(weightChip.className).toContain('text-ink-primary');
-
       const regularPrice = screen.getByTestId('regular-price');
       expect(regularPrice.className).toContain('tabular-nums');
       expect(regularPrice.className).toContain('text-ink-primary');
@@ -528,22 +531,39 @@ describe('ProductCard component', () => {
       expect(screen.getByTestId('regular-price')).toBeInTheDocument();
     });
 
+    // STOR-077 (PO 2026-11-02): tầng 6 không còn chip thông số; mỗi chip một ca riêng.
     it.each([
-      ['spec-weight', { weight: '4U' }, '4U'],
-      ['spec-balance', { balance: 295 }, 'CB 295mm'],
-      ['spec-stiffness', { stiffness: 'Trung bình' }, 'Trung bình']
-    ])('chip %s chỉ khi giá trị có thật, trên ngành vợt', (testId, specs, text) => {
+      ['spec-weight', { weight: '4U' }],
+      ['spec-balance', { balance: 295 }],
+      ['spec-stiffness', { stiffness: 'Trung bình' }]
+    ])('chip %s không hiện dù vợt có giá trị thật', (testId, specs) => {
       r({ ...base, categoryCode: 'VC001491', specs });
-      expect(screen.getByTestId(testId).textContent).toBe(text);
-      const others = ['spec-weight', 'spec-balance', 'spec-stiffness'].filter((t) => t !== testId);
-      others.forEach((t) => expect(screen.queryByTestId(t)).toBeNull());
+      expect(screen.queryByTestId(testId)).toBeNull();
     });
 
-    it('chip thông số không hiện ngoài ngành vợt', () => {
-      r({ ...base, categoryCode: 'VC001488', specs: { weight: '4U', balance: 295, stiffness: 'Cứng' } });
-      expect(screen.queryByTestId('spec-weight')).toBeNull();
-      expect(screen.queryByTestId('spec-balance')).toBeNull();
-      expect(screen.queryByTestId('spec-stiffness')).toBeNull();
+    it('chip wide-fit không hiện dù isWide === true', () => {
+      r({ ...base, categoryCode: 'VC001491', isWide: true });
+      expect(screen.queryByTestId('wide-fit')).toBeNull();
+    });
+
+    it('nguồn ProductCard không còn SpecChip, showSpecs, product.specs, isRacketCategoryCode', () => {
+      const src = readFileSync(resolve(__dirname, '../components/ProductCard.tsx'), 'utf8');
+      expect(src).not.toContain('SpecChip');
+      expect(src).not.toContain('showSpecs');
+      expect(src).not.toContain('product.specs');
+      expect(src).not.toContain('isRacketCategoryCode');
+    });
+
+    // Nút O2O: chỉ khi hasO2OStringing(product) -- tầng có lựa chọn 'Khung không dây'.
+    it.each([
+      ['Khung không dây', 'Loại cước', ['Khung không dây', 'BG65'], true],
+      ['Màu cước', 'Màu cước', ['Trắng', 'Vàng'], false],
+      ['Kích cỡ', 'Kích cỡ', ['3U', '4U'], false]
+    ] as const)('nút O2O với tầng "%s" khớp hasO2OStringing', (_label, name, options, shown) => {
+      const p: Product = { ...base, tier_variations: [{ tier_index: 1, name, options: [...options] }] };
+      r(p);
+      expect(hasO2OStringing(p)).toBe(shown);
+      expect(screen.queryByTestId('o2o-stringing-button') !== null).toBe(hasO2OStringing(p));
     });
 
     it('nút O2O không hiện khi tên tầng có "cước" nhưng hasO2OStringing false', () => {
