@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
 import { NO_IMAGE_URL } from '../../services/sport-api/constants';
 import { hasO2OStringing } from '../../utils/badmintonReadiness';
-import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
+import { getCategoryLabel, getInStockCategories, getProductCategoryCounts } from '../../utils/categories';
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
 import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
@@ -33,7 +33,7 @@ export default function HomePage() {
   const allInStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0);
   // Chip ngành đếm hàng còn hàng để khớp kệ và bộ đếm; ngành 0 còn hàng thì ẩn.
   const categoryCounts = getProductCategoryCounts(allInStock);
-  const sortedCategories = getCategoriesSortedByCount(categories, products).filter(cat => (categoryCounts[cat.code] || 0) > 0);
+  const sortedCategories = getInStockCategories(categories, products);
   // Thương hiệu gộp không phân biệt hoa thường; nhãn là chuỗi gốc gặp đầu tiên.
   const brands = new Map<string, string>();
   for (const p of allInStock) {
