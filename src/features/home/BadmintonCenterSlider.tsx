@@ -87,7 +87,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
         >
           <div
             data-testid="slider-visual-wrap"
-            className="slide-visual-wrap relative w-full aspect-square md:aspect-[1400/600] overflow-hidden bg-brand-light flex items-center justify-center p-4 md:p-6"
+            className="slide-visual-wrap relative w-full aspect-[16/9] md:aspect-[1400/600] overflow-hidden bg-brand-light flex items-center justify-center p-4 md:p-6"
           >
             {activeProduct.image ? (
               <img
@@ -167,14 +167,22 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
 
           <div
             data-testid="slider-caption-bar"
-            className="slide-caption-bar hidden md:flex items-center justify-between gap-5 px-6 py-3.5 bg-surface border-t border-line-strong min-w-0 overflow-hidden"
+            className="slide-caption-bar flex flex-col items-stretch md:flex-row md:items-center justify-between gap-3 md:gap-5 px-4 py-3 md:px-6 md:py-4 bg-surface border-t-[1.5px] border-ink-primary min-w-0 overflow-hidden"
           >
-            <div className="min-w-0 flex-1 overflow-hidden">
+            <div className="slide-caption-left min-w-0 flex-1 flex flex-col gap-1 overflow-hidden">
               {(activeProduct.brand || activeProduct.category) && (
-                <div className="slide-caption-eyebrow font-mono text-xs font-bold uppercase tracking-wider text-brand-primary truncate">
+                <div className="slide-caption-eyebrow font-mono text-[11.5px] font-bold uppercase tracking-[0.08em] text-brand-primary truncate">
                   {activeProduct.brand && <span>{activeProduct.brand}</span>}
-                  {activeProduct.brand && activeProduct.category && <span className="mx-1.5">•</span>}
+                  {activeProduct.brand && activeProduct.category && <span className="mx-1.5">·</span>}
                   {activeProduct.category && <span>{activeProduct.category}</span>}
+                </div>
+              )}
+              <div className="slide-caption-title font-display font-black text-[17px] leading-[1.3] md:text-[19px] text-ink-primary min-w-0 break-words line-clamp-2 md:line-clamp-1">
+                {activeProduct.name}
+              </div>
+              {activeProduct.description?.trim() && (
+                <div className="slide-caption-sub text-[13.5px] leading-[1.45] font-medium text-ink-secondary min-w-0 break-words whitespace-normal line-clamp-2 md:line-clamp-1">
+                  {activeProduct.description}
                 </div>
               )}
             </div>
@@ -183,7 +191,7 @@ export default function BadmintonCenterSlider({ products }: BadmintonCenterSlide
               type="button"
               data-testid="slider-cta"
               onClick={() => navigate(productPath)}
-              className="slide-caption-cta shrink-0 bg-ink-primary hover:bg-brand-primary text-white border border-line-strong px-5 py-2.5 font-display text-xs font-extrabold uppercase tracking-wider rounded-[4px] transition-colors duration-150"
+              className="slide-caption-cta shrink-0 w-full md:w-auto bg-ink-primary hover:bg-brand-primary text-white border-[1.5px] border-ink-primary hover:border-brand-primary px-5 py-[11px] font-display text-[13px] font-extrabold uppercase tracking-[0.04em] whitespace-nowrap rounded-[4px] transition-colors duration-150"
             >
               Xem chi tiết
             </button>

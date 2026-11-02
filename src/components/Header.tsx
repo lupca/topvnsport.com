@@ -158,6 +158,11 @@ export default function Header({ cartCount, openCart, products, categories, cate
               Đặt lịch đan vợt O2O
             </Link>
             <span className="text-zinc-600">|</span>
+            {/* Chưa có trang tra cứu bảo hành: bảo hành xử lý tại chi nhánh theo SĐT mua hàng. */}
+            <Link to="/stores" className="text-white hover:underline transition">
+              Tra cứu bảo hành
+            </Link>
+            <span className="text-zinc-600">|</span>
             <a href="tel:0976007006" className="text-white hover:underline transition">
               Hotline: 097 6007006
             </a>

@@ -227,7 +227,7 @@ describe('STOR-055 Hero banner carousel từ sản phẩm thật VOMA, không tr
     const testIds = Array.from(hero.querySelectorAll('[data-testid]')).map(el => el.getAttribute('data-testid'));
     expect(new Set(testIds).size).toBe(testIds.length);
 
-    expect(hero.querySelector('.slide-caption-title')).toBeNull();
+    expect(hero.querySelector('.slide-caption-title')?.textContent).toBe(p1.name);
     expect(hero.querySelector('.slide-caption-sub')).toBeNull();
     expect(hero.textContent).not.toMatch(/ASTROX SERIES|SẢN PHẨM TIÊU ĐIỂM|DÒNG TẤN CÔNG CHỦ LỰC/i);
 

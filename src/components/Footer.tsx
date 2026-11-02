@@ -19,10 +19,10 @@ export default function Footer({ categories, products }: FooterProps) {
 
   return (
     <footer className="mt-20" id="topvnsport-footer">
-      <TrustBadges />
+      <TrustBadges products={products} />
 
       <section className="bg-footer-bg text-white px-[24px] pt-[56px] pb-[36px]">
-        <div className={`max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-[36px] ${categoryLinks.length > 0 ? 'lg:grid-cols-[1.5fr_1fr_1fr]' : 'lg:grid-cols-[1.5fr_1fr]'}`}>
+        <div className={`max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-[36px] ${categoryLinks.length > 0 ? 'lg:grid-cols-[1.5fr_1fr_1fr_1fr]' : 'lg:grid-cols-[1.5fr_1fr_1fr]'}`}>
           <div>
             <h5 className={HEADING}>TOPVNSPORT — BADMINTON SPECIALTY STORE</h5>
             <p className={TEXT}>Hệ thống bán lẻ và đan vợt cầu lông chuyên nghiệp O2O. Đồng bộ tồn kho và biến thể thời gian thực từ hệ thống VOMA PIM.</p>
@@ -46,6 +46,11 @@ export default function Footer({ categories, products }: FooterProps) {
               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li>
               <li><Link to="/stores" className={LINK}>Hệ thống cửa hàng trải nghiệm</Link></li>
             </ul>
+          </div>
+
+          <div>
+            <h5 className={HEADING}>TIÊU CHUẨN HIỂN THỊ UI/UX v2.0</h5>
+            <p className={TEXT}>Áp dụng hệ mực in độ tương phản cao (<code>#000000</code> 21:1, <code>#18181b</code> 17.4:1, tối thiểu <code>#52525b</code> 7.0:1 AAA).</p>
           </div>
         </div>
       </section>
