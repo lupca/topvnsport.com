@@ -204,7 +204,7 @@ describe('Tracking Module Specification (STOR-065)', () => {
     expect(metaPageViews).toHaveLength(1);
   });
 
-  it('Navigating to a second route sends one more GA4 page_view and one more Meta PageView', () => {
+  it('Navigating to a second route sends no GA4 page_view (GA4 history-event page_view is the one hit) and exactly one Meta PageView', () => {
     setupSpiedTracking();
 
     function TestApp() {
@@ -229,7 +229,9 @@ describe('Tracking Module Specification (STOR-065)', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Go to Catalog/ }));
 
-    expect(gtagSpy.mock.calls.filter(c => c[0] === 'event' && c[1] === 'page_view')).toHaveLength(2);
+    // In-app navigation: no site-sent GA4 page_view (GA4 history-event page_view covers it)
+    expect(gtagSpy.mock.calls.filter(c => c[0] === 'event' && c[1] === 'page_view')).toHaveLength(1);
+    // Meta PageView still once per distinct route
     expect(fbqSpy.mock.calls.filter(c => c[0] === 'track' && c[1] === 'PageView')).toHaveLength(2);
   });
 
