@@ -5,7 +5,7 @@
 
 import { lazy, MouseEvent, Suspense, useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
-import { Link, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, matchPath, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import Footer from './components/Footer';
@@ -30,6 +30,12 @@ import MobileBottomNav from './features/navigation/MobileBottomNav';
 import CheckoutCallbackPage from './features/checkout/CheckoutCallbackPage';
 import { pageView } from './lib/tracking.ts';
 import { captureAttribution } from './lib/attribution.ts';
+import { SITE_ORIGIN } from './config/storefront';
+import { buildProductSlugById, findProductBySlug, getProductPath } from './utils/productSlug';
+import { productHeadValues, readShellTitle, syncHead } from './utils/productHead';
+
+// Read once at load, before any route change rewrites document.title.
+const SHELL_TITLE = readShellTitle(document);
 
 const CartModal = lazy(() => import('./components/CartModal'));
 const ProductDetailRoute = lazy(() => import('./features/product/ProductDetailRoute'));
@@ -63,6 +69,21 @@ export default function App() {
     captureAttribution(location.search);
     pageView(location.pathname + location.search);
   }, [location.pathname, location.search]);
+
+  // STOR-072: title/canonical/og follow the route so a server-rendered product head never goes stale.
+  useEffect(() => {
+    const slug = matchPath('/product/:slug', location.pathname)?.params.slug;
+    if (slug && products.length === 0) return; // catalog not loaded yet: keep the server head
+    let product;
+    try {
+      product = findProductBySlug(products, slug);
+    } catch {
+      product = undefined; // malformed %-escape in the slug
+    }
+    syncHead(document, product
+      ? productHeadValues(product, `${SITE_ORIGIN}${getProductPath(product, buildProductSlugById(products))}`)
+      : null, SHELL_TITLE);
+  }, [location.pathname, products]);
 
   useEffect(() => {
     if (isCartOpen) setHasOpenedCart(true);
