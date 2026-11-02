@@ -1,5 +1,6 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ImageOff } from 'lucide-react';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
@@ -14,6 +15,7 @@ import BadmintonCenterSlider from './BadmintonCenterSlider';
 const ALL = 'ALL';
 const O2O = 'O2O';
 const ACTIVE_CHIP = 'bg-ink-primary text-white shadow-md';
+const SECTION_SUB = 'text-[15px] font-medium text-ink-secondary mt-2';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -38,7 +40,8 @@ export default function HomePage() {
     const raw = p.brand?.trim();
     if (raw && !brands.has(raw.toLowerCase())) brands.set(raw.toLowerCase(), raw);
   }
-  const [brokenTiles, setBrokenTiles] = useState<Record<string, boolean>>({});
+  // Ảnh lỗi tải theo URL: ô ngành thử ảnh của SP còn hàng kế tiếp trong ngành.
+  const [brokenImages, setBrokenImages] = useState<Set<string>>(() => new Set());
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL);
   const [quickFilter, setQuickFilter] = useState<string>(ALL);
   const [sortMode, setSortMode] = useState<SortMode>('in-stock-first');
@@ -89,8 +92,11 @@ export default function HomePage() {
   return (
     <div className="space-y-12 animate-in fade-in duration-300">
       {sortedCategories.length > 0 && (
-        <section data-testid="badminton-hub-header" className="max-w-7xl mx-auto px-4 md:px-8 pt-2">
+        <section data-testid="badminton-hub-header" className="max-w-[1280px] mx-auto px-4 md:px-[24px] pt-2">
           <div className="title-box text-center mb-4">
+            <p data-testid="hub-eyebrow" className="font-mono text-xs font-bold tracking-[0.14em] uppercase text-brand-primary mb-1.5">
+              TOPVNSPORT OFFICIAL SPECIALTY HUB
+            </p>
             <h1 className="font-display font-black text-2xl md:text-4xl tracking-tight text-ink-primary uppercase">
               BADMINTON
             </h1>
@@ -126,10 +132,15 @@ export default function HomePage() {
       <BadmintonCenterSlider products={allInStock.filter(p => Boolean(p.image) && p.image !== NO_IMAGE_URL).slice(0, 5)} />
 
       {allInStock.length > 0 && (
-        <section data-testid="instock-shelf" className="max-w-7xl mx-auto px-4 md:px-8">
-          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5 pb-6">SẢN PHẨM NỔI BẬT</h2>
+        <section data-testid="instock-shelf" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
+          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5">SẢN PHẨM NỔI BẬT</h2>
+          {/* Số thật = SP còn hàng; vế đan cước chỉ khi có SP còn hàng có tầng cước (cùng luật với giỏ). */}
+          <p data-testid="featured-subtitle" className={`text-center ${SECTION_SUB} pb-6`}>
+            {`${allInStock.length} sản phẩm thật từ hệ thống PIM TopVNSport`}
+            {allInStock.some(hasO2OStringing) && ' — Tích hợp cấu hình đan cước 2 tầng (Khung vợt + Loại cước & Số KG)'}
+          </p>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 bg-brand-light border border-line-tag rounded-[10px] px-4 py-3 mb-7">
+          <div className="flex flex-col items-start gap-3 bg-brand-light border border-line-tag rounded-[10px] px-4 py-3 mb-7">
             <div data-testid="quick-filter-bar" className="flex flex-wrap items-center gap-2">
               <span className="font-mono text-[11.5px] font-bold uppercase text-ink-secondary mr-1">Lọc nhanh:</span>
               {[
@@ -149,7 +160,7 @@ export default function HomePage() {
                 </button>
               ))}
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div data-testid="shelf-count-sort" className="flex flex-wrap items-center gap-3">
               <span data-testid="result-counter" className="font-mono text-xs font-bold text-ink-secondary tabular-nums">
                 Hiển thị {shown.length} / {matched.length} sản phẩm
               </span>
@@ -182,14 +193,15 @@ export default function HomePage() {
       )}
 
       {sortedCategories.length > 0 && (
-        <section data-testid="category-tiles" className="max-w-7xl mx-auto px-4 md:px-8">
-          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5 pb-6">Danh mục cầu lông</h2>
+        <section data-testid="category-tiles" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
+          <h2 className="text-center font-display font-black text-2xl md:text-3xl text-ink-primary tracking-wide uppercase pt-5">Danh mục cầu lông</h2>
+          <p data-testid="category-subtitle" className={`text-center ${SECTION_SUB} pb-6`}>Đi thẳng vào từng nhóm trang thiết bị cầu lông chuyên dụng</p>
 
           <div data-testid="category-tile-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-[18px] lg:gap-x-6 lg:gap-y-7">
             {sortedCategories.slice(0, 8).map(cat => {
               const label = getCategoryLabel(cat, categories);
               // Ảnh ngành = ảnh bìa thật của một sản phẩm còn hàng trong ngành (VOMA không có ảnh ngành).
-              const image = brokenTiles[cat.code] ? undefined : allInStock.find(p => p.categoryCode === cat.code && p.image && p.image !== NO_IMAGE_URL)?.image;
+              const image = allInStock.find(p => p.categoryCode === cat.code && p.image && p.image !== NO_IMAGE_URL && !brokenImages.has(p.image))?.image;
               return (
                 <button
                   type="button"
@@ -201,9 +213,11 @@ export default function HomePage() {
                 >
                   <div className="w-full aspect-[4/3] overflow-hidden bg-brand-light border-b border-line-tag">
                     {image ? (
-                      <img src={image} alt={label} loading="lazy" onError={() => setBrokenTiles(b => ({ ...b, [cat.code]: true }))} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      <img src={image} alt={label} loading="lazy" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
                     ) : (
-                      <div data-testid="cat-tile-placeholder" aria-hidden="true" className="w-full h-full bg-brand-light" />
+                      <div data-testid="cat-tile-placeholder" className="w-full h-full bg-brand-light flex items-center justify-center text-ink-muted">
+                        <ImageOff aria-hidden="true" className="w-8 h-8" />
+                      </div>
                     )}
                   </div>
                   <div className="px-3 py-3.5 text-center">
@@ -228,7 +242,7 @@ export default function HomePage() {
       )}
 
       {promoProducts.length > 0 && (
-        <section data-testid="promo-section" className="max-w-7xl mx-auto px-4 md:px-8">
+        <section data-testid="promo-section" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
           <div data-testid="promo-banner" className="bg-brand-accent rounded-2xl p-6 text-white flex flex-col lg:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden">
             <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
 
