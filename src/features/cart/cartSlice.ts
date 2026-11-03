@@ -298,6 +298,40 @@ export function getCartItemUnitPrice(item: CartItem, products: Product[]): numbe
   return getCartItemPriceDisplay(item, products).unit;
 }
 
+export interface CartPriceSummary {
+  itemsTotal: number;
+  originalItemsTotal: number;
+  productDiscount: number;
+}
+
+// Tổng tiền hàng theo giá bán (itemsTotal = Σ(sale × qty)), tổng giá gốc gạch ngang
+// (originalItemsTotal = itemsTotal + productDiscount), và số tiền giảm giá sản phẩm
+// (productDiscount = Σ((original − sale) × qty) chỉ cho các dòng có KM thật từ PIM).
+// Bất kỳ dòng nào chưa xác định được giá thật (unit === null) -> trả về null.
+// Dòng không có original_price từ PIM không fallback sang variant.price và đóng góp 0 vào productDiscount.
+export function getCartPriceSummary(items: CartItem[], products: Product[]): CartPriceSummary | null {
+  let itemsTotal = 0;
+  let productDiscount = 0;
+
+  for (const item of items) {
+    const { unit, original } = getCartItemPriceDisplay(item, products);
+    if (unit === null) {
+      return null;
+    }
+    itemsTotal += unit * item.quantity;
+    if (original !== null && original > unit) {
+      productDiscount += (original - unit) * item.quantity;
+    }
+  }
+
+  const originalItemsTotal = itemsTotal + productDiscount;
+  return {
+    itemsTotal,
+    originalItemsTotal,
+    productDiscount,
+  };
+}
+
 // Biến thể đã chọn không có giá thật -> không tạo món, báo rõ product id + sku.
 function priceOrReport(product: Product, variant: ProductVariant): number | null {
   const price = variantUnitPrice(variant);
