@@ -1,4 +1,5 @@
 import type { Product, StringOption } from '../../types';
+import { sumStock } from '../../utils/stock.js';
 
 export const formatVnd = (n: number) => `${n.toLocaleString('vi-VN')}đ`;
 
@@ -111,7 +112,7 @@ export const aggregateStock = (product: Product, tier1: string, tier2: string): 
   );
   if (matched.length === 0) return { kind: 'none' };
   const known = matched.filter((v) => v.stock !== undefined);
-  const total = known.reduce((sum, v) => sum + (v.stock as number), 0);
+  const total = sumStock(known.map((v) => v.stock));
   if (known.some((v) => (v.stock as number) > 0)) return { kind: 'known', stock: total };
   if (known.length < matched.length) return { kind: 'unknown' };
   return { kind: 'known', stock: 0 };

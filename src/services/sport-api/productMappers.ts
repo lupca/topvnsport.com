@@ -1,5 +1,6 @@
 import type { Category, Product, ProductAttribute, ProductVariant, ProductVomaAttribute } from '../../types';
 import { slugifyProductName } from '../../utils/productSlug.js';
+import { sumStock } from '../../utils/stock.js';
 import { NO_IMAGE_URL } from './constants.js';
 import type { ApiListResponse, PmiAttributeValue, PmiProduct, PmiVariant, PmiVomaAttributeValue } from './types.js';
 
@@ -127,7 +128,7 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
 
   const prices = variants.map((variant) => Number(variant.price ?? 0)).filter((price) => !isNaN(price) && price > 0);
   const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
-  const stock = variants.reduce((sum, variant) => sum + Number(variant.stock || 0), 0);
+  const stock = sumStock(variants.map((v) => Number(v.stock || 0)));
   const colors = [...new Set(variants.map((variant) => variant.tier_1_option).filter((option): option is string => Boolean(option)))];
 
   const variantById = variants.reduce<Record<number, PmiVariant>>((accumulator, variant) => {
