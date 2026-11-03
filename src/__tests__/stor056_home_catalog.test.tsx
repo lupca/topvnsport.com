@@ -198,27 +198,28 @@ describe('STOR-056 ô danh mục', () => {
     expect(within(tile).queryByTestId('cat-tile-placeholder')).toBeNull();
   });
 
-  it('không có ảnh dùng được -> placeholder trung tính, không <img>', () => {
+  it('không có ảnh dùng được -> không <img>, không khung ảnh', () => {
     renderHome([prod('1', { image: NO_IMAGE_URL }), prod('2', { image: '/img/x.jpg', stock: 0 }), prod('3', { categoryCode: 'c2', image: '' })]);
     for (const code of ['c1', 'c2']) {
       const tile = screen.getByTestId(`cat-tile-${code}`);
       expect(within(tile).queryByRole('img')).toBeNull();
-      expect(within(tile).getByTestId('cat-tile-placeholder')).toBeTruthy();
+      expect(within(tile).queryByTestId('cat-tile-placeholder')).toBeNull();
+      expect(tile.querySelector('.aspect-square')).toBeNull();
     }
   });
 
-  it('ảnh lỗi tải (onError) -> placeholder trung tính', () => {
+  it('ảnh lỗi tải (onError) -> bỏ khung ảnh', () => {
     renderHome([prod('1', { image: '/img/404.jpg' })]);
     const tile = screen.getByTestId('cat-tile-c1');
     fireEvent.error(within(tile).getByRole('img'));
     expect(within(tile).queryByRole('img')).toBeNull();
-    expect(within(tile).getByTestId('cat-tile-placeholder')).toBeTruthy();
+    expect(tile.querySelector('.aspect-square')).toBeNull();
   });
 
-  it('ô không có phụ đề, pill số lượng, chữ monogram: chỉ ảnh + tên', () => {
+  it('ô không có pill số lượng, "N sản phẩm", chữ monogram: chỉ ảnh + tên + (nếu có) thương hiệu thật', () => {
     renderHome([prod('1'), prod('2')]);
     const tile = screen.getByTestId('cat-tile-c1');
-    expect(tile.textContent).toBe('Vợt');
+    expect(tile.textContent).toBe('VợtBrandA');
     expect(tile.textContent).not.toMatch(/sản phẩm|Thể Thao|^V$/);
   });
 

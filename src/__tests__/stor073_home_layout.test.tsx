@@ -117,7 +117,7 @@ describe('STOR-073 bố cục trang chủ', () => {
     expect(Math.abs(cardWidth - 288)).toBeLessThanOrEqual(10);
   });
 
-  it('(6) ô danh mục: ảnh lỗi -> thử ảnh SP còn hàng kế tiếp cùng ngành, hết ảnh -> placeholder có icon, không phụ đề', () => {
+  it('(6) ô danh mục: ảnh lỗi -> thử ảnh SP còn hàng kế tiếp cùng ngành, hết ảnh -> bỏ khung ảnh', () => {
     renderHome([prod('1', { image: '/img/a.jpg' }), prod('2', { image: '/img/b.jpg' }), prod('3', { categoryCode: 'c2', image: '/img/c.jpg' })]);
     const tile = screen.getByTestId('cat-tile-c1');
     expect(within(tile).getByRole('img').getAttribute('src')).toBe('/img/a.jpg');
@@ -125,16 +125,12 @@ describe('STOR-073 bố cục trang chủ', () => {
     expect(within(tile).getByRole('img').getAttribute('src')).toBe('/img/b.jpg');
     fireEvent.error(within(tile).getByRole('img'));
     expect(within(tile).queryByRole('img')).toBeNull();
-    const ph = within(tile).getByTestId('cat-tile-placeholder');
-    const svg = ph.querySelector('svg');
-    expect(svg).not.toBeNull();
-    expect(svg!.getAttribute('aria-hidden')).toBe('true');
-    expect(ph.textContent).toBe('');
-    // ô khác không bị ảnh hưởng; không ô nào có phụ đề
+    expect(tile.querySelector('.aspect-square')).toBeNull();
+    // ô khác không bị ảnh hưởng; chữ ô = tên + phụ đề thương hiệu (nếu có)
     expect(within(screen.getByTestId('cat-tile-c2')).getByRole('img').getAttribute('src')).toBe('/img/c.jpg');
     for (const t of screen.getAllByTestId(/^cat-tile-c\d$/)) {
-      expect(t.textContent).toBe(t.querySelector('h3')!.textContent);
-      expect(t.querySelectorAll('p')).toHaveLength(0);
+      const sub = t.querySelector('[data-testid="cat-tile-sub"]');
+      expect(t.textContent).toBe(t.querySelector('h3')!.textContent + (sub?.textContent ?? ''));
     }
   });
 
