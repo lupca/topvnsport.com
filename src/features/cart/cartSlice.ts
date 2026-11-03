@@ -12,7 +12,8 @@ interface CartState {
 }
 
 // Món thêm vào giỏ kèm tồn đã biết của biến thể (số; undefined = chưa biết tồn).
-export type CartItemInput = CartItem & { stock?: number };
+// stockGroupSkus: sku_code các biến thể cùng stock_code (AC8) -- chỉ đi trong payload, không lưu.
+export type CartItemInput = CartItem & { stock?: number; stockGroupSkus?: string[] };
 
 const CART_STORAGE_KEY = 'cart_items';
 
@@ -54,7 +55,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addCartItem: (state, action: PayloadAction<CartItemInput>) => {
-      const { stock, ...item } = action.payload;
+      const { stock, stockGroupSkus, ...item } = action.payload;
       const add = Number.isInteger(item.quantity) && item.quantity > 0 ? item.quantity : 1;
       // Gộp cùng SKU + cùng dây + cùng lực căng (thêm từ thẻ và từ trang chi tiết).
       const existing = state.items.find(i =>
@@ -62,7 +63,11 @@ const cartSlice = createSlice({
         (Boolean(item.skuCode) && i.skuCode === item.skuCode &&
           (i.stringOption?.id ?? null) === (item.stringOption?.id ?? null) && i.tension === item.tension)
       );
-      const have = existing?.quantity ?? 0;
+      // Cùng stock_code (vd 2 dòng khác cước cùng khung): tổng các dòng không vượt tồn chung.
+      const have = stockGroupSkus
+        ? state.items.reduce((sum, i) =>
+            i.productId === item.productId && stockGroupSkus.includes(i.skuCode ?? '') ? sum + i.quantity : sum, 0)
+        : existing?.quantity ?? 0;
       if (typeof stock === 'number' && have + add > stock) {
         state.stockNotice = stock <= 0
           ? 'Sản phẩm này đã hết hàng.'
@@ -258,7 +263,8 @@ export function cartItemWarningMessage(status: CartItemSkuStatus, stock?: number
 // - 'sku_changed': sản phẩm vẫn còn, nhưng skuCode không khớp ĐÚNG một biến
 //   thể bán được nào của chính sản phẩm đó (PIM đã đổi/xoá tổ hợp).
 // - 'no_price': skuCode khớp biến thể bán được nhưng biến thể chưa có giá thật.
-export function describeCartItemSkuStatus(item: CartItem, products: Product[]): CartItemSkuStatus {
+// cartItems: cả giỏ -- dòng có biến thể cùng stock_code được kiểm theo TỔNG số lượng (AC8).
+export function describeCartItemSkuStatus(item: CartItem, products: Product[], cartItems: CartItem[] = [item]): CartItemSkuStatus {
   const product = products.find(p => p.id === item.productId);
   if (!product) return 'product_not_found';
   const variant = item.skuCode ? sellableVariantsOf(product).find(v => v.sku_code === item.skuCode) : undefined;
@@ -268,7 +274,12 @@ export function describeCartItemSkuStatus(item: CartItem, products: Product[]): 
   // (undefined) không chặn -- không đoán là hết hàng.
   if (typeof variant.stock === 'number') {
     if (variant.stock <= 0) return 'out_of_stock';
-    if (!Number.isInteger(item.quantity) || item.quantity > variant.stock) return 'over_stock';
+    const code = variant.stock_code;
+    const quantity = code
+      ? cartItems.reduce((sum, i) => i.productId === item.productId &&
+          sellableVariantsOf(product).some(v => v.sku_code === i.skuCode && v.stock_code === code) ? sum + i.quantity : sum, 0)
+      : item.quantity;
+    if (!Number.isInteger(quantity) || quantity > variant.stock) return 'over_stock';
   }
   return 'ok';
 }
@@ -346,8 +357,14 @@ function priceOrReport(product: Product, variant: ProductVariant): number | null
 // chính sản phẩm đó -- không chỉ kiểm rỗng/khớp mẫu chuỗi "SKU-<id>-...".
 // Sản phẩm không tìm thấy hoặc biến thể đã đổi/xoá (PIM cập nhật lại tổ hợp)
 // đều bị coi là không hợp lệ, không đoán.
-export function isCartItemSkuValid(item: CartItem, products: Product[]): boolean {
-  return describeCartItemSkuStatus(item, products) === 'ok';
+export function isCartItemSkuValid(item: CartItem, products: Product[], cartItems: CartItem[] = [item]): boolean {
+  return describeCartItemSkuStatus(item, products, cartItems) === 'ok';
+}
+
+// sku_code bán được cùng stock_code với biến thể; không có stock_code -> {} (luật tắt).
+function stockGroupOf(product: Product, variant: ProductVariant): { stockGroupSkus?: string[] } {
+  if (!variant.stock_code) return {};
+  return { stockGroupSkus: sellableVariantsOf(product).filter(v => v.stock_code === variant.stock_code).map(v => v.sku_code) };
 }
 
 export function buildDefaultCartItem(product: Product): CartItemInput | null {
@@ -386,7 +403,8 @@ export function buildDefaultCartItem(product: Product): CartItemInput | null {
     stringOption: null,
     tension: 10.5,
     quantity: 1,
-    stock: variant.stock
+    stock: variant.stock,
+    ...stockGroupOf(product, variant)
   };
 }
 
@@ -420,7 +438,8 @@ export function buildConfiguredCartItem(
     stringOption: stringChoice,
     tension,
     quantity: 1,
-    stock: variant.stock
+    stock: variant.stock,
+    ...stockGroupOf(product, variant)
   };
 }
 

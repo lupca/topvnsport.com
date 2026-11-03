@@ -335,7 +335,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
   // thanh toán/OTP, thay vì để lọt tới sau sendOtp rồi
   // mới báo. Đang tải dữ liệu sản phẩm -> cũng khoá (chưa kết luận được gì).
-  const canCheckout = !isLoadingProducts && !productsError && cartItems.every(item => isCartItemSkuValid(item, products));
+  const canCheckout = !isLoadingProducts && !productsError && cartItems.every(item => isCartItemSkuValid(item, products, cartItems));
 
   const handleProceedToCheckout = () => {
     if (!canCheckout) return;
@@ -362,9 +362,9 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     if (isLoadingProducts || productsError) {
       return;
     }
-    const invalidItem = cartItems.find(item => describeCartItemSkuStatus(item, products) !== 'ok');
+    const invalidItem = cartItems.find(item => describeCartItemSkuStatus(item, products, cartItems) !== 'ok');
     if (invalidItem) {
-      const message = cartItemWarningMessage(describeCartItemSkuStatus(invalidItem, products), variantStock(invalidItem));
+      const message = cartItemWarningMessage(describeCartItemSkuStatus(invalidItem, products, cartItems), variantStock(invalidItem));
       if (message) await popupService.alert(message);
       return;
     }
@@ -616,7 +616,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                         ? null
                         : productsError
                         ? PRODUCTS_LOAD_ERROR_MESSAGE
-                        : cartItemWarningMessage(describeCartItemSkuStatus(item, products), variantStock(item));
+                        : cartItemWarningMessage(describeCartItemSkuStatus(item, products, cartItems), variantStock(item));
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5" data-testid="cart-line">
                           <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
