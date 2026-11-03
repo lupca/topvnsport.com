@@ -229,7 +229,8 @@ export default function Header({ cartCount, openCart, products, categories, cate
       </div>
 
       {/* Mobile Black Strip */}
-      <div className="md:hidden bg-ink-primary text-white text-center text-[11.5px] font-bold py-1.5 px-3">
+      {/* Trang chủ: lề 7/10px như tab Mobile (390px) của thiết kế. Chữ tĩnh, không chấm trạng thái: storefront không có nguồn giờ hoạt động. */}
+      <div data-testid="mobile-showroom-strip" className={`md:hidden bg-ink-primary text-white text-center text-[11.5px] font-bold ${currentView === 'home' ? 'py-[7px] px-[10px]' : 'py-1.5 px-3'}`}>
         Đan vợt chuẩn quốc tế 30p
       </div>
 
