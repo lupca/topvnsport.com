@@ -1,4 +1,5 @@
 import type { Product } from '../../types';
+import { sumStock } from '../../utils/stock.js';
 
 // Đọc phản hồi /public/stock ({stock:{sku:qty}} hoặc {items:[{sku_code,...}]}).
 export function parseWmsStock(data: any): Record<string, number> {
@@ -24,11 +25,8 @@ export function applyWmsStock(products: Product[], stockMap: Record<string, numb
   const read = (sku: string) => (stockMap ? stockMap[sku] ?? 0 : undefined);
 
   return products.map((product) => {
-    let aggregateStock: number | undefined = stockMap ? 0 : undefined;
-
     const updatedVariants = product.variants?.map((variant) => {
       const variantStock = variant.sku_code ? read(variant.sku_code) : stockMap ? 0 : undefined;
-      if (variantStock !== undefined && aggregateStock !== undefined) aggregateStock += variantStock;
       return {
         ...variant,
         stock: variantStock
@@ -37,7 +35,7 @@ export function applyWmsStock(products: Product[], stockMap: Record<string, numb
 
     let finalProductStock: number | undefined = stockMap ? product.stock : undefined;
     if (updatedVariants && updatedVariants.length > 0) {
-      finalProductStock = aggregateStock;
+      finalProductStock = stockMap ? sumStock(updatedVariants.map((v) => v.stock)) : undefined;
     } else if (product.defaultSku) {
       finalProductStock = read(product.defaultSku);
     }
