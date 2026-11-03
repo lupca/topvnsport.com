@@ -273,6 +273,11 @@ describe('STOR-096: Giỏ hàng + thanh toán: khối tổng tiền hiện giá 
       // Cart step before a shipping quote: 'Tiết kiệm Xđ' still renders
       const savingEl = screen.getByText('Tiết kiệm 1.000.000đ');
       expect(savingEl).toBeInTheDocument();
+      const savingRow = savingEl.closest('div')!;
+      expect(savingRow.className).toContain('text-sm');
+      expect(savingRow.className).toContain('font-medium');
+      expect(savingRow.className).toContain('text-brand-sale');
+      expect(savingRow.className).not.toContain('text-[11px]');
 
       // Renders under 'Tổng cộng thanh toán'
       const orderTotalLabel = screen.getByText('Tổng cộng thanh toán:');
@@ -381,7 +386,12 @@ describe('STOR-096: Giỏ hàng + thanh toán: khối tổng tiền hiện giá 
 
       // Giảm giá sản phẩm and Tiết kiệm
       expect(screen.getByText('Giảm giá sản phẩm:')).toBeInTheDocument();
-      expect(screen.getByText('Tiết kiệm 1.000.000đ')).toBeInTheDocument();
+      const savingEl2 = screen.getByText('Tiết kiệm 1.000.000đ');
+      expect(savingEl2).toBeInTheDocument();
+      const savingRow2 = savingEl2.closest('div')!;
+      expect(savingRow2.className).toContain('text-sm');
+      expect(savingRow2.className).toContain('font-medium');
+      expect(savingRow2.className).toContain('text-brand-sale');
     });
 
     it('Promoted case test: POST /orders items and shipping_fee are unchanged, Σunit×qty + fee equals displayed Tổng cộng thanh toán', async () => {
