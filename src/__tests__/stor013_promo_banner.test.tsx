@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
-// STOR-013: banner khuyến mãi trang chủ chỉ hiện khi có khuyến mãi thật, nội dung từ dữ liệu.
+// STOR-098 (thay STOR-013): trang chủ KHÔNG còn khối khuyến mãi riêng; khuyến mãi chỉ nằm trên thẻ sản phẩm.
 import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
-import { render, screen, cleanup, within } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
@@ -27,42 +27,31 @@ function renderHome(products: any[]) {
 
 afterEach(cleanup);
 
-describe('STOR-013 banner khuyến mãi', () => {
-  it('không khuyến mãi thì không banner', () => {
-    renderHome([prod('1'), prod('2', { salePrice: 90000 })]);
-    expect(screen.queryByTestId('promo-banner')).toBeNull();
-    expect(screen.queryByText('Đang khuyến mãi')).toBeNull();
-  });
+const promoted = () => [
+  prod('1', { hasActivePromotion: true, percentageDiscount: 10, originalPrice: 100000, computedPrice: 90000 }),
+  prod('2', { hasActivePromotion: true, percentageDiscount: 25, originalPrice: 200000, computedPrice: 150000 }),
+];
 
-  it('không khuyến mãi thì không thẻ sản phẩm khuyến mãi', () => {
-    renderHome([prod('1', { salePrice: 90000 })]);
+describe('STOR-098 trang chủ không còn khối khuyến mãi riêng', () => {
+  it('có sản phẩm khuyến mãi vẫn không hiện khối "Đang khuyến mãi / Giảm đến"', () => {
+    renderHome(promoted());
     expect(screen.queryByTestId('promo-section')).toBeNull();
+    expect(screen.queryByTestId('promo-banner')).toBeNull();
+    expect(screen.queryByText(/Đang khuyến mãi/i)).toBeNull();
+    expect(screen.queryByText(/Giảm đến/i)).toBeNull();
   });
 
-  it('banner hiện mức giảm lớn nhất', () => {
-    renderHome([
-      prod('1', { hasActivePromotion: true, percentageDiscount: 10 }),
-      prod('2', { hasActivePromotion: true, percentageDiscount: 25 }),
-    ]);
-    expect(screen.getByTestId('promo-banner').textContent).toContain('Giảm đến 25%');
+  it('thẻ sản phẩm vẫn hiện giá khuyến mãi và giá niêm yết gạch ngang', () => {
+    renderHome([promoted()[0]]);
+    expect(screen.getByTestId('sale-price').textContent).toContain('90.000');
+    const original = screen.getByTestId('original-price');
+    expect(original.textContent).toContain('100.000');
+    expect(original.className).toContain('line-through');
   });
 
-  it('percentageDiscount thiếu hoặc 0 thì không hiện con số phần trăm', () => {
-    renderHome([prod('1', { hasActivePromotion: true }), prod('2', { hasActivePromotion: true, percentageDiscount: 0 })]);
-    const banner = screen.getByTestId('promo-banner');
-    expect(banner.textContent).toContain('Đang khuyến mãi');
-    expect(banner.textContent).not.toMatch(/%|Giảm đến/);
-  });
-
-  it('lưới chỉ có sản phẩm khuyến mãi', () => {
-    renderHome([prod('1', { salePrice: 90000 }), prod('2', { hasActivePromotion: true, percentageDiscount: 5 })]);
-    const promo = within(screen.getByTestId('promo-section'));
-    expect(promo.getByText('SP 2')).toBeTruthy();
-    expect(promo.queryByText('SP 1')).toBeNull();
-  });
-
-  it('mã nguồn không còn chuỗi viết cứng và đồng hồ đếm ngược', () => {
+  it('mã nguồn không còn khối khuyến mãi và chuỗi viết cứng', () => {
     const src = readFileSync('src/features/home/HomePage.tsx', 'utf8');
-    for (const s of ['GIẢM GIÁ 30%', 'GIỜ VÀNG SĂN DEAL CHẤT', '80 chi nhánh', 'Kết thúc sau']) expect(src).not.toContain(s);
+    for (const s of ['promoProducts', 'maxDiscount', 'promo-section', 'promo-banner', 'Đang khuyến mãi', 'Giảm đến',
+      'GIẢM GIÁ 30%', 'GIỜ VÀNG SĂN DEAL CHẤT', '80 chi nhánh', 'Kết thúc sau']) expect(src).not.toContain(s);
   });
 });
