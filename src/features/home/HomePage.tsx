@@ -25,11 +25,6 @@ export default function HomePage() {
   const productsError = useAppSelector(state => state.appData.productsError);
 
 
-  // Chỉ sản phẩm có khuyến mãi thật (mapper đặt hasActivePromotion); không có thì không hiện khối nào.
-  const promoProducts = products.filter(p => p.hasActivePromotion);
-  const discounts = promoProducts.map(p => p.percentageDiscount).filter((d): d is number => Number.isFinite(d) && (d as number) > 0);
-  const maxDiscount = discounts.length > 0 ? Math.max(...discounts) : undefined;
-
   const allInStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0);
   // Chip ngành đếm hàng còn hàng để khớp kệ và bộ đếm; ngành 0 còn hàng thì ẩn.
   const categoryCounts = getProductCategoryCounts(allInStock);
@@ -245,36 +240,6 @@ export default function HomePage() {
             >
               XEM TẤT CẢ SẢN PHẨM CẦU LÔNG
             </button>
-          </div>
-        </section>
-      )}
-
-      {promoProducts.length > 0 && (
-        <section data-testid="promo-section" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
-          <div data-testid="promo-banner" className="bg-brand-accent rounded-2xl p-6 text-white flex flex-col lg:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden">
-            <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-
-            <div className="space-y-2 text-center lg:text-left">
-              <span className="bg-white/10 text-white border border-white/20 text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
-                Đang khuyến mãi
-              </span>
-              {maxDiscount !== undefined && (
-                <h3 className="font-display font-black text-2xl md:text-3xl tracking-tight uppercase leading-none">
-                  Giảm đến {maxDiscount}%
-                </h3>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-            {promoProducts.slice(0, 4).map(p => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                onQuickView={prod => dispatch(setQuickViewProduct(prod))}
-                onAddToCart={(prod, e) => handleAddToCart(prod, e)}
-              />
-            ))}
           </div>
         </section>
       )}
