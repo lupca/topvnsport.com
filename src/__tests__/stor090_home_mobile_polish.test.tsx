@@ -141,7 +141,7 @@ describe('STOR-090 chip, tiêu đề nổi bật, ô ngành dưới md', () => {
     expect(sub.previousElementSibling?.textContent).toBe('Danh mục cầu lông');
   });
 
-  it('ô ngành: không viền/nền dưới md; ảnh vuông viền đen; nhãn 13px py 6; không <p>', () => {
+  it('ô ngành: không viền/nền dưới md; ảnh vuông viền đen; nhãn 13px py 6; <p> duy nhất là phụ đề ẩn dưới md', () => {
     renderHome([prod('1')]);
     const tile = screen.getByTestId('cat-tile-c1');
     expect(cls(tile)).toEqual(expect.arrayContaining(['max-md:border-0', 'max-md:bg-transparent', 'border', 'bg-white']));
@@ -151,6 +151,9 @@ describe('STOR-090 chip, tiêu đề nổi bật, ô ngành dưới md', () => {
     const h3 = tile.querySelector('h3')!;
     expect(cls(h3)).toEqual(expect.arrayContaining(['max-md:text-[13px]', 'font-extrabold']));
     expect(cls(h3.parentElement!)).toEqual(expect.arrayContaining(['max-md:px-0', 'max-md:py-[6px]']));
-    expect(tile.querySelectorAll('p')).toHaveLength(0);
+    for (const p of tile.querySelectorAll('p')) {
+      expect(p.getAttribute('data-testid')).toBe('cat-tile-sub');
+      expect(cls(p)).toEqual(expect.arrayContaining(['hidden', 'md:block']));
+    }
   });
 });

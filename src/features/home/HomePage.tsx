@@ -1,6 +1,5 @@
 import { MouseEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ImageOff } from 'lucide-react';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
@@ -201,10 +200,23 @@ export default function HomePage() {
           <p data-testid="category-subtitle" className={`hidden md:block text-center ${SECTION_SUB} pb-6`}>Đi thẳng vào từng nhóm trang thiết bị cầu lông chuyên dụng</p>
 
           <div data-testid="category-tile-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-[18px] lg:gap-x-6 lg:gap-y-7">
-            {sortedCategories.slice(0, 8).map(cat => {
-              const label = getCategoryLabel(cat, categories);
-              // Ảnh ngành = ảnh bìa thật của một sản phẩm còn hàng trong ngành (VOMA không có ảnh ngành).
-              const image = allInStock.find(p => p.categoryCode === cat.code && p.image && p.image !== NO_IMAGE_URL && !brokenImages.has(p.image))?.image;
+            {sortedCategories
+              .slice(0, 8)
+              .map(cat => {
+                const inCat = allInStock.filter(p => p.categoryCode === cat.code);
+                // Ảnh ngành = ảnh bìa thật của một sản phẩm còn hàng trong ngành (VOMA không có ảnh ngành).
+                const image = inCat.find(p => p.image && p.image !== NO_IMAGE_URL && !brokenImages.has(p.image))?.image;
+                // Phụ đề = thương hiệu thật của SP còn hàng trong ngành, gộp không phân biệt hoa thường (nhãn gốc đầu tiên).
+                const subBrands = new Map<string, string>();
+                for (const p of inCat) {
+                  const raw = p.brand?.trim();
+                  if (raw && !subBrands.has(raw.toLowerCase())) subBrands.set(raw.toLowerCase(), raw);
+                }
+                return { cat, label: getCategoryLabel(cat, categories), image, sub: [...subBrands.values()].join(' · ') };
+              })
+              // STOR-099: ô có ảnh đứng trước ô không ảnh; sort ổn định giữ thứ tự gốc trong mỗi nhóm.
+              .sort((a, b) => Number(Boolean(b.image)) - Number(Boolean(a.image)))
+              .map(({ cat, label, image, sub }) => {
               return (
                 <button
                   type="button"
@@ -214,17 +226,14 @@ export default function HomePage() {
                   aria-label={`Mở danh mục ${label}`}
                   className="group flex flex-col bg-white max-md:bg-transparent border max-md:border-0 border-line-tag text-left transition hover:border-ink-primary hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/40"
                 >
-                  <div className="w-full aspect-square md:aspect-[4/3] overflow-hidden bg-brand-light max-md:border max-md:border-line-strong md:border-b md:border-line-tag">
-                    {image ? (
+                  {image && (
+                    <div className="w-full aspect-square md:aspect-[4/3] overflow-hidden bg-brand-light max-md:border max-md:border-line-strong md:border-b md:border-line-tag">
                       <img src={image} alt={label} loading="lazy" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-                    ) : (
-                      <div data-testid="cat-tile-placeholder" className="w-full h-full bg-brand-light flex items-center justify-center text-ink-muted">
-                        <ImageOff aria-hidden="true" className="w-8 h-8" />
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <div className="px-3 py-3.5 max-md:px-0 max-md:py-[6px] text-center">
                     <h3 className="text-sm max-md:text-[13px] md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition max-md:!font-sans">{label}</h3>
+                    {sub && <p data-testid="cat-tile-sub" className="hidden md:block text-[12px] font-semibold text-ink-secondary mt-[3px]">{sub}</p>}
                   </div>
                 </button>
               );
