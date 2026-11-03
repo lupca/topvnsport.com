@@ -143,6 +143,7 @@ export default function ProductPurchaseSection({
                         return (
                           <button
                             key={option}
+                            data-stock={stockForOption.kind === 'known' ? stockForOption.stock : stockForOption.kind}
                             onClick={() => !optionOutOfStock && setValue(option)}
                             disabled={optionOutOfStock}
                             className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition ${

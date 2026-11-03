@@ -101,6 +101,8 @@ export interface ProductVariant {
   price: number;
   barcode?: string | null;
   stock?: number;
+  // WMS /public/stock items[].stock_code: variants with one code share one stock row (AC8).
+  stock_code?: string;
   computedPrice?: number;
   originalPrice?: number;
   percentageDiscount?: number;
