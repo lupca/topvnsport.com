@@ -271,7 +271,8 @@ describe('STOR-093: Giỏ hàng + thanh toán hiện giá KM kèm giá gốc g�
       // 2 × 2.000.000 + 1 × 1.800.000 = 5.800.000đ (không phải 2 × 2.500.000 + 1.800.000 = 6.800.000đ)
       const itemsTotalRow = screen.getByText('Tổng tiền hàng:').parentElement!;
       expect(itemsTotalRow).toHaveTextContent(fmt(5800000));
-      expect(itemsTotalRow).not.toHaveTextContent(fmt(6800000));
+      const saleTotal = within(itemsTotalRow).getByText(fmt(5800000));
+      expect(saleTotal).not.toHaveTextContent(fmt(6800000));
     });
 
     it('đang tải hoặc lỗi tải sản phẩm: không hiện cả giá bán lẫn giá gốc gạch ngang', () => {

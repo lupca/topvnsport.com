@@ -5,7 +5,7 @@ import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
 import { popupService } from '@topvnsport/ui-kit';
 import { ReceiverAddressField, isFinalPaymentError, isReceiverAddressError, receiverAddressField } from '../features/checkout/omsErrors';
-import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemPriceDisplay, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
+import { cartItemWarningMessage, describeCartItemSkuStatus, getCartItemPriceDisplay, getCartPriceSummary, isCartItemSkuValid, updateCartItemQuantity } from '../features/cart/cartSlice';
 import { isStringingTier } from './product-detail/helpers';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import OtpModal, { getStoredCooldown, markOtpSent } from './OtpModal';
@@ -110,6 +110,31 @@ const isUsable = (o: ShippingQuoteOption | undefined): o is ShippingQuoteOption 
   !!o && o.available === true && typeof o.shipping_fee === 'number';
 
 const PRODUCTS_LOAD_ERROR_MESSAGE = 'Không tải được danh sách sản phẩm. Vui lòng tải lại trang.';
+
+interface SummaryRowProps {
+  label: string;
+  value: React.ReactNode;
+  struckValue?: React.ReactNode;
+  isAccent?: boolean;
+}
+
+function SummaryRow({ label, value, struckValue, isAccent }: SummaryRowProps) {
+  return (
+    <div className="flex justify-between">
+      <span>{label}</span>{' '}
+      <strong className={`text-right ${isAccent ? 'text-brand-sale' : 'text-gray-900'}`}>
+        {struckValue && (
+          <>
+            <span className="line-through text-gray-600 font-normal mr-1.5">
+              {struckValue}
+            </span>{' '}
+          </>
+        )}
+        <span className={isAccent ? 'text-brand-sale' : undefined}>{value}</span>
+      </strong>
+    </div>
+  );
+}
 
 export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, onClearCart }: CartModalProps) {
   const dispatch = useAppDispatch();
@@ -271,6 +296,10 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
   // Giá TÍNH LẠI từ biến thể đã tải (không tin item.price lưu localStorage).
   // Đang tải/tải lỗi hoặc biến thể không có giá -> null: không hiện số.
+  const summary = !isLoadingProducts && !productsError ? getCartPriceSummary(cartItems, products) : null;
+  const itemsTotal = summary?.itemsTotal ?? null;
+  const hasPromotion = summary !== null && summary.productDiscount > 0;
+
   const linePrice = (item: CartItem): { sale: number | null; original: number | null } => {
     if (isLoadingProducts || productsError) return { sale: null, original: null };
     const { unit, original } = getCartItemPriceDisplay(item, products);
@@ -281,7 +310,6 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   };
   const linePrices = cartItems.map(linePrice);
   const lineAmounts = linePrices.map(p => p.sale);
-  const itemsTotal = lineAmounts.some(a => a === null) ? null : (lineAmounts as number[]).reduce((acc, a) => acc + a, 0);
 
   const productOf = (item: CartItem) => products.find(p => String(p.id) === String(item.productId));
   const variantStock = (item: CartItem) => productOf(item)?.variants?.find(v => v.sku_code === item.skuCode)?.stock;
@@ -644,11 +672,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                               </div>
                               <div className="flex flex-wrap items-baseline justify-end gap-x-1.5 font-mono">
                                 {linePrices[index].original !== null && (
-                                  <span className="text-xs text-gray-400 line-through">
+                                  <span className="text-sm text-gray-600 line-through">
                                     {formatMoney(linePrices[index].original)}
                                   </span>
                                 )}
-                                <span className="text-sm font-bold text-brand-primary">
+                                <span className="text-base font-bold text-brand-primary">
                                   {formatMoney(lineAmounts[index])}
                                 </span>
                               </div>
@@ -708,11 +736,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                       </div>
                       <div className="flex flex-wrap items-baseline justify-end gap-x-1.5 font-mono shrink-0">
                         {linePrices[index].original !== null && (
-                          <span className="text-xs text-gray-400 line-through">
+                          <span className="text-sm text-gray-600 line-through">
                             {formatMoney(linePrices[index].original)}
                           </span>
                         )}
-                        <span className="text-sm font-bold text-brand-primary">
+                        <span className="text-base font-bold text-brand-primary">
                           {formatMoney(lineAmounts[index])}
                         </span>
                       </div>
@@ -948,21 +976,36 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         {cartItems.length > 0 && step < 3 && (
           <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-3">
             <div className="space-y-1.5 text-xs text-gray-600 font-mono">
-              <div className="flex justify-between">
-                <span>Tổng tiền hàng:</span>
-                <strong className="text-gray-900">{formatMoney(itemsTotal)}</strong>
-              </div>
-              <div className="flex justify-between">
-                <span>Phí vận chuyển:</span>
-                <strong className="text-gray-900 text-right">
-                  {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
-                  {selectedFee !== null && selectedOption?.is_fallback && <span className="block text-amber-600 text-[10px]">Phí tạm tính</span>}
-                </strong>
-              </div>
+              <SummaryRow
+                label="Tổng tiền hàng:"
+                struckValue={hasPromotion ? formatMoney(summary.originalItemsTotal) : null}
+                value={formatMoney(itemsTotal)}
+              />
+              {hasPromotion && (
+                <SummaryRow
+                  label="Giảm giá sản phẩm:"
+                  value={`−${formatMoney(summary.productDiscount)}`}
+                  isAccent
+                />
+              )}
+              <SummaryRow
+                label="Phí vận chuyển:"
+                value={
+                  <>
+                    {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
+                    {selectedFee !== null && selectedOption?.is_fallback && <span className="block text-amber-600 text-[10px]">Phí tạm tính</span>}
+                  </>
+                }
+              />
               <div className="flex justify-between text-sm border-t border-gray-200 pt-1.5 mt-1.5 font-bold">
                 <span className="text-gray-900">Tổng cộng thanh toán:</span>
                 <span className="text-brand-primary font-display text-base">{formatMoney(orderTotal)}</span>
               </div>
+              {hasPromotion && (
+                <div className="flex justify-end text-[11px] text-gray-500 font-normal">
+                  <span>Tiết kiệm {formatMoney(summary.productDiscount)}</span>
+                </div>
+              )}
             </div>
 
             {step === 1 ? (
