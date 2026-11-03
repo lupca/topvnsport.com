@@ -221,7 +221,7 @@ export default function HomePage() {
                 >
                   <div className="w-full aspect-square md:aspect-[4/3] overflow-hidden bg-brand-light max-md:border max-md:border-line-strong md:border-b md:border-line-tag">
                     {image ? (
-                      <img src={image} alt={label} loading="lazy" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      <img src={image} alt={label} loading="lazy" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
                     ) : (
                       <div data-testid="cat-tile-placeholder" className="w-full h-full bg-brand-light flex items-center justify-center text-ink-muted">
                         <ImageOff aria-hidden="true" className="w-8 h-8" />

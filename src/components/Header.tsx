@@ -88,10 +88,12 @@ export default function Header({ cartCount, openCart, products, categories, cate
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Phím '/' focus vào ô tìm kiếm nếu không đang gõ trong input/textarea/select/contentEditable
+  // Phím '/' focus vào ô tìm kiếm nếu không đang gõ trong input/textarea/select/contentEditable;
+  // có Ctrl/Meta/Alt thì bỏ qua để không chặn tổ hợp phím của trình duyệt/hệ điều hành (STOR-095).
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === '/') {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
         const target = (e.target as HTMLElement | null) || (document.activeElement as HTMLElement | null);
         const tag = target?.tagName?.toUpperCase();
         const isEditable = Boolean(target?.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT');
