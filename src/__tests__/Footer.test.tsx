@@ -47,7 +47,7 @@ describe('Footer', () => {
     for (const item of Array.from(grid.children)) expect(item.className).toContain('border-l-[3px]');
     // Fixture chỉ có Yonex, không có tầng cước: chỉ tên có trong dữ liệu được hiện (spec 37f60f5b).
     expect(trust.textContent).not.toMatch(/BG66|Exbolt|Kizuna|Victor|Li-Ning/);
-    expect(trust.textContent).toContain('Phân phối chính thức Yonex.');
+    expect(trust.textContent).toContain('Đại lý uỷ quyền Yonex Sunrise.');
     expect(trust.textContent).toContain('Tùy chọn cước và mức căng');
   });
 
