@@ -2,7 +2,7 @@ import { Branch, Category, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
 import { delay, OMS_CHECKOUT_PROXY_URL, OMS_PROXY_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { mapPmiProduct } from './productMappers';
-import { applyWmsStock, parseWmsStock } from './wmsStock';
+import { applyWmsStock, parseWmsStock, stockCodesOf, tagStockCodes } from './wmsStock';
 import { AdminUnit, ApiListResponse, CreateOrderPayload, PmiProduct, SendOtpResponse, ShippingQuote, ShippingQuoteRequest, VerifyOtpResponse } from './types';
 
 // STOR-012: MỘT request /public/stock không sku_codes = toàn bộ tồn của seller
@@ -37,6 +37,7 @@ async function fetchWmsStock(skuCodes: string[]): Promise<Record<string, number>
   }
 
   const result: Record<string, number> = {};
+  const codes: Record<string, string> = {};
 
   const fetchChunk = async (chunk: string[]) => {
     const url = `${WMS_PROXY_URL}/public/stock?sku_codes=${encodeURIComponent(chunk.join(','))}`;
@@ -51,12 +52,14 @@ async function fetchWmsStock(skuCodes: string[]): Promise<Record<string, number>
       console.error(`Failed to fetch stock: ${url} returned status ${response.status}`);
       throw new Error(`WMS stock failed with status ${response.status}`);
     }
-    Object.assign(result, parseWmsStock(await response.json()));
+    const parsed = parseWmsStock(await response.json());
+    Object.assign(result, parsed);
+    Object.assign(codes, stockCodesOf(parsed));
   };
 
   await Promise.all(chunks.map((chunk) => fetchChunk(chunk)));
 
-  return result;
+  return tagStockCodes(result, codes);
 }
 
 function collectSkus(products: Product[]): string[] {

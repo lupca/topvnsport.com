@@ -146,6 +146,7 @@ export default function StringingAssistant({
                     return (
                       <div
                         key={optionName}
+                        data-stock={stock.kind === 'known' ? stock.stock : stock.kind}
                         aria-disabled={isBlocked ? 'true' : undefined}
                         onClick={() => {
                           if (isBlocked) return;

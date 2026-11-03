@@ -1,5 +1,5 @@
 import type { Product, StringOption } from '../../types';
-import { sumStock } from '../../utils/stock.js';
+import { dedupeByStockCode, sumStock } from '../../utils/stock.js';
 
 export const formatVnd = (n: number) => `${n.toLocaleString('vi-VN')}đ`;
 
@@ -95,7 +95,8 @@ export const formatStringMeta = (meta: { type?: string; thickness?: string }): s
 
 // Tồn của một tổ hợp (STOR-027), ba trạng thái tách bạch:
 // none = không biến thể nào khớp; unknown = có biến thể nhưng tồn không rõ
-// (lỗi WMS, STOR-015); known = tổng tồn đã biết.
+// (lỗi WMS, STOR-015); known = tổng tồn đã biết. Biến thể cùng stock_code
+// đếm MỘT lần (AC8, design 5.6 / R4).
 export type StockState = { kind: 'none' } | { kind: 'unknown' } | { kind: 'known'; stock: number };
 
 // Tầng có trong tier_variations mà giá trị rỗng = khớp mọi giá trị của tầng;
@@ -105,11 +106,11 @@ export const aggregateStock = (product: Product, tier1: string, tier2: string): 
     return product.stock === undefined ? { kind: 'unknown' } : { kind: 'known', stock: product.stock };
   }
   const hasTier = (i: number) => !!product.tier_variations?.some((tv) => tv.tier_index === i);
-  const matched = product.variants.filter(
+  const matched = dedupeByStockCode(product.variants.filter(
     (v) =>
       (!hasTier(1) || !tier1 || v.tier_1_option === tier1) &&
       (!hasTier(2) || !tier2 || v.tier_2_option === tier2)
-  );
+  ));
   if (matched.length === 0) return { kind: 'none' };
   const known = matched.filter((v) => v.stock !== undefined);
   const total = sumStock(known.map((v) => v.stock));
