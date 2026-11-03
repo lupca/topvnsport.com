@@ -1002,7 +1002,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <span className="text-brand-primary font-display text-base">{formatMoney(orderTotal)}</span>
               </div>
               {hasPromotion && (
-                <div className="flex justify-end text-[11px] text-gray-500 font-normal">
+                <div className="flex justify-end text-sm font-medium text-brand-sale">
                   <span>Tiết kiệm {formatMoney(summary.productDiscount)}</span>
                 </div>
               )}

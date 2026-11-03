@@ -272,7 +272,9 @@ describe('STOR-093: Giỏ hàng + thanh toán hiện giá KM kèm giá gốc g�
       const itemsTotalRow = screen.getByText('Tổng tiền hàng:').parentElement!;
       expect(itemsTotalRow).toHaveTextContent(fmt(5800000));
       const saleTotal = within(itemsTotalRow).getByText(fmt(5800000));
-      expect(saleTotal).not.toHaveTextContent(fmt(6800000));
+      // Giá bán (không gạch) phải là phần tử riêng, không nằm trong phần tử gạch ngang
+      expect(saleTotal.className).not.toContain('line-through');
+      expect(saleTotal.closest('.line-through')).toBeNull();
     });
 
     it('đang tải hoặc lỗi tải sản phẩm: không hiện cả giá bán lẫn giá gốc gạch ngang', () => {
