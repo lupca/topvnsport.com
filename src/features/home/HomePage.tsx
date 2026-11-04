@@ -24,8 +24,11 @@ export default function HomePage() {
   const products = useAppSelector(state => state.appData.products ?? []);
   const categories = useAppSelector(state => state.appData.categories ?? []);
   const productsError = useAppSelector(state => state.appData.productsError);
+  const stockError = useAppSelector(state => state.appData.stockError);
 
   const inStockFirst = sortProducts(products, 'in-stock-first');
+  // STOR-135: tồn chưa rõ (lỗi tải hoặc không SP nào có tồn) không được báo thành "hết hàng" / số 0.
+  const stockUnknown = stockError || !products.some(p => p.stock !== undefined);
   const allInStock = inStockFirst.filter(p => (p.stock ?? 0) > 0);
   // Published = hiển thị: chip/ô ngành gồm mọi ngành có SP (kể cả chỉ có SP hết hàng) và đếm mọi SP của ngành;
   // riêng chip "Tất cả" đếm hàng còn hàng để khớp kệ "Tất cả".
@@ -113,7 +116,7 @@ export default function HomePage() {
                   className={`min-h-11 max-md:min-h-[40px] md:min-h-[44px] max-md:rounded-full md:rounded-[999px] px-3 max-md:px-[14px] md:px-[18px] py-1.5 max-md:py-[8px] md:py-[8px] text-[13px] md:text-[14.5px] font-bold whitespace-nowrap transition flex items-center gap-1.5 md:gap-[7px] max-md:!font-sans md:font-sans! ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
                   <span>{chip.label}</span>
-                  <span className="max-md:font-sans md:font-mono md:text-[11.5px] tabular-nums md:opacity-[0.88]">({chip.count})</span>
+                  {!(stockUnknown && chip.code === ALL) && <span className="max-md:font-sans md:font-mono md:text-[11.5px] tabular-nums md:opacity-[0.88]">({chip.count})</span>}
                 </button>
               );
             })}
@@ -153,9 +156,11 @@ export default function HomePage() {
               ))}
             </div>
             <div data-testid="shelf-count-sort" className="flex flex-wrap items-center gap-3">
-              <span data-testid="result-counter" className="font-mono text-xs font-bold text-ink-secondary tabular-nums">
-                Hiển thị {shown.length} / {matched.length} sản phẩm
-              </span>
+              {!(stockUnknown && selectedCategory === ALL) && (
+                <span data-testid="result-counter" className="font-mono text-xs font-bold text-ink-secondary tabular-nums">
+                  Hiển thị {shown.length} / {matched.length} sản phẩm
+                </span>
+              )}
               <select
                 data-testid="sort-select"
                 aria-label="Sắp xếp sản phẩm"
@@ -170,7 +175,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {shown.length === 0 && <p role="status" className="text-center text-sm font-medium text-ink-muted py-8">Không có sản phẩm còn hàng phù hợp bộ lọc.</p>}
+          {shown.length === 0 && <p role="status" className="text-center text-sm font-medium text-ink-muted py-8">{stockUnknown && selectedCategory === ALL ? 'Chưa tải được tình trạng hàng.' : 'Không có sản phẩm còn hàng phù hợp bộ lọc.'}</p>}
           <div data-testid="featured-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-[16px] md:gap-6">
             {shown.map(p => (
               <ProductCard
