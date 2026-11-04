@@ -8,12 +8,15 @@ import { StringOption } from '../../types';
 import { findProductBySlug } from '../../utils/productSlug';
 import { viewItem } from '../../lib/tracking.ts';
 import { getPdpPrice, initialTierValue } from '../../components/product-detail/helpers';
+import { fetchAppData } from '../appData/appDataSlice';
+import HomeLoadState from '../home/HomeLoadState';
 
 export default function ProductDetailRoute() {
   const dispatch = useAppDispatch();
   const { slug } = useParams<{ slug: string }>();
   const products = useAppSelector(state => state.appData.products);
   const stringOptions = useAppSelector(state => state.appData.stringOptions);
+  const productsError = useAppSelector(state => state.appData.productsError);
   const product = findProductBySlug(products, slug);
 
   useEffect(() => {
@@ -26,6 +29,9 @@ export default function ProductDetailRoute() {
       });
     }
   }, [product?.id]);
+
+  // STOR-141: catalog không tải được -> không biết SP có tồn tại; báo lỗi + Thử lại, không giả 404.
+  if (!product && productsError) return <HomeLoadState error onRetry={() => dispatch(fetchAppData())} />;
 
   if (!product) {
     return (
