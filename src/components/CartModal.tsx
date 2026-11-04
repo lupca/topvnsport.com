@@ -66,7 +66,7 @@ function isOutcomeUnknown(err: any): boolean {
 }
 
 const UNCERTAIN_ORDER_MESSAGE = 'Chưa chắc đơn đã được tạo vì kết nối tới cửa hàng bị gián đoạn. Xin đừng đặt lại ngay: hãy kiểm tra tin nhắn/email xác nhận đơn hoặc liên hệ cửa hàng để hỏi đơn theo số điện thoại đã nhập, rồi mới đặt lại nếu chưa có đơn.';
-const MISSING_ORDER_NUMBER_MESSAGE = 'Chưa chắc đơn đã được tạo: hệ thống phản hồi nhưng không trả về mã đơn hàng. Xin đừng đặt lại ngay: hãy kiểm tra tin nhắn/email xác nhận đơn hoặc liên hệ cửa hàng để hỏi đơn theo số điện thoại đã nhập.';
+const MISSING_ORDER_NUMBER_MESSAGE = 'Chưa chắc đơn đã được tạo: cửa hàng đã phản hồi nhưng chưa gửi mã đơn hàng. Xin đừng đặt lại ngay: hãy kiểm tra tin nhắn/email xác nhận đơn hoặc liên hệ cửa hàng để hỏi đơn theo số điện thoại đã nhập.';
 const ORDER_FAILED_MESSAGE = 'Chưa tạo được đơn hàng. Vui lòng thử lại!';
 const TOKEN_REJECTED_MESSAGE = 'Mã xác thực OTP đã hết hạn hoặc không hợp lệ. Vui lòng xác thực lại số điện thoại.';
 const PAYMENT_OPEN_FAILED_MESSAGE = 'Cổng thanh toán chưa phản hồi. Vui lòng bấm "Thanh toán lại".';
@@ -94,8 +94,8 @@ const EMPTY_LIST: UnitList = { units: null, loading: false, error: null };
 const QUOTE_FAILED_MESSAGE = 'Chưa tính được phí vận chuyển. Vui lòng thử lại.';
 const QUOTE_REJECTED_MESSAGE = 'Không tính được phí vận chuyển cho giỏ hàng và địa chỉ này.';
 const ORDER_REJECTED_MESSAGE = 'Đơn hàng chưa được chấp nhận. Vui lòng kiểm tra lại thông tin rồi thử lại.';
-const TOTAL_MISSING_MESSAGE = 'Chưa nhận được tổng tiền từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.';
-const FEE_MISSING_MESSAGE = 'Chưa nhận được phí vận chuyển từ hệ thống — cửa hàng sẽ xác nhận lại với bạn.';
+const TOTAL_MISSING_MESSAGE = 'Chưa nhận được tổng tiền — cửa hàng sẽ xác nhận lại với bạn.';
+const FEE_MISSING_MESSAGE = 'Chưa nhận được phí vận chuyển — cửa hàng sẽ xác nhận lại với bạn.';
 const NO_DELIVERY_MESSAGE = 'Địa chỉ này hiện chưa có phương thức giao hàng nào. Vui lòng chọn địa chỉ khác.';
 
 // Báo giá của OMS cho đúng một bộ giỏ+xã (key).
@@ -942,7 +942,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto" />
               <h3 className="font-display font-black text-xl text-gray-900 uppercase">ĐẶT HÀNG THÀNH CÔNG!</h3>
               <p className="text-xs text-gray-500">
-                Cảm ơn bạn đã tin tưởng TopVNSport. Hệ thống đang tiến hành đóng gói và chuẩn bị bàn giao cho bưu cục vận chuyển.
+                Cảm ơn bạn đã tin tưởng TopVNSport. Cửa hàng đang đóng gói và chuẩn bị bàn giao cho bưu cục vận chuyển.
               </p>
               
               <div className="bg-gray-50 p-4 rounded-xl text-left border border-gray-100 text-xs text-gray-700 space-y-2 font-mono">

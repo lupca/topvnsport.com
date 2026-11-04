@@ -73,7 +73,7 @@ describe('STOR-042 F1 với sportApi thật', () => {
     paymentsReply = { status: 502, body: { detail: 'upstream_unreachable' } };
     await placeSepayOrder();
     const alertEl = screen.getByRole('alert');
-    expect(alertEl.textContent).toContain('Đã tạo đơn DH-7. Chưa mở được trang thanh toán: Hệ thống đặt hàng đang tạm thời không phản hồi.');
+    expect(alertEl.textContent).toContain('Đã tạo đơn DH-7. Chưa mở được trang thanh toán: Cửa hàng đang tạm thời không phản hồi.');
     expect(alertEl.textContent).not.toContain('upstream_unreachable');
     expect(urls.filter(u => u.endsWith('/orders'))).toHaveLength(1);
   });
@@ -85,7 +85,7 @@ describe('STOR-042 F1 với sportApi thật', () => {
   it('payments mất mạng: câu mạng tiếng Việt của sportApi; "Thanh toán lại" không gọi /orders', async () => {
     paymentsReply = 'network';
     await placeSepayOrder();
-    expect(screen.getByRole('alert').textContent).toContain('Không kết nối được tới hệ thống đặt hàng');
+    expect(screen.getByRole('alert').textContent).toContain('Không kết nối được tới cửa hàng');
     paymentsReply = { status: 200, body: { action: 'https://pay.example/c', fields: { a: 'b' } } };
     fireEvent.click(screen.getByRole('button', { name: 'Thanh toán lại' }));
     await waitFor(() => expect(urls.filter(u => u.endsWith('/payments'))).toHaveLength(2));

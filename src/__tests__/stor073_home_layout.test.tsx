@@ -61,21 +61,18 @@ describe('STOR-073 bố cục trang chủ', () => {
     expect(cls(eyebrow)).toEqual(expect.arrayContaining(['font-mono', 'font-bold', 'uppercase', 'text-brand-primary', 'text-xs']));
   });
 
-  it('(2) phụ đề SẢN PHẨM NỔI BẬT = số SP còn hàng thật, không có "12" mẫu; vế đan cước chỉ khi có SP còn hàng có tầng cước', () => {
+  it('(2) STOR-112: không còn dòng phụ đề kỹ thuật dưới SẢN PHẨM NỔI BẬT (kể cả khi có SP tầng cước); h2 giữ khoảng cách desktop md:pb-6', () => {
     renderHome([prod('1'), prod('2'), prod('3', { stock: 0, tier_variations: [STRING_TIER] })]);
     const h2 = screen.getByRole('heading', { level: 2, name: 'SẢN PHẨM NỔI BẬT' });
-    const sub = screen.getByTestId('featured-subtitle');
-    expect(h2.nextElementSibling).toBe(sub);
-    expect(sub.textContent).toBe('2 sản phẩm thật từ hệ thống PIM TopVNSport');
-    expect(sub.textContent).not.toMatch(/\b12\b/);
+    expect(screen.queryByTestId('featured-subtitle')).toBeNull();
+    expect(cls(h2)).toContain('md:pb-6');
     cleanup();
 
     const withTier = [prod('1', { tier_variations: [STRING_TIER] }), prod('2')];
     expect(withTier.some(hasO2OStringing)).toBe(true);
     renderHome(withTier);
-    expect(screen.getByTestId('featured-subtitle').textContent).toBe(
-      '2 sản phẩm thật từ hệ thống PIM TopVNSport — Tích hợp cấu hình đan cước 2 tầng (Khung vợt + Loại cước & Số KG)',
-    );
+    expect(screen.queryByTestId('featured-subtitle')).toBeNull();
+    expect(document.body.textContent).not.toMatch(/PIM|Tích hợp cấu hình đan cước 2 tầng/);
   });
 
   it('(2) phụ đề Danh mục cầu lông đúng câu của design, ngay dưới h2', () => {

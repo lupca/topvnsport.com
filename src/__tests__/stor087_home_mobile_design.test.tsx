@@ -126,19 +126,18 @@ describe('STOR-087 eyebrow SPECIALTY STORE và chip tách viên theo tab Mobile'
     expect(inactive).not.toContain('bg-ink-primary');
   });
 
-  it('phụ đề nổi bật: desktop hidden md:block; mobile "Chạm vào thẻ..." chỉ khi có SP còn hàng có tầng cước', () => {
+  it('phụ đề nổi bật: không còn dòng desktop (STOR-112); mobile "Chạm vào thẻ..." chỉ khi có SP còn hàng có tầng cước', () => {
     renderHome([prod('1', { tier_variations: [STRING_TIER] }), prod('2')]);
-    const desktop = screen.getByTestId('featured-subtitle');
-    expect(cls(desktop)).toEqual(expect.arrayContaining(['hidden', 'md:block']));
+    expect(screen.queryByTestId('featured-subtitle')).toBeNull();
     const mobile = screen.getByTestId('featured-subtitle-mobile');
     expect(mobile.textContent).toBe('Chạm vào thẻ sản phẩm để chọn loại cước & số kg');
     expect(cls(mobile)).toEqual(expect.arrayContaining(['md:hidden', 'text-xs', 'font-semibold', 'text-ink-secondary']));
-    // phụ đề mobile nằm SAU featured-subtitle (stor073 (2) vẫn thấy sub ngay dưới h2).
-    expect(desktop.nextElementSibling).toBe(mobile);
+    // phụ đề mobile nằm ngay dưới h2.
+    expect(screen.getByRole('heading', { level: 2, name: 'SẢN PHẨM NỔI BẬT' }).nextElementSibling).toBe(mobile);
     cleanup();
 
     renderHome([prod('1'), prod('2')]);
     expect(screen.queryByTestId('featured-subtitle-mobile')).toBeNull();
-    expect(cls(screen.getByTestId('featured-subtitle'))).toEqual(expect.arrayContaining(['hidden', 'md:block']));
+    expect(screen.queryByTestId('featured-subtitle')).toBeNull();
   });
 });

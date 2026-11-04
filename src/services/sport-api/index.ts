@@ -253,14 +253,14 @@ async function getConstants() {
 export const OMS_TIMEOUT_MS = 20_000;
 export type OmsErrorKind = 'http' | 'network' | 'timeout' | 'invalid_response';
 
-const MSG_NETWORK = 'Không kết nối được tới hệ thống đặt hàng. Vui lòng kiểm tra mạng rồi thử lại.';
-const MSG_TIMEOUT = 'Hệ thống đặt hàng phản hồi quá lâu. Vui lòng thử lại sau ít phút.';
-const MSG_INVALID = 'Hệ thống trả về dữ liệu không hợp lệ. Vui lòng thử lại sau ít phút.';
+const MSG_NETWORK = 'Không kết nối được tới cửa hàng. Vui lòng kiểm tra mạng rồi thử lại.';
+const MSG_TIMEOUT = 'Cửa hàng phản hồi quá lâu. Vui lòng thử lại sau ít phút.';
+const MSG_INVALID = 'Cửa hàng trả về dữ liệu không hợp lệ. Vui lòng thử lại sau ít phút.';
 
 function httpMessage(status: number): string {
   if (status === 429) return 'Bạn thao tác quá nhanh. Vui lòng đợi một lúc rồi thử lại.';
-  if (status === 502 || status === 503 || status === 504) return 'Hệ thống đặt hàng đang tạm thời không phản hồi. Vui lòng thử lại sau ít phút.';
-  if (status >= 500) return 'Hệ thống đặt hàng gặp lỗi khi xử lý. Vui lòng thử lại sau ít phút.';
+  if (status === 502 || status === 503 || status === 504) return 'Cửa hàng đang tạm thời không phản hồi. Vui lòng thử lại sau ít phút.';
+  if (status >= 500) return 'Cửa hàng gặp lỗi khi xử lý đơn. Vui lòng thử lại sau ít phút.';
   if (status === 422) return 'Thông tin gửi đi chưa hợp lệ. Vui lòng kiểm tra lại.';
   return 'Yêu cầu không được chấp nhận. Vui lòng kiểm tra lại thông tin.';
 }

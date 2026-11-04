@@ -147,7 +147,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, need
         zaloAuthDone();
         onSuccess(res.verification_token);
       } else {
-        setErrorMessage('Xác thực chưa hoàn tất: hệ thống không trả về mã xác thực. Vui lòng thử lại hoặc gửi lại mã.');
+        setErrorMessage('Xác thực chưa hoàn tất: chưa nhận được mã xác thực. Vui lòng thử lại hoặc gửi lại mã.');
       }
     } catch (err: any) {
       setErrorMessage(mapApiError(err.status, err.message));

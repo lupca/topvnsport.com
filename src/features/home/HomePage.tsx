@@ -122,12 +122,7 @@ export default function HomePage() {
 
       {allInStock.length > 0 && (
         <section ref={shelfRef} data-testid="instock-shelf" className="scroll-mt-[88px] md:max-[949px]:scroll-mt-[300px] min-[949px]:scroll-mt-[252px] max-w-[1280px] mx-auto px-4 md:px-[24px]">
-          <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
-          {/* Số thật = SP còn hàng; vế đan cước chỉ khi có SP còn hàng có tầng cước (cùng luật với giỏ). */}
-          <p data-testid="featured-subtitle" className={`hidden md:block text-center ${SECTION_SUB} pb-6`}>
-            {`${allInStock.length} sản phẩm thật từ hệ thống PIM TopVNSport`}
-            {allInStock.some(hasO2OStringing) && ' — Tích hợp cấu hình đan cước 2 tầng (Khung vợt + Loại cước & Số KG)'}
-          </p>
+          <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 md:pb-6 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
           {allInStock.some(hasO2OStringing) && (
             <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-xs font-semibold text-ink-secondary mt-0.5 pb-6 max-md:mt-[2px] max-md:pb-[14px]">
               Chạm vào thẻ sản phẩm để chọn loại cước &amp; số kg

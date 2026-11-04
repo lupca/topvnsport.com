@@ -247,7 +247,7 @@ describe('STOR-042 lỗi 8: OtpModal', () => {
     renderOtp({ onSuccess });
     fireEvent.change(screen.getByPlaceholderText('Nhập 6 số OTP'), { target: { value: '123456' } });
     fireEvent.click(screen.getByRole('button', { name: 'Xác nhận OTP' }));
-    expect(await screen.findByText(/không trả về mã xác thực/)).toBeInTheDocument();
+    expect(await screen.findByText(/chưa nhận được mã xác thực/)).toBeInTheDocument();
     expect(onSuccess).not.toHaveBeenCalled();
   });
 
