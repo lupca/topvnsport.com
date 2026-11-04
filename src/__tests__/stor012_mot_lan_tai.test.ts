@@ -1,6 +1,12 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
 import appDataReducer, { fetchAppData } from '../features/appData/appDataSlice';
+// STOR-137: GET lỗi tạm được thử lại sau 1000/2000 ms; test này chỉ xét kết quả
+// sau lần thử cuối nên bỏ thời gian chờ (số lần thử: stor137_retry_transient).
+vi.mock('../services/sport-api/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../services/sport-api/constants')>()),
+  delay: () => Promise.resolve()
+}));
 
 // STOR-012: fetchAppData tải mỗi nguồn đúng 1 lần, ba nguồn bắn song song.
 const PRODUCT = {

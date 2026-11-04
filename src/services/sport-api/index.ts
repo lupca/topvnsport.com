@@ -5,6 +5,29 @@ import { mapPmiProduct } from './productMappers';
 import { applyWmsStock, parseWmsStock, stockCodesOf, tagStockCodes } from './wmsStock';
 import { AdminUnit, ApiListResponse, CreateOrderPayload, PmiProduct, SendOtpResponse, ShippingQuote, ShippingQuoteRequest, VerifyOtpResponse } from './types';
 
+// STOR-137: GET danh mục/sản phẩm/tồn thử lại khi lỗi tạm (5xx, lỗi mạng, quá
+// 12 s mỗi lần -- cold start đo 9.2 s): 3 lần, chờ 1000 rồi 2000 ms. 4xx (cả 404)
+// trả ngay. Hết lượt: trả 5xx cuối / ném lỗi cuối để caller console.error + ném.
+export const RETRY_DELAYS_MS = [1000, 2000];
+export const ATTEMPT_TIMEOUT_MS = 12_000;
+
+async function fetchWithRetry(url: string): Promise<Response> {
+  for (let attempt = 0; ; attempt += 1) {
+    const last = attempt >= RETRY_DELAYS_MS.length;
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), ATTEMPT_TIMEOUT_MS);
+    try {
+      const response = await fetch(url, { signal: ctrl.signal });
+      if (response.ok || response.status < 500 || last) return response;
+    } catch (error) {
+      if (last) throw error;
+    } finally {
+      clearTimeout(timer);
+    }
+    await delay(RETRY_DELAYS_MS[attempt]);
+  }
+}
+
 // STOR-012: MỘT request /public/stock không sku_codes = toàn bộ tồn của seller
 // theo grant (WMS sku_stock(db, None): chỉ SKU có dòng tồn). STOR-015: lỗi ->
 // console.error nêu URL rồi NÉM (tồn chỉ lấy từ WMS, không dùng tồn PIM thay).
@@ -12,7 +35,7 @@ async function fetchAllWmsStock(): Promise<Record<string, number>> {
   const url = `${WMS_PROXY_URL}/public/stock`;
   let response: Response;
   try {
-    response = await fetch(url);
+    response = await fetchWithRetry(url);
   } catch (error) {
     console.error(`Failed to fetch stock from ${url}:`, error);
     throw error;
@@ -43,7 +66,7 @@ async function fetchWmsStock(skuCodes: string[]): Promise<Record<string, number>
     const url = `${WMS_PROXY_URL}/public/stock?sku_codes=${encodeURIComponent(chunk.join(','))}`;
     let response: Response;
     try {
-      response = await fetch(url);
+      response = await fetchWithRetry(url);
     } catch (error) {
       console.error(`Failed to fetch stock from ${url}:`, error);
       throw error;
@@ -96,7 +119,7 @@ async function getCategories(): Promise<Category[]> {
   const url = `${PMI_PROXY_URL}/public/voma-categories`;
   let response: Response;
   try {
-    response = await fetch(url);
+    response = await fetchWithRetry(url);
   } catch (error) {
     console.error(`Failed to fetch categories from ${url}:`, error);
     throw error;
@@ -125,7 +148,7 @@ async function fetchAllPmiProducts(): Promise<PmiProduct[]> {
     const url = `${PMI_PROXY_URL}/public/products?page=${page}&limit=${PRODUCTS_PAGE_SIZE}`;
     let response: Response;
     try {
-      response = await fetch(url);
+      response = await fetchWithRetry(url);
     } catch (error) {
       console.error(`Failed to fetch products from ${url}:`, error);
       throw error;
@@ -177,7 +200,7 @@ async function getProductById(id: string): Promise<Product | null> {
   await delay(SIMULATED_LATENCY);
   try {
     const [response, categories] = await Promise.all([
-      fetch(`${PMI_PROXY_URL}/public/products/${id}`),
+      fetchWithRetry(`${PMI_PROXY_URL}/public/products/${id}`),
       getCategories()
     ]);
 
