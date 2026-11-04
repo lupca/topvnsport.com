@@ -1,0 +1,26 @@
+[
+  {
+    "headline": "Đại lý uỷ quyền Yonex Sunrise",
+    "subline": "Cam kết 100% chính hãng",
+    "cta": { "label": "Xem sản phẩm", "href": "/catalog" },
+    "image": { "src": "/banners/chinh-hang-yonex.webp", "alt": "Vợt cầu lông chính hãng xếp trên thảm sân mini tại showroom TopVNSport" }
+  },
+  {
+    "headline": "Đan vợt lấy ngay 30 phút",
+    "subline": "Chọn cước và số kg cùng lúc đặt vợt",
+    "cta": { "label": "Chọn vợt và cước", "href": "/catalog?category=VC001491" },
+    "image": { "src": "/banners/dan-vot-30-phut.webp", "alt": "Các gói cước cầu lông xếp trên kệ tại showroom TopVNSport" }
+  },
+  {
+    "headline": "Showroom Hà Nội",
+    "subline": "Đan vợt chuẩn quốc tế 30p, xem địa chỉ và liên hệ chi nhánh",
+    "cta": { "label": "Tìm showroom", "href": "/stores" },
+    "image": { "src": "/banners/showroom-ha-noi.webp", "alt": "Kệ cước cầu lông treo trên tường tại showroom TopVNSport" }
+  },
+  {
+    "headline": "Hotline 097 6007006",
+    "subline": "Tư vấn kỹ thuật 08:00 - 22:00",
+    "cta": { "label": "Gọi ngay", "href": "tel:0976007006" },
+    "image": { "src": "/banners/hotline-tu-van.webp", "alt": "Ba cây vợt cầu lông đặt trên thảm sân mini của TopVNSport" }
+  }
+]

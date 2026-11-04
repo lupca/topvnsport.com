@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-// STOR-090: hero 390px theo tab 'Khung nhìn Mobile (390px)' — thẻ giữa không viền, hé 26px, dots 7px
-// (vùng chạm ::before 25px), nút dừng cao 20px, section 334 (pt 12 + 290 + controls 32), cách thanh chip 12px;
+// STOR-090: hero 390px theo tab 'Khung nhìn Mobile (390px)' — dots 8px (vùng chạm ::before 28px), nút dừng 32px,
+// section = pt 12 + hộp 290 (STOR-107: điều khiển nằm trong hộp), cách thanh chip 12px;
 // chip gọn 40px, số đếm cùng font nhãn; ô ngành ảnh vuông viền đen, chỉ tên, phụ đề ngành ẩn dưới md.
 // Tất cả là max-md: hoặc cặp md:<gốc> — 1440 không đổi.
 import React from 'react';
@@ -10,10 +10,9 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
 import HomePage from '../features/home/HomePage';
-import BadmintonCenterSlider from '../features/home/BadmintonCenterSlider';
 import cartReducer from '../features/cart/cartSlice';
 import catalogReducer from '../features/catalog/catalogSlice';
-import { Category, Product } from '../types';
+import { Category } from '../types';
 
 const STRING_TIER = { tier_index: 2, name: 'Loại Cước', options: ['Khung không dây', 'BG 65'] };
 const prod = (id: string, extra: Record<string, unknown> = {}) =>
@@ -40,22 +39,13 @@ function renderHome(products: any[]) {
   );
 }
 
-function renderSlider() {
-  const products = [prod('s1'), prod('s2'), prod('s3')] as Product[];
-  return render(
-    <MemoryRouter>
-      <BadmintonCenterSlider products={products} />
-    </MemoryRouter>,
-  );
-}
-
 afterEach(cleanup);
 const cls = (el: Element) => el.className.toString().split(/\s+/);
 
-describe('STOR-090 hero dưới md', () => {
+describe('STOR-090 hero dưới md (STOR-107: banner theo cấu hình)', () => {
   it('section: bỏ khoảng space-y dưới md, pt 12px tới thanh chip', () => {
-    renderSlider();
-    expect(cls(screen.getByTestId('badminton-center-slider'))).toEqual(expect.arrayContaining(['max-md:!mt-0', 'max-md:mb-0', 'max-md:pt-[12px]']));
+    renderHome([prod('1')]);
+    expect(cls(screen.getByTestId('hero-banner-section'))).toEqual(expect.arrayContaining(['max-md:!mt-0', 'max-md:mb-0', 'max-md:pt-[12px]']));
   });
 
   it('hub header không đẩy margin space-y-12 xuống hero dưới md', () => {
@@ -63,46 +53,25 @@ describe('STOR-090 hero dưới md', () => {
     expect(cls(screen.getByTestId('badminton-hub-header'))).toContain('max-md:mb-0');
   });
 
-  it('viewport: cột hé 26px, md+ giữ 1fr/1060px', () => {
-    const { container } = renderSlider();
-    const c = cls(container.querySelector('.center-slider-viewport')!);
-    expect(c).toEqual(expect.arrayContaining(['grid-cols-[26px_minmax(0,290px)_26px]', 'md:grid-cols-[1fr_minmax(0,1060px)_1fr]']));
-  });
-
-  it('thẻ giữa không viền dưới md, md+ giữ viền', () => {
-    renderSlider();
-    expect(cls(screen.getByTestId('center-slide-active'))).toEqual(expect.arrayContaining(['border', 'max-md:border-0', 'border-line-strong']));
-  });
-
-  it('controls: giữ mt-2 md:mt-4, dưới md mt-0 pt 8 pb 4 gap 10', () => {
-    const { container } = renderSlider();
-    expect(cls(container.querySelector('.slider-controls')!)).toEqual(
-      expect.arrayContaining(['mt-2', 'md:mt-4', 'max-md:mt-0', 'max-md:pt-[8px]', 'max-md:pb-[4px]', 'max-md:gap-[10px]']),
-    );
-  });
-
-  it('mỗi dot 7x7 dưới md, vùng chạm ::before tuyệt đối -10px; md+ giữ 11px / 38px', () => {
-    renderSlider();
+  it('mỗi dot 8x8 (đang chọn rộng 28) với vùng chạm ::before tuyệt đối -10px', () => {
+    renderHome([prod('1')]);
     const dots = [0, 1, 2].map(i => cls(screen.getByTestId(`slider-dot-${i}`)));
     for (const c of dots) {
-      expect(c).toEqual(expect.arrayContaining([
-        'max-md:h-[7px]', 'max-md:w-[7px]', 'h-[11px]',
-        'max-md:relative', 'max-md:before:absolute', 'max-md:before:-inset-[10px]', "max-md:before:content-['']",
-      ]));
+      expect(c).toEqual(expect.arrayContaining(['h-[8px]', 'relative', 'before:absolute', 'before:-inset-[10px]', "before:content-['']"]));
     }
-    expect(dots[0]).toEqual(expect.arrayContaining(['w-[38px]', 'bg-ink-primary']));
-    expect(dots[1]).toEqual(expect.arrayContaining(['w-[11px]', 'bg-line-tag']));
+    expect(dots[0]).toEqual(expect.arrayContaining(['w-[28px]', 'bg-white']));
+    expect(dots[1]).toEqual(expect.arrayContaining(['w-[8px]', 'bg-white/50']));
   });
 
-  it('nút dừng: dưới md px 6 py 2 góc vuông, icon 14px (cao 20); md+ giữ px-3 py-1.5 rounded-[4px]; vẫn icon Lucide', () => {
-    renderSlider();
+  it('nút dừng: tròn 32px, icon Lucide Pause -> Play, không ký tự ❚', () => {
+    renderHome([prod('1')]);
     const t = screen.getByTestId('slider-pause-toggle');
-    expect(cls(t)).toEqual(expect.arrayContaining(['max-md:px-[6px]', 'max-md:py-[2px]', 'max-md:rounded-none', 'px-3', 'py-1.5', 'rounded-[4px]']));
+    expect(cls(t)).toEqual(expect.arrayContaining(['h-8', 'w-8', 'rounded-full']));
     const icon = () => t.querySelector('svg')!.getAttribute('class')!.split(/\s+/);
-    expect(icon()).toEqual(expect.arrayContaining(['lucide-pause', 'max-md:w-[14px]', 'max-md:h-[14px]']));
+    expect(icon()).toContain('lucide-pause');
     fireEvent.click(t);
     expect(t.getAttribute('aria-pressed')).toBe('true');
-    expect(icon()).toEqual(expect.arrayContaining(['lucide-play', 'max-md:w-[14px]', 'max-md:h-[14px]']));
+    expect(icon()).toContain('lucide-play');
     expect(t.textContent).not.toContain('❚');
   });
 });

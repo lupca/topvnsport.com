@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 // STOR-087: trang chủ 390px theo tab 'Khung nhìn Mobile (390px)' của public/design/index.html —
-// banner 290x290 (cột giữa 290px, căn giữa), ẩn caption bar / mũi tên / nhãn 'Tạm dừng' dưới md,
+// banner hộp 290px (STOR-107 thay slider sản phẩm 290x290),
 // hamburger ẩn trên '/' (giữ ở '/catalog'), eyebrow SPECIALTY STORE, chip tách viên riêng
 // (viền từng pill, không panel xám), phụ đề mobile 'Chạm vào thẻ...' chỉ khi có SP còn hàng có tầng cước.
 // Mọi thay đổi chỉ là cặp hidden md:<orig>, token dời sau md:, hoặc max-md: — 1440 và các tuyến khác không đổi.
@@ -12,10 +12,9 @@ import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
 import HomePage from '../features/home/HomePage';
-import BadmintonCenterSlider from '../features/home/BadmintonCenterSlider';
 import cartReducer from '../features/cart/cartSlice';
 import catalogReducer from '../features/catalog/catalogSlice';
-import { Category, Product } from '../types';
+import { Category } from '../types';
 
 const STRING_TIER = { tier_index: 2, name: 'Loại Cước', options: ['Khung không dây', 'BG 65'] };
 const prod = (id: string, extra: Record<string, unknown> = {}) =>
@@ -42,18 +41,6 @@ function renderHome(products: any[]) {
   );
 }
 
-function renderSlider() {
-  const products: Product[] = [
-    { ...prod('s1'), slug: 'sp-1' } as Product,
-    { ...prod('s2'), slug: 'sp-2' } as Product,
-  ];
-  return render(
-    <MemoryRouter>
-      <BadmintonCenterSlider products={products} />
-    </MemoryRouter>,
-  );
-}
-
 function renderHeaderAt(pathname: string) {
   return render(
     <MemoryRouter initialEntries={[pathname]}>
@@ -66,48 +53,25 @@ afterEach(cleanup);
 
 const cls = (el: Element) => el.className.toString().split(/\s+/);
 
-describe('STOR-087 hero 290px dưới md theo tab Mobile', () => {
-  it('viewport lưới: cột giữa max 290px, cả khối căn giữa dưới md; md+ trả về justify thường', () => {
-    const { container } = renderSlider();
-    const viewport = container.querySelector('.center-slider-viewport')!;
-    expect(cls(viewport)).toEqual(expect.arrayContaining(['grid-cols-[26px_minmax(0,290px)_26px]', 'justify-center', 'md:justify-normal']));
-    expect(cls(viewport)).not.toContain('grid-cols-[18px_minmax(0,1fr)_18px]');
+describe('STOR-087 hero 290px dưới md theo tab Mobile (STOR-107: banner theo cấu hình)', () => {
+  it('hộp hero: 290px dưới md, tỉ lệ 1440/520 từ md', () => {
+    renderHome([prod('1')]);
+    expect(cls(screen.getByTestId('hero-banner-box'))).toEqual(expect.arrayContaining(['max-md:h-[290px]', 'md:aspect-[1440/520]']));
   });
 
-  it('caption bar (hàng tiêu đề + XEM CHI TIẾT) ẩn dưới md, hiện flex ở md+', () => {
-    renderSlider();
-    const c = cls(screen.getByTestId('slider-caption-bar'));
-    expect(c).toEqual(expect.arrayContaining(['hidden', 'md:flex', 'flex-row']));
-    expect(c).not.toContain('flex');
-  });
-
-  it('mũi tên prev: ẩn dưới md, md:inline-flex', () => {
-    renderSlider();
-    const c = cls(screen.getByTestId('slider-prev'));
-    expect(c).toEqual(expect.arrayContaining(['hidden', 'md:inline-flex']));
-    expect(c).not.toContain('inline-flex');
-  });
-
-  it('mũi tên next: ẩn dưới md, md:inline-flex', () => {
-    renderSlider();
-    const c = cls(screen.getByTestId('slider-next'));
-    expect(c).toEqual(expect.arrayContaining(['hidden', 'md:inline-flex']));
-    expect(c).not.toContain('inline-flex');
-  });
-
-  it('nhãn chữ "Tạm dừng/Phát tiếp" ẩn dưới md, icon Pause/Play vẫn hiện (nút không hidden)', () => {
-    renderSlider();
+  it('nút Tạm dừng/Phát tiếp chỉ là icon Lucide dưới mọi cỡ (không nhãn chữ, không hidden); dots không hidden', () => {
+    renderHome([prod('1')]);
     const toggle = screen.getByTestId('slider-pause-toggle');
-    const label = toggle.querySelector('span')!;
-    expect(cls(label)).toEqual(expect.arrayContaining(['hidden', 'md:inline']));
     expect(cls(toggle)).not.toContain('hidden');
     expect(cls(toggle)).toContain('inline-flex');
+    expect(toggle.querySelector('svg')!.getAttribute('class')).toContain('lucide-pause');
+    expect(toggle.textContent).toBe('');
+    expect(cls(screen.getByTestId('slider-dots'))).not.toContain('hidden');
   });
 
-  it('chip SP và dots vẫn hiện dưới md (không thêm hidden)', () => {
-    renderSlider();
-    expect(cls(screen.getByTestId('slider-product-chip'))).not.toContain('hidden');
-    expect(cls(screen.getByTestId('slider-dots'))).not.toContain('hidden');
+  it('slider sản phẩm cũ đã bỏ: không caption bar, không chip sản phẩm, không mũi tên', () => {
+    renderHome([prod('1')]);
+    for (const id of ['slider-caption-bar', 'slider-product-chip', 'slider-prev', 'slider-next']) expect(screen.queryByTestId(id)).toBeNull();
   });
 });
 
