@@ -63,3 +63,23 @@ h1, h2, h3, h4, h5, h6, button, .font-display {
     scrollbar-width: none;
   }
 }
+
+/* STOR-129: cụm liên hệ nổi (Zalo + hotline) góc dưới phải. Một chỗ chỉnh duy nhất:
+   --bottom-bar-offset = chiều cao thanh đáy đang hiện (MobileBottomNav; trên trang sản phẩm
+   là thanh "Mua ngay" sticky). Cụm nằm trên thanh đó + 0.75rem, tính cả safe-area. */
+:root {
+  --bottom-bar-offset: 4rem;
+  --pdp-bar-offset: 4.1rem;
+}
+.floating-contact {
+  bottom: calc(var(--bottom-bar-offset) + 0.75rem + env(safe-area-inset-bottom));
+}
+.floating-contact-pdp {
+  bottom: calc(var(--pdp-bar-offset) + 0.75rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 768px) {
+  .floating-contact,
+  .floating-contact-pdp {
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+}

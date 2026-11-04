@@ -8,6 +8,7 @@ import { RefreshCw } from 'lucide-react';
 import { Link, matchPath, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import FloatingContact from './components/FloatingContact';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import QuickViewModal from './components/QuickViewModal';
@@ -182,6 +183,8 @@ export default function App() {
       </main>
 
       <Footer categories={categories} products={products} />
+
+      <FloatingContact isPdp={isPdp} />
 
       {hasOpenedCart && (
         <Suspense fallback={<PageLoader />}>
