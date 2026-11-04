@@ -250,12 +250,17 @@ describe('STOR-061: Removed legacy elements absence', () => {
 });
 
 describe('STOR-061: Sticky header integrity and no global overflow-x:hidden injection', () => {
-  it('H1: Header root element has sticky top-0 classes', () => {
+  it('H1: Header dính từ md (md:sticky md:top-0); dưới md chỉ hàng mobile-sticky-bar dính (STOR-133)', () => {
     const { container } = setupHeader();
     const header = container.querySelector('#topvnsport-header');
     expect(header).not.toBeNull();
-    expect(header?.classList.contains('sticky')).toBe(true);
-    expect(header?.classList.contains('top-0')).toBe(true);
+    expect(header?.classList.contains('md:sticky')).toBe(true);
+    expect(header?.classList.contains('md:top-0')).toBe(true);
+    const bar = container.querySelector('[data-testid="mobile-sticky-bar"]');
+    expect(bar).not.toBeNull();
+    expect(bar?.classList.contains('sticky')).toBe(true);
+    expect(bar?.classList.contains('top-0')).toBe(true);
+    expect(bar?.classList.contains('md:hidden')).toBe(true);
   });
 
   it('H2: Header does not contain injected <style> setting overflow-x: hidden on html or body', () => {
