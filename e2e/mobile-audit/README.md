@@ -4,6 +4,7 @@ Quét mobile "trước khi sửa": chụp mọi route ở 360x800, 390x844, 430x
 
     node e2e/mobile-audit/audit.cjs --selftest   # 8 dòng PASS (mỗi phép đo một lỗi cài sẵn + ca sạch), exit 0
     node e2e/mobile-audit/audit.cjs              # chụp + đo, ghi docs/mobile-audit/{before/,desktop-baseline/,before.json,before.md}
+    node e2e/mobile-audit/audit.cjs --report-only   # viết lại before.md từ before.json có sẵn (đổi template, không mở trình duyệt)
     node e2e/mobile-audit/audit.cjs --only=cart,checkout --width=390   # chạy một phần để gỡ lỗi (không ghi before.json/md)
     node e2e/mobile-audit/competitors.cjs        # đo header mobile của đối thủ, chỉ đọc
 

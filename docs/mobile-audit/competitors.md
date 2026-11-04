@@ -36,7 +36,7 @@ Cách xem: `node e2e/mobile-audit/competitors.cjs` mở trang chủ ở 390x844 
 
 ## Tổng hợp pattern chung (không phải quyết định thiết kế)
 
-- Cả 3 đối thủ: header mobile **1 hàng, 70–108px**, không hàng danh mục nhiều dòng; hai trong ba **không dính** hoặc dính tối đa 1 hàng.
+- Cả 3 đối thủ: header mobile **1 hàng, 70–108px**, không hàng danh mục nhiều dòng; cả ba **không dính** (static/relative): khi cuộn, vùng cố định trên cùng là 0px.
 - Nav danh mục: hamburger/ngăn menu (shopvnb, yonexshop.jp) hoặc ô nội dung trong trang chủ (hvshop); không site nào xếp danh mục thành nhiều hàng trong header.
 - Dải khuyến mãi/thông tin: tối đa 1 dòng và nằm trong header (yonexshop.jp), hoặc là banner trong nội dung (shopvnb, hvshop); không đối thủ nào có dải thông tin nhiều dòng cố định trên cùng.
-- Của ta (xem `before.md`): header dính cao 79px ở trang chủ nhưng 499–577px ở 360–430 trên các trang khác (hàng danh mục 4–5 hàng + dải đan vợt 3 dòng), đối chiếu MOB-A/B/C.
+- Của ta (xem `before.md`): trang chủ header dính 79px; các trang có hàng danh mục (catalog, PDP, …) header dính **420px**, nav 3 hàng + dải đan vợt 3 dòng, đo trên site live (www.topvnsport.com/catalog, 390x844, 2026-11-04, chỉ-đọc) và trùng với bộ fixture của `before.md` (5 liên kết nav). Đối chiếu MOB-A/B/C.

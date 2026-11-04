@@ -4,6 +4,7 @@
 // and width 360/390/430/768 saves a PNG and measures the page with ONE page.evaluate (r:8a172b17: numbers, not eyes).
 //   node e2e/mobile-audit/audit.cjs                 full run -> docs/mobile-audit/{before/,desktop-baseline/,before.json,before.md}
 //   node e2e/mobile-audit/audit.cjs --selftest      8 PASS/FAIL lines (one planted violation per measurement + clean control)
+//   node e2e/mobile-audit/audit.cjs --report-only   rewrite before.md from the existing before.json
 //   node e2e/mobile-audit/audit.cjs --only=cart --width=390   debug subset (writes nothing outside before/ and does not touch before.json/md)
 // PLAYWRIGHT=<path to playwright(-core)> optional. PORT (default 4428). OUT (default docs/mobile-audit).
 const { spawn, execSync } = require('child_process');
@@ -154,23 +155,44 @@ async function measureInPage(opts) {
     .filter((el) => vis(el) && parseFloat(cs(el).fontSize) < 16);
   const f_small_inputs = { count: smallIn.length, sample: smallIn.slice(0, 8).map((el) => ({ sel: sel(el), fs: parseFloat(cs(el).fontSize), t: txt(el) })) };
 
-  // ---- g: bottom fixed/sticky bar covering the last content (measured scrolled to the very bottom)
-  window.scrollTo(0, maxScroll()); await raf(); await raf();
-  const bars = scope === 'overlay' ? [] : ALL(root).filter((el) => {
+  // ---- g: bottom fixed/sticky bar. A `sticky bottom-0` bar (PDP "Mua ngay") only sits at the viewport bottom while the page
+  // is NOT scrolled to its end (at the end it falls back into normal flow above the footer), so bars are collected at
+  // scroll 0 AND at the very bottom; "covers" is judged at the very bottom: any content (outside the bar) overlapping a bar's rect.
+  const bottomBars = () => scope === 'overlay' ? [] : ALL(root).filter((el) => {
     const s = cs(el);
     if ((s.position !== 'fixed' && s.position !== 'sticky') || !vis(el)) return false;
     const r = el.getBoundingClientRect();
     return r.bottom >= H - 2 && r.top >= H * 0.5 && r.width >= W * 0.9 && r.height < H * 0.5;
   });
-  const barTop = bars.length ? Math.min(...bars.map((b) => b.getBoundingClientRect().top)) : H;
-  const contentBottom = Math.max(0, ...items(root).filter((r) => r.bottom <= H + 0.5 && !bars.some((b) => { const br = b.getBoundingClientRect(); return r.top >= br.top - 1 && r.bottom <= br.bottom + 1; })).map((r) => r.bottom));
+  window.scrollTo(0, 0); await raf(); await raf();
+  const bars = new Set(bottomBars());
+  const barH = (b) => Math.round(b.getBoundingClientRect().height);
+  const heights = new Map(Array.from(bars).map((b) => [b, barH(b)]));
+  window.scrollTo(0, maxScroll()); await raf(); await raf();
+  for (const b of bottomBars()) { bars.add(b); heights.set(b, Math.max(heights.get(b) || 0, barH(b))); }
+  const barList = Array.from(bars);
+  const inBar = (n) => barList.some((b) => b.contains(n));
+  const content = [];
+  const tw2 = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n = tw2.nextNode(); n; n = tw2.nextNode()) {
+    if (!n.nodeValue.trim() || !n.parentElement || !vis(n.parentElement) || inBar(n.parentElement) || /^(SCRIPT|STYLE|NOSCRIPT)$/.test(n.parentElement.tagName)) continue;
+    const rg = document.createRange(); rg.selectNodeContents(n);
+    for (const r of rg.getClientRects()) if (r.width > 1 && r.height > 1) content.push(r);
+  }
+  for (const el of root.querySelectorAll('img,svg,input,select,textarea,button,a')) if (vis(el) && !inBar(el) && !barList.some((b) => el.contains(b))) content.push(el.getBoundingClientRect());
+  let overlapPx = 0;
+  for (const b of barList) {
+    const br = b.getBoundingClientRect();
+    if (!(br.bottom > br.top && br.top < H)) continue;
+    for (const r of content) if (r.top < H && r.bottom > br.top + 1 && r.top < br.bottom - 1) overlapPx = Math.max(overlapPx, Math.round(Math.min(r.bottom, br.bottom) - Math.max(r.top, br.top)));
+  }
   const pad = (el) => (el ? parseFloat(cs(el).paddingBottom) || 0 : 0);
   const g_bottom_overlap = {
-    covers: bars.length > 0 && contentBottom > barTop + 1,
-    barH: Math.round(Math.max(0, ...bars.map((b) => b.getBoundingClientRect().height))),
+    covers: overlapPx > 0,
+    barH: Math.max(0, ...heights.values()),
     padBottom: Math.round(Math.max(pad(document.body), pad(document.body.firstElementChild), pad(document.body.firstElementChild && document.body.firstElementChild.firstElementChild))),
-    overlapPx: bars.length ? Math.max(0, Math.round(contentBottom - barTop)) : 0,
-    bars: bars.map(sel).slice(0, 3),
+    overlapPx,
+    bars: barList.map(sel).slice(0, 3),
   };
 
   // ---- h: promo / info strips ("*-strip" or topbar test ids) in the first screen and how many text lines they take
@@ -228,6 +250,8 @@ const SELFTEST_HTML = {
     <p>${FILL}</p>
     <div style="position:fixed;bottom:0;left:0;right:0;height:56px;background:#ccc">bottom bar</div>
     <p>last line of the page</p></body>`,
+  // PDP shape: `sticky bottom-0` bar inside a wrapper, footer below it. Must be SEEN (barH>0) yet not "cover" anything.
+  sticky: `<body style="margin:0;font:16px sans-serif"><div><p>${FILL}</p><div style="position:sticky;bottom:0;height:64px;background:#ccc"><button style="height:44px;font-size:16px">Mua ngay</button></div></div><footer style="height:200px">footer</footer></body>`,
 };
 
 async function selftest() {
@@ -239,12 +263,14 @@ async function selftest() {
     const run = async (html) => { await page.setContent(html); const m = await page.evaluate(measureInPage, {}); return { ...m, width: 390 }; };
     const dirty = await run(SELFTEST_HTML.dirty);
     const clean = await run(SELFTEST_HTML.clean);
+    const sticky = await run(SELFTEST_HTML.sticky);
     const keyOf = { a_top_fixed: 'a_top_fixed', b_overflow_x: 'b_overflow_x', c_nav_rows: 'c_nav_rows', d_small_targets: 'd_small_targets', e_small_text: 'e_small_text', f_small_inputs: 'f_small_inputs', g_bottom_overlap: 'g_bottom_overlap', h_promo_lines: 'h_promo_lines' };
     const vd = new Set(violations(dirty).map((x) => x.key)), vc = new Set(violations(clean).map((x) => x.key));
     for (const k of Object.keys(keyOf)) {
-      const ok = vd.has(k) && !vc.has(k);
+      let ok = vd.has(k) && !vc.has(k);
+      if (k === 'g_bottom_overlap') ok = ok && sticky.g_bottom_overlap.barH >= 60 && !sticky.g_bottom_overlap.covers; // in-flow sticky bar is seen, and does not cover
       if (!ok) fails++;
-      const detail = ok ? '' : ` dirty=${JSON.stringify(dirty[k])} clean=${JSON.stringify(clean[k])}`;
+      const detail = ok ? '' : ` dirty=${JSON.stringify(dirty[k])} clean=${JSON.stringify(clean[k])}${k === 'g_bottom_overlap' ? ` sticky=${JSON.stringify(sticky[k])}` : ''}`;
       console.log(`${ok ? 'PASS' : 'FAIL'} ${k}: planted violation ${vd.has(k) ? 'detected' : 'MISSED'}, clean control ${vc.has(k) ? 'FLAGGED' : 'clean'}${detail}`);
     }
     await ctx.close();
@@ -258,13 +284,14 @@ async function selftest() {
 // 3. Fixtures: fake shop, fake identity. Everything under /api/** is answered here.
 // ------------------------------------------------------------------------------------------------------------------
 const IMGS = ['hotline-tu-van', 'dan-vot-30-phut', 'showroom-ha-noi', 'chinh-hang-yonex'].map((n) => `/banners/${n}.webp`);
+// Fixture categories mimic the LIVE nav of www.topvnsport.com (5 links = "trang chủ" + 4 in-stock categories, measured read-only
+// 2026-11-04: header 420px / 3 nav rows at 390). Only the racket category is invented (the PDP/stringing states need one).
+// More categories than live would inflate the nav rows and the sticky header height, so keep this at 4.
 const CATS = [
   { id: 1, code: 'VC001491', name: 'Vợt cầu lông', display_name: 'Cầu lông > Vợt cầu lông' },
-  { id: 2, code: 'VC001427', name: 'Giày cầu lông', display_name: 'Cầu lông > Giày cầu lông' },
-  { id: 3, code: 'VC001500', name: 'Quả cầu lông', display_name: 'Cầu lông > Quả cầu lông' },
-  { id: 4, code: 'VC001510', name: 'Balo – Túi vợt', display_name: 'Cầu lông > Balo – Túi vợt' },
-  { id: 5, code: 'VC001520', name: 'Quần áo thi đấu', display_name: 'Cầu lông > Quần áo thi đấu' },
-  { id: 6, code: 'VC001530', name: 'Phụ kiện – Quấn cán', display_name: 'Cầu lông > Phụ kiện – Quấn cán' },
+  { id: 2, code: 'VC001427', name: 'Giày Cầu Lông', display_name: 'Cầu lông > Giày Cầu Lông' },
+  { id: 3, code: 'VC001500', name: 'Lưới Cầu Lông', display_name: 'Cầu lông > Lưới Cầu Lông' },
+  { id: 4, code: 'VC001510', name: 'Bộ Đồ Thể Thao', display_name: 'Cầu lông > Bộ Đồ Thể Thao' },
 ];
 const brandAttr = (b) => [{ id: 1, attribute_id: 10, value_string: b, attribute: { code: 'brand', name: 'Thương hiệu' } }];
 const media = (i) => [{ image_url: IMGS[i % IMGS.length], is_cover: true, display_order: 0 }];
@@ -282,12 +309,12 @@ const racketNames = ['Vợt Li-Ning Axforce 80', 'Vợt Victor Thruster K 12', '
 racketNames.forEach((n, i) => addProduct({ id: 9002 + i, name: n, slug: `vot-audit-${i + 1}`, description: 'Vợt kiểm thử.', voma_category_id: 1, attribute_values: brandAttr(['Li-Ning', 'Victor', 'Yonex', 'Mizuno'][i]), media: media(i + 1), tier_variations: [{ id: 10 + i, product_id: 9002 + i, tier_index: 1, name: 'Màu sắc', options: ['Đen'] }], variants: [{ id: 90020 + i, product_id: 9002 + i, tier_1_option: 'Đen', sku_code: `AUDIT-R${i + 2}`, price: 2100000 + i * 210000 }] }));
 const simpleDefs = [
   [2, 'Giày cầu lông Yonex Power Cushion 65 Z3 Wide', 'Yonex', 2890000], [2, 'Giày cầu lông Lining Saga Lite', 'Li-Ning', 1690000],
-  [3, 'Ống cầu lông Yonex Aerosensa 20 (12 quả)', 'Yonex', 790000], [3, 'Ống cầu lông Hải Yến Đặc Biệt', 'Hải Yến', 450000],
-  [4, 'Balo cầu lông Yonex BA82212 Tournament', 'Yonex', 1390000], [4, 'Túi vợt Victor BR9213 Thi Đấu', 'Victor', 1590000],
-  [5, 'Áo thi đấu Lining AAYT325 Nam', 'Li-Ning', 390000], [6, 'Quấn cán Yonex AC102EX (3 cuộn)', 'Yonex', 150000],
+  [3, 'Lưới cầu lông Yonex AC171 thi đấu', 'Yonex', 790000], [3, 'Lưới cầu lông Kawasaki tập luyện', 'Kawasaki', 450000],
+  [4, 'Áo thi đấu Lining AAYT325 Nam', 'Li-Ning', 390000], [4, 'Bộ đồ thể thao Yonex 1015 Nữ', 'Yonex', 690000],
+  [4, 'Quần cầu lông Victor R-3096', 'Victor', 450000], [4, 'Tất thể thao Yonex (3 đôi)', 'Yonex', 150000],
 ];
 simpleDefs.forEach(([cat, name, brand, price], i) => addProduct({ id: 9100 + i, name, slug: `san-pham-audit-${i + 1}`, description: 'Sản phẩm kiểm thử.', voma_category_id: cat, attribute_values: brandAttr(brand), media: media(i), tier_variations: [], variants: [{ id: 91000 + i, product_id: 9100 + i, sku_code: `AUDIT-S${i + 1}`, price }] }));
-const SIMPLE_SLUG = 'san-pham-audit-8'; // Quấn cán: no tiers, one SKU, cheap, ideal for the cart
+const SIMPLE_SLUG = 'san-pham-audit-8'; // Tất: no tiers, one SKU, cheap, ideal for the cart
 const RACKET_SLUG = 'vot-yonex-astrox-100zz-kurenai';
 const PROVINCES = [{ code: 'P01', level: 'province', name: 'Hà Nội', parent_code: null }, { code: 'P79', level: 'province', name: 'Thành phố Hồ Chí Minh', parent_code: null }];
 const WARDS = [{ code: 'W0101', level: 'ward', name: 'Phường Kiểm Thử', parent_code: 'P01' }, { code: 'W0102', level: 'ward', name: 'Phường Thử Nghiệm', parent_code: 'P01' }];
@@ -372,7 +399,10 @@ const ROUTES = [
     await jsClick(p.getByRole('button', { name: 'Xác nhận OTP' }));
     await p.getByText('Đặt Hàng Thành Công').first().waitFor(); await sleep(600);
   } },
-  { id: 'checkout-success', state: '/checkout/success', go: async (p) => { await p.goto(`${BASE}/checkout/success`); await loaded(p); } },
+  // ?order= so the orderNumber box (text-xs font-mono) is rendered and measured too
+  { id: 'checkout-success', state: '/checkout/success?order=AUDIT-0001', go: async (p) => { await p.goto(`${BASE}/checkout/success?order=AUDIT-0001`); await loaded(p); } },
+  { id: 'checkout-error', state: '/checkout/error?order=AUDIT-0001', go: async (p) => { await p.goto(`${BASE}/checkout/error?order=AUDIT-0001`); await loaded(p); } },
+  { id: 'checkout-cancel', state: '/checkout/cancel?order=AUDIT-0001', go: async (p) => { await p.goto(`${BASE}/checkout/cancel?order=AUDIT-0001`); await loaded(p); } },
   { id: 'stores', state: '/stores (trang O2O / đan vợt)', go: async (p) => { await p.goto(`${BASE}/stores`); await loaded(p); } },
   { id: 'notfound', state: '/khong-ton-tai (404)', go: async (p) => { await p.goto(`${BASE}/khong-ton-tai`); await loaded(p); } },
 ];
@@ -412,6 +442,7 @@ function writeReport(records) {
 Sinh tự động bởi \`node e2e/mobile-audit/audit.cjs\` từ \`before.json\` (đo bằng \`page.evaluate\`, không đo bằng mắt). Không sửa tay.
 Ảnh: \`before/<route>-<độ rộng>.png\` (${ROUTES.length} route × 4 độ rộng), mốc desktop \`desktop-baseline/<route>-1440.png\`.
 Dữ liệu: vite dev local + fixture giả (không dữ liệu cá nhân, OMS/OTP giả), \`prefers-reduced-motion: reduce\` để slide hero đứng yên, ảnh ngoài thay bằng ô xám.
+**Số đo phụ thuộc fixture**: bộ danh mục fixture (4 danh mục + "trang chủ" = 5 liên kết nav) được chọn khớp site live đo chỉ-đọc ngày 2026-11-04 (www.topvnsport.com/catalog ở 390: header dính 420px, nav 3 hàng, 5 liên kết). Thêm danh mục vào fixture sẽ làm nav và header cao hơn; số "sau khi sửa" phải so với bộ fixture này.
 
 Ngưỡng (spec MOB-A..G): A: vùng cố định/dính trên cùng ≤120px và 1 hàng khi cuộn · B: thanh danh mục ≤1 hàng · C: dải khuyến mãi ≤1 dòng trong màn hình đầu · D: scrollWidth ≤ clientWidth (cả 4 độ rộng) · E: vùng bấm ≥44px · F: chữ ≥14px, ô nhập ≥16px · G: thanh dưới không che nội dung. Mọi ngưỡng trừ D chỉ áp dụng ở 360–430px; ở 768px chỉ MOB-D được xét (số liệu 768 vẫn nằm trong \`before.json\`).
 Ngoại lệ đo: link nằm giữa câu không tính vào MOB-E; khi có lớp phủ toàn màn hình (giỏ hàng) đo bên trong lớp phủ.
@@ -440,6 +471,7 @@ ${issueRows.join('\n')}
 async function main() {
   const onlyArg = (process.argv.find((a) => a.startsWith('--only=')) || '').slice(7);
   const widthArg = Number((process.argv.find((a) => a.startsWith('--width=')) || '').slice(8)) || 0;
+  if (process.argv.includes('--report-only')) { writeReport(JSON.parse(fs.readFileSync(path.join(OUT, 'before.json'), 'utf8'))); console.log('rewrote before.md from before.json'); return; } // template-only change, no browser
   const full = !onlyArg && !widthArg;
   const routes = ROUTES.filter((r) => !onlyArg || onlyArg.split(',').includes(r.id));
   const widths = MOBILE_WIDTHS.filter(([w]) => !widthArg || w === widthArg);
