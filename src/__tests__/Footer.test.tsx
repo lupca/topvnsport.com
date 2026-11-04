@@ -119,14 +119,15 @@ describe('Footer', () => {
     expect(screen.queryByRole('heading', { name: /BẢO HÀNH/i })).toBeNull();
   });
 
-  test('cột thương hiệu: dòng đại lý, địa chỉ, hotline tel: kèm giờ hotline, Shopee mở tab mới', () => {
+  test('cột thương hiệu: dòng đại lý, địa chỉ, hotline tel: kèm giờ hotline, Shopee mở tab mới, link /stores', () => {
     renderFooter();
     const col = column(BRAND);
     expect(Array.from(col.querySelectorAll('p')).map(p => p.textContent)).toEqual([
       'Đại lý uỷ quyền Yonex Sunrise.',
       ADDRESS,
       `Hotline tư vấn: ${HOTLINE} (${HOURS})`,
-      'Gian hàng trên Shopee'
+      'Gian hàng trên Shopee',
+      'Cửa hàng trải nghiệm'
     ]);
     const tel = within(col).getByRole('link', { name: HOTLINE });
     expect(tel.getAttribute('href')).toBe('tel:0976007006');
@@ -134,14 +135,15 @@ describe('Footer', () => {
     expect(shopee.getAttribute('href')).toBe(SHOPEE);
     expect(shopee.getAttribute('target')).toBe('_blank');
     expect(shopee.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(within(col).getByRole('link', { name: 'Cửa hàng trải nghiệm' }).getAttribute('href')).toBe('/stores');
   });
 
-  test('toàn footer chỉ có các link đã duyệt: không /stores, mạng xã hội, email, trang chính sách', () => {
+  test('toàn footer chỉ có các link đã duyệt: không mạng xã hội, email, trang chính sách', () => {
     const { container } = renderFooter();
     const hrefs = Array.from(container.querySelectorAll('footer a')).map(a => a.getAttribute('href'));
-    expect(hrefs).toEqual(['tel:0976007006', SHOPEE, '/catalog?category=VC001491', '/catalog?category=VC001427', STRINGING_CTA_PATH]);
+    expect(hrefs).toEqual(['tel:0976007006', SHOPEE, '/stores', '/catalog?category=VC001491', '/catalog?category=VC001427', STRINGING_CTA_PATH]);
     const html = (container.querySelector('footer') as HTMLElement).outerHTML;
-    expect(html).not.toMatch(/\/stores|facebook|fb\.com|zalo|youtube|youtu\.be|tiktok|mailto:|@/i);
+    expect(html).not.toMatch(/facebook|fb\.com|zalo|youtube|youtu\.be|tiktok|mailto:|@/i);
   });
 
   test('không có chữ giữ chỗ, bản quyền, mã số thuế/ĐKKD', () => {
