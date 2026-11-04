@@ -110,7 +110,8 @@ describe('4 gộp cùng SKU', () => {
 });
 
 describe('5 giá thẻ KM một phần', () => {
-  it('thẻ: giá bán <= giá gốc, cùng một biến thể', () => {
+  // STOR-109: KM ở bất kỳ biến thể nào là SP đang KM; thẻ hiện cặp giá của biến thể KM (không ghép chéo biến thể).
+  it('thẻ: chỉ biến thể không rẻ nhất có KM -> cặp giá của chính biến thể KM', () => {
     const p = mapPmiProduct({
       id: 1, name: 'Km mot phan', voma_category_id: 1,
       variants: [
@@ -120,8 +121,8 @@ describe('5 giá thẻ KM một phần', () => {
     } as any, []);
     const d = getPriceDisplay(p!);
     expect(d.salePrice).toBeLessThanOrEqual(d.originalPrice);
-    expect(d.salePrice).toBe(500000);
-    expect(p!.percentageDiscount ?? 0).toBeGreaterThanOrEqual(0);
+    expect([p!.computedPrice, p!.originalPrice, p!.percentageDiscount]).toEqual([1500000, 2000000, 25]);
+    expect(p!.hasActivePromotion).toBe(true);
   });
   it('biến thể rẻ nhất có KM -> cặp giá của chính nó', () => {
     const p = mapPmiProduct({
