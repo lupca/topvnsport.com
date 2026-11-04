@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 // STOR-086: Home page 1440px desktop header: two-row top bar with full promise copy,
-// TVN logo mark, '/' search chip & shortcut
+// logo image (was TVN mark, STOR-106), '/' search chip & shortcut
 import React from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
@@ -115,26 +115,17 @@ describe('STOR-086: Home desktop header (1440px)', () => {
     });
   });
 
-  describe('Desktop logo TVN mark', () => {
-    it('The desktop logo renders a 44x44 "TVN" box with bg-brand-primary', () => {
+  describe('Desktop logo image (STOR-106 thay ô chữ TVN)', () => {
+    it('The desktop logo renders a 44x44 <img> with alt "TopVNSport Logo" and no "TVN" box', () => {
       renderHeader([]);
-      const logoMark = screen.getByText('TVN');
-      expect(logoMark).toBeTruthy();
-      expect(logoMark.className).toContain('w-[44px]');
-      expect(logoMark.className).toContain('h-[44px]');
-      expect(logoMark.className).toContain('bg-brand-primary');
-      expect(logoMark.className).toContain('text-white');
-      expect(logoMark.className).toContain('rounded-[6px]');
-      expect(logoMark.className).toContain('border-[1.5px]');
-      expect(logoMark.className).toContain('border-black');
-    });
-
-    it('The desktop logo contains no <img>', () => {
-      renderHeader([]);
-      const logoMark = screen.getByText('TVN');
-      const desktopBrand = logoMark.closest('div.hidden.md\\:flex');
+      expect(screen.queryByText('TVN')).toBeNull();
+      const desktopBrand = screen.getByTestId('brand-wordmark').closest('div.hidden.md\\:flex');
       expect(desktopBrand).not.toBeNull();
-      expect(desktopBrand?.querySelector('img')).toBeNull();
+      const logo = desktopBrand!.querySelector('img');
+      expect(logo?.getAttribute('alt')).toBe('TopVNSport Logo');
+      expect(logo?.className).toContain('w-[44px]');
+      expect(logo?.className).toContain('h-[44px]');
+      expect(logo?.className).toContain('rounded-[6px]');
     });
   });
 

@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -39,6 +39,16 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL);
   const [quickFilter, setQuickFilter] = useState<string>(ALL);
   const [sortMode, setSortMode] = useState<SortMode>('in-stock-first');
+  const shelfRef = useRef<HTMLElement>(null);
+
+  // STOR-106: bấm chip ngành vừa lọc kệ vừa cuộn kệ vào tầm nhìn; người dùng giảm chuyển động thì nhảy thẳng (auto).
+  // Chip và kệ cùng sinh ra từ hàng còn hàng nên kệ luôn có mặt; thiếu ref thì để lỗi nổ ra, không nuốt.
+  // scroll-mt trên kệ = chiều cao header sticky + ~12px, đo bằng scripts/stor106-walk: 79px mobile, 289px (270px quanh 946-948px) từ 768 đến 948px, 239px từ 949px; header đổi cao theo dòng chữ xuống hàng.
+  const pickCategory = (code: string) => {
+    setSelectedCategory(code);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    shelfRef.current!.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  };
 
   // STOR-056: chỉ lọc theo dữ liệu VOMA thật (ngành, thương hiệu, tầng cước); lối đánh không có nguồn nên không lọc.
   const matched = sortProducts(products, sortMode)
@@ -114,7 +124,7 @@ export default function HomePage() {
                   aria-selected={active}
                   key={chip.id}
                   data-testid={`cate-pill-${chip.code}`}
-                  onClick={() => setSelectedCategory(chip.code)}
+                  onClick={() => pickCategory(chip.code)}
                   className={`min-h-11 max-md:min-h-[40px] md:min-h-[44px] max-md:rounded-full md:rounded-[999px] px-3 max-md:px-[14px] md:px-[18px] py-1.5 max-md:py-[8px] md:py-[8px] text-[13px] md:text-[14.5px] font-bold whitespace-nowrap transition flex items-center gap-1.5 md:gap-[7px] max-md:!font-sans md:font-sans! ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
                   <span>{chip.label}</span>
@@ -129,7 +139,7 @@ export default function HomePage() {
       <BadmintonCenterSlider products={allInStock.filter(p => Boolean(p.image) && p.image !== NO_IMAGE_URL).slice(0, 5)} />
 
       {allInStock.length > 0 && (
-        <section data-testid="instock-shelf" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
+        <section ref={shelfRef} data-testid="instock-shelf" className="scroll-mt-[88px] md:max-[949px]:scroll-mt-[300px] min-[949px]:scroll-mt-[252px] max-w-[1280px] mx-auto px-4 md:px-[24px]">
           <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
           {/* Số thật = SP còn hàng; vế đan cước chỉ khi có SP còn hàng có tầng cước (cùng luật với giỏ). */}
           <p data-testid="featured-subtitle" className={`hidden md:block text-center ${SECTION_SUB} pb-6`}>
