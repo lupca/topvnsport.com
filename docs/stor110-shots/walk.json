@@ -1,0 +1,69 @@
+{
+  "fails": 0,
+  "expected": {
+    "count": 9,
+    "order": [
+      45,
+      40,
+      35,
+      30,
+      25,
+      20,
+      15,
+      10,
+      5
+    ]
+  },
+  "report": {
+    "390": {
+      "top_badminton-hub-header": 79,
+      "top_badminton-center-slider": 218,
+      "top_instock-shelf": 552,
+      "top_sale-section": 1844,
+      "domOrder": true,
+      "heading": "đang khuyến mãi",
+      "badge": "Giảm đến 45%",
+      "cardCount": 9,
+      "discounts": [
+        45,
+        40,
+        35,
+        30,
+        25,
+        20,
+        15,
+        10,
+        5
+      ],
+      "salePrices": 9,
+      "struck": 9,
+      "outOfStockAbsent": 0,
+      "overflowX": true
+    },
+    "1440": {
+      "top_badminton-hub-header": 239,
+      "top_badminton-center-slider": 439,
+      "top_instock-shelf": 1102,
+      "top_sale-section": 2294,
+      "domOrder": true,
+      "heading": "đang khuyến mãi",
+      "badge": "Giảm đến 45%",
+      "cardCount": 9,
+      "discounts": [
+        45,
+        40,
+        35,
+        30,
+        25,
+        20,
+        15,
+        10,
+        5
+      ],
+      "salePrices": 9,
+      "struck": 9,
+      "outOfStockAbsent": 0,
+      "overflowX": true
+    }
+  }
+}

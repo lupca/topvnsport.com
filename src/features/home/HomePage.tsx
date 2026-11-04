@@ -10,6 +10,7 @@ import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
 import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
 import BadmintonCenterSlider from './BadmintonCenterSlider';
+import SaleSection from './SaleSection';
 
 const ALL = 'ALL';
 const O2O = 'O2O';
@@ -203,6 +204,12 @@ export default function HomePage() {
           </div>
         </section>
       )}
+
+      <SaleSection
+        products={products}
+        onQuickView={prod => dispatch(setQuickViewProduct(prod))}
+        onAddToCart={(prod, e) => handleAddToCart(prod, e)}
+      />
 
       {sortedCategories.length > 0 && (
         <section data-testid="category-tiles" className="max-w-[1280px] mx-auto px-4 md:px-[24px]">
