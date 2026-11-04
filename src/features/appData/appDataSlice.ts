@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sportApi } from '../../services/sportApi';
+import { applyWmsStock } from '../../services/sport-api/wmsStock';
 import { Branch, Category, Product, StringOption } from '../../types';
 
 export interface AppDataState {
@@ -18,6 +19,8 @@ export interface AppDataState {
   stockError: boolean;
   // STOR-137: single-flight; không dùng isLoading (khởi tạo true sẽ chặn lần tải đầu).
   loadInFlight: boolean;
+  // STOR-141: single-flight riêng cho refetchStock.
+  stockRefetching: boolean;
 }
 
 const initialState: AppDataState = {
@@ -30,7 +33,8 @@ const initialState: AppDataState = {
   productsError: false,
   stringOptionsError: false,
   stockError: false,
-  loadInFlight: false
+  loadInFlight: false,
+  stockRefetching: false
 };
 
 export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () => {
@@ -63,6 +67,17 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
   condition: (_, { getState }) => !(getState() as { appData: AppDataState }).appData.loadInFlight
 });
 
+type AppDataRoot = { appData: AppDataState };
+
+// STOR-141: chỉ tải lại tồn WMS (1 GET), áp lên products đang có; không đụng isLoading
+// (sẽ bật spinner toàn trang), không tải lại sản phẩm/danh mục.
+export const refetchStock = createAsyncThunk('appData/refetchStock', async (_, { getState }) => {
+  const stock = await sportApi.getAllStock();
+  return applyWmsStock((getState() as AppDataRoot).appData.products, stock);
+}, {
+  condition: (_, { getState }) => !(getState() as AppDataRoot).appData.stockRefetching
+});
+
 const appDataSlice = createSlice({
   name: 'appData',
   initialState,
@@ -84,6 +99,18 @@ const appDataSlice = createSlice({
         state.stockError = action.payload.stockError;
         state.isLoading = false;
         state.loadInFlight = false;
+      })
+      .addCase(refetchStock.pending, state => {
+        state.stockRefetching = true;
+      })
+      .addCase(refetchStock.fulfilled, (state, action) => {
+        state.products = action.payload;
+        state.stockError = false;
+        state.stockRefetching = false;
+      })
+      .addCase(refetchStock.rejected, state => {
+        state.stockError = true;
+        state.stockRefetching = false;
       })
       .addCase(fetchAppData.rejected, state => {
         // Thunk ném = không biết danh sách sản phẩm; không để [] đọc thành "shop trống".

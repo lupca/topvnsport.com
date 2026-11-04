@@ -14,7 +14,7 @@ import Header from './components/Header';
 import QuickViewModal from './components/QuickViewModal';
 import ScrollToTop from './components/ScrollToTop';
 import StoreLocator from './components/StoreLocator';
-import { fetchAppData } from './features/appData/appDataSlice';
+import { fetchAppData, refetchStock } from './features/appData/appDataSlice';
 import CatalogPage from './features/catalog/CatalogPage';
 import { setSearchQuery, setSelectedBrand, setSelectedCategory } from './features/catalog/catalogSlice';
 import {
@@ -57,7 +57,7 @@ export default function App() {
   // PDP có MobilePurchaseBar sticky là thanh đáy duy nhất: không nav đáy, không pb-16.
   const isPdp = location.pathname.startsWith('/product/');
 
-  const { products, branches, categories, isLoading, categoriesError, productsError, stockError } = useAppSelector(state => state.appData);
+  const { products, branches, categories, isLoading, categoriesError, productsError, stockError, stockRefetching } = useAppSelector(state => state.appData);
   const { items: cartItems, isOpen: isCartOpen, quickViewProduct } = useAppSelector(state => state.cart);
   const [hasOpenedCart, setHasOpenedCart] = useState(isCartOpen);
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
@@ -154,7 +154,12 @@ export default function App() {
         <div role="alert" id="load-error-banner" className="bg-red-50 border-b border-red-200 text-red-700 text-sm font-medium px-4 py-2.5 text-center space-y-0.5">
           {showCategoriesError && <p>Không tải được danh mục sản phẩm. Vui lòng tải lại trang.</p>}
           {showProductsError && <p>Không tải được danh sách sản phẩm. Vui lòng tải lại trang.</p>}
-          {stockError && <p>Không tải được tồn kho. Vui lòng tải lại trang.</p>}
+          {stockError && (
+            <p>
+              Không tải được tồn kho. Vui lòng tải lại trang.{' '}
+              <button type="button" disabled={stockRefetching} onClick={() => dispatch(refetchStock())} className="underline font-bold disabled:opacity-50">Thử lại</button>
+            </p>
+          )}
         </div>
       )}
 

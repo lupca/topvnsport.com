@@ -24,9 +24,12 @@ export default function HomePage() {
   const products = useAppSelector(state => state.appData.products ?? []);
   const categories = useAppSelector(state => state.appData.categories ?? []);
   const productsError = useAppSelector(state => state.appData.productsError);
+  // STOR-141: tồn không tải được -> không biết còn hàng; kệ "Tất cả" không lọc theo tồn (không giả Hết hàng).
+  const stockError = useAppSelector(state => state.appData.stockError);
+  const inStockOrUnknown = (p: { stock?: number }) => stockError || (p.stock ?? 0) > 0;
 
   const inStockFirst = sortProducts(products, 'in-stock-first');
-  const allInStock = inStockFirst.filter(p => (p.stock ?? 0) > 0);
+  const allInStock = inStockFirst.filter(inStockOrUnknown);
   // Published = hiển thị: chip/ô ngành gồm mọi ngành có SP (kể cả chỉ có SP hết hàng) và đếm mọi SP của ngành;
   // riêng chip "Tất cả" đếm hàng còn hàng để khớp kệ "Tất cả".
   const categoryCounts = getProductCategoryCounts(products);
@@ -56,7 +59,7 @@ export default function HomePage() {
   // STOR-056: chỉ lọc theo dữ liệu VOMA thật (ngành, thương hiệu, tầng cước); lối đánh không có nguồn nên không lọc.
   // Kệ "Tất cả" chỉ gồm SP còn hàng (STOR-025); kệ một ngành liệt kê mọi SP của ngành, hết hàng mang nhãn Hết hàng.
   const matched = sortProducts(products, sortMode)
-    .filter(p => selectedCategory !== ALL || (p.stock ?? 0) > 0)
+    .filter(p => selectedCategory !== ALL || inStockOrUnknown(p))
     .filter(p => selectedCategory === ALL || p.categoryCode === selectedCategory)
     .filter(p =>
       quickFilter === ALL ? true : quickFilter === O2O ? hasO2OStringing(p) : `brand:${p.brand?.trim().toLowerCase()}` === quickFilter
@@ -125,6 +128,7 @@ export default function HomePage() {
 
       {(allInStock.length > 0 || sortedCategories.length > 0) && (
         <section ref={shelfRef} data-testid="instock-shelf" className="scroll-mt-[88px] md:max-[949px]:scroll-mt-[300px] min-[949px]:scroll-mt-[252px] max-w-[1280px] mx-auto px-4 md:px-[24px]">
+          {stockError && <p role="status" data-testid="shelf-stock-error" className="text-center text-sm font-medium text-red-700 pt-5">Chưa tải được tình trạng hàng.</p>}
           <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 md:pb-6 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
           {allInStock.some(hasO2OStringing) && (
             <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-xs font-semibold text-ink-secondary mt-0.5 pb-6 max-md:mt-[2px] max-md:pb-[14px]">
