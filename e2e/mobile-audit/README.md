@@ -7,8 +7,9 @@ Quét mobile "trước khi sửa": chụp mọi route ở 360x800, 390x844, 430x
     node e2e/mobile-audit/audit.cjs --report-only   # viết lại before.md từ before.json có sẵn (đổi template, không mở trình duyệt)
     node e2e/mobile-audit/audit.cjs --only=cart,checkout --width=390   # chạy một phần để gỡ lỗi (không ghi before.json/md)
     node e2e/mobile-audit/competitors.cjs        # đo header mobile của đối thủ, chỉ đọc
+    node e2e/mobile-guard-390.cjs                # chốt chặn CI (STOR-149): 390x844, MOB-A ≤120px + MOB-D, exit 1 nếu lỗi
 
-- Cần `npm ci` (vite chạy từ `node_modules`) và `playwright-core` ở `npm root -g` (hoặc `PLAYWRIGHT=<đường dẫn>`). Không thêm dependency.
+- Cần `npm ci` và `npx playwright-core install chromium`; `playwright-core` 1.64.1 là devDependency (guard tự dùng bản này; audit.cjs dùng `PLAYWRIGHT=<đường dẫn>` hoặc `npm root -g`).
 - Script tự mở vite `--strictPort` trên cổng `PORT` (mặc định 4428), ghi lại PID và tắt đúng PID đó khi xong.
 - Mọi `/api/**` được `page.route` trả fixture giả (sản phẩm, tồn, tỉnh/xã, báo giá ship). Tạo đơn, gửi và xác thực OTP là giả; OMS thật không bao giờ được gọi; danh tính là placeholder.
 - Route/trạng thái: bảng `ROUTES` đầu phần 4 của `audit.cjs`. Cửa hàng không có trang giỏ/thanh toán/tìm kiếm riêng nên `search` = `/catalog?search=`, `cart`/`checkout`/`order-success` = các bước của CartModal, `stringing` = `STRINGING_CTA_PATH`.

@@ -528,5 +528,5 @@ async function main() {
   }
 }
 
-module.exports = { measureInPage };
+module.exports = { measureInPage, stub, ROUTES, waitPort, BASE };
 if (require.main === module) { if (process.argv.includes('--selftest')) selftest(); else main(); }
