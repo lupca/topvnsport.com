@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
-import { proxyToVoma } from '../../api/_catalogProxy';
+import { proxyToVoma, PROXY_CDN_CACHE_CONTROL } from '../../api/_catalogProxy';
 
 // STOR-012: chỉ upstream 200 được CDN cache; mọi nhánh khác no-store.
 function makeRes() {
@@ -29,18 +29,24 @@ describe('catalogProxy cache CDN (STOR-012)', () => {
   });
   afterEach(() => { process.env = { ...ORIGINAL_ENV }; });
 
+  test('PROXY_CDN_CACHE_CONTROL có stale-if-error=600 (STOR-140)', () => {
+    expect(PROXY_CDN_CACHE_CONTROL).toBe('max-age=60, stale-while-revalidate=300, stale-if-error=600');
+  });
+
   test('proxy 200 gắn Vercel-CDN-Cache-Control', async () => {
     global.fetch = upstream(200);
     const res = makeRes();
     await proxyToVoma(req(), res, 'https://pmi.test');
-    expect(res.headers['Vercel-CDN-Cache-Control']).toBe('max-age=60, stale-while-revalidate=300');
+    expect(res.headers['Vercel-CDN-Cache-Control']).toBe(PROXY_CDN_CACHE_CONTROL);
     expect(res.headers['Cache-Control']).toContain('max-age=0');
   });
 
-  test.each([404, 500, 401])('proxy upstream lỗi gắn no-store (%i)', async (status) => {
+  // STOR-140: 503 (gateway catalog_verify timeout) giữ nguyên 503, no-store, không header CDN.
+  test.each([404, 500, 401, 503])('proxy upstream lỗi gắn no-store (%i)', async (status) => {
     global.fetch = upstream(status);
     const res = makeRes();
     await proxyToVoma(req(), res, 'https://pmi.test');
+    expect(res.statusCode).toBe(status);
     expect(res.headers['Cache-Control']).toBe('no-store');
     expect(res.headers['Vercel-CDN-Cache-Control']).toBeUndefined();
   });

@@ -42,6 +42,8 @@ export function resolveCatalogGrantToken(): string | undefined {
 // stale-while-revalidate) cộng thời gian revalidate; OMS vẫn tính tiền theo giá
 // PIM lúc đặt. Mọi nhánh khác 200 gắn no-store (không cache lỗi).
 export const CDN_CACHE_CONTROL = 'max-age=60, stale-while-revalidate=300';
+// STOR-140: chỉ proxyToVoma 200 thêm stale-if-error=600 (CDN có thể trả bản cũ tới 600s khi upstream lỗi; chưa kiểm chứng với 503 của function, xem docs/incident-503-proxy.md).
+export const PROXY_CDN_CACHE_CONTROL = 'max-age=60, stale-while-revalidate=300, stale-if-error=600';
 
 export async function proxyToVoma(req: any, res: any, baseUrl: string | undefined) {
   // This proxy exists only to attach a read-scoped catalog-grant token to
@@ -81,7 +83,7 @@ export async function proxyToVoma(req: any, res: any, baseUrl: string | undefine
     res.status(upstreamResponse.status);
     res.setHeader('content-type', upstreamResponse.headers.get('content-type') || 'application/json');
     if (upstreamResponse.status === 200) {
-      res.setHeader('Vercel-CDN-Cache-Control', CDN_CACHE_CONTROL);
+      res.setHeader('Vercel-CDN-Cache-Control', PROXY_CDN_CACHE_CONTROL);
       res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
     } else {
       res.setHeader('Cache-Control', 'no-store');
