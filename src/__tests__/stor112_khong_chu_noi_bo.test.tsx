@@ -33,14 +33,12 @@ import { popupService } from '@topvnsport/ui-kit';
 import App from '../App';
 
 const BANNED = /VOMA|PIM|WMS|OMS|\bsync\b|\bAPI\b|đồng bộ|tương phản|AAA|UI\/UX|v2\.0|hệ thống/i;
-// Duy nhất chuỗi này được phép chứa "hệ thống" (liên kết cửa hàng ở chân trang; task dựng lại chân trang sẽ quyết định).
-const ALLOWED = 'Hệ thống cửa hàng trải nghiệm';
 
 // Chữ khách thấy: nội dung văn bản + placeholder/title/aria-label/alt.
 function shopperText(): string {
   const attrs = Array.from(document.body.querySelectorAll('[placeholder],[title],[aria-label],[alt]'))
     .flatMap((el) => ['placeholder', 'title', 'aria-label', 'alt'].map((a) => el.getAttribute(a) ?? ''));
-  return [document.body.textContent ?? '', ...attrs].join('\n').split(ALLOWED).join('');
+  return [document.body.textContent ?? '', ...attrs].join('\n');
 }
 function expectClean(where: string) {
   const text = shopperText();
@@ -128,12 +126,14 @@ describe('STOR-112 chữ khách thấy không có từ nội bộ', () => {
     expectClean('home');
   });
 
-  it('chân trang: còn cột thương hiệu, danh mục, dịch vụ; còn link cửa hàng trải nghiệm', async () => {
+  it('chân trang: hotline tel: và giờ hotline, không có từ nội bộ', async () => {
     mount('/');
     await screen.findByText('SẢN PHẨM NỔI BẬT');
     const footer = document.querySelector('footer') as HTMLElement;
-    expect(footer.textContent).toContain('097 6007006 (08:00 - 22:00)');
-    expect(footer.textContent).toContain(ALLOWED);
+    const tel = footer.querySelector('a[href^="tel:"]') as HTMLElement;
+    expect(tel.getAttribute('href')).toBe('tel:0976007006');
+    expect(tel.textContent).toBe('097 6007006');
+    expect(tel.parentElement?.textContent).toBe('Hotline tư vấn: 097 6007006 (08:00 - 22:00)');
     expectClean('footer');
   });
 

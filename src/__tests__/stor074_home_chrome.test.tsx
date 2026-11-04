@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// STOR-074: dải cam kết lọc theo dữ liệu, footer 4 cột như thiết kế. (Phần hero caption từ sản phẩm đã bỏ ở STOR-107: hero là banner cấu hình.)
+// STOR-074: dải cam kết lọc theo dữ liệu, footer 3 cột. (Phần hero caption từ sản phẩm đã bỏ ở STOR-107: hero là banner cấu hình.)
 import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
@@ -26,7 +26,7 @@ describe('STOR-074 trust row lọc theo dữ liệu', () => {
       product('b4', { brand: 'Kizuna' })
     ];
     render(<TrustBadges products={products} />);
-    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise, cam kết chính hãng Li-Ning, Victor, Kizuna. Đền gấp 10 lần nếu phát hiện hàng giả.');
+    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise, cam kết chính hãng Li-Ning, Victor, Kizuna. Đền 1000% nếu phát hiện hàng giả.');
     expect(trustText(1)).toBe('Tùy chọn cước BG66U, Exbolt 65, Kizuna Z61 và mức căng 9.0–13.0kg ngay khi đặt vợt.');
     expect(screen.getByRole('heading', { name: 'Giao Hỏa Tốc & Đồng Kiểm' })).toBeTruthy();
   });
@@ -36,21 +36,21 @@ describe('STOR-074 trust row lọc theo dữ liệu', () => {
       product('c1', { brand: 'Li-Ning', tier_variations: [stringingTier(['Exbolt 65']), { tier_index: 0, name: 'Màu', options: ['BG66U'] }] })
     ];
     render(<TrustBadges products={products} />);
-    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise, cam kết chính hãng Li-Ning. Đền gấp 10 lần nếu phát hiện hàng giả.');
+    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise, cam kết chính hãng Li-Ning. Đền 1000% nếu phát hiện hàng giả.');
     expect(trustText(1)).toBe('Tùy chọn cước Exbolt 65 và mức căng 9.0–13.0kg ngay khi đặt vợt.');
   });
 
   it('không có dữ liệu -> không nêu tên nào', () => {
     render(<TrustBadges products={[product('d1', { brand: 'Gowin' })]} />);
-    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise. Đền gấp 10 lần nếu phát hiện hàng giả.');
+    expect(trustText(0)).toBe('Đại lý uỷ quyền Yonex Sunrise. Đền 1000% nếu phát hiện hàng giả.');
     expect(trustText(1)).toBe('Tùy chọn cước và mức căng 9.0–13.0kg ngay khi đặt vợt.');
   });
 });
 
-describe('STOR-074 footer 4 cột', () => {
+describe('STOR-074 footer 3 cột', () => {
   const cats: Category[] = [{ id: 1491, code: 'VC001491', name: 'Vợt Cầu Lông', parent_id: null, display_name: 'Vợt Cầu Lông' }];
 
-  it('tiêu đề theo thứ tự thiết kế, cột 4 nguyên văn, lưới 1 cột ở mobile và 4 track ở lg', () => {
+  it('tiêu đề theo thứ tự, lưới 1 cột ở mobile và 3 track ở lg', () => {
     const { container } = render(
       <MemoryRouter>
         <Footer categories={cats} products={[product('e1')]} />
@@ -60,7 +60,7 @@ describe('STOR-074 footer 4 cột', () => {
     expect(Array.from(grid.querySelectorAll('h5')).map(h => h.textContent)).toEqual([
       'TOPVNSPORT — BADMINTON SPECIALTY STORE',
       'DANH MỤC CẦU LÔNG',
-      'DỊCH VỤ ĐAN VỢT & BẢO HÀNH'
+      'DỊCH VỤ ĐAN VỢT'
     ]);
     expect(grid.children).toHaveLength(3);
     expect(grid.className.split(' ')).toContain('grid-cols-1');

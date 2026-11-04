@@ -1,0 +1,75 @@
+=== MUTATION: internal word 'hệ thống' (src/components/Footer.tsx) -> src/__tests__/stor112_khong_chu_noi_bo.test.tsx
+<             <p className={`${TEXT} mt-[10px]`}>Đại lý uỷ quyền Yonex Sunrise.</p>
+>             <p className={`${TEXT} mt-[10px]`}>Đại lý uỷ quyền Yonex Sunrise.</p><p className={TEXT}>Hệ thống cửa hàng trải nghiệm</p>
+--- mutated:
+     × trang chủ (Header, banner, thẻ sản phẩm có tầng cước, Footer, thanh đáy mobile) 68ms
+     × chân trang: hotline tel: và giờ hotline, không có từ nội bộ 30ms
+     × trang danh mục 28ms
+     × trang chi tiết sản phẩm có tầng cước 347ms
+     × trang cửa hàng 20ms
+     × trang không tìm thấy 14ms
+     × giỏ hàng bước giỏ 341ms
+     × giỏ hàng bước thanh toán 153ms
+     × /payments lỗi mạng 210ms
+     × /payments không trả lời quá 20 giây 187ms
+     × /payments trả 200 không phải JSON 295ms
+     × /payments trả 503 không có code 372ms
+     × /payments trả 500 không có code 349ms
+     × đặt hàng COD thành công: lời cảm ơn bước 3 308ms
+     × 201 không có mã đơn: popup + dòng cảnh báo trên màn 291ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  15 failed | 2 passed (17)
+--- reverted:
+      Tests  17 passed (17)
+
+=== MUTATION: placeholder phone 0981.234.567 (src/components/Footer.tsx) -> src/__tests__/Footer.test.tsx
+<               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li>
+>               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li><li>Tư vấn: 0981.234.567</li>
+--- mutated:
+     × không có chữ giữ chỗ, bản quyền, mã số thuế/ĐKKD 7ms
+     × khuôn số điện thoại, giờ, địa chỉ: mỗi loại chỉ có đúng một giá trị đã duyệt 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 10 passed (12)
+--- reverted:
+      Tests  12 passed (12)
+
+=== MUTATION: example.com (src/components/Footer.tsx) -> src/__tests__/Footer.test.tsx
+<               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li>
+>               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li><li>www.example.com</li>
+--- mutated:
+     × không có chữ giữ chỗ, bản quyền, mã số thuế/ĐKKD 6ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 11 passed (12)
+--- reverted:
+      Tests  12 passed (12)
+
+=== MUTATION: lorem (src/components/Footer.tsx) -> src/__tests__/Footer.test.tsx
+<               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li>
+>               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li><li>Lorem ipsum dolor sit amet</li>
+--- mutated:
+     × không có chữ giữ chỗ, bản quyền, mã số thuế/ĐKKD 6ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 11 passed (12)
+--- reverted:
+      Tests  12 passed (12)
+
+=== MUTATION: invented address line (ngõ) (src/components/Footer.tsx) -> src/__tests__/Footer.test.tsx
+<               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li>
+>               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li><li>Số 12, ngõ 34, phố Mẫu, Quận Mẫu, Hà Nội</li>
+--- mutated:
+     × khuôn số điện thoại, giờ, địa chỉ: mỗi loại chỉ có đúng một giá trị đã duyệt 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 11 passed (12)
+--- reverted:
+      Tests  12 passed (12)
+
+=== MUTATION: second hotline (src/components/Footer.tsx) -> src/__tests__/Footer.test.tsx
+<               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li>
+>               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li><li>Hotline 2: 0900 000 000</li>
+--- mutated:
+     × khuôn số điện thoại, giờ, địa chỉ: mỗi loại chỉ có đúng một giá trị đã duyệt 7ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 11 passed (12)
+--- reverted:
+      Tests  12 passed (12)
+
