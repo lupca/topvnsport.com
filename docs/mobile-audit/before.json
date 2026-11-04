@@ -1,0 +1,9600 @@
+[
+ {
+  "route": "home",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 79,
+   "hScrolled": 79,
+   "scrolledBy": 800,
+   "rowsScrolled": 2
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 30,
+   "total": 55,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-ALL]",
+     "w": 111,
+     "h": 40,
+     "t": "Tất cả(13)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001491]",
+     "w": 149,
+     "h": 40,
+     "t": "Vợt cầu lông(5)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001510]",
+     "w": 172,
+     "h": 40,
+     "t": "Bộ Đồ Thể Thao(4)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001427]",
+     "w": 162,
+     "h": 40,
+     "t": "Giày Cầu Lông(2)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001500]",
+     "w": 161,
+     "h": 40,
+     "t": "Lưới Cầu Lông(2)"
+    },
+    {
+     "sel": "a[data-testid=hero-banner-cta]",
+     "w": 150,
+     "h": 43,
+     "t": "Xem sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 71,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "p[data-testid=hub-eyebrow-mobile]",
+     "fs": 10,
+     "t": "SPECIALTY STORE"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Tất cả"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(13)"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(5)"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 1,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 47,
+     "height": 31,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "home",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 79,
+   "hScrolled": 79,
+   "scrolledBy": 800,
+   "rowsScrolled": 2
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 30,
+   "total": 55,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-ALL]",
+     "w": 111,
+     "h": 40,
+     "t": "Tất cả(13)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001491]",
+     "w": 149,
+     "h": 40,
+     "t": "Vợt cầu lông(5)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001510]",
+     "w": 172,
+     "h": 40,
+     "t": "Bộ Đồ Thể Thao(4)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001427]",
+     "w": 162,
+     "h": 40,
+     "t": "Giày Cầu Lông(2)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001500]",
+     "w": 161,
+     "h": 40,
+     "t": "Lưới Cầu Lông(2)"
+    },
+    {
+     "sel": "a[data-testid=hero-banner-cta]",
+     "w": 150,
+     "h": 43,
+     "t": "Xem sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 71,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "p[data-testid=hub-eyebrow-mobile]",
+     "fs": 10,
+     "t": "SPECIALTY STORE"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Tất cả"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(13)"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(5)"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 1,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 47,
+     "height": 31,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "home",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 79,
+   "hScrolled": 79,
+   "scrolledBy": 800,
+   "rowsScrolled": 2
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 30,
+   "total": 55,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-ALL]",
+     "w": 111,
+     "h": 40,
+     "t": "Tất cả(13)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001491]",
+     "w": 149,
+     "h": 40,
+     "t": "Vợt cầu lông(5)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001510]",
+     "w": 172,
+     "h": 40,
+     "t": "Bộ Đồ Thể Thao(4)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001427]",
+     "w": 162,
+     "h": 40,
+     "t": "Giày Cầu Lông(2)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001500]",
+     "w": 161,
+     "h": 40,
+     "t": "Lưới Cầu Lông(2)"
+    },
+    {
+     "sel": "a[data-testid=hero-banner-cta]",
+     "w": 150,
+     "h": 43,
+     "t": "Xem sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 71,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "p[data-testid=hub-eyebrow-mobile]",
+     "fs": 10,
+     "t": "SPECIALTY STORE"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Tất cả"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(13)"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(5)"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 1,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 47,
+     "height": 31,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "home",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 33,
+   "total": 69,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.hidden.md:block",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button[data-testid=slider-dot-0]",
+     "w": 28,
+     "h": 8,
+     "t": "Xem banner 1/4"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 87,
+   "at11": 37,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.hidden.md:block",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select[data-testid=sort-select]",
+     "fs": 13,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "footer",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 79,
+   "hScrolled": 79,
+   "scrolledBy": 800,
+   "rowsScrolled": 2
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 30,
+   "total": 55,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-ALL]",
+     "w": 111,
+     "h": 40,
+     "t": "Tất cả(13)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001491]",
+     "w": 149,
+     "h": 40,
+     "t": "Vợt cầu lông(5)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001510]",
+     "w": 172,
+     "h": 40,
+     "t": "Bộ Đồ Thể Thao(4)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001427]",
+     "w": 162,
+     "h": 40,
+     "t": "Giày Cầu Lông(2)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001500]",
+     "w": 161,
+     "h": 40,
+     "t": "Lưới Cầu Lông(2)"
+    },
+    {
+     "sel": "a[data-testid=hero-banner-cta]",
+     "w": 150,
+     "h": 43,
+     "t": "Xem sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 71,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "p[data-testid=hub-eyebrow-mobile]",
+     "fs": 10,
+     "t": "SPECIALTY STORE"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Tất cả"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(13)"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(5)"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 1,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 47,
+     "height": 31,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "footer",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 79,
+   "hScrolled": 79,
+   "scrolledBy": 800,
+   "rowsScrolled": 2
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 30,
+   "total": 55,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-ALL]",
+     "w": 111,
+     "h": 40,
+     "t": "Tất cả(13)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001491]",
+     "w": 149,
+     "h": 40,
+     "t": "Vợt cầu lông(5)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001510]",
+     "w": 172,
+     "h": 40,
+     "t": "Bộ Đồ Thể Thao(4)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001427]",
+     "w": 162,
+     "h": 40,
+     "t": "Giày Cầu Lông(2)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001500]",
+     "w": 161,
+     "h": 40,
+     "t": "Lưới Cầu Lông(2)"
+    },
+    {
+     "sel": "a[data-testid=hero-banner-cta]",
+     "w": 150,
+     "h": 43,
+     "t": "Xem sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 71,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "p[data-testid=hub-eyebrow-mobile]",
+     "fs": 10,
+     "t": "SPECIALTY STORE"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Tất cả"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(13)"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(5)"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 1,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 47,
+     "height": 31,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "footer",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 79,
+   "hScrolled": 79,
+   "scrolledBy": 800,
+   "rowsScrolled": 2
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 30,
+   "total": 55,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-ALL]",
+     "w": 111,
+     "h": 40,
+     "t": "Tất cả(13)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001491]",
+     "w": 149,
+     "h": 40,
+     "t": "Vợt cầu lông(5)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001510]",
+     "w": 172,
+     "h": 40,
+     "t": "Bộ Đồ Thể Thao(4)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001427]",
+     "w": 162,
+     "h": 40,
+     "t": "Giày Cầu Lông(2)"
+    },
+    {
+     "sel": "button[data-testid=cate-pill-VC001500]",
+     "w": 161,
+     "h": 40,
+     "t": "Lưới Cầu Lông(2)"
+    },
+    {
+     "sel": "a[data-testid=hero-banner-cta]",
+     "w": 150,
+     "h": 43,
+     "t": "Xem sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 71,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "p[data-testid=hub-eyebrow-mobile]",
+     "fs": 10,
+     "t": "SPECIALTY STORE"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Tất cả"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(13)"
+    },
+    {
+     "sel": "span",
+     "fs": 13,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "span.max-md:font-sans.md:font-mono",
+     "fs": 13,
+     "t": "(5)"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 1,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 47,
+     "height": 31,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "footer",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 33,
+   "total": 69,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.hidden.md:block",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button[data-testid=slider-dot-0]",
+     "w": 28,
+     "h": 8,
+     "t": "Xem banner 1/4"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 87,
+   "at11": 37,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.hidden.md:block",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select[data-testid=sort-select]",
+     "fs": 13,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "catalog",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 25,
+   "total": 61,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=o2o-stringing-button]",
+     "w": 142,
+     "h": 24,
+     "t": "Chọn cước & kgĐan cước O2OCh"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 74,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "catalog",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 26,
+   "total": 61,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 90,
+     "h": 32,
+     "t": "Bộ lọc"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=o2o-stringing-button]",
+     "w": 157,
+     "h": 24,
+     "t": "Chọn cước & kgĐan cước O2OCh"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 74,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "catalog",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 26,
+   "total": 61,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 90,
+     "h": 32,
+     "t": "Bộ lọc"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=o2o-stringing-button]",
+     "w": 177,
+     "h": 24,
+     "t": "Chọn cước & kgĐan cước O2OCh"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 74,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "catalog",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 27,
+   "total": 59,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 90,
+     "h": 32,
+     "t": "Bộ lọc"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 91,
+   "at11": 46,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "category",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 14,
+   "total": 28,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 40,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "category",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 14,
+   "total": 28,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 40,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "category",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 15,
+   "total": 28,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 113,
+     "h": 32,
+     "t": "Bộ lọc1"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 40,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "category",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 16,
+   "total": 26,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 113,
+     "h": 32,
+     "t": "Bộ lọc1"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 44,
+   "at11": 9,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "search",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 14,
+   "total": 24,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.p-1.text-brand-secondary",
+     "w": 26,
+     "h": 26,
+     "t": ""
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button.mt-4.bg-brand-primary",
+     "w": 169,
+     "h": 38,
+     "t": "Làm mới bộ lọc"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 36,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "search",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 15,
+   "total": 24,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.p-1.text-brand-secondary",
+     "w": 26,
+     "h": 26,
+     "t": ""
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 90,
+     "h": 32,
+     "t": "Bộ lọc"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 36,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "search",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 15,
+   "total": 24,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.p-1.text-brand-secondary",
+     "w": 26,
+     "h": 26,
+     "t": ""
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 90,
+     "h": 32,
+     "t": "Bộ lọc"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 36,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "search",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 720,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 16,
+   "total": 22,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.p-1.text-brand-secondary",
+     "w": 26,
+     "h": 26,
+     "t": ""
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 38,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stringing",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 17,
+   "total": 37,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=o2o-stringing-button]",
+     "w": 142,
+     "h": 24,
+     "t": "Chọn cước & kgĐan cước O2OCh"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 51,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stringing",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 17,
+   "total": 37,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=o2o-stringing-button]",
+     "w": 157,
+     "h": 24,
+     "t": "Chọn cước & kgĐan cước O2OCh"
+    },
+    {
+     "sel": "button[data-testid=mobile-add-to-cart]",
+     "w": 34,
+     "h": 34,
+     "t": "Thêm vào giỏ"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 51,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stringing",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 18,
+   "total": 37,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 113,
+     "h": 32,
+     "t": "Bộ lọc1"
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "w": 149,
+     "h": 32,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    },
+    {
+     "sel": "button[data-testid=o2o-stringing-button]",
+     "w": 177,
+     "h": 24,
+     "t": "Chọn cước & kgĐan cước O2OCh"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 51,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stringing",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 19,
+   "total": 35,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.lg:hidden.flex",
+     "w": 113,
+     "h": 32,
+     "t": "Bộ lọc1"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 60,
+   "at11": 22,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 2,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "select.text-xs.font-bold",
+     "fs": 12.75,
+     "t": "Còn hàng trướcGiá thấp → cao"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-racket",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 21,
+   "total": 28,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    },
+    {
+     "sel": "button.relative.text-xs",
+     "w": 56,
+     "h": 36,
+     "t": "Đen"
+    },
+    {
+     "sel": "button.relative.text-xs",
+     "w": 63,
+     "h": 36,
+     "t": "Xanh"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 51,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": [
+    "div.sticky.bottom-0"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-racket",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 21,
+   "total": 28,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    },
+    {
+     "sel": "button.relative.text-xs",
+     "w": 56,
+     "h": 36,
+     "t": "Đen"
+    },
+    {
+     "sel": "button.relative.text-xs",
+     "w": 63,
+     "h": 36,
+     "t": "Xanh"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 51,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": [
+    "div.sticky.bottom-0"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-racket",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 21,
+   "total": 28,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    },
+    {
+     "sel": "button.relative.text-xs",
+     "w": 56,
+     "h": 36,
+     "t": "Đen"
+    },
+    {
+     "sel": "button.relative.text-xs",
+     "w": 63,
+     "h": 36,
+     "t": "Xanh"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 51,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": [
+    "div.sticky.bottom-0"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-racket",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 21,
+   "total": 29,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 53,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-simple",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 15,
+   "total": 22,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    },
+    {
+     "sel": "button.pb-3.px-4",
+     "w": 236,
+     "h": 32,
+     "t": "Mô tả thực tế & Cảm nhận"
+    },
+    {
+     "sel": "button.pb-3.px-4",
+     "w": 181,
+     "h": 32,
+     "t": "Thông số kỹ thuật"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 37,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": [
+    "div.sticky.bottom-0"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-simple",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 15,
+   "total": 22,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    },
+    {
+     "sel": "button.pb-3.px-4",
+     "w": 236,
+     "h": 32,
+     "t": "Mô tả thực tế & Cảm nhận"
+    },
+    {
+     "sel": "button.pb-3.px-4",
+     "w": 181,
+     "h": 32,
+     "t": "Thông số kỹ thuật"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 37,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": [
+    "div.sticky.bottom-0"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-simple",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 15,
+   "total": 22,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    },
+    {
+     "sel": "button.pb-3.px-4",
+     "w": 236,
+     "h": 32,
+     "t": "Mô tả thực tế & Cảm nhận"
+    },
+    {
+     "sel": "button.pb-3.px-4",
+     "w": 181,
+     "h": 32,
+     "t": "Thông số kỹ thuật"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 37,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": [
+    "div.sticky.bottom-0"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "pdp-simple",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 15,
+   "total": 23,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 219,
+     "h": 21,
+     "t": "Quay lại danh mục sản phẩm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 39,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "cart",
+  "width": 360,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 5,
+   "total": 5,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Giảm số lượng"
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Tăng số lượng"
+    },
+    {
+     "sel": "button.p-1.5.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.text-xs",
+     "w": 326,
+     "h": 42,
+     "t": "Tiến hành thanh toán →"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 9,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "span.text-[10px].font-mono",
+     "fs": 10,
+     "t": "Yonex"
+    },
+    {
+     "sel": "h4.font-bold.text-xs",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "strong.min-w-4.text-center",
+     "fs": 12.75,
+     "t": "1"
+    },
+    {
+     "sel": "span",
+     "fs": 11,
+     "t": "Hóa đơn bán vợt kèm thẻ bảo "
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Tổng tiền hàng:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "150.000đ"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Phí vận chuyển:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Chọn địa chỉ để tính phí"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "cart",
+  "width": 390,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 5,
+   "total": 5,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Giảm số lượng"
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Tăng số lượng"
+    },
+    {
+     "sel": "button.p-1.5.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.text-xs",
+     "w": 356,
+     "h": 42,
+     "t": "Tiến hành thanh toán →"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 9,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "span.text-[10px].font-mono",
+     "fs": 10,
+     "t": "Yonex"
+    },
+    {
+     "sel": "h4.font-bold.text-xs",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "strong.min-w-4.text-center",
+     "fs": 12.75,
+     "t": "1"
+    },
+    {
+     "sel": "span",
+     "fs": 11,
+     "t": "Hóa đơn bán vợt kèm thẻ bảo "
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Tổng tiền hàng:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "150.000đ"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Phí vận chuyển:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Chọn địa chỉ để tính phí"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "cart",
+  "width": 430,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 5,
+   "total": 5,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Giảm số lượng"
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Tăng số lượng"
+    },
+    {
+     "sel": "button.p-1.5.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.text-xs",
+     "w": 396,
+     "h": 42,
+     "t": "Tiến hành thanh toán →"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 9,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "span.text-[10px].font-mono",
+     "fs": 10,
+     "t": "Yonex"
+    },
+    {
+     "sel": "h4.font-bold.text-xs",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "strong.min-w-4.text-center",
+     "fs": 12.75,
+     "t": "1"
+    },
+    {
+     "sel": "span",
+     "fs": 11,
+     "t": "Hóa đơn bán vợt kèm thẻ bảo "
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Tổng tiền hàng:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "150.000đ"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Phí vận chuyển:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Chọn địa chỉ để tính phí"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "cart",
+  "width": 768,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 5,
+   "total": 5,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Giảm số lượng"
+    },
+    {
+     "sel": "button.w-7.h-7",
+     "w": 30,
+     "h": 30,
+     "t": "Tăng số lượng"
+    },
+    {
+     "sel": "button.p-1.5.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.text-xs",
+     "w": 510,
+     "h": 42,
+     "t": "Tiến hành thanh toán →"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 9,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "span.text-[10px].font-mono",
+     "fs": 10,
+     "t": "Yonex"
+    },
+    {
+     "sel": "h4.font-bold.text-xs",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "strong.min-w-4.text-center",
+     "fs": 12.75,
+     "t": "1"
+    },
+    {
+     "sel": "span",
+     "fs": 11,
+     "t": "Hóa đơn bán vợt kèm thẻ bảo "
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Tổng tiền hàng:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "150.000đ"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Phí vận chuyển:"
+    },
+    {
+     "sel": "span",
+     "fs": 12.75,
+     "t": "Chọn địa chỉ để tính phí"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout",
+  "width": 360,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 6,
+   "total": 12,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 326,
+     "h": 36,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 326,
+     "h": 36,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 326,
+     "h": 36,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 326,
+     "h": 36,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 326,
+     "h": 36,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 26,
+   "at11": 4,
+   "sample": [
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Đơn hàng của bạn"
+    },
+    {
+     "sel": "p.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "p.text-[10px].text-gray-500",
+     "fs": 10,
+     "t": "SL: 1"
+    },
+    {
+     "sel": "strong.text-gray-800",
+     "fs": 10,
+     "t": "1"
+    },
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Thông tin nhận hàng"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Họ và tên người nhận *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Số điện thoại liên hệ *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Địa chỉ cụ thể (Số nhà, Ngõ/"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 5,
+   "sample": [
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout",
+  "width": 390,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 6,
+   "total": 12,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 356,
+     "h": 36,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 356,
+     "h": 36,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 356,
+     "h": 36,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 356,
+     "h": 36,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 356,
+     "h": 36,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 26,
+   "at11": 4,
+   "sample": [
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Đơn hàng của bạn"
+    },
+    {
+     "sel": "p.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "p.text-[10px].text-gray-500",
+     "fs": 10,
+     "t": "SL: 1"
+    },
+    {
+     "sel": "strong.text-gray-800",
+     "fs": 10,
+     "t": "1"
+    },
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Thông tin nhận hàng"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Họ và tên người nhận *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Số điện thoại liên hệ *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Địa chỉ cụ thể (Số nhà, Ngõ/"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 5,
+   "sample": [
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout",
+  "width": 430,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 6,
+   "total": 12,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 396,
+     "h": 36,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 396,
+     "h": 36,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 396,
+     "h": 36,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 396,
+     "h": 36,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 396,
+     "h": 36,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 26,
+   "at11": 4,
+   "sample": [
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Đơn hàng của bạn"
+    },
+    {
+     "sel": "p.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "p.text-[10px].text-gray-500",
+     "fs": 10,
+     "t": "SL: 1"
+    },
+    {
+     "sel": "strong.text-gray-800",
+     "fs": 10,
+     "t": "1"
+    },
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Thông tin nhận hàng"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Họ và tên người nhận *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Số điện thoại liên hệ *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Địa chỉ cụ thể (Số nhà, Ngõ/"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 5,
+   "sample": [
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout",
+  "width": 768,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 6,
+   "total": 12,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 510,
+     "h": 36,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 510,
+     "h": 36,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 510,
+     "h": 36,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 510,
+     "h": 36,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "w": 510,
+     "h": 36,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 26,
+   "at11": 4,
+   "sample": [
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Đơn hàng của bạn"
+    },
+    {
+     "sel": "p.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Tất thể thao Yonex (3 đôi)"
+    },
+    {
+     "sel": "p.text-[10px].text-gray-500",
+     "fs": 10,
+     "t": "SL: 1"
+    },
+    {
+     "sel": "strong.text-gray-800",
+     "fs": 10,
+     "t": "1"
+    },
+    {
+     "sel": "h3.font-bold.text-gray-900",
+     "fs": 12.75,
+     "t": "Thông tin nhận hàng"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Họ và tên người nhận *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Số điện thoại liên hệ *"
+    },
+    {
+     "sel": "label.text-[10px].font-bold",
+     "fs": 10,
+     "t": "Địa chỉ cụ thể (Số nhà, Ngõ/"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 5,
+   "sample": [
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Nguyễn Văn A"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: #"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Ví dụ: Số 12 Chùa Hà"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Tỉnh/Thành phố"
+    },
+    {
+     "sel": "input.w-full.bg-gray-50",
+     "fs": 12.75,
+     "t": "Phường/Xã"
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "order-success",
+  "width": 360,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 2,
+   "total": 2,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.bg-gray-900",
+     "w": 326,
+     "h": 42,
+     "t": "Hoàn thành mua sắm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 15,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "p.text-xs.text-gray-500",
+     "fs": 12.75,
+     "t": "Cảm ơn bạn đã tin tưởng TopV"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Mã đơn hàng: AUDIT-0001"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Mã đơn hàng:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Người nhận: Khách Kiểm Thử"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Người nhận:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Số điện thoại: #"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Số điện thoại:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Địa chỉ giao: Số 1 Đường K"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "order-success",
+  "width": 390,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 2,
+   "total": 2,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.bg-gray-900",
+     "w": 356,
+     "h": 42,
+     "t": "Hoàn thành mua sắm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 15,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "p.text-xs.text-gray-500",
+     "fs": 12.75,
+     "t": "Cảm ơn bạn đã tin tưởng TopV"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Mã đơn hàng: AUDIT-0001"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Mã đơn hàng:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Người nhận: Khách Kiểm Thử"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Người nhận:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Số điện thoại: #"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Số điện thoại:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Địa chỉ giao: Số 1 Đường K"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "order-success",
+  "width": 430,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 2,
+   "total": 2,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.bg-gray-900",
+     "w": 396,
+     "h": 42,
+     "t": "Hoàn thành mua sắm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 15,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "p.text-xs.text-gray-500",
+     "fs": 12.75,
+     "t": "Cảm ơn bạn đã tin tưởng TopV"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Mã đơn hàng: AUDIT-0001"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Mã đơn hàng:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Người nhận: Khách Kiểm Thử"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Người nhận:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Số điện thoại: #"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Số điện thoại:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Địa chỉ giao: Số 1 Đường K"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "order-success",
+  "width": 768,
+  "scope": "overlay",
+  "a_top_fixed": {
+   "h0": 0,
+   "hScrolled": 0,
+   "scrolledBy": 800,
+   "rowsScrolled": 0
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 0,
+  "d_small_targets": {
+   "count": 2,
+   "total": 2,
+   "sample": [
+    {
+     "sel": "button.p-1.text-gray-400",
+     "w": 30,
+     "h": 30,
+     "t": ""
+    },
+    {
+     "sel": "button.w-full.bg-gray-900",
+     "w": 510,
+     "h": 42,
+     "t": "Hoàn thành mua sắm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 15,
+   "at11": 1,
+   "sample": [
+    {
+     "sel": "p.text-xs.text-gray-500",
+     "fs": 12.75,
+     "t": "Cảm ơn bạn đã tin tưởng TopV"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Mã đơn hàng: AUDIT-0001"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Mã đơn hàng:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Người nhận: Khách Kiểm Thử"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Người nhận:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Số điện thoại: #"
+    },
+    {
+     "sel": "strong",
+     "fs": 12.75,
+     "t": "Số điện thoại:"
+    },
+    {
+     "sel": "p",
+     "fs": 12.75,
+     "t": "• Địa chỉ giao: Số 1 Đường K"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 0,
+   "sample": []
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 0,
+   "strips": []
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-success",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 239,
+     "h": 43,
+     "t": "Tiếp tục mua sắm"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-success",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 269,
+     "h": 43,
+     "t": "Tiếp tục mua sắm"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-success",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 309,
+     "h": 43,
+     "t": "Tiếp tục mua sắm"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-success",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 678,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 13,
+   "total": 19,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 406,
+     "h": 43,
+     "t": "Tiếp tục mua sắm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 35,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-error",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 239,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-error",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 269,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-error",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 309,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-error",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 678,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 13,
+   "total": 19,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 406,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 35,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-cancel",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 239,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-cancel",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 269,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-cancel",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 309,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "checkout-cancel",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 678,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 13,
+   "total": 19,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "button.w-full.btn-primary",
+     "w": 406,
+     "h": 43,
+     "t": "Quay lại cửa hàng"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 35,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stores",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 14,
+   "total": 24,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.border.border-white/40",
+     "w": 130,
+     "h": 36,
+     "t": "Chỉ đường"
+    },
+    {
+     "sel": "a.bg-brand-primary.hover:bg-brand-secondary",
+     "w": 217,
+     "h": 34,
+     "t": "Gọi điện: 097 #"
+    },
+    {
+     "sel": "a.inline-flex.bg-brand-primary",
+     "w": 165,
+     "h": 42,
+     "t": "097 #"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 39,
+   "at11": 6,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stores",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 14,
+   "total": 24,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.border.border-white/40",
+     "w": 130,
+     "h": 36,
+     "t": "Chỉ đường"
+    },
+    {
+     "sel": "a.bg-brand-primary.hover:bg-brand-secondary",
+     "w": 217,
+     "h": 34,
+     "t": "Gọi điện: 097 #"
+    },
+    {
+     "sel": "a.inline-flex.bg-brand-primary",
+     "w": 165,
+     "h": 42,
+     "t": "097 #"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 39,
+   "at11": 6,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stores",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 14,
+   "total": 24,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.border.border-white/40",
+     "w": 130,
+     "h": 36,
+     "t": "Chỉ đường"
+    },
+    {
+     "sel": "a.bg-brand-primary.hover:bg-brand-secondary",
+     "w": 217,
+     "h": 34,
+     "t": "Gọi điện: 097 #"
+    },
+    {
+     "sel": "a.inline-flex.bg-brand-primary",
+     "w": 165,
+     "h": 42,
+     "t": "097 #"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 39,
+   "at11": 6,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "stores",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 800,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 15,
+   "total": 22,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "a.border.border-white/40",
+     "w": 130,
+     "h": 36,
+     "t": "Chỉ đường"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 42,
+   "at11": 4,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "notfound",
+  "width": 360,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 360,
+   "clientWidth": 360,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 198,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.inline-block.text-sm",
+     "w": 108,
+     "h": 21,
+     "t": "Về trang chủ"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 29,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "notfound",
+  "width": 390,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 800,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 390,
+   "clientWidth": 390,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 79,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 228,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.inline-block.text-sm",
+     "w": 108,
+     "h": 21,
+     "t": "Về trang chủ"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 29,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "notfound",
+  "width": 430,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 420,
+   "hScrolled": 420,
+   "scrolledBy": 744,
+   "rowsScrolled": 9
+  },
+  "b_overflow_x": {
+   "scrollWidth": 430,
+   "clientWidth": 430,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 3,
+  "d_small_targets": {
+   "count": 12,
+   "total": 21,
+   "sample": [
+    {
+     "sel": "button.p-1.-ml-1",
+     "w": 34,
+     "h": 34,
+     "t": "Open mobile menu"
+    },
+    {
+     "sel": "button.border.border-ink-primary",
+     "w": 83,
+     "h": 27,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "w": 66,
+     "h": 30,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 268,
+     "h": 17,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 81,
+     "h": 30,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.inline-block.text-sm",
+     "w": 108,
+     "h": 21,
+     "t": "Về trang chủ"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 156,
+     "h": 16,
+     "t": "Gian hàng trên Shopee"
+    },
+    {
+     "sel": "a.text-[13.5px].leading-[1.8]",
+     "w": 147,
+     "h": 16,
+     "t": "Cửa hàng trải nghiệm"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 29,
+   "at11": 5,
+   "sample": [
+    {
+     "sel": "button.border.border-ink-primary",
+     "fs": 12.75,
+     "t": "Đan cước"
+    },
+    {
+     "sel": "button.bg-ink-primary.text-white",
+     "fs": 12.75,
+     "t": "Giỏ (0)"
+    },
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "fs": 11.5,
+     "t": "Đan vợt chuẩn quốc tế 30p"
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "fs": 12.75,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "BADMINTON (TRANG CHỦ)"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Vợt cầu lông"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Bộ Đồ Thể Thao"
+    },
+    {
+     "sel": "a.relative.inline-flex",
+     "fs": 13.5,
+     "t": "Giày Cầu Lông"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 12.75,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 69,
+   "padBottom": 68,
+   "overlapPx": 0,
+   "bars": [
+    "div.md:hidden.fixed"
+   ]
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=mobile-showroom-strip]",
+     "lines": 1,
+     "top": 51,
+     "height": 30,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 3,
+     "top": 342,
+     "height": 78,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ },
+ {
+  "route": "notfound",
+  "width": 768,
+  "scope": "document",
+  "a_top_fixed": {
+   "h0": 368,
+   "hScrolled": 368,
+   "scrolledBy": 276,
+   "rowsScrolled": 8
+  },
+  "b_overflow_x": {
+   "scrollWidth": 768,
+   "clientWidth": 768,
+   "offenderCount": 0,
+   "offenders": []
+  },
+  "c_nav_rows": 2,
+  "d_small_targets": {
+   "count": 13,
+   "total": 19,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 248,
+     "h": 25,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 140,
+     "h": 18,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 116,
+     "h": 18,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "w": 146,
+     "h": 18,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "input.w-full.min-w-0",
+     "w": 128,
+     "h": 19,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    },
+    {
+     "sel": "button.bg-ink-primary.hover:bg-brand-primary",
+     "w": 76,
+     "h": 26,
+     "t": "Tìm kiếm"
+    },
+    {
+     "sel": "button.inline-flex.items-center",
+     "w": 130,
+     "h": 38,
+     "t": "Giỏ hàng0"
+    },
+    {
+     "sel": "a.inline-block.text-sm",
+     "w": 108,
+     "h": 21,
+     "t": "Về trang chủ"
+    }
+   ]
+  },
+  "e_small_text": {
+   "count": 32,
+   "at11": 3,
+   "sample": [
+    {
+     "sel": "button.inline-flex.items-center",
+     "fs": 11.5,
+     "t": "Showroom Hà Nội · Đan vợt lấ"
+    },
+    {
+     "sel": "span",
+     "fs": 12,
+     "t": "Cam kết 100% Chính Hãng Yone"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Đặt lịch đan vợt O2O"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Tra cứu bảo hành"
+    },
+    {
+     "sel": "span.text-zinc-600",
+     "fs": 12,
+     "t": "|"
+    },
+    {
+     "sel": "a.text-white.hover:underline",
+     "fs": 12,
+     "t": "Hotline: 097 #"
+    },
+    {
+     "sel": "p[data-testid=brand-tagline]",
+     "fs": 10.5,
+     "t": "Badminton Specialty Store"
+    }
+   ]
+  },
+  "f_small_inputs": {
+   "count": 1,
+   "sample": [
+    {
+     "sel": "input.w-full.min-w-0",
+     "fs": 14,
+     "t": "Tìm vợt Yonex, Lining, cước "
+    }
+   ]
+  },
+  "g_bottom_overlap": {
+   "covers": false,
+   "barH": 0,
+   "padBottom": 0,
+   "overlapPx": 0,
+   "bars": []
+  },
+  "h_promo_lines": {
+   "lines": 3,
+   "strips": [
+    {
+     "sel": "div[data-testid=topbar]",
+     "lines": 3,
+     "top": 0,
+     "height": 107,
+     "firstScreen": true
+    },
+    {
+     "sel": "div[data-testid=stringing-strip]",
+     "lines": 2,
+     "top": 309,
+     "height": 58,
+     "firstScreen": true
+    }
+   ]
+  },
+  "pageErrors": []
+ }
+]
