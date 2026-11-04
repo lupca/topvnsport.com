@@ -1,5 +1,11 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { sportApi } from '../services/sport-api/index';
+// STOR-137: GET lỗi tạm được thử lại sau 1000/2000 ms; test này chỉ xét kết quả
+// sau lần thử cuối nên bỏ thời gian chờ (số lần thử: stor137_retry_transient).
+vi.mock('../services/sport-api/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../services/sport-api/constants')>()),
+  delay: () => Promise.resolve()
+}));
 
 const ok = (body: unknown) => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(body) });
 const item = (id: number) => ({ id, name: `P${id}`, variants: [] });

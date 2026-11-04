@@ -13,6 +13,13 @@ import { sportApi } from '../services/sportApi';
 import Header from '../components/Header';
 import App from '../App';
 
+// STOR-137: GET lỗi tạm được thử lại sau 1000/2000 ms; test UI này chỉ xét câu lỗi
+// sau lần thử cuối nên bỏ thời gian chờ (số lần thử: stor137_retry_transient).
+vi.mock('../services/sport-api/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../services/sport-api/constants')>()),
+  delay: () => Promise.resolve()
+}));
+
 const CATALOG_ERR = 'Chưa tải được danh mục sản phẩm.';
 
 const CATS = [
@@ -164,7 +171,7 @@ describe('STOR-057 Header menu danh mục: trạng thái lỗi tải (500 / netw
 
   it('bấm Thử lại trên desktop nav dispatch fetchAppData() và gọi sportApi.getProducts lần 2; khi có hàng thì hiện danh mục, ẩn lỗi', async () => {
     const getProductsSpy = vi.spyOn(sportApi, 'getProducts');
-    products = [{ status: 500 }, PRODUCTS_ITEMS];
+    products = [{ status: 500 }, { status: 500 }, { status: 500 }, PRODUCTS_ITEMS]; // STOR-137: lần tải đầu hết 3 lượt thử
     const { container } = renderApp('/catalog');
 
     const nav = await waitFor(() => getDesktopNav(container));
@@ -185,7 +192,7 @@ describe('STOR-057 Header menu danh mục: trạng thái lỗi tải (500 / netw
 
   it('bấm Thử lại trong mobile drawer dispatch fetchAppData() và gọi sportApi.getProducts lần 2', async () => {
     const getProductsSpy = vi.spyOn(sportApi, 'getProducts');
-    products = [{ status: 500 }, PRODUCTS_ITEMS];
+    products = [{ status: 500 }, { status: 500 }, { status: 500 }, PRODUCTS_ITEMS]; // STOR-137: lần tải đầu hết 3 lượt thử
     const { container } = renderApp('/catalog');
 
     await waitFor(() => getDesktopNav(container));

@@ -16,6 +16,8 @@ export interface AppDataState {
   stringOptionsError: boolean;
   // Lỗi tải tồn WMS: tồn không biết (stock undefined), không phải hết hàng.
   stockError: boolean;
+  // STOR-137: single-flight; không dùng isLoading (khởi tạo true sẽ chặn lần tải đầu).
+  loadInFlight: boolean;
 }
 
 const initialState: AppDataState = {
@@ -27,7 +29,8 @@ const initialState: AppDataState = {
   categoriesError: false,
   productsError: false,
   stringOptionsError: false,
-  stockError: false
+  stockError: false,
+  loadInFlight: false
 };
 
 export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () => {
@@ -56,6 +59,8 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
     stringOptionsError: stringOptions.status === 'rejected',
     stockError: stock.status === 'rejected'
   };
+}, {
+  condition: (_, { getState }) => !(getState() as { appData: AppDataState }).appData.loadInFlight
 });
 
 const appDataSlice = createSlice({
@@ -66,6 +71,7 @@ const appDataSlice = createSlice({
     builder
       .addCase(fetchAppData.pending, state => {
         state.isLoading = true;
+        state.loadInFlight = true;
       })
       .addCase(fetchAppData.fulfilled, (state, action) => {
         state.products = action.payload.products;
@@ -77,11 +83,13 @@ const appDataSlice = createSlice({
         state.stringOptionsError = action.payload.stringOptionsError;
         state.stockError = action.payload.stockError;
         state.isLoading = false;
+        state.loadInFlight = false;
       })
       .addCase(fetchAppData.rejected, state => {
         // Thunk ném = không biết danh sách sản phẩm; không để [] đọc thành "shop trống".
         state.productsError = true;
         state.isLoading = false;
+        state.loadInFlight = false;
       });
   }
 });

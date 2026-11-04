@@ -13,6 +13,13 @@ import catalogReducer from '../features/catalog/catalogSlice';
 import { sportApi } from '../services/sportApi';
 import App from '../App';
 
+// STOR-137: GET lỗi tạm được thử lại sau 1000/2000 ms; test UI này chỉ xét câu lỗi
+// sau lần thử cuối nên bỏ thời gian chờ (số lần thử: stor137_retry_transient).
+vi.mock('../services/sport-api/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../services/sport-api/constants')>()),
+  delay: () => Promise.resolve()
+}));
+
 const ERR = 'Cửa hàng chưa tải được sản phẩm lúc này. Vui lòng thử lại sau.';
 const EMPTY = 'Cửa hàng chưa có sản phẩm nào đang bán.';
 const BANNER_PROD = 'Không tải được danh sách sản phẩm. Vui lòng tải lại trang.';
@@ -108,7 +115,7 @@ describe('STOR-053 trang chủ: lỗi tải sản phẩm', () => {
 
   it('Thử lại gọi lại sportApi.getProducts; lần 2 có hàng -> hiện sản phẩm, hết câu lỗi', async () => {
     const getProducts = vi.spyOn(sportApi, 'getProducts');
-    products = [{ status: 500 }, PRODUCTS_ITEMS];
+    products = [{ status: 500 }, { status: 500 }, { status: 500 }, PRODUCTS_ITEMS]; // STOR-137: lần tải đầu hết 3 lượt thử
     renderApp('/');
     const alert = (await screen.findByText(ERR)).closest('[role="alert"]') as HTMLElement;
     expect(getProducts).toHaveBeenCalledTimes(1);

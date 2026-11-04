@@ -16,6 +16,13 @@ import { store as appStore } from '../app/store';
 import App from '../App';
 import { Product } from '../types';
 
+// STOR-137: GET lỗi tạm được thử lại sau 1000/2000 ms; test UI này chỉ xét câu lỗi
+// sau lần thử cuối nên bỏ thời gian chờ (số lần thử: stor137_retry_transient).
+vi.mock('../services/sport-api/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../services/sport-api/constants')>()),
+  delay: () => Promise.resolve()
+}));
+
 // STOR-015: lỗi tải tồn kho WMS -> tồn không rõ (undefined), báo rõ, chặn mua.
 const PIM_PRODUCT = {
   id: 1,
@@ -100,10 +107,10 @@ describe('STOR-015 tải tồn kho (service + appData)', () => {
     expect((await runAppData()).products[0].stock).toBeUndefined();
   });
 
-  it('WMS 500: gọi /public/stock đúng 1 lần', async () => {
+  it('WMS 500: gọi /public/stock đúng 3 lần (STOR-137: 2 lần thử lại rồi báo lỗi)', async () => {
     stubFetch('fail');
     await runAppData();
-    expect(urls.filter((u) => u.includes('/public/stock'))).toHaveLength(1);
+    expect(urls.filter((u) => u.includes('/public/stock'))).toHaveLength(3);
   });
 
   it('WMS 200: SKU vắng nhận 0, SKU có nhận đúng số tồn, stockError false', async () => {
