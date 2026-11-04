@@ -257,6 +257,14 @@ export function zaloAuthDone(): void {
   safeFbq('trackCustom', 'zalo_auth_done');
 }
 
+export function contactZaloClick(): void {
+  safeGtag('event', 'contact_zalo_click', { location: 'floating_button' });
+}
+
+export function contactCallClick(): void {
+  safeGtag('event', 'contact_call_click', { location: 'floating_button' });
+}
+
 export function purchase(order: TrackingOrder): void {
   if (!order || !order.order_number) return;
   const orderNumber = String(order.order_number);

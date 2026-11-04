@@ -51,3 +51,11 @@ export function getVisibleMainNav(categories: { code: string }[]): VisibleMainNa
 
 // Gốc canonical duy nhất cho sitemap, robots, api/product và đồng bộ head phía SPA.
 export const SITE_ORIGIN = 'https://www.topvnsport.com';
+
+// Liên hệ nhanh (nút nổi Zalo + hotline). Trường nào để trống thì nút tương ứng
+// không hiện -- không có giá trị thay thế.
+export const CONTACT: { zaloUrl?: string; hotlineDisplay?: string; hotlineTel?: string } = {
+  zaloUrl: 'https://zalo.me/955065648695191027',
+  hotlineDisplay: '097 6007006',
+  hotlineTel: '0976007006'
+};
