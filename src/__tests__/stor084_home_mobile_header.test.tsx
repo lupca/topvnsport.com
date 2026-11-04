@@ -118,7 +118,8 @@ describe('STOR-084 Home page 390px header block, bottom nav, and hero size', () 
       expect(cls(strip)).toContain('md:block');
     });
 
-    it.each(['/catalog', '/stores'])('ở "%s" nav Điều hướng chính và [data-testid=stringing-strip] không có hidden', (route) => {
+    // STOR-133: stringing-strip ẩn dưới md trên mọi trang; nav vẫn hiện ngoài trang chủ.
+    it.each(['/catalog', '/stores'])('ở "%s" nav Điều hướng chính không có hidden, [data-testid=stringing-strip] có hidden md:block', (route) => {
       render(
         <MemoryRouter initialEntries={[route]}>
           <MainNav items={ITEMS} />
@@ -128,8 +129,8 @@ describe('STOR-084 Home page 390px header block, bottom nav, and hero size', () 
       const strip = screen.getByTestId('stringing-strip');
       expect(cls(nav)).not.toContain('hidden');
       expect(cls(nav)).not.toContain('md:block');
-      expect(cls(strip)).not.toContain('hidden');
-      expect(cls(strip)).not.toContain('md:block');
+      expect(cls(strip)).toContain('hidden');
+      expect(cls(strip)).toContain('md:block');
     });
   });
 

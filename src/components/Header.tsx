@@ -167,7 +167,42 @@ export default function Header({ cartCount, openCart, products, categories, cate
   const navItems = getInStockCategories(categories, products).map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
 
   return (
-    <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs" id="topvnsport-header">
+    <>
+    {/* Mobile Top Row: dưới md chỉ hàng này dính đầu trang (STOR-133, MOB-A); dải đen, ô tìm kiếm, thanh danh mục cuộn theo trang. */}
+    <div data-testid="mobile-sticky-bar" className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-100 shadow-xs flex items-center justify-between gap-2 px-4 py-2 max-[399px]:gap-1 max-[399px]:px-3">
+      <button
+        type="button"
+        onClick={() => setIsMobileMenuOpen(true)}
+        className={`${currentView === 'home' ? 'hidden ' : ''}p-1 -ml-1 text-gray-700 hover:text-brand-primary rounded-lg transition shrink-0`}
+        aria-label="Open mobile menu"
+      >
+        <Menu className="w-6 h-6" />
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate('/stores')}
+        className="min-h-[44px] border border-ink-primary text-ink-primary text-xs font-bold px-2.5 max-[399px]:px-2 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
+      >
+        Đan cước
+      </button>
+      <div 
+        onClick={() => navigate('/')} 
+        className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none min-w-0 truncate"
+      >
+        <img src={LOGO_SRC} alt="TopVNSport Logo" className="inline-block w-6 h-6 rounded-md object-cover align-middle mr-1.5" />
+        TOPVN<span className="text-brand-primary">SPORT</span>
+      </div>
+      <button 
+        type="button"
+        onClick={openCart}
+        aria-label="Giỏ hàng"
+        className="bg-ink-primary text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-brand-primary transition shrink-0 tabular-nums"
+      >
+        Giỏ ({cartCount})
+      </button>
+    </div>
+
+    <header className="w-full bg-white border-b border-gray-100 md:sticky md:top-0 md:z-50 shadow-xs" id="topvnsport-header">
       {/* Top Bar */}
       <div data-testid="topbar" className="hidden md:flex bg-ink-primary text-white text-[12px] font-semibold leading-[1.5] py-[8px] px-[24px]">
         <div data-testid="topbar-inner" className="max-w-[1280px] mx-auto w-full flex items-center justify-between gap-4 flex-wrap">
@@ -196,40 +231,6 @@ export default function Header({ cartCount, openCart, products, categories, cate
             </a>
           </div>
         </div>
-      </div>
-
-      {/* Mobile Top Row */}
-      <div className="md:hidden flex items-center justify-between gap-2 px-4 py-2 max-[399px]:gap-1 max-[399px]:px-3">
-        <button
-          type="button"
-          onClick={() => setIsMobileMenuOpen(true)}
-          className={`${currentView === 'home' ? 'hidden ' : ''}p-1 -ml-1 text-gray-700 hover:text-brand-primary rounded-lg transition shrink-0`}
-          aria-label="Open mobile menu"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate('/stores')}
-          className="border border-ink-primary text-ink-primary text-xs font-bold px-2.5 max-[399px]:px-2 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
-        >
-          Đan cước
-        </button>
-        <div 
-          onClick={() => navigate('/')} 
-          className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none min-w-0 truncate"
-        >
-          <img src={LOGO_SRC} alt="TopVNSport Logo" className="inline-block w-6 h-6 rounded-md object-cover align-middle mr-1.5" />
-          TOPVN<span className="text-brand-primary">SPORT</span>
-        </div>
-        <button 
-          type="button"
-          onClick={openCart}
-          aria-label="Giỏ hàng"
-          className="bg-ink-primary text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-brand-primary transition shrink-0 tabular-nums"
-        >
-          Giỏ ({cartCount})
-        </button>
       </div>
 
       {/* Mobile Black Strip */}
@@ -483,5 +484,6 @@ export default function Header({ cartCount, openCart, products, categories, cate
         )}
       </MainNav>
     </header>
+    </>
   );
 }

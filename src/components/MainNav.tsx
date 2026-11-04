@@ -27,8 +27,8 @@ export default function MainNav({ items, children }: MainNavProps) {
   return (
     <>
       <nav aria-label="Điều hướng chính" className={`${homeActive ? 'hidden md:block ' : ''}bg-white border-t border-zinc-200`}>
-        <ul className="max-w-[1280px] mx-auto px-[24px] flex flex-wrap items-center justify-center gap-[32px]">
-          <li>
+        <ul className="max-w-[1280px] mx-auto px-[24px] flex flex-wrap items-center justify-center gap-[32px] max-md:flex-nowrap max-md:justify-start max-md:overflow-x-auto max-md:gap-6 max-md:px-4">
+          <li className="max-md:shrink-0 max-md:whitespace-nowrap">
             <Link to="/" aria-current={homeActive ? 'page' : undefined} className={linkClass(homeActive)}>
               BADMINTON (TRANG CHỦ)
             </Link>
@@ -36,7 +36,7 @@ export default function MainNav({ items, children }: MainNavProps) {
           {items.map(item => {
             const active = activeCategory === item.code;
             return (
-              <li key={item.code}>
+              <li key={item.code} className="max-md:shrink-0 max-md:whitespace-nowrap">
                 <Link
                   to={`/catalog?category=${encodeURIComponent(item.code)}`}
                   aria-current={active ? 'page' : undefined}
@@ -51,7 +51,8 @@ export default function MainNav({ items, children }: MainNavProps) {
         {children}
       </nav>
 
-      <div data-testid="stringing-strip" className={`${homeActive ? 'hidden md:block ' : ''}bg-zinc-100 border-b border-zinc-200 text-center px-[16px] py-[9px] text-[13px] leading-[1.5] font-bold text-ink-primary`}>
+      {/* Dưới md ẩn trên mọi trang để ảnh sản phẩm lên màn đầu (STOR-133, MOB-C); desktop giữ nguyên. */}
+      <div data-testid="stringing-strip" className="hidden md:block bg-zinc-100 border-b border-zinc-200 text-center px-[16px] py-[9px] text-[13px] leading-[1.5] font-bold text-ink-primary">
         Dịch vụ Đan Vợt Điện Tử Chuẩn Quốc Tế: Tùy chọn cước &amp; mức căng 9.0kg–13.0kg ngay khi đặt vợt.
         <Link to={STRINGING_CTA_PATH} className="ml-[6px] text-brand-primary underline">Trải nghiệm chọn cước →</Link>
       </div>
