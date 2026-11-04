@@ -2,7 +2,7 @@
 // STOR-025: trang chủ mobile — chip/mũi tên danh mục đọc được, lưới gọn, kệ sản phẩm thật còn hàng.
 import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
-import { render, screen, cleanup, within } from '@testing-library/react';
+import { render, screen, cleanup, within, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
@@ -81,9 +81,16 @@ describe('STOR-025 kệ sản phẩm còn hàng', () => {
     renderHome([prod('1')]);
     expect(within(screen.getByTestId('instock-shelf')).queryByRole('button', { name: /Xem tất cả/ })).toBeNull();
   });
-  it('không còn hàng thì không kệ', () => {
+  // STOR-132 sửa lại: không còn hàng vẫn có kệ (chip ngành luôn hiện); "Tất cả" báo trống, bấm chip ngành không ném lỗi.
+  it('không còn hàng: kệ vẫn có, "Tất cả" báo trống; bấm chip ngành không ném lỗi và liệt kê SP hết hàng', () => {
     renderHome([prod('1', { stock: 0 }), prod('2', { stock: undefined })]);
-    expect(screen.queryByTestId('instock-shelf')).toBeNull();
+    const shelf = screen.getByTestId('instock-shelf');
+    expect(within(shelf).getByRole('status').textContent).toBe('Không có sản phẩm còn hàng phù hợp bộ lọc.');
+    expect(within(shelf).queryByText(/^SP \d+$/)).toBeNull();
+    expect(() => fireEvent.click(screen.getByTestId('cate-pill-c1'))).not.toThrow();
+    // sortProducts in-stock-first: chưa rõ tồn kho (SP 2) đứng trước hết hàng (SP 1); chỉ SP 1 mang nhãn Hết hàng.
+    expect(names()).toEqual(['SP 2', 'SP 1']);
+    expect(within(shelf).getByText('Hết hàng')).toBeTruthy();
   });
   // STOR-056 thay 9841359a: tiêu đề theo thiết kế chủ shop đã duyệt.
   it('tiêu đề kệ SẢN PHẨM NỔI BẬT', () => {

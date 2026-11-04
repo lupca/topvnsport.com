@@ -84,16 +84,29 @@ describe('STOR-099 ô danh mục: ảnh + phụ đề từ VOMA', () => {
     expect(within(tile('vot')).getByRole('img')).toBeTruthy();
   });
 
-  it('ô không có ảnh: không <img>, không khung ảnh; ảnh SP hết hàng không được dùng', () => {
-    renderHome([pmi(0, { cat: 1, brand: 'Yonex' }), pmi(1, { cat: 1, brand: 'Yonex', image: '/img/het.jpg', stock: 0 })]);
+  it('ô không có ảnh: không <img>, không khung ảnh (kể cả khi SP hết hàng cũng không có ảnh)', () => {
+    renderHome([pmi(0, { cat: 1, brand: 'Yonex' }), pmi(1, { cat: 1, brand: 'Yonex', stock: 0 })]);
     expect(within(tile('vot')).queryByRole('img')).toBeNull();
     expect(box('vot')).toBeNull();
     expect(sub('vot')!.textContent).toBe('Yonex');
   });
 
-  it('thương hiệu của SP hết hàng không vào phụ đề', () => {
-    renderHome([pmi(0, { cat: 1, brand: 'Yonex', image: '/img/a.jpg' }), pmi(1, { cat: 1, brand: 'HetHang', image: '/img/b.jpg', stock: 0 })]);
-    expect(sub('vot')!.textContent).toBe('Yonex');
+  // STOR-132: Published = hiển thị; ảnh/thương hiệu lấy từ SP thật của ngành, SP còn hàng đứng trước.
+  it('ảnh: SP còn hàng được ưu tiên; ngành chỉ có ảnh ở SP hết hàng thì dùng ảnh đó', () => {
+    renderHome([pmi(0, { cat: 1, image: '/img/het.jpg', stock: 0 }), pmi(1, { cat: 1, image: '/img/con.jpg' }), pmi(2, { cat: 2 }), pmi(3, { cat: 2, image: '/img/g-het.jpg', stock: 0 })]);
+    expect(within(tile('vot')).getByRole('img').getAttribute('src')).toBe('/img/con.jpg');
+    expect(within(tile('giay')).getByRole('img').getAttribute('src')).toBe('/img/g-het.jpg');
+  });
+
+  it('thương hiệu của SP hết hàng vào phụ đề, sau thương hiệu SP còn hàng', () => {
+    renderHome([pmi(0, { cat: 1, brand: 'HetHang', image: '/img/b.jpg', stock: 0 }), pmi(1, { cat: 1, brand: 'Yonex', image: '/img/a.jpg' })]);
+    expect(sub('vot')!.textContent).toBe('Yonex · HetHang');
+  });
+
+  it('ngành chỉ có SP hết hàng: ô hiện với ảnh và thương hiệu thật của ngành đó', () => {
+    renderHome([pmi(0, { cat: 1, brand: 'Yonex', image: '/img/a.jpg' }), pmi(1, { cat: 3, brand: 'Victor', image: '/img/ao-het.jpg', stock: 0 })]);
+    expect(within(tile('ao')).getByRole('img').getAttribute('src')).toBe('/img/ao-het.jpg');
+    expect(sub('ao')!.textContent).toBe('Victor');
   });
 
   it('mọi ảnh lỗi tải -> ô bỏ khung ảnh', () => {
@@ -103,7 +116,7 @@ describe('STOR-099 ô danh mục: ảnh + phụ đề từ VOMA', () => {
     expect(box('vot')).toBeNull();
   });
 
-  it('ô có ảnh đứng trước ô không ảnh; mỗi nhóm giữ thứ tự getInStockCategories (đếm giảm dần)', () => {
+  it('ô có ảnh đứng trước ô không ảnh; mỗi nhóm giữ thứ tự getCategoriesSortedByCount (đếm giảm dần)', () => {
     // vot 3 SP (không ảnh), giay 2 SP (ảnh), ao 1 SP (ảnh) -> thứ tự gốc vot, giay, ao
     renderHome([
       pmi(0, { cat: 1 }), pmi(1, { cat: 1 }), pmi(2, { cat: 1 }),

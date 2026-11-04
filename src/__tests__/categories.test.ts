@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import * as categoriesModule from '../utils/categories';
 import {
   getCategoriesSortedByCount,
   getCategoryLabel,
@@ -17,7 +18,7 @@ function makeProduct(overrides: Partial<Product>): Product {
     price: 100000,
     specs: {},
     description: '',
-    stock: 1
+    stock: overrides.stock ?? 1
   };
 }
 
@@ -76,6 +77,21 @@ describe('utils/categories', () => {
 
       expect(sorted.map(c => c.code)).toEqual(['VC001491']);
       expect(sorted.some(c => c.code === 'VC000099')).toBe(false);
+    });
+
+    // STOR-132: Published = hiển thị; ngành chỉ có SP hết hàng vẫn được giữ, đếm cả SP hết hàng.
+    it('giữ ngành chỉ có SP hết hàng và đếm cả SP hết hàng', () => {
+      const products = [
+        makeProduct({ id: 'a', categoryCode: 'VC001491' }),
+        makeProduct({ id: 'b', categoryCode: 'VC001488', stock: 0 }),
+        makeProduct({ id: 'c', categoryCode: 'VC001488', stock: 0 })
+      ];
+      expect(getProductCategoryCounts(products)['VC001488']).toBe(2);
+      expect(getCategoriesSortedByCount([racket, otherUnderBadminton], products).map(c => c.code)).toEqual(['VC001488', 'VC001491']);
+    });
+
+    it('không còn hàm getInStockCategories (đã bỏ lọc ngành theo còn hàng)', () => {
+      expect('getInStockCategories' in categoriesModule).toBe(false);
     });
   });
 

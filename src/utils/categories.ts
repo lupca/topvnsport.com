@@ -21,13 +21,6 @@ export function getCategoriesSortedByCount(categories: Category[], products: Pro
     .sort((a, b) => (counts[b.code] || 0) - (counts[a.code] || 0));
 }
 
-// Ngành có sản phẩm CÒN HÀNG, cùng thứ tự với getCategoriesSortedByCount -- nguồn
-// chung cho chip trang chủ và menu chính, để hai nơi luôn khớp nhau.
-export function getInStockCategories(categories: Category[], products: Product[]): Category[] {
-  const inStockCounts = getProductCategoryCounts(products.filter(product => (product.stock ?? 0) > 0));
-  return getCategoriesSortedByCount(categories, products).filter(category => (inStockCounts[category.code] || 0) > 0);
-}
-
 function splitDisplayPath(displayName: string): string[] {
   return displayName.split('>').map(segment => segment.trim()).filter(Boolean);
 }

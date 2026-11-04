@@ -72,11 +72,26 @@ describe('STOR-056 chip danh mục', () => {
     expect(counter()).toBe('Hiển thị 3 / 3 sản phẩm');
   });
 
-  it('chip ngành đếm SP còn hàng; ngành 0 còn hàng bị ẩn', () => {
+  it('STOR-132: chip ngành đếm mọi SP của ngành; ngành chỉ có SP hết hàng vẫn có chip; "Tất cả" vẫn đếm còn hàng', () => {
     renderHome(ps);
     expect(screen.getByTestId('cate-pill-c1').textContent).toBe('Vợt(1)');
-    expect(screen.getByTestId('cate-pill-c2').textContent).toBe('Giày(1)');
-    expect(screen.queryByTestId('cate-pill-c3')).toBeNull();
+    expect(screen.getByTestId('cate-pill-c2').textContent).toBe('Giày(2)');
+    expect(screen.getByTestId('cate-pill-c3').textContent).toBe('Cước(1)');
+    expect(screen.getByTestId('cate-pill-ALL').textContent).toBe('Tất cả(3)');
+  });
+
+  it('STOR-132: kệ ngành xếp SP còn hàng trước SP hết hàng (bất kể thứ tự dữ liệu)', () => {
+    renderHome([prod('a', { categoryCode: 'c2', stock: 0 }), prod('b', { categoryCode: 'c2' }), prod('c', { categoryCode: 'c2', stock: 0 }), prod('d', { categoryCode: 'c2' })]);
+    fireEvent.click(screen.getByTestId('cate-pill-c2'));
+    expect(names()).toEqual(['SP b', 'SP d', 'SP a', 'SP c']);
+  });
+
+  it('STOR-132: bấm chip ngành chỉ có SP hết hàng -> kệ hiện SP đó với nhãn "Hết hàng"', () => {
+    renderHome(ps);
+    fireEvent.click(screen.getByTestId('cate-pill-c3'));
+    expect(names()).toEqual(['SP 5']);
+    expect(within(screen.getByTestId('featured-grid')).getByText('Hết hàng')).toBeTruthy();
+    expect(counter()).toBe('Hiển thị 1 / 1 sản phẩm');
   });
 
   it('"Tất cả" đang chọn lúc đầu, kiểu đen active; chip khác không', () => {
@@ -90,7 +105,9 @@ describe('STOR-056 chip danh mục', () => {
   it('bấm chip ngành: chỉ SP ngành đó, chip đó thành active, URL vẫn /', () => {
     renderHome(ps);
     fireEvent.click(screen.getByTestId('cate-pill-c2'));
-    expect(names()).toEqual(['SP 2']);
+    // STOR-132: kệ ngành có cả SP hết hàng, còn hàng đứng trước; kệ "Tất cả" vẫn chỉ còn hàng.
+    expect(names()).toEqual(['SP 2', 'SP 3']);
+    expect(within(screen.getByTestId('featured-grid')).getAllByText('Hết hàng')).toHaveLength(1);
     expect(screen.getByTestId('cate-pill-c2').className.split(/\s+/)).toContain('bg-ink-primary');
     expect(screen.getByTestId('cate-pill-ALL').getAttribute('aria-selected')).toBe('false');
     expect(screen.getByTestId('here').textContent).toBe('/');
@@ -198,8 +215,13 @@ describe('STOR-056 ô danh mục', () => {
     expect(within(tile).queryByTestId('cat-tile-placeholder')).toBeNull();
   });
 
+  it('STOR-132: ngành chỉ còn ảnh của SP hết hàng -> dùng ảnh thật đó', () => {
+    renderHome([prod('1', { image: NO_IMAGE_URL }), prod('2', { image: '/img/x.jpg', stock: 0 })]);
+    expect(within(screen.getByTestId('cat-tile-c1')).getByRole('img').getAttribute('src')).toBe('/img/x.jpg');
+  });
+
   it('không có ảnh dùng được -> không <img>, không khung ảnh', () => {
-    renderHome([prod('1', { image: NO_IMAGE_URL }), prod('2', { image: '/img/x.jpg', stock: 0 }), prod('3', { categoryCode: 'c2', image: '' })]);
+    renderHome([prod('1', { image: NO_IMAGE_URL }), prod('2', { image: '', stock: 0 }), prod('3', { categoryCode: 'c2', image: '' })]);
     for (const code of ['c1', 'c2']) {
       const tile = screen.getByTestId(`cat-tile-${code}`);
       expect(within(tile).queryByRole('img')).toBeNull();

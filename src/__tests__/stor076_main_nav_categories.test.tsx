@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
-// STOR-076: menu chính dựng từ ngành VOMA thật (còn hàng, cùng thứ tự và nhãn với chip trang chủ).
+// STOR-076: menu chính dựng từ ngành VOMA thật (mọi ngành có SP, kể cả chỉ SP hết hàng -- STOR-132;
+// cùng thứ tự và nhãn với chip trang chủ).
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -107,10 +108,10 @@ describe('STOR-076 menu chính lấy từ ngành VOMA thật', () => {
     expect(links.slice(1).map(a => a.textContent)).toEqual(pills.map(p => p.label));
   });
 
-  it('thứ tự cố định theo số SP còn hàng giảm dần (đổi chiều sắp xếp -> đỏ)', async () => {
+  it('thứ tự cố định theo số SP giảm dần, gồm cả ngành chỉ có SP hết hàng (đổi chiều sắp xếp -> đỏ)', async () => {
     renderApp('/');
     const links = await loadedNavLinks();
-    expect(links.map(a => a.textContent)).toEqual(['BADMINTON (TRANG CHỦ)', 'Vợt Cầu Lông', 'Giày Cầu Lông', 'Khác']);
+    expect(links.map(a => a.textContent)).toEqual(['BADMINTON (TRANG CHỦ)', 'Vợt Cầu Lông', 'Giày Cầu Lông', 'Băng Quấn', 'Khác']);
   });
 
   it('mỗi link ngành trỏ /catalog?category=<mã VOMA>', async () => {
@@ -129,14 +130,14 @@ describe('STOR-076 menu chính lấy từ ngành VOMA thật', () => {
     expect(khac?.textContent).toBe('Khác');
   });
 
-  it('ngành không có SP (Tất) và ngành chỉ có SP hết hàng (Băng Quấn) không có link', async () => {
+  it('STOR-132: ngành chỉ có SP hết hàng (Băng Quấn) vẫn có link; ngành không có SP (Tất) thì không', async () => {
     renderApp('/');
     const links = await loadedNavLinks();
     const labels = links.map(a => a.textContent);
     expect(labels).not.toContain('Tất');
-    expect(labels).not.toContain('Băng Quấn');
+    expect(labels).toContain('Băng Quấn');
     expect(links.some(a => a.getAttribute('href') === '/catalog?category=VC000004')).toBe(false);
-    expect(links.some(a => a.getAttribute('href') === '/catalog?category=VC000005')).toBe(false);
+    expect(links.find(a => a.textContent === 'Băng Quấn')?.getAttribute('href')).toBe('/catalog?category=VC000005');
   });
 
   it('không có chữ "lối đánh" trong menu chính', async () => {

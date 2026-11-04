@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
 import { NO_IMAGE_URL } from '../../services/sport-api/constants';
 import { hasO2OStringing } from '../../utils/badmintonReadiness';
-import { getCategoryLabel, getInStockCategories, getProductCategoryCounts } from '../../utils/categories';
+import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
 import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
@@ -25,17 +25,19 @@ export default function HomePage() {
   const categories = useAppSelector(state => state.appData.categories ?? []);
   const productsError = useAppSelector(state => state.appData.productsError);
 
-  const allInStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0);
-  // Chip ngành đếm hàng còn hàng để khớp kệ và bộ đếm; ngành 0 còn hàng thì ẩn.
-  const categoryCounts = getProductCategoryCounts(allInStock);
-  const sortedCategories = getInStockCategories(categories, products);
+  const inStockFirst = sortProducts(products, 'in-stock-first');
+  const allInStock = inStockFirst.filter(p => (p.stock ?? 0) > 0);
+  // Published = hiển thị: chip/ô ngành gồm mọi ngành có SP (kể cả chỉ có SP hết hàng) và đếm mọi SP của ngành;
+  // riêng chip "Tất cả" đếm hàng còn hàng để khớp kệ "Tất cả".
+  const categoryCounts = getProductCategoryCounts(products);
+  const sortedCategories = getCategoriesSortedByCount(categories, products);
   // Thương hiệu gộp không phân biệt hoa thường; nhãn là chuỗi gốc gặp đầu tiên.
   const brands = new Map<string, string>();
   for (const p of allInStock) {
     const raw = p.brand?.trim();
     if (raw && !brands.has(raw.toLowerCase())) brands.set(raw.toLowerCase(), raw);
   }
-  // Ảnh lỗi tải theo URL: ô ngành thử ảnh của SP còn hàng kế tiếp trong ngành.
+  // Ảnh lỗi tải theo URL: ô ngành thử ảnh của SP kế tiếp trong ngành (còn hàng trước).
   const [brokenImages, setBrokenImages] = useState<Set<string>>(() => new Set());
   const [selectedCategory, setSelectedCategory] = useState<string>(ALL);
   const [quickFilter, setQuickFilter] = useState<string>(ALL);
@@ -43,17 +45,18 @@ export default function HomePage() {
   const shelfRef = useRef<HTMLElement>(null);
 
   // STOR-106: bấm chip ngành vừa lọc kệ vừa cuộn kệ vào tầm nhìn; người dùng giảm chuyển động thì nhảy thẳng (auto).
-  // Chip và kệ cùng sinh ra từ hàng còn hàng nên kệ luôn có mặt; thiếu ref thì để lỗi nổ ra, không nuốt.
+  // Kệ luôn render khi có chip; ?. chỉ là chốt chặn để bấm chip không bao giờ ném lỗi.
   // scroll-mt trên kệ = chiều cao header sticky + ~12px, đo bằng scripts/stor106-walk: 79px mobile, 289px (270px quanh 946-948px) từ 768 đến 948px, 239px từ 949px; header đổi cao theo dòng chữ xuống hàng.
   const pickCategory = (code: string) => {
     setSelectedCategory(code);
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    shelfRef.current!.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    shelfRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   };
 
   // STOR-056: chỉ lọc theo dữ liệu VOMA thật (ngành, thương hiệu, tầng cước); lối đánh không có nguồn nên không lọc.
+  // Kệ "Tất cả" chỉ gồm SP còn hàng (STOR-025); kệ một ngành liệt kê mọi SP của ngành, hết hàng mang nhãn Hết hàng.
   const matched = sortProducts(products, sortMode)
-    .filter(p => (p.stock ?? 0) > 0)
+    .filter(p => selectedCategory !== ALL || (p.stock ?? 0) > 0)
     .filter(p => selectedCategory === ALL || p.categoryCode === selectedCategory)
     .filter(p =>
       quickFilter === ALL ? true : quickFilter === O2O ? hasO2OStringing(p) : `brand:${p.brand?.trim().toLowerCase()}` === quickFilter
@@ -120,7 +123,7 @@ export default function HomePage() {
 
       <HeroBanner />
 
-      {allInStock.length > 0 && (
+      {(allInStock.length > 0 || sortedCategories.length > 0) && (
         <section ref={shelfRef} data-testid="instock-shelf" className="scroll-mt-[88px] md:max-[949px]:scroll-mt-[300px] min-[949px]:scroll-mt-[252px] max-w-[1280px] mx-auto px-4 md:px-[24px]">
           <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 md:pb-6 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
           {allInStock.some(hasO2OStringing) && (
@@ -196,10 +199,10 @@ export default function HomePage() {
             {sortedCategories
               .slice(0, 8)
               .map(cat => {
-                const inCat = allInStock.filter(p => p.categoryCode === cat.code);
-                // Ảnh ngành = ảnh bìa thật của một sản phẩm còn hàng trong ngành (VOMA không có ảnh ngành).
+                const inCat = inStockFirst.filter(p => p.categoryCode === cat.code);
+                // Ảnh ngành = ảnh bìa thật của một sản phẩm trong ngành, ưu tiên SP còn hàng (VOMA không có ảnh ngành).
                 const image = inCat.find(p => p.image && p.image !== NO_IMAGE_URL && !brokenImages.has(p.image))?.image;
-                // Phụ đề = thương hiệu thật của SP còn hàng trong ngành, gộp không phân biệt hoa thường (nhãn gốc đầu tiên).
+                // Phụ đề = thương hiệu thật của SP trong ngành (còn hàng trước), gộp không phân biệt hoa thường (nhãn gốc đầu tiên).
                 const subBrands = new Map<string, string>();
                 for (const p of inCat) {
                   const raw = p.brand?.trim();
