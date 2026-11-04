@@ -60,11 +60,10 @@ describe('STOR-074 footer 4 cột', () => {
     expect(Array.from(grid.querySelectorAll('h5')).map(h => h.textContent)).toEqual([
       'TOPVNSPORT — BADMINTON SPECIALTY STORE',
       'DANH MỤC CẦU LÔNG',
-      'DỊCH VỤ ĐAN VỢT & BẢO HÀNH',
-      'TIÊU CHUẨN HIỂN THỊ UI/UX v2.0'
+      'DỊCH VỤ ĐAN VỢT & BẢO HÀNH'
     ]);
-    expect(grid.children[3].querySelector('p')!.textContent).toBe('Áp dụng hệ mực in độ tương phản cao (#000000 21:1, #18181b 17.4:1, tối thiểu #52525b 7.0:1 AAA).');
+    expect(grid.children).toHaveLength(3);
     expect(grid.className.split(' ')).toContain('grid-cols-1');
-    expect(grid.className).toContain('lg:grid-cols-[1.5fr_1fr_1fr_1fr]');
+    expect(grid.className).toContain('lg:grid-cols-[1.5fr_1fr_1fr]');
   });
 });

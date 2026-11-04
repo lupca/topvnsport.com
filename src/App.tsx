@@ -130,8 +130,8 @@ export default function App() {
             </div>
           </div>
           <div className="space-y-1.5">
-            <h3 className="font-display font-black text-gray-900 text-lg uppercase tracking-wider">TopVNSport API</h3>
-            <p className="text-xs text-gray-500 font-medium">Đang tải đồng bộ cơ sở dữ liệu thiết bị cầu lông & O2O chi nhánh...</p>
+            <h3 className="font-display font-black text-gray-900 text-lg uppercase tracking-wider">TopVNSport</h3>
+            <p className="text-xs text-gray-500 font-medium">Đang tải sản phẩm...</p>
           </div>
         </div>
       </div>

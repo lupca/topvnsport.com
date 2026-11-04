@@ -54,22 +54,25 @@ describe('Footer', () => {
   test('lưới footer lg có đúng số track bằng số cột render (không để track trống)', () => {
     const { container, unmount } = renderFooter();
     const grid = () => container.querySelector('footer .bg-footer-bg > div') as HTMLElement;
-    expect(grid().children).toHaveLength(4);
-    expect(grid().className).toContain('lg:grid-cols-[1.5fr_1fr_1fr_1fr]');
+    expect(grid().children).toHaveLength(3);
+    expect(grid().className).toContain('lg:grid-cols-[1.5fr_1fr_1fr]');
+    expect(grid().className).not.toContain('lg:grid-cols-[1.5fr_1fr]');
     unmount();
     const hidden = renderFooter([cat(1489, 'VC001489', 'Lưới Cầu Lông')], [makeProduct('n1', 'VC001489')]);
     const grid2 = hidden.container.querySelector('footer .bg-footer-bg > div') as HTMLElement;
-    expect(grid2.children).toHaveLength(3);
-    expect(grid2.className).toContain('lg:grid-cols-[1.5fr_1fr_1fr]');
-    expect(grid2.className).not.toContain('lg:grid-cols-[1.5fr_1fr_1fr_1fr]');
+    expect(grid2.children).toHaveLength(2);
+    expect(grid2.className).toContain('lg:grid-cols-[1.5fr_1fr]');
+    expect(grid2.className).not.toContain('lg:grid-cols-[1.5fr_1fr_1fr]');
   });
 
-  test('có khối bg-footer-bg với bốn cột theo thiết kế', () => {
+  test('có khối bg-footer-bg với ba cột, không có cột tiêu chuẩn UI/UX', () => {
     const { container } = renderFooter();
     expect(container.querySelector('footer .bg-footer-bg')).not.toBeNull();
-    for (const title of ['TOPVNSPORT — BADMINTON SPECIALTY STORE', 'DANH MỤC CẦU LÔNG', 'DỊCH VỤ ĐAN VỢT & BẢO HÀNH', 'TIÊU CHUẨN HIỂN THỊ UI/UX v2.0']) {
+    for (const title of ['TOPVNSPORT — BADMINTON SPECIALTY STORE', 'DANH MỤC CẦU LÔNG', 'DỊCH VỤ ĐAN VỢT & BẢO HÀNH']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
     }
+    expect(screen.queryByRole('heading', { name: /UI\/UX/ })).toBeNull();
+    expect(container.textContent).not.toMatch(/VOMA|PIM|Đồng bộ|tương phản|AAA/i);
     expect(container.textContent).toContain('097 6007006 (08:00 - 22:00)');
   });
 
