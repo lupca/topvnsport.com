@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 // STOR-081: trang chủ dưới md theo tab 'Khung nhìn Mobile (390px)' của public/design/index.html —
-// hàng chip ngành cuộn ngang, banner 1:1, ẩn thanh lọc nhanh/đếm/sắp xếp, lưới khoảng dọc 16px,
+// hàng chip ngành cuộn ngang, banner hộp 290px (STOR-107), ẩn thanh lọc nhanh/đếm/sắp xếp, lưới khoảng dọc 16px,
 // ô danh mục vuông, nút xem tất cả rộng hết khối, nhãn thanh dưới 11px #18181b.
 // Mỗi thay đổi chỉ ở class gốc (dưới md); giá trị cũ nằm sau md: để 1440 không đổi.
 import React from 'react';
@@ -53,11 +53,12 @@ describe('STOR-081 trang chủ 390px theo tab Mobile', () => {
     expect(c).not.toContain('flex-wrap');
   });
 
-  it('banner: khung ảnh vuông 1:1 dưới md, md+ giữ 1400/600', () => {
+  it('banner (STOR-107): hộp cố định 290px dưới md, tỉ lệ 1440/520 từ md; không còn khung ảnh vuông 1:1 của slider sản phẩm', () => {
     renderHome(products);
-    const c = cls(screen.getByTestId('slider-visual-wrap'));
-    expect(c).toEqual(expect.arrayContaining(['aspect-square', 'md:aspect-[1400/600]']));
-    expect(c).not.toContain('aspect-[16/9]');
+    const c = cls(screen.getByTestId('hero-banner-box'));
+    expect(c).toEqual(expect.arrayContaining(['max-md:h-[290px]', 'md:aspect-[1440/520]']));
+    expect(c).not.toContain('aspect-square');
+    expect(screen.queryByTestId('slider-visual-wrap')).toBeNull();
   });
 
   it('thanh lọc nhanh + đếm/sắp xếp ẩn dưới md, hiện flex ở md+', () => {

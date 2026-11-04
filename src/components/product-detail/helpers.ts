@@ -22,10 +22,9 @@ export function getPdpPrice(product: Product, tier1: string, tier2: string) {
   const displayBasePrice = salePriceToUse;
   const displayOriginalPrice = originalPriceToUse;
 
-  const hasDiscount = Boolean(
-    (matchedVariant?.hasActivePromotion || product.hasActivePromotion) ||
-    (displayBasePrice < displayOriginalPrice)
-  );
+  // STOR-111: chỉ gạch giá khi giá đang chọn thật sự thấp hơn giá gốc. Cờ KM của sản phẩm
+  // bật khi BẤT KỲ biến thể nào KM (STOR-109), không nói gì về biến thể đang chọn.
+  const hasDiscount = displayBasePrice < displayOriginalPrice;
 
   const discountPercent = matchedVariant?.percentageDiscount ?? product.percentageDiscount ?? 
     (hasDiscount && displayOriginalPrice > 0 ? Math.round(((displayOriginalPrice - displayBasePrice) / displayOriginalPrice) * 100) : 0);

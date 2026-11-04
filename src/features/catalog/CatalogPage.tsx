@@ -7,6 +7,7 @@ import { RACKET_CATEGORY_CODES } from '../../config/storefront';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../../utils/categories';
 import { getBrands } from '../../utils/brands';
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
+import { getCheapestPrice } from '../../utils/priceDisplay';
 import CatalogFilterDrawer from './CatalogFilterDrawer';
 import {
   resetCatalogFilters,
@@ -73,7 +74,7 @@ export default function CatalogPage() {
       if (selectedBrand.length > 0 && !selectedBrand.includes(p.brand ?? '')) return false;
 
       // Chưa có giá thật thì không lọc theo giá (không coi là số).
-      if (p.price !== undefined && (p.salePrice || p.price) > maxPrice) return false;
+      if (p.price !== undefined && getCheapestPrice(p) > maxPrice) return false;
 
       if (selectedWeight.length > 0 && RACKET_CATEGORY_CODES.includes(p.categoryCode || '')) {
         const match = selectedWeight.some(wt => p.specs.weight?.includes(wt));

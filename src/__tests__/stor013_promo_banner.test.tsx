@@ -62,6 +62,12 @@ describe('STOR-110 khối Đang khuyến mãi trên trang chủ', () => {
     expect(screen.queryByText(/Giảm đến/)).toBeNull();
   });
 
+  it('% giảm không hữu hạn (Infinity) -> không có nhãn "Giảm đến"', () => {
+    renderHome([promo('a', Infinity)]);
+    expect(screen.getByTestId('sale-section')).toBeTruthy();
+    expect(screen.queryByText(/Giảm đến/)).toBeNull();
+  });
+
   it('không có SP còn hàng đang KM -> không có khối', () => {
     renderHome([prod('plain'), promo('out', 20, { stock: 0 })]);
     expect(screen.queryByTestId('sale-section')).toBeNull();

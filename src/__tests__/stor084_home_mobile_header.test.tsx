@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
 import MainNav from '../components/MainNav';
 import MobileBottomNav from '../features/navigation/MobileBottomNav';
-import BadmintonCenterSlider from '../features/home/BadmintonCenterSlider';
+import HeroBanner from '../features/home/HeroBanner';
 import { STRINGING_CTA_PATH } from '../config/storefront';
 import { Category, Product } from '../types';
 
@@ -179,45 +179,18 @@ describe('STOR-084 Home page 390px header block, bottom nav, and hero size', () 
     });
   });
 
-  describe('BadmintonCenterSlider: thu gọn caption bar và controls dưới md để tổng chiều cao <= 452px, giữ nguyên md+', () => {
-    it('caption bar nằm ngang ở mobile (flex-row items-center px-3 py-2), ẩn eyebrow & sub dưới md, nút CTA gọn (w-auto px-3 py-1.5 text-[11.5px]) và controls mt-2 md:mt-4', () => {
-      const { container } = render(
+  describe('HeroBanner: hộp hero cố định 290px dưới md, tỉ lệ 1440/520 từ md, điều khiển nằm trong hộp (STOR-107)', () => {
+    it('hộp max-md:h-[290px] md:aspect-[1440/520], track tuyệt đối trong hộp; dots và nút dừng là con của hộp nên không cộng thêm chiều cao', () => {
+      render(
         <MemoryRouter>
-          <BadmintonCenterSlider products={SLIDER_PRODUCTS} />
+          <HeroBanner />
         </MemoryRouter>
       );
-
-      const captionBar = screen.getByTestId('slider-caption-bar');
-      expect(cls(captionBar)).toEqual(
-        expect.arrayContaining(['flex-row', 'items-center', 'md:flex-row', 'md:items-center', 'gap-2.5', 'md:gap-5', 'px-3', 'py-2', 'md:px-6', 'md:py-4'])
-      );
-      expect(cls(captionBar)).not.toContain('flex-col');
-      expect(cls(captionBar)).not.toContain('items-stretch');
-      expect(cls(captionBar)).not.toContain('px-4');
-      expect(cls(captionBar)).not.toContain('py-3');
-
-      const eyebrow = container.querySelector('.slide-caption-eyebrow')!;
-      expect(cls(eyebrow)).toEqual(expect.arrayContaining(['hidden', 'md:block']));
-
-      const title = container.querySelector('.slide-caption-title')!;
-      expect(cls(title)).toEqual(expect.arrayContaining(['text-[13px]', 'md:text-[19px]', 'line-clamp-1', 'md:line-clamp-1']));
-      expect(cls(title)).not.toContain('text-[17px]');
-      expect(cls(title)).not.toContain('line-clamp-2');
-
-      const sub = container.querySelector('.slide-caption-sub')!;
-      // md:line-clamp-1 đặt display: -webkit-box ở md+; không dùng md:block vì sẽ ghi đè display: -webkit-box ở 1440px
-      expect(cls(sub)).toEqual(expect.arrayContaining(['hidden', 'md:line-clamp-1']));
-      expect(cls(sub)).not.toContain('md:block');
-
-      const cta = screen.getByTestId('slider-cta');
-      expect(cls(cta)).toEqual(
-        expect.arrayContaining(['w-auto', 'md:w-auto', 'px-3', 'py-1.5', 'md:px-5', 'md:py-[11px]', 'text-[11.5px]', 'md:text-[13px]'])
-      );
-      expect(cls(cta)).not.toContain('w-full');
-
-      const controls = container.querySelector('.slider-controls')!;
-      expect(cls(controls)).toEqual(expect.arrayContaining(['mt-2', 'md:mt-4']));
-      expect(cls(controls)).not.toContain('mt-4');
+      const box = screen.getByTestId('hero-banner-box');
+      expect(cls(box)).toEqual(expect.arrayContaining(['overflow-hidden', 'max-md:h-[290px]', 'md:aspect-[1440/520]']));
+      expect(cls(screen.getByTestId('hero-banner-track'))).toEqual(expect.arrayContaining(['absolute', 'inset-0']));
+      expect(box.contains(screen.getByTestId('slider-dots'))).toBe(true);
+      expect(box.contains(screen.getByTestId('slider-pause-toggle'))).toBe(true);
     });
   });
 });

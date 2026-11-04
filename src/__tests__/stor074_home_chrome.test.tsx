@@ -1,14 +1,12 @@
 // @vitest-environment jsdom
-// STOR-074: hero caption từ sản phẩm thật, dải cam kết lọc theo dữ liệu, footer 4 cột như thiết kế.
+// STOR-074: dải cam kết lọc theo dữ liệu, footer 4 cột như thiết kế. (Phần hero caption từ sản phẩm đã bỏ ở STOR-107: hero là banner cấu hình.)
 import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
-import BadmintonCenterSlider from '../features/home/BadmintonCenterSlider';
+import { render, screen, cleanup } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import TrustBadges from '../components/TrustBadges';
 import Footer from '../components/Footer';
 import { Category, Product } from '../types';
-import { getProductPath } from '../utils/productSlug';
 
 afterEach(() => cleanup());
 
@@ -17,44 +15,7 @@ const product = (id: string, o: Partial<Product> = {}): Product =>
 
 const stringingTier = (options: string[]) => ({ tier_index: 1, name: 'Cước', options: ['Khung không dây', ...options] });
 
-const Loc = () => <div data-testid="loc">{useLocation().pathname}</div>;
-
-function renderSlider(p: Product) {
-  return render(
-    <MemoryRouter>
-      <Routes>
-        <Route path="/" element={<BadmintonCenterSlider products={[p]} />} />
-        <Route path="/product/:slug" element={<Loc />} />
-      </Routes>
-    </MemoryRouter>
-  );
-}
-
 const trustText = (i: number) => screen.getByTestId('trust-row').querySelectorAll('p')[i].textContent;
-
-describe('STOR-074 hero caption', () => {
-  it('eyebrow = brand · category, title = name, sub = description, CTA -> getProductPath', () => {
-    const p = product('a1', { name: 'Vợt Yonex Arcsaber 1', description: 'Mô tả thật từ PIM' });
-    const { container } = renderSlider(p);
-    const eyebrow = container.querySelector('.slide-caption-eyebrow')!.textContent!;
-    expect(eyebrow).toContain('Yonex');
-    expect(eyebrow).toContain('Vợt Cầu Lông');
-    expect(container.querySelector('.slide-caption-title')!.textContent).toBe('Vợt Yonex Arcsaber 1');
-    expect(container.querySelector('.slide-caption-sub')!.textContent).toBe('Mô tả thật từ PIM');
-    fireEvent.click(screen.getByTestId('slider-cta'));
-    expect(screen.getByTestId('loc').textContent).toBe(getProductPath(p));
-  });
-
-  it.each([['rỗng', ''], ['chỉ khoảng trắng', '   \n ']])('không render .slide-caption-sub khi mô tả %s', (_, description) => {
-    const { container } = renderSlider(product('a2', { description }));
-    expect(container.querySelector('.slide-caption-sub')).toBeNull();
-  });
-
-  it('caption bar ẩn dưới md (hidden md:flex), hiện lại ở md+ theo STOR-087', () => {
-    renderSlider(product('a3'));
-    expect(screen.getByTestId('slider-caption-bar').className.split(' ')).toEqual(expect.arrayContaining(['hidden', 'md:flex']));
-  });
-});
 
 describe('STOR-074 trust row lọc theo dữ liệu', () => {
   it('đủ dữ liệu -> đúng chữ thiết kế; so khớp không phân biệt hoa thường/khoảng trắng', () => {

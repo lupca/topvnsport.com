@@ -17,9 +17,9 @@
   "report": {
     "390": {
       "top_badminton-hub-header": 79,
-      "top_badminton-center-slider": 218,
-      "top_instock-shelf": 552,
-      "top_sale-section": 1844,
+      "top_hero-banner-section": 218,
+      "top_instock-shelf": 520,
+      "top_sale-section": 1812,
       "domOrder": true,
       "heading": "đang khuyến mãi",
       "badge": "Giảm đến 45%",
@@ -42,9 +42,9 @@
     },
     "1440": {
       "top_badminton-hub-header": 239,
-      "top_badminton-center-slider": 439,
-      "top_instock-shelf": 1102,
-      "top_sale-section": 2294,
+      "top_hero-banner-section": 439,
+      "top_instock-shelf": 1010,
+      "top_sale-section": 2202,
       "domOrder": true,
       "heading": "đang khuyến mãi",
       "badge": "Giảm đến 45%",

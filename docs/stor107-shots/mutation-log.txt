@@ -1,0 +1,188 @@
+STOR-107 mutation proof (r:7f8cd4dc): each guarded branch mutated one at a time against src/__tests__/stor107_hero_banner.test.tsx.
+Throwaway runner (not committed): apply mutation -> run suite (RED expected) -> revert -> run suite (GREEN expected).
+
+BASELINE (unmutated): 36 passed (36)
+OK  M1 parser: empty list not rejected
+     RED   : 2 failed | 34 passed (36)
+       x parser ném lỗi khi danh sách rỗng hoặc không phải mảng
+       x cấu hình sai: role=alert trong ô hero + console.error, không banner, không dot, không banner mặc định
+     GREEN : 36 passed (36) (after revert)
+OK  M1b parser: non-array not rejected with its message
+     RED   : 1 failed | 35 passed (36)
+       x parser ném lỗi khi danh sách rỗng hoặc không phải mảng
+     GREEN : 36 passed (36) (after revert)
+OK  M2a parser: blank string accepted
+     RED   : 1 failed | 35 passed (36)
+       x parser ném lỗi khi banner thiếu headline rỗng, thông báo nêu chỉ số
+     GREEN : 36 passed (36) (after revert)
+OK  M2b parser: missing field not rejected by name
+     RED   : 5 failed | 31 passed (36)
+       x parser ném lỗi khi banner thiếu headline, thông báo nêu chỉ số
+       x parser ném lỗi khi banner thiếu subline, thông báo nêu chỉ số
+       x parser ném lỗi khi banner thiếu cta.label, thông báo nêu chỉ số
+       ... +2 more
+     GREEN : 36 passed (36) (after revert)
+OK  M3a parser: cta.href never checked
+     RED   : 6 failed | 30 passed (36)
+       x parser ném lỗi với cta.href ngoài site: https://shopvnb.com/x
+       x parser ném lỗi với cta.href ngoài site: //evil.example/x
+       x parser ném lỗi với cta.href ngoài site: /\evil.example
+       ... +3 more
+     GREEN : 36 passed (36) (after revert)
+OK  M3b parser: protocol-relative //x allowed
+     RED   : 2 failed | 34 passed (36)
+       x parser ném lỗi với cta.href ngoài site: //evil.example/x
+       x parser ném lỗi với cta.href ngoài site: /\evil.example
+     GREEN : 36 passed (36) (after revert)
+OK  M3c parser: any tel: allowed
+     RED   : 1 failed | 35 passed (36)
+       x parser ném lỗi với cta.href ngoài site: tel:abc
+     GREEN : 36 passed (36) (after revert)
+OK  M4a parser: image.src never checked
+     RED   : 4 failed | 32 passed (36)
+       x parser ném lỗi với image.src ngoài /banners/: https://pim.voma.vn/media/a.jpg
+       x parser ném lỗi với image.src ngoài /banners/: /img/a.webp
+       x parser ném lỗi với image.src ngoài /banners/: /banners/../a.webp
+       ... +1 more
+     GREEN : 36 passed (36) (after revert)
+OK  M4b parser: /banners/../x allowed
+     RED   : 1 failed | 35 passed (36)
+       x parser ném lỗi với image.src ngoài /banners/: /banners/../a.webp
+     GREEN : 36 passed (36) (after revert)
+OK  M5a component: error alert role removed
+     RED   : 1 failed | 35 passed (36)
+       x cấu hình sai: role=alert trong ô hero + console.error, không banner, không dot, không banner mặc định
+     GREEN : 36 passed (36) (after revert)
+OK  M5b component: invalid config shows empty/default carousel
+     RED   : 1 failed | 35 passed (36)
+       x cấu hình sai: role=alert trong ô hero + console.error, không banner, không dot, không banner mặc định
+     GREEN : 36 passed (36) (after revert)
+OK  M5c component: no console.error on invalid config
+     RED   : 1 failed | 35 passed (36)
+       x cấu hình sai: role=alert trong ô hero + console.error, không banner, không dot, không banner mặc định
+     GREEN : 36 passed (36) (after revert)
+OK  M6a swipe: threshold 40 -> 10
+     RED   : 1 failed | 35 passed (36)
+       x vuốt trái/phải >= 40px đổi banner; dưới 40px hoặc chủ yếu theo chiều dọc thì không đổi
+     GREEN : 36 passed (36) (after revert)
+OK  M6b swipe: threshold exactly 40 ignored (< -> <=)
+     RED   : 1 failed | 35 passed (36)
+       x vuốt trái/phải >= 40px đổi banner; dưới 40px hoặc chủ yếu theo chiều dọc thì không đổi
+     GREEN : 36 passed (36) (after revert)
+OK  M6c swipe: direction reversed
+     RED   : 1 failed | 35 passed (36)
+       x vuốt trái/phải >= 40px đổi banner; dưới 40px hoặc chủ yếu theo chiều dọc thì không đổi
+     GREEN : 36 passed (36) (after revert)
+OK  M6d swipe: vertical drift guard removed
+     RED   : 1 failed | 35 passed (36)
+       x vuốt trái/phải >= 40px đổi banner; dưới 40px hoặc chủ yếu theo chiều dọc thì không đổi
+     GREEN : 36 passed (36) (after revert)
+OK  M7a autoplay: ignores pause button
+     RED   : 1 failed | 35 passed (36)
+       x nút dừng chặn autoplay và đổi aria-label Tạm dừng <-> Phát tiếp
+     GREEN : 36 passed (36) (after revert)
+OK  M7b autoplay: ignores hover
+     RED   : 1 failed | 35 passed (36)
+       x autoplay dừng khi trỏ chuột đang ở trên hero, chạy lại khi rời đi
+     GREEN : 36 passed (36) (after revert)
+OK  M7c autoplay: ignores reduced motion
+     RED   : 1 failed | 35 passed (36)
+       x prefers-reduced-motion: tắt autoplay và bỏ transition của track
+     GREEN : 36 passed (36) (after revert)
+OK  M7d autoplay: interval 5000 -> 4000
+     RED   : 1 failed | 35 passed (36)
+       x autoplay chuyển banner sau 5000ms và quay vòng
+     GREEN : 36 passed (36) (after revert)
+OK  M8a transition: 500ms -> 300ms
+     RED   : 1 failed | 35 passed (36)
+       x track trượt 500ms có easing (duration-500 ease-out) bằng translateX theo chỉ số
+     GREEN : 36 passed (36) (after revert)
+OK  M8b transition: easing class removed
+     RED   : 1 failed | 35 passed (36)
+       x track trượt 500ms có easing (duration-500 ease-out) bằng translateX theo chỉ số
+     GREEN : 36 passed (36) (after revert)
+OK  M9 reduced motion: transition kept
+     RED   : 1 failed | 35 passed (36)
+       x prefers-reduced-motion: tắt autoplay và bỏ transition của track
+     GREEN : 36 passed (36) (after revert)
+OK  M10a box: mobile height 290 -> 340
+     RED   : 1 failed | 35 passed (36)
+       x khung hero cố định: cao 280-300px ở 390px, không đổi class khi đổi slide
+     GREEN : 36 passed (36) (after revert)
+OK  M10b box: aspect ratio removed
+     RED   : 1 failed | 35 passed (36)
+       x khung hero cố định: cao 280-300px ở 390px, không đổi class khi đổi slide
+     GREEN : 36 passed (36) (after revert)
+OK  M10c box: height changes with the active slide
+     RED   : 1 failed | 35 passed (36)
+       x khung hero cố định: cao 280-300px ở 390px, không đổi class khi đổi slide
+     GREEN : 36 passed (36) (after revert)
+OK  M11a dot: aria-current dropped
+     RED   : 6 failed | 30 passed (36)
+       x vuốt trái/phải >= 40px đổi banner; dưới 40px hoặc chủ yếu theo chiều dọc thì không đổi
+       x autoplay chuyển banner sau 5000ms và quay vòng
+       x autoplay dừng khi trỏ chuột đang ở trên hero, chạy lại khi rời đi
+       ... +3 more
+     GREEN : 36 passed (36) (after revert)
+OK  M11b dot: click does not navigate
+     RED   : 4 failed | 32 passed (36)
+       x chỉ banner đang hiện được lộ ra cho trình đọc màn hình (các banner còn lại aria-hidden)
+       x track trượt 500ms có easing (duration-500 ease-out) bằng translateX theo chỉ số
+       x bấm dot hiện đúng banner và đặt aria-current (chỉ trên dot đó)
+       ... +1 more
+     GREEN : 36 passed (36) (after revert)
+OK  M12 slides: inactive not aria-hidden
+     RED   : 1 failed | 35 passed (36)
+       x chỉ banner đang hiện được lộ ra cho trình đọc màn hình (các banner còn lại aria-hidden)
+     GREEN : 36 passed (36) (after revert)
+OK  M13 CTA: href not taken from config
+     RED   : 1 failed | 35 passed (36)
+       x mỗi banner có đúng một headline, một subline, một CTA link và một ảnh
+     GREEN : 36 passed (36) (after revert)
+OK  M14 CTA: product-style label leaks into hero
+     RED   : 1 failed | 35 passed (36)
+       x Home render đúng một hero-banner cho mỗi mục cấu hình, không BadmintonCenterSlider, không tên sản phẩm / giá /
+     GREEN : 36 passed (36) (after revert)
+OK  M15 Home: HeroBanner not rendered
+     RED   : 2 failed | 34 passed (36)
+       x Home render đúng một hero-banner cho mỗi mục cấu hình, không BadmintonCenterSlider, không tên sản phẩm / giá /
+       x cấu hình sai: role=alert trong ô hero + console.error, không banner, không dot, không banner mặc định
+     GREEN : 36 passed (36) (after revert)
+OK  M16 Home: old slider name reappears
+     RED   : 1 failed | 35 passed (36)
+       x Home render đúng một hero-banner cho mỗi mục cấu hình, không BadmintonCenterSlider, không tên sản phẩm / giá /
+     GREEN : 36 passed (36) (after revert)
+OK  M17 config: only 2 banners (< 3)
+     RED   : 3 failed | 33 passed (36)
+       x heroBanners.json có ít nhất 3 banner, mỗi banner đủ headline, subline, cta, image
+       x track trượt 500ms có easing (duration-500 ease-out) bằng translateX theo chỉ số
+       x bấm dot hiện đúng banner và đặt aria-current (chỉ trên dot đó)
+     GREEN : 36 passed (36) (after revert)
+OK  M18 config: competitor name in text
+     RED   : 1 failed | 35 passed (36)
+       x chữ banner không nêu đối thủ hay hãng nào ngoài Yonex Sunrise; không hứa đặt lịch online; CTA đan vợt đi /stor
+     GREEN : 36 passed (36) (after revert)
+OK  M19 config: image file missing
+     RED   : 1 failed | 35 passed (36)
+       x mọi ảnh banner có file trong public/banners/ và nặng tối đa 200KB
+     GREEN : 36 passed (36) (after revert)
+OK  M20 config: booking claim
+     RED   : 1 failed | 35 passed (36)
+       x chữ banner không nêu đối thủ hay hãng nào ngoài Yonex Sunrise; không hứa đặt lịch online; CTA đan vợt đi /stor
+     GREEN : 36 passed (36) (after revert)
+OK  M21 config: stringing CTA points elsewhere
+     RED   : 1 failed | 35 passed (36)
+       x chữ banner không nêu đối thủ hay hãng nào ngoài Yonex Sunrise; không hứa đặt lịch online; CTA đan vợt đi /stor
+     GREEN : 36 passed (36) (after revert)
+OK  M22 config: invalid external CTA href (parse red)
+     RED   : 27 failed | 9 passed (36)
+       x heroBanners.json có ít nhất 3 banner, mỗi banner đủ headline, subline, cta, image
+       x parser ném lỗi khi banner thiếu headline, thông báo nêu chỉ số
+       x parser ném lỗi khi banner thiếu subline, thông báo nêu chỉ số
+       ... +24 more
+     GREEN : 36 passed (36) (after revert)
+OK  M23 image: banner file over 200KB
+     RED   : 1 failed | 35 passed (36)
+       x mọi ảnh banner có file trong public/banners/ và nặng tối đa 200KB
+     GREEN : 36 passed (36) (after revert)
+ALL MUTATIONS RED THEN GREEN

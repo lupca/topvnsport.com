@@ -1,0 +1,82 @@
+=== MUTATION: filter removed (src/features/home/SaleSection.tsx)
+<   const list = getPromotedInStock(products);
+>   const list = products;
+--- mutated:
+     × loại SP KM hết hàng và SP còn hàng không KM 25ms
+     × thứ tự = getPromotedInStock (giảm % nhiều nhất trước) 18ms
+     × không có SP còn hàng đang KM -> không có khối 16ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 8 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+
+=== MUTATION: slice added (src/features/home/SaleSection.tsx)
+<   const list = getPromotedInStock(products);
+>   const list = getPromotedInStock(products).slice(0, 4);
+--- mutated:
+     × 10 SP còn hàng đang KM -> đủ 10 thẻ, không cắt 77ms
+     × mã nguồn không có số giảm/chuỗi KM viết cứng 3ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 9 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+
+=== MUTATION: re-sorted (reverse) (src/features/home/SaleSection.tsx)
+<   const list = getPromotedInStock(products);
+>   const list = getPromotedInStock(products).reverse();
+--- mutated:
+     × thứ tự = getPromotedInStock (giảm % nhiều nhất trước) 25ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+
+=== MUTATION: empty guard dropped (src/features/home/SaleSection.tsx)
+<   if (list.length === 0) return null;
+--- mutated:
+     × không có SP còn hàng đang KM -> không có khối 17ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+
+=== MUTATION: max -> min (src/features/home/SaleSection.tsx)
+<   const max = Math.max(...list.map(p => getPriceDisplay(p).discountPercent));
+>   const max = Math.min(...list.map(p => getPriceDisplay(p).discountPercent));
+--- mutated:
+     × nhãn "Giảm đến x%" = % lớn nhất từ dữ liệu 52ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+
+=== MUTATION: badge >0 guard dropped (src/features/home/SaleSection.tsx)
+<         {Number.isFinite(max) && max > 0 && (
+>         {Number.isFinite(max) && (
+--- mutated:
+     × mọi % giảm = 0 -> có khối nhưng không có nhãn "Giảm đến" 31ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+
+=== MUTATION: badge isFinite guard dropped (src/features/home/SaleSection.tsx)
+<         {Number.isFinite(max) && max > 0 && (
+>         {max > 0 && (
+--- mutated:
+     × % giảm không hữu hạn (Infinity) -> không có nhãn "Giảm đến" 15ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+
+=== MUTATION: rendered on productsError (src/features/home/HomePage.tsx)
+<   if (productsError || products.length === 0) return <HomeLoadState error={productsError} onRetry={() => dispatch(fetchAppData())} />;
+>   if (productsError || products.length === 0) return <><SaleSection products={products} onQuickView={() => {}} onAddToCart={() => {}} /><HomeLoadState error={productsError} onRetry={() => dispatch(fetchAppData())} /></>;
+--- mutated:
+     × lỗi tải sản phẩm -> role=alert, không có khối KM 11ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 10 passed (11)
+--- reverted:
+      Tests  11 passed (11)
+

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// STOR-052: BadmintonCenterSlider.tsx & HomePage.tsx chuẩn Yonex Badminton Specialty Hub
+// STOR-052: HomePage.tsx chuẩn Yonex Badminton Specialty Hub (hero là banner cấu hình từ STOR-107)
 import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup, fireEvent, within } from '@testing-library/react';
@@ -7,11 +7,9 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from '../features/home/HomePage';
-import BadmintonCenterSlider from '../features/home/BadmintonCenterSlider';
 import cartReducer from '../features/cart/cartSlice';
 import catalogReducer from '../features/catalog/catalogSlice';
 import { Product, Category } from '../types';
-import { getProductPath } from '../utils/productSlug';
 
 afterEach(cleanup);
 
@@ -92,78 +90,26 @@ function renderHome(
   );
 }
 
-function renderSlider(products: Product[]) {
-  return render(
-    <MemoryRouter initialEntries={['/']}>
-      <Routes>
-        <Route path="/" element={<BadmintonCenterSlider products={products} />} />
-        <Route path="/product/:slug" element={<Probe />} />
-      </Routes>
-    </MemoryRouter>,
-  );
-}
-
-describe('STOR-052 BadmintonCenterSlider.tsx', () => {
-  it('BadmintonCenterSlider.tsx trả về null khi danh sách products rỗng', () => {
-    const { container } = renderSlider([]);
-    expect(container.firstChild).toBeNull();
-    expect(screen.queryByTestId('badminton-center-slider')).toBeNull();
+describe('STOR-052 hero trang chủ không còn là slider sản phẩm (STOR-107)', () => {
+  it('không còn slider sản phẩm: không testid slider-active-title / slider-cta / center-slide-*, hero không có tên sản phẩm', () => {
+    renderHome([sampleRacketAttack, sampleRacketSpeed]);
+    for (const id of ['badminton-center-slider', 'slider-active-title', 'slider-cta', 'slider-playstyle-badge', 'center-slide-active', 'center-slide-1']) {
+      expect(screen.queryByTestId(id)).toBeNull();
+    }
+    const hero = screen.getByTestId('hero-banner-section');
+    expect(hero.textContent).not.toContain(sampleRacketAttack.name);
+    expect(hero.textContent).not.toContain(sampleRacketSpeed.name);
   });
 
-  it('BadmintonCenterSlider.tsx hiện tên sản phẩm thật qua data-testid="slider-active-title"', () => {
-    renderSlider([sampleRacketAttack, sampleRacketSpeed]);
-    expect(screen.getByTestId('slider-active-title').textContent).toBe(sampleRacketAttack.name);
-  });
-
-  it('BadmintonCenterSlider.tsx hiện data-testid="slider-playstyle-badge" khi sản phẩm có lối đánh', () => {
-    renderSlider([sampleRacketAttack]);
-    const badge = screen.getByTestId('slider-playstyle-badge');
-    expect(badge).toBeTruthy();
-    expect(badge.textContent).toBe('Tấn Công');
-
-    cleanup();
-    renderSlider([sampleShuttleNoPlayStyle]);
-    expect(screen.queryByTestId('slider-playstyle-badge')).toBeNull();
-  });
-
-  it('Bấm nút data-testid="slider-next" chuyển sang slide kế tiếp', () => {
-    renderSlider([sampleRacketAttack, sampleRacketSpeed]);
-    expect(screen.getByTestId('slider-active-title').textContent).toBe(sampleRacketAttack.name);
-
-    fireEvent.click(screen.getByTestId('slider-next'));
-    expect(screen.getByTestId('slider-active-title').textContent).toBe(sampleRacketSpeed.name);
-  });
-
-  it('Bấm nút data-testid="slider-dot-1" chuyển slide đang chọn sang vị trí 1', () => {
-    renderSlider([sampleRacketAttack, sampleRacketSpeed]);
-    expect(screen.getByTestId('slider-active-title').textContent).toBe(sampleRacketAttack.name);
-
+  it('Bấm dot chuyển banner, bấm nút Tạm dừng đổi aria-pressed', () => {
+    renderHome();
+    expect(screen.getByTestId('slider-dot-0').getAttribute('aria-current')).toBe('true');
     fireEvent.click(screen.getByTestId('slider-dot-1'));
-    expect(screen.getByTestId('slider-active-title').textContent).toBe(sampleRacketSpeed.name);
-  });
-
-  it('Bấm nút data-testid="slider-pause-toggle" đổi trạng thái aria-pressed', () => {
-    renderSlider([sampleRacketAttack, sampleRacketSpeed]);
+    expect(screen.getByTestId('slider-dot-1').getAttribute('aria-current')).toBe('true');
     const toggle = screen.getByTestId('slider-pause-toggle');
     expect(toggle.getAttribute('aria-pressed')).toBe('false');
-
     fireEvent.click(toggle);
     expect(toggle.getAttribute('aria-pressed')).toBe('true');
-
-    fireEvent.click(toggle);
-    expect(toggle.getAttribute('aria-pressed')).toBe('false');
-  });
-
-  it('Bấm nút data-testid="slider-cta" điều hướng tới getProductPath(activeProduct)', () => {
-    renderSlider([sampleRacketAttack]);
-    fireEvent.click(screen.getByTestId('slider-cta'));
-    expect(screen.getByTestId('loc').textContent).toBe(getProductPath(sampleRacketAttack));
-  });
-
-  it('Bấm slide lân cận center-slide-1 chuyển activeIndex sang vị trí 1', () => {
-    renderSlider([sampleRacketAttack, sampleRacketSpeed]);
-    fireEvent.click(screen.getByTestId('center-slide-1'));
-    expect(screen.getByTestId('slider-active-title').textContent).toBe(sampleRacketSpeed.name);
   });
 });
 

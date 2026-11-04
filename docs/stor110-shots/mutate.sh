@@ -17,5 +17,5 @@ mut "empty guard dropped" $S '  if (list.length === 0) return null;
 ' ''
 mut "max -> min" $S 'Math.max(' 'Math.min('
 mut "badge >0 guard dropped" $S '{Number.isFinite(max) && max > 0 && (' '{Number.isFinite(max) && ('
-mut "rendered on productsError" $H '        {!productsError && <p role="status"' '        <SaleSection products={products} onQuickView={() => {}} onAddToCart={() => {}} />
-        {!productsError && <p role="status"'
+mut "badge isFinite guard dropped" $S '{Number.isFinite(max) && max > 0 && (' '{max > 0 && ('
+mut "rendered on productsError" $H 'return <HomeLoadState error={productsError} onRetry={() => dispatch(fetchAppData())} />;' 'return <><SaleSection products={products} onQuickView={() => {}} onAddToCart={() => {}} /><HomeLoadState error={productsError} onRetry={() => dispatch(fetchAppData())} /></>;'

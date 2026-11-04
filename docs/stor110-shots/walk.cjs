@@ -68,7 +68,7 @@ async function viewport(browser, w, h) {
   console.log(`--- ${w}px`);
   const r = (report[w] = {});
   // Đi theo thứ tự người dùng cuộn: header hub -> hero -> kệ nổi bật -> khối KM.
-  for (const id of ['badminton-hub-header', 'badminton-center-slider', 'instock-shelf', 'sale-section']) {
+  for (const id of ['badminton-hub-header', 'hero-banner-section', 'instock-shelf', 'sale-section']) {
     const el = page.getByTestId(id);
     await el.waitFor();
     await el.scrollIntoViewIfNeeded();
@@ -76,7 +76,7 @@ async function viewport(browser, w, h) {
     r[`top_${id}`] = await el.evaluate((n) => Math.round(n.getBoundingClientRect().top + scrollY));
   }
   r.domOrder = check(`${w}: thứ tự DOM hub < hero < kệ < KM`, await page.evaluate(() => {
-    const ids = ['badminton-hub-header', 'badminton-center-slider', 'instock-shelf', 'sale-section'];
+    const ids = ['badminton-hub-header', 'hero-banner-section', 'instock-shelf', 'sale-section'];
     const els = ids.map((i) => document.querySelector(`[data-testid="${i}"]`));
     return els.every((e, k) => k === 0 || (els[k - 1].compareDocumentPosition(e) & Node.DOCUMENT_POSITION_FOLLOWING) > 0);
   }), true);
