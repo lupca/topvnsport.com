@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { STRINGING_CTA_PATH } from '../config/storefront';
 
@@ -23,11 +23,25 @@ export default function MainNav({ items, children }: MainNavProps) {
   const { pathname, search } = useLocation();
   const activeCategory = pathname === '/catalog' ? new URLSearchParams(search).get('category') : null;
   const homeActive = pathname === '/';
+  const listRef = useRef<HTMLUListElement>(null);
+  const itemCodes = items.map(item => item.code).join('|');
+
+  // Thanh 1 hàng cuộn ngang dưới md: đưa mục đang chọn vào giữa tầm nhìn (STOR-134, MOB-E).
+  // Chỉ đổi scrollLeft của <ul>, không cuộn trang; desktop <ul> không tràn nên không đổi gì.
+  useEffect(() => {
+    const ul = listRef.current;
+    const link = ul?.querySelector('[aria-current="page"]');
+    if (!ul || !link) return;
+    const u = ul.getBoundingClientRect();
+    const l = link.getBoundingClientRect();
+    ul.scrollLeft += l.left - u.left - (u.width - l.width) / 2;
+    // Khoá theo chuỗi mã: Header tạo mảng items mới mỗi lần render, không được kéo lại thanh khi khách đang tự cuộn.
+  }, [activeCategory, homeActive, itemCodes]);
 
   return (
     <>
       <nav aria-label="Điều hướng chính" className={`${homeActive ? 'hidden md:block ' : ''}bg-white border-t border-zinc-200`}>
-        <ul className="max-w-[1280px] mx-auto px-[24px] flex flex-wrap items-center justify-center gap-[32px] max-md:flex-nowrap max-md:justify-start max-md:overflow-x-auto max-md:gap-6 max-md:px-4">
+        <ul ref={listRef} className="max-w-[1280px] mx-auto px-[24px] flex flex-wrap items-center justify-center gap-[32px] max-md:flex-nowrap max-md:justify-start max-md:overflow-x-auto max-md:gap-6 max-md:px-4">
           <li className="max-md:shrink-0 max-md:whitespace-nowrap">
             <Link to="/" aria-current={homeActive ? 'page' : undefined} className={linkClass(homeActive)}>
               BADMINTON (TRANG CHỦ)
