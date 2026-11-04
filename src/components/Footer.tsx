@@ -25,7 +25,10 @@ export default function Footer({ categories, products }: FooterProps) {
         <div className={`max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-[36px] ${categoryLinks.length > 0 ? 'lg:grid-cols-[1.5fr_1fr_1fr]' : 'lg:grid-cols-[1.5fr_1fr]'}`}>
           <div>
             <h5 className={HEADING}>TOPVNSPORT — BADMINTON SPECIALTY STORE</h5>
-            <p className={`${TEXT} mt-[10px]`}><strong>Hotline tư vấn kỹ thuật:</strong> 097 6007006 (08:00 - 22:00)</p>
+            <p className={`${TEXT} mt-[10px]`}>Đại lý uỷ quyền Yonex Sunrise.</p>
+            <p className={TEXT}>Số 1, ngõ 141/3, phố Lê Văn Hiến, Phường Đông Ngạc, Hà Nội</p>
+            <p className={TEXT}><strong>Hotline tư vấn:</strong> <a href="tel:0976007006" className={LINK}>097 6007006</a> (08:00 - 22:00)</p>
+            <p className={TEXT}><a href="https://shopee.vn/shop/1406345225" target="_blank" rel="noopener noreferrer" className={LINK}>Gian hàng trên Shopee</a></p>
           </div>
 
           {categoryLinks.length > 0 && (
@@ -40,10 +43,9 @@ export default function Footer({ categories, products }: FooterProps) {
           )}
 
           <div>
-            <h5 className={HEADING}>DỊCH VỤ ĐAN VỢT &amp; BẢO HÀNH</h5>
+            <h5 className={HEADING}>DỊCH VỤ ĐAN VỢT</h5>
             <ul className={TEXT}>
               <li><Link to={STRINGING_CTA_PATH} className={LINK}>Cấu hình cước đan trực tuyến</Link></li>
-              <li><Link to="/stores" className={LINK}>Hệ thống cửa hàng trải nghiệm</Link></li>
             </ul>
           </div>
         </div>

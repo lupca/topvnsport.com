@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Footer from '../components/Footer';
-import { getVisibleMainNav } from '../config/storefront';
+import { getVisibleMainNav, STRINGING_CTA_PATH } from '../config/storefront';
 import { Category, Product } from '../types';
 
 function cat(id: number, code: string, name: string): Category {
@@ -30,6 +30,23 @@ function renderFooter(categories = CATS, products = PRODUCTS) {
 }
 
 const column = (title: string) => screen.getByRole('heading', { name: title }).parentElement as HTMLElement;
+
+// Thông tin cửa hàng đã được duyệt (04/11): địa chỉ, hotline công khai, giờ hotline, gian hàng Shopee.
+const BRAND = 'TOPVNSPORT — BADMINTON SPECIALTY STORE';
+const ADDRESS = 'Số 1, ngõ 141/3, phố Lê Văn Hiến, Phường Đông Ngạc, Hà Nội';
+const HOTLINE = '097 6007006';
+const HOURS = '08:00 - 22:00';
+const SHOPEE = 'https://shopee.vn/shop/1406345225';
+const PHONE_RE = /(?:\+84|0)(?:[\s.-]?\d){8,10}/g;
+const HOURS_RE = /\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}/g;
+const ADDRESS_RE = /ngõ|phố|phường|quận/i;
+const PLACEHOLDER_RE = /lorem|0981\.234\.567|example\.com|xxx|đang cập nhật/i;
+
+// Phần tử sâu nhất có chữ khớp re (một "dòng" chữ khách thấy).
+const linesMatching = (root: HTMLElement, re: RegExp) =>
+  Array.from(root.querySelectorAll('*'))
+    .filter(el => re.test(el.textContent ?? '') && !Array.from(el.children).some(c => re.test(c.textContent ?? '')))
+    .map(el => el.textContent);
 
 describe('Footer', () => {
   afterEach(() => cleanup());
@@ -68,7 +85,7 @@ describe('Footer', () => {
   test('có khối bg-footer-bg với ba cột, không có cột tiêu chuẩn UI/UX', () => {
     const { container } = renderFooter();
     expect(container.querySelector('footer .bg-footer-bg')).not.toBeNull();
-    for (const title of ['TOPVNSPORT — BADMINTON SPECIALTY STORE', 'DANH MỤC CẦU LÔNG', 'DỊCH VỤ ĐAN VỢT & BẢO HÀNH']) {
+    for (const title of [BRAND, 'DANH MỤC CẦU LÔNG', 'DỊCH VỤ ĐAN VỢT']) {
       expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
     }
     expect(screen.queryByRole('heading', { name: /UI\/UX/ })).toBeNull();
@@ -95,20 +112,53 @@ describe('Footer', () => {
     expect(screen.queryByRole('heading', { name: 'DANH MỤC CẦU LÔNG' })).toBeNull();
   });
 
-  test('cột dịch vụ chỉ có hai link: đan cước -> ngành vợt, cửa hàng -> /stores', () => {
+  test('cột DỊCH VỤ ĐAN VỢT chỉ có link đan cước -> STRINGING_CTA_PATH; không có tiêu đề BẢO HÀNH', () => {
     renderFooter();
-    const links = within(column('DỊCH VỤ ĐAN VỢT & BẢO HÀNH')).getAllByRole('link');
-    expect(links.map(a => [a.textContent, a.getAttribute('href')])).toEqual([
-      ['Cấu hình cước đan trực tuyến', '/catalog?category=VC001491'],
-      ['Hệ thống cửa hàng trải nghiệm', '/stores']
-    ]);
+    const links = within(column('DỊCH VỤ ĐAN VỢT')).getAllByRole('link');
+    expect(links.map(a => [a.textContent, a.getAttribute('href')])).toEqual([['Cấu hình cước đan trực tuyến', STRINGING_CTA_PATH]]);
+    expect(screen.queryByRole('heading', { name: /BẢO HÀNH/i })).toBeNull();
   });
 
-  test('không có dòng bản quyền/ĐKKD/email bịa', () => {
+  test('cột thương hiệu: dòng đại lý, địa chỉ, hotline tel: kèm giờ hotline, Shopee mở tab mới', () => {
+    renderFooter();
+    const col = column(BRAND);
+    expect(Array.from(col.querySelectorAll('p')).map(p => p.textContent)).toEqual([
+      'Đại lý uỷ quyền Yonex Sunrise.',
+      ADDRESS,
+      `Hotline tư vấn: ${HOTLINE} (${HOURS})`,
+      'Gian hàng trên Shopee'
+    ]);
+    const tel = within(col).getByRole('link', { name: HOTLINE });
+    expect(tel.getAttribute('href')).toBe('tel:0976007006');
+    const shopee = within(col).getByRole('link', { name: 'Gian hàng trên Shopee' });
+    expect(shopee.getAttribute('href')).toBe(SHOPEE);
+    expect(shopee.getAttribute('target')).toBe('_blank');
+    expect(shopee.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
+  test('toàn footer chỉ có các link đã duyệt: không /stores, mạng xã hội, email, trang chính sách', () => {
     const { container } = renderFooter();
-    expect(container.textContent).not.toContain('©');
-    expect(container.textContent).not.toContain('ĐKKD');
-    expect(container.textContent).not.toContain('support@');
+    const hrefs = Array.from(container.querySelectorAll('footer a')).map(a => a.getAttribute('href'));
+    expect(hrefs).toEqual(['tel:0976007006', SHOPEE, '/catalog?category=VC001491', '/catalog?category=VC001427', STRINGING_CTA_PATH]);
+    const html = (container.querySelector('footer') as HTMLElement).outerHTML;
+    expect(html).not.toMatch(/\/stores|facebook|fb\.com|zalo|youtube|youtu\.be|tiktok|mailto:|@/i);
+  });
+
+  test('không có chữ giữ chỗ, bản quyền, mã số thuế/ĐKKD', () => {
+    const { container } = renderFooter();
+    const footer = container.querySelector('footer') as HTMLElement;
+    expect(footer.outerHTML).not.toMatch(PLACEHOLDER_RE);
+    expect(footer.textContent).not.toMatch(/©|ĐKKD|GPKD|MST|mã số thuế|đăng ký kinh doanh|giấy phép kinh doanh/i);
+  });
+
+  test('khuôn số điện thoại, giờ, địa chỉ: mỗi loại chỉ có đúng một giá trị đã duyệt', () => {
+    const { container } = renderFooter();
+    const footer = container.querySelector('footer') as HTMLElement;
+    const text = footer.textContent ?? '';
+    expect(text.match(PHONE_RE)).toEqual([HOTLINE]);
+    expect(Array.from(footer.querySelectorAll('a[href^="tel:"]')).map(a => a.getAttribute('href'))).toEqual(['tel:0976007006']);
+    expect(text.match(HOURS_RE)).toEqual([HOURS]);
+    expect(linesMatching(footer, ADDRESS_RE)).toEqual([ADDRESS]);
   });
 
   test('index.css @theme có --color-footer-bg: #111111', () => {
