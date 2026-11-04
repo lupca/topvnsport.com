@@ -1,5 +1,5 @@
 // STOR-125/127 footer research: measures which footer blocks exist (yes/no only, never competitor text) on three
-// competitor sites and on our own rendered footer, then writes docs/stor125-footer-report.md (Table 1 only).
+// competitor sites and on our own rendered footer, then writes docs/stor125-footer-report.md (Bảng 1 and Bảng 2).
 // Competitor sites: read-only, page load + a wait only (no login, no form, no clicks), 1440x900.
 // Our footer: vite dev on a free port (PID recorded, killed by PID, r:0b30a607) with /api/* fixtures,
 // unless OURS_URL is set. A competitor failure -> 'khong doc duoc' in that column only, exit 0.
@@ -93,6 +93,44 @@ function detectInPage({ selector, detect }) {
   return out;
 }
 
+// Runs in the page. Raw text and links of our footer, for Bảng 2 only (never written as-is).
+function collectRaw({ selector }) {
+  const root = document.querySelector(selector);
+  if (!root) throw new Error('no footer element');
+  const text = root.innerText || root.textContent || '';
+  const anchor = (a) => {
+    const p = a.closest('p,li');
+    return { href: a.getAttribute('href') || '', text: (a.innerText || a.getAttribute('title') || '').trim(), lineText: (p && (p.innerText || p.textContent)) || '' };
+  };
+  const categories = [];
+  for (const h of root.querySelectorAll('h5')) {
+    if ((h.textContent || '').trim() !== 'DANH MỤC CẦU LÔNG' || !h.parentElement) continue;
+    categories.push(...[...h.parentElement.querySelectorAll('a')].map(anchor));
+  }
+  return { text, lines: text.split('\n'), links: [...root.querySelectorAll('a')].map(anchor), categories };
+}
+
+const LIVE = 'https://www.topvnsport.com/';
+const SHOPEE = 'https://shopee.vn/shop/1406345225';
+const HOTLINE_HREF = 'tel:0976007006';
+const SRC_OWNER = 'chủ shop duyệt 04/11';
+const SRC_CAT = 'Dữ liệu danh mục VOMA (getVisibleMainNav), xác nhận trên https://www.topvnsport.com';
+// Owner list of facts that are not on our footer and not in the allowed sources. Policy lines end 'trang và nội dung'.
+const MISSING_FACTS = [
+  '- Email: chủ shop cần cung cấp',
+  '- Đăng ký kinh doanh (số ĐKKD): chủ shop cần cung cấp',
+  '- Mã số thuế: chủ shop cần cung cấp',
+  '- Link TikTok: chủ shop cần cung cấp',
+  '- Link Facebook: chủ shop cần cung cấp',
+  '- Link Zalo: chủ shop cần cung cấp',
+  '- Link YouTube: chủ shop cần cung cấp',
+  '- Trang chính sách đổi trả: chủ shop cần cung cấp đường dẫn trang và nội dung',
+  '- Trang chính sách bảo hành: chủ shop cần cung cấp đường dẫn trang và nội dung',
+  '- Trang chính sách vận chuyển: chủ shop cần cung cấp đường dẫn trang và nội dung',
+  '- Trang chính sách thanh toán: chủ shop cần cung cấp đường dẫn trang và nội dung',
+  '- Trang chính sách bảo mật: chủ shop cần cung cấp đường dẫn trang và nội dung',
+];
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const errCode = (e) => (String(e && e.message).match(/net::ERR_[A-Z_]+/) || [String(e && e.name) || 'Error'])[0];
 const freePort = () => new Promise((res, rej) => {
@@ -141,7 +179,8 @@ async function measureOurs(browser) {
       }
       await page.goto(base, { timeout: 30000 });
       await page.locator(OURS_SELECTOR).waitFor({ timeout: 30000 });
-      return await page.evaluate(detectInPage, { selector: OURS_SELECTOR, detect: DETECT });
+      const result = await page.evaluate(detectInPage, { selector: OURS_SELECTOR, detect: DETECT });
+      return { result, raw: await page.evaluate(collectRaw, { selector: OURS_SELECTOR }) };
     } finally {
       await ctx.close();
     }
@@ -163,6 +202,64 @@ async function measureSite(browser, url) {
     await ctx.close();
   }
 }
+
+// Read-only: load the live home page, wait for the same footer column, keep only /catalog?category= links.
+// Any error or no link -> log it and return null (Bảng 2 then gets a missing-facts line).
+async function measureLiveCategories(browser) {
+  const ctx = await browser.newContext({ viewport: VIEWPORT });
+  try {
+    const page = await ctx.newPage();
+    await page.goto(LIVE, { timeout: 30000 });
+    await page.locator(OURS_SELECTOR).waitFor({ timeout: 30000 });
+    const cats = (await page.evaluate(collectRaw, { selector: OURS_SELECTOR })).categories.filter((a) => /\/catalog\?category=/.test(a.href));
+    if (!cats.length) console.error(`${LIVE}: no /catalog?category= links in the category column`);
+    return cats.length ? cats : null;
+  } catch (e) {
+    console.error(`${LIVE}: ${errCode(e)}`);
+    return null;
+  } finally {
+    await ctx.close();
+  }
+}
+
+// Bảng 2 from measured raw only. A value not found becomes a 'chưa đo được' missing line.
+function buildTable2(raw, live) {
+  const rows = [];
+  const missing = [];
+  const cell = (s) => String(s).replace(/\|/g, '\\|').replace(/\s+/g, ' ').trim();
+  const add = (label, value, src) => (value ? rows.push(`| ${label} | ${cell(value)} | ${src} |`) : missing.push(`- ${label}: chưa đo được trên footer của chúng ta`));
+  const lineOf = (s) => raw.lines.find((l) => new RegExp(s, 'iu').test(l) && !new RegExp(DETECT.regLine, 'iu').test(l));
+  add('Dòng đại lý (trust line)', lineOf('Đại lý uỷ quyền'), SRC_OWNER);
+  add('Địa chỉ', lineOf(DETECT.address), SRC_OWNER);
+  const tel = raw.links.find((a) => a.href === HOTLINE_HREF);
+  add('Hotline', tel && `${tel.text} (href ${HOTLINE_HREF})`, SRC_OWNER);
+  const hours = tel && (tel.lineText.match(/\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}/) || [])[0];
+  add('Giờ hotline', hours && `Giờ hotline: ${hours}`, SRC_OWNER);
+  const shop = raw.links.find((a) => a.href === SHOPEE);
+  add('Shopee', shop && `${shop.text} (href ${SHOPEE})`, SRC_OWNER);
+  if (live && live.length) rows.push(`| Link danh mục | ${live.length} mục: ${cell(live.map((a) => `${a.text || a.href} (${a.href})`).join('; '))} | ${SRC_CAT} |`);
+  else missing.push('- Link danh mục: chưa đo được trên https://www.topvnsport.com (chưa deploy)');
+  return { rows, missing };
+}
+
+// Whole-report guards. Returns [[guard, detail]]; empty = pass. text=null runs only ours-measured.
+const RE_PHONE = /(?<![\w+])(?:\+84|0)(?:[\s.-]?\d){8,10}(?!\w)/g;
+const RE_TIME = /\d{1,2}[:h]\d{2}\s*[-–]\s*\d{1,2}[:h]\d{2}/;
+const RE_SHOWROOM = /showroom|cua hang/;
+function selfCheck(text, ours, raw, oursErr) {
+  const fails = [];
+  if (!ours || !raw || !raw.text) fails.push(['ours-measured', oursErr || 'own footer measured but raw text is empty']);
+  if (text == null) return fails;
+  const bad = (text.match(RE_PHONE) || []).filter((p) => p.replace(/\D/g, '') !== '0976007006');
+  if (bad.length) fails.push(['phone', `phone not 0976007006: ${bad.join(', ')}`]);
+  const ats = (text.match(/@/g) || []).length;
+  if (ats) fails.push(['email', `${ats} '@' in report`]);
+  const norm = (l) => l.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').toLowerCase();
+  const show = text.split('\n').find((l) => RE_SHOWROOM.test(norm(l)) && RE_TIME.test(norm(l)));
+  if (show) fails.push(['showroom-hours', show.trim()]);
+  return fails;
+}
+const printFails = (fails) => fails.forEach(([g, d]) => console.error(`selfcheck FAIL ${g}: ${d}`));
 
 async function selftest() {
   const browser = await chromium.launch();
@@ -199,12 +296,20 @@ async function main() {
   const cols = [];
   const notes = [];
   try {
-    let ours;
+    let ours = null;
+    let raw = null;
+    let oursErr = null;
     try {
-      ours = await measureOurs(browser);
+      ({ result: ours, raw } = await measureOurs(browser));
       console.log('ours', JSON.stringify(ours));
     } catch (e) {
-      console.error(`own footer (${OURS_SELECTOR}) failed: ${e.message.split('\n')[0]}; report not written`);
+      oursErr = e.message.split('\n')[0];
+      console.error(`own footer (${OURS_SELECTOR}) failed: ${oursErr}`);
+    }
+    const early = selfCheck(null, ours, raw, oursErr);
+    if (early.length) {
+      printFails(early);
+      console.error('report not written');
       process.exitCode = 1;
       return;
     }
@@ -237,13 +342,22 @@ async function main() {
         await ctx.close();
       }
     }
-    writeReport(cols, ours, notes);
+    const table2 = buildTable2(raw, await measureLiveCategories(browser));
+    const text = buildReport(cols, ours, notes, table2, MISSING_FACTS.concat(table2.missing));
+    const fails = selfCheck(text, ours, raw);
+    if (fails.length) {
+      printFails(fails);
+      console.error('report not written');
+      process.exitCode = 1;
+      return;
+    }
+    writeReport(text);
   } finally {
     await browser.close();
   }
 }
 
-function writeReport(cols, ours, notes) {
+function buildReport(cols, ours, notes, table2, missing) {
   const cell = (r, k) => (r ? (r[k] ? 'yes' : 'no') : FAIL);
   const head = [...cols.map((c) => c.label), 'Footer của chúng ta'];
   const lines = [
@@ -259,14 +373,28 @@ function writeReport(cols, ours, notes) {
     '',
     'Hai dòng cuối (kiểm hàng, điều khoản) chỉ ghi nhận thêm, không bắt buộc (not required).',
     '',
+    '## Bảng 2 — Thông tin trên footer của chúng ta và nguồn',
+    '',
+    '| Thông tin | Giá trị đo được | Nguồn |',
+    '|---|---|---|',
+    ...table2.rows,
+    '',
+    '## Thông tin còn thiếu (chủ shop cần cung cấp)',
+    '',
+    ...missing,
+    '',
     '## Ghi chú',
     '',
     ...notes,
     `- Cột "Footer của chúng ta" được đo trên footer render thật (\`${OURS_SELECTOR}\`, vite dev với dữ liệu /api giả).`,
     '',
   ];
+  return lines.join('\n');
+}
+
+function writeReport(text) {
   fs.mkdirSync(path.dirname(REPORT), { recursive: true });
-  fs.writeFileSync(REPORT, lines.join('\n'));
+  fs.writeFileSync(REPORT, text);
   console.log('wrote', path.relative(ROOT, REPORT));
 }
 

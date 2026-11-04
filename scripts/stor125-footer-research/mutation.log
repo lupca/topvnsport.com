@@ -1,0 +1,73 @@
+=== MUTATION phone: diff of scripts/stor125-footer-research/extract.cjs
+120a121
+>   '- Hotline 2: 0912345678',
+--- RED phone (mutated) | env: (none) | exit=1
+dev server pid 2294948 port 35319
+killed dev server pid 2294948
+selfcheck FAIL phone: phone not 0976007006: 0912345678
+report not written
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: RED phone (exit 1, 'selfcheck FAIL phone')
+reverted scripts/stor125-footer-research/extract.cjs (phone)
+--- GREEN phone (reverted) | env: (none) | exit=0
+dev server pid 2297150 port 33855
+killed dev server pid 2297150
+wrote docs/stor125-footer-report.md
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: GREEN phone (exit 0)
+=== MUTATION email: diff of scripts/stor125-footer-research/extract.cjs
+120a121
+>   '- Email: a@b.vn',
+--- RED email (mutated) | env: (none) | exit=1
+dev server pid 2298977 port 45997
+killed dev server pid 2298977
+selfcheck FAIL email: 1 '@' in report
+report not written
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: RED email (exit 1, 'selfcheck FAIL email')
+reverted scripts/stor125-footer-research/extract.cjs (email)
+--- GREEN email (reverted) | env: (none) | exit=0
+dev server pid 2300520 port 42065
+killed dev server pid 2300520
+wrote docs/stor125-footer-report.md
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: GREEN email (exit 0)
+=== MUTATION showroom-hours: diff of scripts/stor125-footer-research/extract.cjs
+126a127
+>   '- Showroom mở cửa 08:00-22:00',
+--- RED showroom-hours (mutated) | env: (none) | exit=1
+dev server pid 2302291 port 46517
+killed dev server pid 2302291
+selfcheck FAIL showroom-hours: - Showroom mở cửa 08:00-22:00
+report not written
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: RED showroom-hours (exit 1, 'selfcheck FAIL showroom-hours')
+reverted scripts/stor125-footer-research/extract.cjs (showroom-hours)
+--- GREEN showroom-hours (reverted) | env: (none) | exit=0
+dev server pid 2304777 port 39239
+killed dev server pid 2304777
+wrote docs/stor125-footer-report.md
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: GREEN showroom-hours (exit 0)
+--- RED ours-measured (OURS_URL=http://127.0.0.1:9/) | env: OURS_URL=http://127.0.0.1:9/ | exit=1
+own footer (#topvnsport-footer section.bg-footer-bg) failed: page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/
+selfcheck FAIL ours-measured: page.goto: net::ERR_UNSAFE_PORT at http://127.0.0.1:9/
+report not written
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: RED ours-measured (exit 1, 'selfcheck FAIL ours-measured')
+--- GREEN ours-measured (no OURS_URL) | env: (none) | exit=0
+dev server pid 2307385 port 38415
+killed dev server pid 2307385
+wrote docs/stor125-footer-report.md
+report sha256 before=22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546
+report sha256 after =22181f8085d9d7d350ed034b80e70350b20c92f9edfdea09998a55d5f8858546 (unchanged)
+OK: GREEN ours-measured (exit 0)
+final: scripts/stor125-footer-research/extract.cjs identical to pre-mutation copy
+SUMMARY: all 8 expectations met
