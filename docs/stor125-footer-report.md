@@ -22,6 +22,32 @@ Sinh tự động bởi `scripts/stor125-footer-research/extract.cjs` ngày 2026
 
 Hai dòng cuối (kiểm hàng, điều khoản) chỉ ghi nhận thêm, không bắt buộc (not required).
 
+## Bảng 2 — Thông tin trên footer của chúng ta và nguồn
+
+| Thông tin | Giá trị đo được | Nguồn |
+|---|---|---|
+| Dòng đại lý (trust line) | Đại lý uỷ quyền Yonex Sunrise. | chủ shop duyệt 04/11 |
+| Địa chỉ | Số 1, ngõ 141/3, phố Lê Văn Hiến, Phường Đông Ngạc, Hà Nội | chủ shop duyệt 04/11 |
+| Hotline | 097 6007006 (href tel:0976007006) | chủ shop duyệt 04/11 |
+| Giờ hotline | Giờ hotline: 08:00 - 22:00 | chủ shop duyệt 04/11 |
+| Shopee | Gian hàng trên Shopee (href https://shopee.vn/shop/1406345225) | chủ shop duyệt 04/11 |
+| Link danh mục | 2 mục: Vợt Cầu Lông Yonex / Li-Ning (/catalog?category=VC001491); Giày Cầu Lông Chuyên Dụng (/catalog?category=VC001427) | Dữ liệu danh mục VOMA (getVisibleMainNav), xác nhận trên https://www.topvnsport.com |
+
+## Thông tin còn thiếu (chủ shop cần cung cấp)
+
+- Email: chủ shop cần cung cấp
+- Đăng ký kinh doanh (số ĐKKD): chủ shop cần cung cấp
+- Mã số thuế: chủ shop cần cung cấp
+- Link TikTok: chủ shop cần cung cấp
+- Link Facebook: chủ shop cần cung cấp
+- Link Zalo: chủ shop cần cung cấp
+- Link YouTube: chủ shop cần cung cấp
+- Trang chính sách đổi trả: chủ shop cần cung cấp đường dẫn trang và nội dung
+- Trang chính sách bảo hành: chủ shop cần cung cấp đường dẫn trang và nội dung
+- Trang chính sách vận chuyển: chủ shop cần cung cấp đường dẫn trang và nội dung
+- Trang chính sách thanh toán: chủ shop cần cung cấp đường dẫn trang và nội dung
+- Trang chính sách bảo mật: chủ shop cần cung cấp đường dẫn trang và nội dung
+
 ## Ghi chú
 
 - http://yonex.vn/ chuyển hướng bằng JS tới https://liningbadminton.vn/; cột này được đặt tên theo URL cuối https://liningbadminton.vn/.
