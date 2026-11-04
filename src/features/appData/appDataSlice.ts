@@ -21,6 +21,9 @@ export interface AppDataState {
   loadInFlight: boolean;
   // STOR-141: single-flight riêng cho refetchStock.
   stockRefetching: boolean;
+  // STOR-153: requestId của refetchStock hiện hành; fetchAppData.fulfilled xoá -> kết quả
+  // refetch cũ về muộn bị bỏ qua. Optional để các literal AppDataState cũ vẫn hợp lệ.
+  stockRefetchId?: string | null;
 }
 
 const initialState: AppDataState = {
@@ -99,18 +102,26 @@ const appDataSlice = createSlice({
         state.stockError = action.payload.stockError;
         state.isLoading = false;
         state.loadInFlight = false;
+        // fetchAppData vừa có tồn mới hơn: refetchStock đang bay (nếu có) thành cũ.
+        state.stockRefetchId = null;
+        state.stockRefetching = false;
       })
-      .addCase(refetchStock.pending, state => {
+      .addCase(refetchStock.pending, (state, action) => {
         state.stockRefetching = true;
+        state.stockRefetchId = action.meta.requestId;
       })
       .addCase(refetchStock.fulfilled, (state, action) => {
+        if (action.meta.requestId !== state.stockRefetchId) return;
         state.products = action.payload;
         state.stockError = false;
         state.stockRefetching = false;
+        state.stockRefetchId = null;
       })
-      .addCase(refetchStock.rejected, state => {
+      .addCase(refetchStock.rejected, (state, action) => {
+        if (action.meta.requestId !== state.stockRefetchId) return;
         state.stockError = true;
         state.stockRefetching = false;
+        state.stockRefetchId = null;
       })
       .addCase(fetchAppData.rejected, state => {
         // Thunk ném = không biết danh sách sản phẩm; không để [] đọc thành "shop trống".
