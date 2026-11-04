@@ -2,6 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product, ProductVariant, StringOption } from '../../types';
 import { CartItem } from '../../components/CartModal';
 import { addToCart } from '../../lib/tracking.ts';
+import { variantUnitPrice } from '../../utils/priceDisplay';
+
+export { variantUnitPrice };
 
 interface CartState {
   items: CartItem[];
@@ -232,16 +235,6 @@ export function buildVariantLabel(product: Product, tier1: string, tier2: string
   if (tier2Def && tier2) parts.push(`${tier2Def.name}: ${tier2}`);
 
   return parts.length > 0 ? parts.join(' · ') : undefined;
-}
-
-// Giá thật của MỘT biến thể -- cùng luật với trang chi tiết (computedPrice ??
-// price). price không phải số > 0 -> null (chưa có giá, không bịa, không lấy
-// giá cấp sản phẩm thay).
-export function variantUnitPrice(variant: ProductVariant): number | null {
-  if (!(variant.price > 0)) return null;
-  const unit = variant.computedPrice ?? variant.price;
-  // computed_price = 0 (hoặc không phải số) không phải giá thật -- không bán 0đ.
-  return unit > 0 ? unit : null;
 }
 
 export type CartItemSkuStatus = 'ok' | 'product_not_found' | 'sku_changed' | 'no_price' | 'out_of_stock' | 'over_stock';
