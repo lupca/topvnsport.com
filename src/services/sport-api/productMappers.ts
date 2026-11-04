@@ -175,28 +175,35 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
   };
   const resolvedPrice = minPrice > 0 ? minPrice : undefined;
 
-  // Giá thẻ: cặp giá bán/gốc phải CÙNG MỘT biến thể -- biến thể rẻ nhất (giá
-  // bán thực). Không ghép giá KM của biến thể này với giá gốc của biến thể khác.
-  const cheapest = mappedVariants
+  // Giá thẻ: cặp giá bán/gốc phải CÙNG MỘT biến thể. STOR-109: sản phẩm có KM
+  // khi BẤT KỲ biến thể nào đang KM (không chỉ biến thể rẻ nhất); cặp giá lấy
+  // của biến thể KM giảm % nhiều nhất (hòa: giá bán thấp hơn). Không KM thì thẻ
+  // chỉ hiện `price` (giá thấp nhất), không cần cặp. Không ghép giá KM của biến
+  // thể này với giá gốc của biến thể khác.
+  // Tồn WMS gộp SAU mapPmiProduct nên luật còn hàng nằm ở getPromotedInStock.
+  const priced = mappedVariants
     .filter((v) => v.price > 0 && (v.computedPrice ?? 0) > 0)
-    .sort((l, r) => (l.computedPrice as number) - (r.computedPrice as number))[0];
+    .sort((l, r) => (l.computedPrice as number) - (r.computedPrice as number));
+  const topPromoted = priced
+    .filter((v) => v.hasActivePromotion)
+    .sort((l, r) => (r.percentageDiscount ?? 0) - (l.percentageDiscount ?? 0))[0];
   const productLevel = pmiProduct.computed_price !== undefined && pmiProduct.computed_price !== null;
 
   const hasActivePromotion = productLevel
     ? Boolean(pmiProduct.has_active_promotion || mappedVariants.some((v) => v.hasActivePromotion))
-    : Boolean(cheapest?.hasActivePromotion);
+    : Boolean(topPromoted);
 
   const originalPrice = productLevel
     ? (pmiProduct.original_price !== undefined && pmiProduct.original_price !== null ? Number(pmiProduct.original_price) : resolvedPrice)
-    : cheapest?.originalPrice ?? cheapest?.price ?? resolvedPrice;
+    : topPromoted?.originalPrice ?? topPromoted?.price ?? resolvedPrice;
 
   const computedPrice = productLevel
     ? Number(pmiProduct.computed_price)
-    : cheapest?.computedPrice ?? originalPrice;
+    : topPromoted?.computedPrice ?? originalPrice;
 
   const percentageDiscount = productLevel && pmiProduct.percentage_discount !== undefined && pmiProduct.percentage_discount !== null
     ? Number(pmiProduct.percentage_discount)
-    : (!productLevel && cheapest?.hasActivePromotion ? cheapest.percentageDiscount : undefined) ??
+    : (!productLevel && topPromoted ? topPromoted.percentageDiscount : undefined) ??
       (hasActivePromotion && originalPrice > 0 ? Math.round(((originalPrice - computedPrice) / originalPrice) * 100) : 0);
 
   return {
