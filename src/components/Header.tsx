@@ -7,7 +7,7 @@ import { Search, ChevronRight, Menu, X, MapPin } from 'lucide-react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Category, Product } from '../types';
-import { getCategoriesSortedByCount, getCategoryLabel, getInStockCategories } from '../utils/categories';
+import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
 import { getPriceDisplay } from '../utils/priceDisplay';
@@ -164,7 +164,8 @@ export default function Header({ cartCount, openCart, products, categories, cate
 
   const brands = getTrustBrands(products || []);
   const sortedCategories = getCategoriesSortedByCount(categories, products);
-  const navItems = getInStockCategories(categories, products).map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
+  // Published = hiển thị: ngành chỉ có SP hết hàng vẫn có mặt trên menu (SP gắn nhãn Hết hàng, không ẩn).
+  const navItems = sortedCategories.map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
 
   return (
     <>
