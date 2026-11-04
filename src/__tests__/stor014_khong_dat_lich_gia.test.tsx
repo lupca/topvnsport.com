@@ -26,7 +26,7 @@ describe('STOR-014 không đặt lịch giả', () => {
     const { container } = render(<StoreLocator branches={two} products={[]} />);
     const box = container.querySelector('#store-locator-contact')!;
     expect(box.textContent).toContain('0900 111 222');
-    expect(box.querySelector('a')!.getAttribute('href')).toBe('tel:0900 111 222');
+    expect(box.querySelector('a')!.getAttribute('href')).toBe('tel:0900111222');
   });
 
   test.each(['', '  '])('phone rỗng %j', phone => {

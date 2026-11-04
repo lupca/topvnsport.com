@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Phone, Clock, Calendar, ShieldCheck, CheckCircle2, User, ChevronRight, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, Clock, Calendar } from 'lucide-react';
 import { Branch, Product } from '../types';
-import { popupService } from '@topvnsport/ui-kit';
-import { isRacketCategoryCode } from '../config/storefront';
+
+// href gọi điện: chỉ giữ chữ số và dấu +, dữ liệu hiển thị "097 6007006" vẫn giữ nguyên.
+const tel = (p: string) => `tel:${p.replace(/[^\d+]/g, '')}`;
 
 interface StoreLocatorProps {
   branches: Branch[];
@@ -80,12 +81,16 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                     <p className="text-xs text-gray-500 mt-1">{branch.address}</p>
                     
                     <div className="flex flex-wrap items-center gap-3 mt-2.5 text-[11px] text-gray-400 font-mono">
-                      <span className="flex items-center gap-1">
-                        <Phone className="w-3 h-3 text-brand-primary" /> {branch.phone}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-brand-primary" /> {branch.schedule}
-                      </span>
+                      {branch.phone?.trim() && (
+                        <span className="flex items-center gap-1">
+                          <Phone className="w-3 h-3 text-brand-primary" /> {branch.phone}
+                        </span>
+                      )}
+                      {branch.schedule?.trim() && (
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-brand-primary" /> {branch.schedule}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -114,18 +119,20 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                     <MapPin className="w-3.5 h-3.5" /> Chỉ đường
                   </a>
                 )}
-                <a
-                  href={`tel:${activeBranch.phone}`}
-                  className="bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5 transition"
-                >
-                  <Phone className="w-3.5 h-3.5" /> Gọi điện: {activeBranch.phone}
-                </a>
+                {activeBranch.phone?.trim() && (
+                  <a
+                    href={tel(activeBranch.phone)}
+                    className="bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5 transition"
+                  >
+                    <Phone className="w-3.5 h-3.5" /> Gọi điện: {activeBranch.phone}
+                  </a>
+                )}
               </div>
             </div>
 
-            {/* Embedded maps iframe or beautiful graphics */}
-            <div className="aspect-[16/7] w-full bg-gray-100 relative">
-              {activeBranch.mapEmbedUrl ? (
+            {/* Bản đồ chỉ hiện khi dữ liệu chi nhánh có mapEmbedUrl thật; không có thì không dựng khung giữ chỗ */}
+            {activeBranch.mapEmbedUrl?.trim() && (
+              <div className="aspect-[16/7] w-full bg-gray-100 relative">
                 <iframe
                   title={activeBranch.name}
                   src={activeBranch.mapEmbedUrl}
@@ -136,14 +143,8 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
-              ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-brand-light/30">
-                  <MapPin className="w-12 h-12 text-brand-primary mb-2 " />
-                  <p className="font-bold text-gray-800 text-sm">Bản đồ cửa hàng đang được cập nhật</p>
-                  <p className="text-xs text-gray-500 mt-1">Đường dây nóng hỗ trợ khách hàng: 097 6007006</p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Liên hệ chi nhánh: không có API nhận lịch hẹn nên không dựng form; chỉ hiện khi dữ liệu có số điện thoại */}
@@ -155,7 +156,7 @@ export default function StoreLocator({ branches, products, initialBranchId, onCl
               </div>
               <p className="text-xs text-gray-400 mb-4">Gọi điện cho chi nhánh để hẹn thời gian vung thử vợt và đan cước.</p>
               <a
-                href={`tel:${activeBranch.phone}`}
+                href={tel(activeBranch.phone)}
                 className="inline-flex bg-brand-primary hover:bg-brand-secondary text-white text-xs font-bold px-6 py-3 rounded-full items-center gap-1.5 transition"
               >
                 <Phone className="w-3.5 h-3.5" /> {activeBranch.phone}

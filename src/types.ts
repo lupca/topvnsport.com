@@ -115,7 +115,7 @@ export interface Branch {
   name: string;
   address: string;
   phone: string;
-  schedule: string;
+  schedule?: string;
   city: 'Hà Nội' | 'TP. Hồ Chí Minh' | 'Đà Nẵng' | 'Hải Dương' | 'Cần Thơ';
   mapEmbedUrl?: string;
 }
