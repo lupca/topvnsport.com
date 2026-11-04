@@ -1,0 +1,9 @@
+dev server pid 969424 port 4424
+PASS 1440: footer link href: "/stores"
+PASS 1440: link sits in footer column 1 (brand column): "TOPVNSPORT — BADMINTON SPECIALTY STORE"
+PASS after click: location.pathname: "/stores"
+PASS after click: h1 contains CỬA HÀNG TRẢI NGHIỆM: true
+    h1: CỬA HÀNG TRẢI NGHIỆM TOPVNSPORT
+PASS no page errors: []
+killed pid 969424
+ALL PASS
