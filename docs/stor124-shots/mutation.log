@@ -1,0 +1,9 @@
+=== MUTATION: remove the /stores link line (src/components/Footer.tsx) -> src/__tests__/Footer.test.tsx
+<             <p className={TEXT}><Link to="/stores" className={LINK}>Cửa hàng trải nghiệm</Link></p>
+--- mutated:
+     × cột thương hiệu: dòng đại lý, địa chỉ, hotline tel: kèm giờ hotline, Shopee mở tab mới, link /stores 11ms
+     × toàn footer chỉ có các link đã duyệt: không mạng xã hội, email, trang chính sách 4ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 10 passed (12)
+--- reverted:
+      Tests  12 passed (12)

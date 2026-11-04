@@ -29,6 +29,7 @@ export default function Footer({ categories, products }: FooterProps) {
             <p className={TEXT}>Số 1, ngõ 141/3, phố Lê Văn Hiến, Phường Đông Ngạc, Hà Nội</p>
             <p className={TEXT}><strong>Hotline tư vấn:</strong> <a href="tel:0976007006" className={LINK}>097 6007006</a> (08:00 - 22:00)</p>
             <p className={TEXT}><a href="https://shopee.vn/shop/1406345225" target="_blank" rel="noopener noreferrer" className={LINK}>Gian hàng trên Shopee</a></p>
+            <p className={TEXT}><Link to="/stores" className={LINK}>Cửa hàng trải nghiệm</Link></p>
           </div>
 
           {categoryLinks.length > 0 && (
