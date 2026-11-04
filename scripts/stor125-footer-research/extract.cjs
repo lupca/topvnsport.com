@@ -132,7 +132,9 @@ const MISSING_FACTS = [
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const errCode = (e) => (String(e && e.message).match(/net::ERR_[A-Z_]+/) || [String(e && e.name) || 'Error'])[0];
+const errCode = (e) => (String(e && e.message).match(/net::ERR_[A-Z0-9_]+/) || [String(e && e.name) || 'Error'])[0];
+// Report note for a failed probe: the measured code only; TLS wording only for ERR_CERT_*/ERR_SSL_* codes.
+const failNote = (url, code) => (/ERR_(CERT|SSL)/.test(code) ? `- ${url} không mở được, lỗi TLS: ${code}.` : `- ${url} không mở được, lỗi: ${code}.`);
 const freePort = () => new Promise((res, rej) => {
   const s = net.createServer().listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => res(port)); });
   s.on('error', rej);
@@ -177,8 +179,8 @@ async function measureOurs(browser) {
           return json({ detail: 'stor125: not stubbed' }, 404);
         });
       }
-      await page.goto(base, { timeout: 30000 });
-      await page.locator(OURS_SELECTOR).waitFor({ timeout: 30000 });
+      await page.goto(base, { timeout: 90000 });
+      await page.locator(OURS_SELECTOR).waitFor({ timeout: 90000 });
       const result = await page.evaluate(detectInPage, { selector: OURS_SELECTOR, detect: DETECT });
       return { result, raw: await page.evaluate(collectRaw, { selector: OURS_SELECTOR }) };
     } finally {
@@ -209,8 +211,8 @@ async function measureLiveCategories(browser) {
   const ctx = await browser.newContext({ viewport: VIEWPORT });
   try {
     const page = await ctx.newPage();
-    await page.goto(LIVE, { timeout: 30000 });
-    await page.locator(OURS_SELECTOR).waitFor({ timeout: 30000 });
+    await page.goto(LIVE, { timeout: 90000 });
+    await page.locator(OURS_SELECTOR).waitFor({ timeout: 90000 });
     const cats = (await page.evaluate(collectRaw, { selector: OURS_SELECTOR })).categories.filter((a) => /\/catalog\?category=/.test(a.href));
     if (!cats.length) console.error(`${LIVE}: no /catalog?category= links in the category column`);
     return cats.length ? cats : null;
@@ -270,6 +272,15 @@ async function selftest() {
     console.log(`${ok ? 'PASS' : 'FAIL'} ${label}: ${got}${ok ? '' : ' want ' + want}`);
   };
   try {
+    check('errCode keeps digits', errCode(new Error('page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://x/')), 'net::ERR_HTTP2_PROTOCOL_ERROR');
+    check('ERR_CERT code gives lỗi TLS', [failNote('u', 'net::ERR_CERT_COMMON_NAME_INVALID')].every((n) => n.includes('lỗi TLS') && n.includes('net::ERR_CERT_COMMON_NAME_INVALID')), true);
+    check('ERR_SSL code gives lỗi TLS', [failNote('u', 'net::ERR_SSL_PROTOCOL_ERROR')].every((n) => n.includes('lỗi TLS') && n.includes('net::ERR_SSL_PROTOCOL_ERROR')), true);
+    const te = new Error('page.goto: Timeout 30000ms exceeded.');
+    te.name = 'TimeoutError';
+    const teNote = failNote('u', errCode(te));
+    check('TimeoutError note has the code, no TLS', teNote.includes('TimeoutError') && !teNote.includes('TLS'), true);
+    const dns = failNote('u', 'net::ERR_NAME_NOT_RESOLVED');
+    check('ERR_NAME_NOT_RESOLVED note has the code, no TLS', dns.includes('net::ERR_NAME_NOT_RESOLVED') && !dns.includes('TLS'), true);
     const page = await browser.newPage();
     const run = async (html) => { await page.setContent(html); return page.evaluate(detectInPage, { selector: null, detect: DETECT }); };
     const gpkd = await run('<footer><p>Shop ABC</p><p>GPKD số 0101234567 cấp ngày 01/01/2020</p></footer>');
@@ -325,8 +336,9 @@ async function main() {
         }
       } catch (e) {
         cols.push({ label: url, result: null });
-        console.error(`${url}: ${FAIL}: ${e.message.split('\n')[0]}`);
-        if (YONEX_HTTP.test(url)) notes.push(`- ${url}: ${FAIL}, không xác định được URL cuối.`);
+        const code = errCode(e);
+        console.error(`${url}: ${FAIL}: ${code}`);
+        if (YONEX_HTTP.test(url)) notes.push(failNote(url, code));
       }
     }
     if (SITES.some((u) => YONEX_HTTP.test(u))) {
@@ -337,7 +349,7 @@ async function main() {
       } catch (e) {
         const code = errCode(e);
         console.error(`https://yonex.vn/: ${code}`);
-        notes.push(`- https://yonex.vn/ không mở được, lỗi TLS: ${code}.`);
+        notes.push(failNote('https://yonex.vn/', code));
       } finally {
         await ctx.close();
       }
@@ -398,7 +410,7 @@ function writeReport(text) {
   console.log('wrote', path.relative(ROOT, REPORT));
 }
 
-module.exports = { detectInPage, DETECT };
+module.exports = { detectInPage, DETECT, errCode, failNote };
 
 if (require.main === module) {
   (process.argv.includes('--selftest') ? selftest() : main()).catch((e) => { console.error(e); process.exitCode = 1; });
