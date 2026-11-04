@@ -74,7 +74,7 @@ export default function CatalogPage() {
       if (selectedBrand.length > 0 && !selectedBrand.includes(p.brand ?? '')) return false;
 
       // Chưa có giá thật thì không lọc theo giá (không coi là số).
-      if (p.price !== undefined && getCheapestPrice(p) > maxPrice) return false;
+      if (maxPrice !== null && p.price !== undefined && getCheapestPrice(p) > maxPrice) return false;
 
       if (selectedWeight.length > 0 && RACKET_CATEGORY_CODES.includes(p.categoryCode || '')) {
         const match = selectedWeight.some(wt => p.specs.weight?.includes(wt));
@@ -121,11 +121,18 @@ export default function CatalogPage() {
     dispatch(addCartItemAndOpen(item));
   };
 
+  // Đầu thanh trượt = giá rẻ nhất cao nhất trong shop, làm tròn lên 100K: kéo hết về phải = mọi SP.
+  const sliderMax = useMemo(() => {
+    const prices = products.filter(p => p.price !== undefined).map(getCheapestPrice);
+    return Math.max(100000, Math.ceil(Math.max(0, ...prices) / 100000) * 100000);
+  }, [products]);
+  const formatMillion = (n: number) => `${(n / 1000000).toFixed(1)}Mđ`;
+
   const sortedProducts = useMemo(() => sortProducts(filteredProducts, sortMode), [filteredProducts, sortMode]);
   const activeFilterCount =
     selectedBrand.length + selectedWeight.length +
     (selectedCategory !== ALL_CATEGORIES_OPTION ? 1 : 0) +
-    (maxPrice < 6000000 ? 1 : 0) +
+    (maxPrice !== null ? 1 : 0) +
     (selectedBalance !== 'Tất cả' ? 1 : 0) +
     (selectedStiffness !== 'Tất cả' ? 1 : 0);
 
@@ -185,20 +192,20 @@ export default function CatalogPage() {
       <div className="space-y-2">
         <div className="flex justify-between text-[11px] uppercase tracking-wider text-gray-500 font-bold">
           <span>Ngân sách tối đa</span>
-          <span className="text-brand-primary font-mono">{maxPrice.toLocaleString('vi-VN')}đ</span>
+          <span className="text-brand-primary font-mono">{maxPrice === null ? 'Tất cả mức giá' : `${maxPrice.toLocaleString('vi-VN')}đ`}</span>
         </div>
         <input
           type="range"
           min="100000"
-          max="6000000"
+          max={sliderMax}
           step="100000"
-          value={maxPrice}
+          value={maxPrice ?? sliderMax}
           onChange={(e) => dispatch(setMaxPrice(parseInt(e.target.value, 10)))}
           className="w-full accent-brand-primary h-1 bg-gray-100 rounded-lg cursor-pointer"
         />
         <div className="flex justify-between text-[10px] text-gray-400 font-mono">
           <span>100Kđ</span>
-          <span>6.0Mđ</span>
+          <span>{formatMillion(sliderMax)}</span>
         </div>
       </div>
 

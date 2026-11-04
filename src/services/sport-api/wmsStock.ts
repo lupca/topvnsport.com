@@ -12,6 +12,7 @@ export const tagStockCodes = (stockMap: Record<string, number>, codes: Record<st
 };
 
 // Đọc phản hồi /public/stock ({stock:{sku:qty}} hoặc {items:[{sku_code,...}]}).
+// Tồn âm (bán vượt/điều chỉnh) kẹp về 0: khách thấy Hết hàng, tổng biến thể không bị trừ.
 // stock_code CHỈ đọc từ items[].stock_code, kể cả khi có `stock` (AC8, wire VOMA-399).
 export function parseWmsStock(data: any): Record<string, number> {
   const result: Record<string, number> = {};
@@ -19,12 +20,12 @@ export function parseWmsStock(data: any): Record<string, number> {
   const items: any[] = data && Array.isArray(data.items) ? data.items : [];
   if (data && typeof data.stock === 'object' && data.stock !== null) {
     for (const [sku, qty] of Object.entries(data.stock)) {
-      result[sku] = Number(qty) || 0;
+      result[sku] = Math.max(0, Number(qty) || 0);
     }
   } else {
     for (const item of items) {
       if (item && item.sku_code) {
-        result[item.sku_code] = Number(item.qty_available ?? item.qty_on_hand ?? 0);
+        result[item.sku_code] = Math.max(0, Number(item.qty_available ?? item.qty_on_hand ?? 0) || 0);
       }
     }
   }

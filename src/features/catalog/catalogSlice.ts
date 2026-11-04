@@ -3,7 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface CatalogState {
   selectedBrand: string[];
   selectedCategory: string;
-  maxPrice: number;
+  // null = chưa chọn ngân sách: không lọc theo giá (mọi SP Published đều hiện, STOR-131).
+  maxPrice: number | null;
   selectedWeight: string[];
   selectedBalance: string;
   selectedStiffness: string;
@@ -13,7 +14,7 @@ interface CatalogState {
 const initialState: CatalogState = {
   selectedBrand: [],
   selectedCategory: 'Tất cả',
-  maxPrice: 6000000,
+  maxPrice: null,
   selectedWeight: [],
   selectedBalance: 'Tất cả',
   selectedStiffness: 'Tất cả',
@@ -48,7 +49,7 @@ const catalogSlice = createSlice({
     resetCatalogFilters: state => {
       state.selectedBrand = [];
       state.selectedCategory = 'Tất cả';
-      state.maxPrice = 6000000;
+      state.maxPrice = null;
       state.selectedWeight = [];
       state.selectedBalance = 'Tất cả';
       state.selectedStiffness = 'Tất cả';

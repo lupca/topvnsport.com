@@ -1,0 +1,448 @@
+{
+  "_source": "GET https://www.topvnsport.com/api/{pmi/public/products,wms/public/stock,pmi/public/voma-categories} 2026-11-04, trimmed to 6 products (description dropped, media[:1]). CCCSN-DKVJ-DEFAULT qty set to -3 to exercise the clamp; 633 has no stock row as in prod.",
+  "products": {
+    "items": [
+      {
+        "id": 633,
+        "product_code": "VCLY88DP2024KSTDCPCC-JGSZ",
+        "slug": "vot-cau-long-yonex-88d-pro-2024-kiem-soat-toan-dien-chuan-phong-cach-chuyen-nghiep-vcly88dp2024kstdcpcc-jgsz",
+        "name": "Vợt Cầu Lông Yonex 88D Pro 2024 – Kiểm Soát Toàn Diện, Chuẩn Phong Cách Chuyên Nghiệp",
+        "category_id": null,
+        "voma_category_id": null,
+        "family_id": null,
+        "weight": 1000.0,
+        "status": "Published",
+        "tier_variations": [
+          {
+            "id": 974,
+            "product_id": 633,
+            "tier_index": 1,
+            "name": "CĂNG CƯỚC",
+            "options": [
+              "KHUNG KHÔNG DÂY",
+              "CƯỚC TRỢ LỰC",
+              "YONEX BG65Ti",
+              "YONEX EX63-65-68",
+              "YONEX BG66U",
+              "Kizuna Z61"
+            ]
+          }
+        ],
+        "variants": [
+          {
+            "id": 6862,
+            "product_id": 633,
+            "tier_1_option": "CƯỚC TRỢ LỰC",
+            "tier_2_option": null,
+            "sku_code": "VCLY88DP2024KSTDCPCC-VYN7-CUOC-TRO-LUC",
+            "price": 7050000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 7050000.0,
+            "has_active_promotion": false,
+            "original_price": 7050000.0,
+            "percentage_discount": 0.0
+          },
+          {
+            "id": 6863,
+            "product_id": 633,
+            "tier_1_option": "YONEX BG65Ti",
+            "tier_2_option": null,
+            "sku_code": "VCLY88DP2024KSTDCPCC-VYN7-YONEX-BG65TI",
+            "price": 7150000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 7150000.0,
+            "has_active_promotion": false,
+            "original_price": 7150000.0,
+            "percentage_discount": 0.0
+          },
+          {
+            "id": 6864,
+            "product_id": 633,
+            "tier_1_option": "YONEX EX63-65-68",
+            "tier_2_option": null,
+            "sku_code": "VCLY88DP2024KSTDCPCC-VYN7-YONEX-EX63-65-68",
+            "price": 7200000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 7200000.0,
+            "has_active_promotion": false,
+            "original_price": 7200000.0,
+            "percentage_discount": 0.0
+          },
+          {
+            "id": 6865,
+            "product_id": 633,
+            "tier_1_option": "YONEX BG66U",
+            "tier_2_option": null,
+            "sku_code": "VCLY88DP2024KSTDCPCC-VYN7-YONEX-BG66U",
+            "price": 7200000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 7200000.0,
+            "has_active_promotion": false,
+            "original_price": 7200000.0,
+            "percentage_discount": 0.0
+          },
+          {
+            "id": 6866,
+            "product_id": 633,
+            "tier_1_option": "Kizuna Z61",
+            "tier_2_option": null,
+            "sku_code": "VCLY88DP2024KSTDCPCC-VYN7-KIZUNA-Z61",
+            "price": 7200000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 7200000.0,
+            "has_active_promotion": false,
+            "original_price": 7200000.0,
+            "percentage_discount": 0.0
+          },
+          {
+            "id": 6867,
+            "product_id": 633,
+            "tier_1_option": "KHUNG KHÔNG DÂY",
+            "tier_2_option": null,
+            "sku_code": "VCLY88DP2024KSTDCPCC-VYN7-KHUNG-KHONG-DAY",
+            "price": 6700000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 6700000.0,
+            "has_active_promotion": false,
+            "original_price": 6700000.0,
+            "percentage_discount": 0.0
+          }
+        ],
+        "media": [
+          {
+            "id": 5608,
+            "product_id": 633,
+            "variant_id": null,
+            "image_url": "https://pim.voma.vn/media/d88484d5-f724-4fce-a021-67d14bc2aba4.jpg",
+            "is_cover": true,
+            "display_order": 1
+          }
+        ],
+        "attribute_values": [],
+        "voma_attribute_values": [],
+        "min_price": 6700000.0,
+        "max_price": 7200000.0
+      },
+      {
+        "id": 632,
+        "product_code": "TVMDVYCH-PDBD",
+        "slug": "tui-vai-men-dung-vot-yonex-chinh-hang-tvmdvych-pdbd",
+        "name": "Túi vải mền đựng vợt yonex chính hãng",
+        "category_id": null,
+        "voma_category_id": null,
+        "family_id": null,
+        "weight": 200.0,
+        "status": "Published",
+        "tier_variations": [],
+        "variants": [
+          {
+            "id": 6861,
+            "product_id": 632,
+            "tier_1_option": null,
+            "tier_2_option": null,
+            "sku_code": "TVMDVYCH-2TFY-DEFAULT",
+            "price": 150000.0,
+            "barcode": null,
+            "default_tax_rate": 0.0,
+            "computed_price": 150000.0,
+            "has_active_promotion": false,
+            "original_price": 150000.0,
+            "percentage_discount": 0.0
+          }
+        ],
+        "media": [
+          {
+            "id": 5603,
+            "product_id": 632,
+            "variant_id": null,
+            "image_url": "https://pim.voma.vn/media/2e8fd1c9-cfca-4e01-9d91-443a9bc99958.jpg",
+            "is_cover": true,
+            "display_order": 1
+          }
+        ],
+        "attribute_values": [],
+        "voma_attribute_values": [],
+        "min_price": 150000.0,
+        "max_price": 150000.0
+      },
+      {
+        "id": 629,
+        "product_code": "CCCSN-83ZQ",
+        "slug": "cuon-can-cao-su-non-cccsn-83zq",
+        "name": "Cuốn Cán Cao Su Non",
+        "category_id": null,
+        "voma_category_id": null,
+        "family_id": null,
+        "weight": 100.0,
+        "status": "Published",
+        "tier_variations": [],
+        "variants": [
+          {
+            "id": 6852,
+            "product_id": 629,
+            "tier_1_option": null,
+            "tier_2_option": null,
+            "sku_code": "CCCSN-DKVJ-DEFAULT",
+            "price": 15000.0,
+            "barcode": null,
+            "default_tax_rate": 0.0,
+            "computed_price": 15000.0,
+            "has_active_promotion": false,
+            "original_price": 15000.0,
+            "percentage_discount": 0.0
+          }
+        ],
+        "media": [
+          {
+            "id": 5588,
+            "product_id": 629,
+            "variant_id": null,
+            "image_url": "https://pim.voma.vn/media/af230bef-b15e-4995-8844-c7c117522c45.jpg",
+            "is_cover": true,
+            "display_order": 1
+          }
+        ],
+        "attribute_values": [],
+        "voma_attribute_values": [],
+        "min_price": 15000.0,
+        "max_price": 15000.0
+      },
+      {
+        "id": 623,
+        "product_code": "BVCLVAHPCPBTMMTDDC-MA5A",
+        "slug": "bo-vot-cau-long-victor-auraspeed-hs-plus-cny-phien-ban-tet-may-man-toc-do-dinh-cao-bvclvahpcpbtmmtddc-ma5a",
+        "name": "BỘ VỢT CẦU LÔNG VICTOR AURASPEED HS PLUS CNY – PHIÊN BẢN TẾT MAY MẮN, TỐC ĐỘ ĐỈNH CAO",
+        "category_id": null,
+        "voma_category_id": null,
+        "family_id": null,
+        "weight": 1000.0,
+        "status": "Published",
+        "tier_variations": [],
+        "variants": [
+          {
+            "id": 6807,
+            "product_id": 623,
+            "tier_1_option": null,
+            "tier_2_option": null,
+            "sku_code": "BVCLVAHPCPBTMMTDDC-K88J-DEFAULT",
+            "price": 6450000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 6450000.0,
+            "has_active_promotion": false,
+            "original_price": 6450000.0,
+            "percentage_discount": 0.0
+          }
+        ],
+        "media": [
+          {
+            "id": 5543,
+            "product_id": 623,
+            "variant_id": null,
+            "image_url": "https://pim.voma.vn/media/352e8be3-ec5f-4fc1-8337-d940ccb35d61.jpg",
+            "is_cover": true,
+            "display_order": 1
+          }
+        ],
+        "attribute_values": [],
+        "voma_attribute_values": [],
+        "min_price": 6450000.0,
+        "max_price": 6450000.0
+      },
+      {
+        "id": 545,
+        "product_code": "VCLYA11PCHTBVQC-MM5D",
+        "slug": "hoa-toc-vot-cau-long-yonex-arcsaber-11-pro-chinh-hang-khong-cang-san-cuoc-tang-bao-vot-quan-can-vclya11pchtbvqc-mm5d",
+        "name": "[HỎA TỐC] Vợt Cầu Lông Yonex Arcsaber 11 pro Chính Hãng, (Không căng sẵn cước) Tặng Bao vợt + Quấn Cán",
+        "category_id": null,
+        "voma_category_id": null,
+        "family_id": null,
+        "weight": 1.0,
+        "status": "Published",
+        "tier_variations": [],
+        "variants": [
+          {
+            "id": 5928,
+            "product_id": 545,
+            "tier_1_option": null,
+            "tier_2_option": null,
+            "sku_code": "VCLYA11PCHTBVQC-5WGQ-DEFAULT",
+            "price": 6700000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 6700000.0,
+            "has_active_promotion": false,
+            "original_price": 6700000.0,
+            "percentage_discount": 0.0
+          }
+        ],
+        "media": [
+          {
+            "id": 5402,
+            "product_id": 545,
+            "variant_id": null,
+            "image_url": "https://pim.voma.vn/media/1202b91d-bf40-496d-abe9-d2c9a029230e.jpg",
+            "is_cover": true,
+            "display_order": 1
+          }
+        ],
+        "attribute_values": [],
+        "voma_attribute_values": [],
+        "min_price": 6700000.0,
+        "max_price": 6700000.0
+      },
+      {
+        "id": 544,
+        "product_code": "VCLYA99PG3TBVQC-C8JB",
+        "slug": "hoa-toc-vot-cau-long-yonex-astrox-99-pro-gen-3-chinh-hang-khong-cang-san-cuoc-tang-bao-vot-quan-can-vclya99pg3tbvqc-c8jb",
+        "name": "[HỎA TỐC] Vợt Cầu Lông Yonex Astrox 99 Pro Gen 3 (Chính Hãng), (Không căng sẵn cước) Tặng bao vợt + Quấn Cán",
+        "category_id": null,
+        "voma_category_id": null,
+        "family_id": null,
+        "weight": 1.0,
+        "status": "Published",
+        "tier_variations": [],
+        "variants": [
+          {
+            "id": 5927,
+            "product_id": 544,
+            "tier_1_option": null,
+            "tier_2_option": null,
+            "sku_code": "VCLYA99PG3TBVQC-NFDQ-DEFAULT",
+            "price": 6500000.0,
+            "barcode": null,
+            "default_tax_rate": null,
+            "computed_price": 6500000.0,
+            "has_active_promotion": false,
+            "original_price": 6500000.0,
+            "percentage_discount": 0.0
+          }
+        ],
+        "media": [
+          {
+            "id": 5396,
+            "product_id": 544,
+            "variant_id": null,
+            "image_url": "https://pim.voma.vn/media/167f48e4-2ce5-4a39-9933-ef7afbc518e4.jpg",
+            "is_cover": true,
+            "display_order": 1
+          }
+        ],
+        "attribute_values": [],
+        "voma_attribute_values": [],
+        "min_price": 6500000.0,
+        "max_price": 6500000.0
+      }
+    ],
+    "total": 6,
+    "page": 1,
+    "limit": 100,
+    "pages": 1
+  },
+  "stock": {
+    "stock": {
+      "VCLYA99PG3TBVQC-NFDQ-DEFAULT": 0,
+      "TVMDVYCH-2TFY-DEFAULT": 862,
+      "BVCLVAHPCPBTMMTDDC-K88J-DEFAULT": 1,
+      "CCCSN-DKVJ-DEFAULT": -3,
+      "VCLYA11PCHTBVQC-5WGQ-DEFAULT": 2
+    },
+    "items": [
+      {
+        "sku_code": "VCLYA99PG3TBVQC-NFDQ-DEFAULT",
+        "qty_available": 0,
+        "qty_on_hand": 0,
+        "qty_reserved": 0,
+        "stock_status": "OUT_OF_STOCK",
+        "low_stock_threshold": 25,
+        "threshold_source": "default"
+      },
+      {
+        "sku_code": "TVMDVYCH-2TFY-DEFAULT",
+        "qty_available": 862,
+        "qty_on_hand": 863,
+        "qty_reserved": 1,
+        "stock_status": "IN_STOCK",
+        "low_stock_threshold": 25,
+        "threshold_source": "default"
+      },
+      {
+        "sku_code": "BVCLVAHPCPBTMMTDDC-K88J-DEFAULT",
+        "qty_available": 1,
+        "qty_on_hand": 1,
+        "qty_reserved": 0,
+        "stock_status": "LOW_STOCK",
+        "low_stock_threshold": 25,
+        "threshold_source": "default"
+      },
+      {
+        "sku_code": "CCCSN-DKVJ-DEFAULT",
+        "qty_available": -3,
+        "qty_on_hand": -3,
+        "qty_reserved": 1,
+        "stock_status": "OUT_OF_STOCK",
+        "low_stock_threshold": 25,
+        "threshold_source": "default"
+      },
+      {
+        "sku_code": "VCLYA11PCHTBVQC-5WGQ-DEFAULT",
+        "qty_available": 2,
+        "qty_on_hand": 2,
+        "qty_reserved": 0,
+        "stock_status": "LOW_STOCK",
+        "low_stock_threshold": 25,
+        "threshold_source": "default"
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": 5,
+      "name": "Tất",
+      "code": "VC000005",
+      "parent_id": 2,
+      "display_name": "Thời Trang Nữ > Vớ/ Tất > Tất"
+    },
+    {
+      "id": 1420,
+      "name": "Bộ Đồ Thể Thao",
+      "code": "VC001420",
+      "parent_id": 1406,
+      "display_name": "Thể Thao & Dã Ngoại > Thời Trang Thể Thao & Dã Ngoại > Bộ Đồ Thể Thao"
+    },
+    {
+      "id": 1427,
+      "name": "Giày Cầu Lông",
+      "code": "VC001427",
+      "parent_id": 1421,
+      "display_name": "Thể Thao & Dã Ngoại > Giày Thể Thao > Giày Cầu Lông"
+    },
+    {
+      "id": 1488,
+      "name": "Khác",
+      "code": "VC001488",
+      "parent_id": 1487,
+      "display_name": "Thể Thao & Dã Ngoại > Dụng Cụ Thể Thao & Dã Ngoại > Cầu Lông > Khác"
+    },
+    {
+      "id": 1489,
+      "name": "Lưới Cầu Lông",
+      "code": "VC001489",
+      "parent_id": 1487,
+      "display_name": "Thể Thao & Dã Ngoại > Dụng Cụ Thể Thao & Dã Ngoại > Cầu Lông > Lưới Cầu Lông"
+    },
+    {
+      "id": 1491,
+      "name": "Vợt Cầu Lông",
+      "code": "VC001491",
+      "parent_id": 1487,
+      "display_name": "Thể Thao & Dã Ngoại > Dụng Cụ Thể Thao & Dã Ngoại > Cầu Lông > Vợt Cầu Lông"
+    }
+  ]
+}
