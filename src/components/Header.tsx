@@ -14,6 +14,9 @@ import { getPriceDisplay } from '../utils/priceDisplay';
 import { getTrustBrands } from './TrustBadges';
 import MainNav from './MainNav';
 
+// Logo cửa hàng đặt trong public/, không tải từ CDN ngoài.
+const LOGO_SRC = '/topvnsport-logo.webp';
+
 export const normalizeSearchText = (value: string) =>
   value
     .normalize('NFD')
@@ -216,6 +219,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
           onClick={() => navigate('/')} 
           className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none min-w-0 truncate"
         >
+          <img src={LOGO_SRC} alt="TopVNSport Logo" className="inline-block w-6 h-6 rounded-md object-cover align-middle mr-1.5" />
           TOPVN<span className="text-brand-primary">SPORT</span>
         </div>
         <button 
@@ -241,9 +245,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
           onClick={() => navigate('/')} 
           className="hidden md:flex items-center gap-3 cursor-pointer group shrink-0"
         >
-          <div className="w-[44px] h-[44px] bg-brand-primary text-white font-display font-black text-[20px] tracking-[-0.03em] rounded-[6px] border-[1.5px] border-black flex items-center justify-center shrink-0">
-            TVN
-          </div>
+          <img src={LOGO_SRC} alt="TopVNSport Logo" className="w-[44px] h-[44px] rounded-[6px] object-cover shrink-0" />
           <div>
             <span data-testid="brand-wordmark" className="font-display font-black text-[24px] tracking-[-0.03em] text-ink-primary block leading-none">
               TOPVN<span className="text-brand-primary">SPORT</span>
@@ -380,12 +382,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
                 {/* Drawer Header */}
                 <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
                   <div className="flex items-center gap-2">
-                    <img 
-                      src="https://down-zl-vn.img.susercontent.com/vn-11134004-820l4-mdxbg9gyt81z6e_tn.webp" 
-                      alt="Logo" 
-                      className="w-7 h-7 rounded-md object-cover border border-gray-200 bg-white"
-                      referrerPolicy="no-referrer"
-                    />
+                    <img src={LOGO_SRC} alt="TopVNSport Logo" className="w-7 h-7 rounded-md object-cover border border-gray-200 bg-white" />
                     <span className="font-display font-extrabold text-base text-gray-900 tracking-tight">TOPVN<span className="text-brand-primary">SPORT</span></span>
                   </div>
                   <button 
