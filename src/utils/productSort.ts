@@ -1,5 +1,5 @@
 import { Product } from '../types';
-import { getPriceDisplay } from './priceDisplay';
+import { getCheapestPrice } from './priceDisplay';
 
 export type SortMode = 'in-stock-first' | 'price-asc' | 'price-desc';
 
@@ -24,6 +24,6 @@ export function sortProducts(products: Product[], mode: SortMode): Product[] {
     if (a.price === undefined || b.price === undefined) {
       return (a.price === undefined ? 1 : 0) - (b.price === undefined ? 1 : 0);
     }
-    return dir * (getPriceDisplay(a).salePrice - getPriceDisplay(b).salePrice);
+    return dir * (getCheapestPrice(a) - getCheapestPrice(b));
   });
 }
