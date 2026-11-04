@@ -9,7 +9,8 @@ import { getCategoryLabel, getInStockCategories, getProductCategoryCounts } from
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
 import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
-import BadmintonCenterSlider from './BadmintonCenterSlider';
+import HeroBanner from './HeroBanner';
+import HomeLoadState from './HomeLoadState';
 
 const ALL = 'ALL';
 const O2O = 'O2O';
@@ -22,7 +23,6 @@ export default function HomePage() {
   const products = useAppSelector(state => state.appData.products ?? []);
   const categories = useAppSelector(state => state.appData.categories ?? []);
   const productsError = useAppSelector(state => state.appData.productsError);
-
 
   const allInStock = sortProducts(products, 'in-stock-first').filter(p => (p.stock ?? 0) > 0);
   // Chip ngành đếm hàng còn hàng để khớp kệ và bộ đếm; ngành 0 còn hàng thì ẩn.
@@ -72,26 +72,7 @@ export default function HomePage() {
     dispatch(addCartItemAndOpen(item));
   };
 
-  // STOR-053: lỗi tải sản phẩm và shop chưa có sản phẩm là hai câu khác nhau.
-  if (productsError || products.length === 0) {
-    return (
-      <section className="max-w-xl mx-auto px-4 py-16 text-center">
-        {productsError && (
-          <div role="alert" className="space-y-4">
-            <p className="text-base font-medium text-ink-primary">Cửa hàng chưa tải được sản phẩm lúc này. Vui lòng thử lại sau.</p>
-            <button
-              type="button"
-              onClick={() => dispatch(fetchAppData())}
-              className="rounded-full bg-ink-primary text-white px-5 py-2 text-sm font-bold hover:opacity-90 transition"
-            >
-              Thử lại
-            </button>
-          </div>
-        )}
-        {!productsError && <p role="status" className="text-base font-medium text-ink-primary">Cửa hàng chưa có sản phẩm nào đang bán.</p>}
-      </section>
-    );
-  }
+  if (productsError || products.length === 0) return <HomeLoadState error={productsError} onRetry={() => dispatch(fetchAppData())} />;
 
   return (
     <div className="space-y-12 animate-in fade-in duration-300">
@@ -136,7 +117,7 @@ export default function HomePage() {
         </section>
       )}
 
-      <BadmintonCenterSlider products={allInStock.filter(p => Boolean(p.image) && p.image !== NO_IMAGE_URL).slice(0, 5)} />
+      <HeroBanner />
 
       {allInStock.length > 0 && (
         <section ref={shelfRef} data-testid="instock-shelf" className="scroll-mt-[88px] md:max-[949px]:scroll-mt-[300px] min-[949px]:scroll-mt-[252px] max-w-[1280px] mx-auto px-4 md:px-[24px]">
