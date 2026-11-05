@@ -139,22 +139,22 @@ export default function CatalogPage() {
   const filterPanel = (
     <>
       <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-        <span className="font-bold text-xs uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
+        <span className="font-bold text-sm lg:text-xs uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
           <SlidersHorizontal className="w-4 h-4 text-brand-primary" /> Bộ lọc sản phẩm
         </span>
         <button
           onClick={() => dispatch(resetCatalogFilters())}
-          className="text-[11px] text-gray-400 hover:text-brand-primary font-bold flex items-center gap-1 transition"
+          className="min-h-11 lg:min-h-auto text-[0.875rem] lg:text-[11px] text-gray-400 hover:text-brand-primary font-bold flex items-center gap-1 transition"
         >
           <RefreshCw className="w-3 h-3" /> Xóa bộ lọc
         </button>
       </div>
 
       <div className="space-y-2">
-        <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Thương hiệu quốc tế</h4>
+        <h4 className="font-bold text-[0.875rem] lg:text-[11px] uppercase tracking-wider text-gray-500">Thương hiệu quốc tế</h4>
         <div className="space-y-1.5">
           {getBrands(products).map(brand => (
-            <label key={brand} className="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
+            <label key={brand} className="flex items-center gap-2 min-h-11 lg:min-h-auto text-sm lg:text-xs font-semibold text-gray-700 cursor-pointer">
               <input
                 type="checkbox"
                 checked={selectedBrand.includes(brand)}
@@ -174,23 +174,23 @@ export default function CatalogPage() {
       </div>
 
       <div className="space-y-2">
-        <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Phân loại sản phẩm</h4>
+        <h4 className="font-bold text-[0.875rem] lg:text-[11px] uppercase tracking-wider text-gray-500">Phân loại sản phẩm</h4>
         <div className="space-y-1.5 flex flex-col">
           {categoryFilterOptions.map(option => (
             <button
               key={option.code}
               onClick={() => dispatch(setSelectedCategory(option.code))}
-              className={`text-xs text-left py-1.5 px-2.5 rounded-lg font-bold transition flex items-center justify-between ${selectedCategory === option.code ? 'bg-brand-light text-brand-primary font-black' : 'text-gray-600 hover:bg-gray-50'}`}
+              className={`min-h-11 lg:min-h-auto text-sm lg:text-xs text-left py-1.5 px-2.5 rounded-lg font-bold transition flex items-center justify-between ${selectedCategory === option.code ? 'bg-brand-light text-brand-primary font-black' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <span>{option.label}</span>
-              <span className="text-[10px] text-gray-400 font-mono">({option.count})</span>
+              <span className="text-[0.875rem] lg:text-[10px] text-gray-400 font-mono">({option.count})</span>
             </button>
           ))}
         </div>
       </div>
 
       <div className="space-y-2">
-        <div className="flex justify-between text-[11px] uppercase tracking-wider text-gray-500 font-bold">
+        <div className="flex justify-between text-[0.875rem] lg:text-[11px] uppercase tracking-wider text-gray-500 font-bold">
           <span>Ngân sách tối đa</span>
           <span className="text-brand-primary font-mono">{maxPrice === null ? 'Tất cả mức giá' : `${maxPrice.toLocaleString('vi-VN')}đ`}</span>
         </div>
@@ -201,9 +201,9 @@ export default function CatalogPage() {
           step="100000"
           value={maxPrice ?? sliderMax}
           onChange={(e) => dispatch(setMaxPrice(parseInt(e.target.value, 10)))}
-          className="w-full accent-brand-primary h-1 bg-gray-100 rounded-lg cursor-pointer"
+          className="w-full accent-brand-primary h-11 lg:h-1 bg-transparent lg:bg-gray-100 rounded-lg cursor-pointer"
         />
-        <div className="flex justify-between text-[10px] text-gray-400 font-mono">
+        <div className="flex justify-between text-[0.875rem] lg:text-[10px] text-gray-400 font-mono">
           <span>100Kđ</span>
           <span>{formatMillion(sliderMax)}</span>
         </div>
@@ -213,7 +213,7 @@ export default function CatalogPage() {
         <>
           {hasWeightData && (
             <div className="space-y-2 pt-3 border-t border-gray-100">
-              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Trọng lượng (U)</h4>
+              <h4 className="font-bold text-[0.875rem] lg:text-[11px] uppercase tracking-wider text-gray-500">Trọng lượng (U)</h4>
               <div className="flex flex-wrap gap-1.5">
                 {['3U', '4U', '5U'].map(wt => (
                   <button
@@ -225,7 +225,7 @@ export default function CatalogPage() {
                         dispatch(setSelectedWeight([...selectedWeight, wt]));
                       }
                     }}
-                    className={`text-[10px] font-mono font-bold px-3 py-1.5 rounded-md border transition ${selectedWeight.includes(wt) ? 'bg-brand-primary text-white border-brand-primary shadow-xs' : 'bg-white border-gray-150 text-gray-700 hover:bg-gray-50'}`}
+                    className={`min-w-11 min-h-11 lg:min-w-auto lg:min-h-auto text-[0.875rem] lg:text-[10px] font-mono font-bold px-3 py-1.5 rounded-md border transition ${selectedWeight.includes(wt) ? 'bg-brand-primary text-white border-brand-primary shadow-xs' : 'bg-white border-gray-150 text-gray-700 hover:bg-gray-50'}`}
                   >
                     {wt}
                   </button>
@@ -236,11 +236,11 @@ export default function CatalogPage() {
 
           {hasBalanceData && (
             <div className="space-y-2 pt-3 border-t border-gray-100">
-              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Điểm Cân Bằng</h4>
+              <h4 className="font-bold text-[0.875rem] lg:text-[11px] uppercase tracking-wider text-gray-500">Điểm Cân Bằng</h4>
               <select
                 value={selectedBalance}
                 onChange={(e) => dispatch(setSelectedBalance(e.target.value))}
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 min-h-11 lg:min-h-auto text-base lg:text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
               >
                 <option value="Tất cả">Mọi điểm cân bằng</option>
                 <option value="nặng">Nặng Đầu (&gt; 298mm - Công)</option>
@@ -252,11 +252,11 @@ export default function CatalogPage() {
 
           {hasStiffnessData && (
             <div className="space-y-2 pt-3 border-t border-gray-100">
-              <h4 className="font-bold text-[11px] uppercase tracking-wider text-gray-500">Độ Cứng Thân (Stiffness)</h4>
+              <h4 className="font-bold text-[0.875rem] lg:text-[11px] uppercase tracking-wider text-gray-500">Độ Cứng Thân (Stiffness)</h4>
               <select
                 value={selectedStiffness}
                 onChange={(e) => dispatch(setSelectedStiffness(e.target.value))}
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 min-h-11 lg:min-h-auto text-base lg:text-xs text-gray-700 focus:outline-hidden focus:border-brand-primary"
               >
                 <option value="Tất cả">Mọi độ cứng</option>
                 <option value="cứng">Siêu Cứng / Cứng (Extra Stiff/Stiff)</option>
@@ -292,28 +292,28 @@ export default function CatalogPage() {
         <div className="lg:col-span-3 space-y-6">
           {searchQuery && (
             <div className="bg-brand-light border border-blue-100 rounded-xl p-3 flex justify-between items-center">
-              <p className="text-xs text-brand-secondary">Đang tìm kết quả lọc theo từ khóa: <strong>\"{searchQuery}\"</strong></p>
-              <button onClick={() => dispatch(setSearchQuery(''))} className="p-1 text-brand-secondary hover:bg-brand-light rounded-full"><X className="w-4 h-4" /></button>
+              <p className="text-sm md:text-xs text-brand-secondary">Đang tìm kết quả lọc theo từ khóa: <strong>\"{searchQuery}\"</strong></p>
+              <button onClick={() => dispatch(setSearchQuery(''))} className="shrink-0 min-w-11 min-h-11 md:min-w-auto md:min-h-auto p-1 text-brand-secondary hover:bg-brand-light rounded-full"><X className="w-4 h-4 max-md:mx-auto" /></button>
             </div>
           )}
 
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-xs font-bold text-gray-700">{filteredProducts.length} sản phẩm</p>
+          <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-2">
+            <p className="text-sm md:text-xs font-bold text-gray-700">{filteredProducts.length} sản phẩm</p>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setDrawerOpen(true)}
-                className="lg:hidden flex items-center gap-1.5 text-xs font-bold border border-gray-200 rounded-lg px-3 py-1.5 bg-white"
+                className="lg:hidden flex items-center gap-1.5 min-h-11 md:min-h-auto text-sm md:text-xs font-bold border border-gray-200 rounded-lg px-3 py-1.5 bg-white"
               >
                 <SlidersHorizontal className="w-4 h-4 text-brand-primary" /> Bộ lọc
                 {activeFilterCount > 0 && (
-                  <span className="bg-brand-primary text-white rounded-full text-[10px] min-w-4 h-4 px-1 flex items-center justify-center">{activeFilterCount}</span>
+                  <span className="bg-brand-primary text-white rounded-full text-[0.875rem] md:text-[10px] min-w-5 h-5 md:min-w-4 md:h-4 px-1 flex items-center justify-center">{activeFilterCount}</span>
                 )}
               </button>
               <select
                 aria-label="Sắp xếp"
                 value={sortMode}
                 onChange={(e) => setSortMode(e.target.value as SortMode)}
-                className="text-xs font-bold border border-gray-200 rounded-lg px-2 py-1.5 bg-white"
+                className="min-h-11 md:min-h-auto text-base md:text-xs font-bold border border-gray-200 rounded-lg px-2 py-1.5 bg-white"
               >
                 {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
@@ -334,7 +334,7 @@ export default function CatalogPage() {
           ) : (
             <div className="text-center py-24 bg-white border border-gray-100 rounded-2xl p-6">
               <p className="text-gray-500 text-sm">Không tìm thấy sản phẩm nào khớp với bộ lọc của bạn.</p>
-              <button onClick={() => dispatch(resetCatalogFilters())} className="mt-4 bg-brand-primary text-white font-bold text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:bg-brand-secondary transition ">
+              <button onClick={() => dispatch(resetCatalogFilters())} className="mt-4 bg-brand-primary text-white font-bold min-h-11 md:min-h-auto text-sm md:text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:bg-brand-secondary transition ">
                 Làm mới bộ lọc
               </button>
             </div>
