@@ -27,7 +27,7 @@ export default function CheckoutCallbackPage({ status }: CheckoutCallbackPagePro
           </div>
 
           {orderNumber && (
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700 break-all">
+            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700 break-all max-md:text-sm">
               Mã đơn hàng: <strong className="text-brand-primary">{orderNumber}</strong>
             </div>
           )}
@@ -35,7 +35,7 @@ export default function CheckoutCallbackPage({ status }: CheckoutCallbackPagePro
           <div className="pt-2 flex flex-col gap-2.5">
             <button
               onClick={() => navigate('/')}
-              className="w-full btn-primary text-xs uppercase tracking-wider py-3 rounded-xl flex items-center justify-center gap-2"
+              className="w-full btn-primary text-xs uppercase tracking-wider py-3 rounded-xl flex items-center justify-center gap-2 max-md:min-h-[44px] max-md:text-sm"
             >
               <ShoppingBag className="w-4 h-4" /> Tiếp tục mua sắm
             </button>
@@ -61,7 +61,7 @@ export default function CheckoutCallbackPage({ status }: CheckoutCallbackPagePro
           </div>
 
           {orderNumber && (
-            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700">
+            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700 max-md:text-sm">
               Mã đơn hàng: <strong className="text-gray-900">{orderNumber}</strong>
             </div>
           )}
@@ -69,7 +69,7 @@ export default function CheckoutCallbackPage({ status }: CheckoutCallbackPagePro
           <div className="pt-2 flex flex-col gap-2.5">
             <button
               onClick={() => navigate('/catalog')}
-              className="w-full btn-primary text-xs uppercase tracking-wider py-3 rounded-xl flex items-center justify-center gap-2"
+              className="w-full btn-primary text-xs uppercase tracking-wider py-3 rounded-xl flex items-center justify-center gap-2 max-md:min-h-[44px] max-md:text-sm"
             >
               Quay lại cửa hàng <ArrowRight className="w-4 h-4" />
             </button>
@@ -94,7 +94,7 @@ export default function CheckoutCallbackPage({ status }: CheckoutCallbackPagePro
         </div>
 
         {orderNumber && (
-          <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700">
+          <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs font-mono text-gray-700 max-md:text-sm">
             Mã đơn hàng: <strong className="text-rose-600">{orderNumber}</strong>
           </div>
         )}
@@ -102,7 +102,7 @@ export default function CheckoutCallbackPage({ status }: CheckoutCallbackPagePro
         <div className="pt-2 flex flex-col gap-2.5">
           <button
             onClick={() => navigate('/catalog')}
-            className="w-full btn-primary text-xs uppercase tracking-wider py-3 rounded-xl flex items-center justify-center gap-2"
+            className="w-full btn-primary text-xs uppercase tracking-wider py-3 rounded-xl flex items-center justify-center gap-2 max-md:min-h-[44px] max-md:text-sm"
           >
             Quay lại cửa hàng <ArrowRight className="w-4 h-4" />
           </button>

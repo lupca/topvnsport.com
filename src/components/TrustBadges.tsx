@@ -38,7 +38,7 @@ export default function TrustBadges({ products }: { products: Product[] }) {
         {items.map(item => (
           <div key={item.title} className="border-l-[3px] border-ink-primary pl-[16px]">
             <h4 className="font-display font-extrabold uppercase text-[14px] leading-[1.5] text-ink-primary mb-[4px]">{item.title}</h4>
-            <p className="text-[13.5px] leading-[1.45] text-ink-secondary font-medium">{item.text}</p>
+            <p className="text-[13.5px] leading-[1.45] text-ink-secondary font-medium max-md:text-[14px]">{item.text}</p>
           </div>
         ))}
       </div>

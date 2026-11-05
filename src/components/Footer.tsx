@@ -11,8 +11,8 @@ interface FooterProps {
 }
 
 const HEADING = 'font-display font-extrabold uppercase text-[14px] leading-[1.5] tracking-[0.06em] text-white mb-[14px]';
-const TEXT = 'text-[13.5px] leading-[1.8] font-medium text-zinc-200';
-const LINK = `${TEXT} hover:text-white hover:underline`;
+const TEXT = 'text-[13.5px] leading-[1.8] font-medium text-zinc-200 max-md:text-[14px]';
+const LINK = `${TEXT} hover:text-white hover:underline max-md:inline-flex max-md:items-center max-md:min-h-[44px]`;
 
 export default function Footer({ categories, products }: FooterProps) {
   const categoryLinks = getVisibleMainNav(getCategoriesSortedByCount(categories, products)).filter(entry => entry.footerLabel);
