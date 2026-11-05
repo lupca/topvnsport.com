@@ -14,10 +14,14 @@ interface MainNavProps {
   children?: ReactNode;
 }
 
-const ACTIVE_UNDERLINE = 'text-brand-primary after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:bg-brand-primary';
+// Gạch chân vẽ trên <span> chữ: dưới md link rộng tối thiểu 44px nhưng gạch vẫn đúng bề rộng chữ (STOR-166).
+// -13px = py-[13px] của link, đưa gạch về đáy link. Từ md span không relative nên gạch bám link như cũ.
+const ACTIVE_UNDERLINE = 'after:absolute after:inset-x-0 after:bottom-0 max-md:after:bottom-[-13px] after:h-[3px] after:bg-brand-primary';
 
 const linkClass = (active: boolean) =>
-  `relative inline-flex items-center py-[13px] font-display font-extrabold text-sm md:text-[13.5px] leading-[1.5] tracking-[0.03em] uppercase hover:text-brand-primary ${active ? ACTIVE_UNDERLINE : 'text-ink-primary'}`;
+  `relative inline-flex items-center max-md:min-w-[44px] max-md:justify-center py-[13px] font-display font-extrabold text-sm md:text-[13.5px] leading-[1.5] tracking-[0.03em] uppercase hover:text-brand-primary ${active ? 'text-brand-primary' : 'text-ink-primary'}`;
+
+const linkLabel = (active: boolean, label: string) => <span className={`max-md:relative ${active ? ACTIVE_UNDERLINE : ''}`}>{label}</span>;
 
 export default function MainNav({ items, children }: MainNavProps) {
   const { pathname, search } = useLocation();
@@ -44,7 +48,7 @@ export default function MainNav({ items, children }: MainNavProps) {
         <ul ref={listRef} className="max-w-[1280px] mx-auto px-[24px] flex flex-wrap items-center justify-center gap-[32px] max-md:flex-nowrap max-md:justify-start max-md:overflow-x-auto max-md:gap-6 max-md:px-4">
           <li className="max-md:shrink-0 max-md:whitespace-nowrap">
             <Link to="/" aria-current={homeActive ? 'page' : undefined} className={linkClass(homeActive)}>
-              BADMINTON (TRANG CHỦ)
+              {linkLabel(homeActive, 'BADMINTON (TRANG CHỦ)')}
             </Link>
           </li>
           {items.map(item => {
@@ -56,7 +60,7 @@ export default function MainNav({ items, children }: MainNavProps) {
                   aria-current={active ? 'page' : undefined}
                   className={linkClass(active)}
                 >
-                  {item.label}
+                  {linkLabel(active, item.label)}
                 </Link>
               </li>
             );

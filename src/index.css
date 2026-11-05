@@ -77,6 +77,13 @@ h1, h2, h3, h4, h5, h6, button, .font-display {
 .floating-contact-pdp {
   bottom: calc(var(--pdp-bar-offset) + 0.75rem + env(safe-area-inset-bottom));
 }
+/* STOR-166 (MOB-E): nút popup ui-kit đủ 44px trên điện thoại; cùng mốc max-md của Tailwind, từ 768px giữ nguyên. */
+@media (width < 48rem) {
+  [role='alertdialog'] button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
 @media (min-width: 768px) {
   .floating-contact,
   .floating-contact-pdp {

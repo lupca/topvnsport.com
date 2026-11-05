@@ -78,7 +78,7 @@ describe('STOR-058 MainNav', () => {
   ])('ở %s chỉ link khớp vị trí có gạch chân active', (path, activeLabel) => {
     renderNav(path);
     const links = within(screen.getByRole('navigation', { name: 'Điều hướng chính' })).getAllByRole('link');
-    const underlined = links.filter(a => a.className.includes('after:h-[3px]')).map(a => a.textContent);
+    const underlined = links.filter(a => a.querySelector('[class*="after:h-[3px]"]')).map(a => a.textContent);
     expect(underlined).toEqual(activeLabel ? [activeLabel] : []);
     const current = links.filter(a => a.getAttribute('aria-current') === 'page').map(a => a.textContent);
     expect(current).toEqual(activeLabel ? [activeLabel] : []);

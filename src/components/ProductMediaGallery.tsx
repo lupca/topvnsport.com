@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from 'lucide-react';
 
+// Mũi tên dải ảnh (STOR-166, MOB-E): dưới md nút là ô bấm 44px trong suốt, vòng tròn 30px vẽ trên icon.
+// Dùng px vì 1rem của trang là 17px. Từ md giữ nguyên nút tròn cũ.
+const RAIL_ARROW = 'top-1/2 z-20 -translate-y-1/2 rounded-full border border-gray-200 bg-white/95 p-1.5 text-gray-600 shadow-sm transition hover:text-brand-primary max-md:flex max-md:size-[44px] max-md:items-center max-md:justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none';
+const RAIL_ARROW_ICON = 'h-4 w-4 max-md:box-content max-md:size-[16px] max-md:rounded-full max-md:border max-md:border-gray-200 max-md:bg-white/95 max-md:p-[6px] max-md:shadow-sm';
+
 interface ProductMediaGalleryProps {
   productName: string;
   image: string;
@@ -124,23 +129,23 @@ export default function ProductMediaGallery({
           <button
             type="button"
             onClick={() => scrollThumbRail('prev')}
-            className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full border border-gray-200 bg-white/95 p-1.5 text-gray-600 shadow-sm transition hover:text-brand-primary"
+            className={`absolute left-2 max-md:left-[2px] ${RAIL_ARROW}`}
             aria-label="Cuộn danh sách ảnh sang trái"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className={RAIL_ARROW_ICON} />
           </button>
           <button
             type="button"
             onClick={() => scrollThumbRail('next')}
-            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full border border-gray-200 bg-white/95 p-1.5 text-gray-600 shadow-sm transition hover:text-brand-primary"
+            className={`absolute right-2 max-md:right-[2px] ${RAIL_ARROW}`}
             aria-label="Cuộn danh sách ảnh sang phải"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className={RAIL_ARROW_ICON} />
           </button>
 
           <div
             ref={thumbRailRef}
-            className="scroll-smooth flex gap-2.5 overflow-x-auto px-7 py-0.5 scrollbar-hide snap-x snap-mandatory touch-pan-x"
+            className="scroll-smooth flex gap-2.5 overflow-x-auto px-7 py-0.5 scrollbar-hide snap-x snap-mandatory touch-pan-x max-md:scroll-pl-[36px]"
           >
             {galleryImages.map((img, i) => (
               <button
