@@ -1,0 +1,81 @@
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:22 remove max-md:text-sm
+<           <span className="font-bold text-xs uppercase tracking-wider text-gray-900 max-md:text-sm">Bộ lọc sản phẩm</span>
+>           <span className="font-bold text-xs uppercase tracking-wider text-gray-900">Bộ lọc sản phẩm</span>
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 30ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:23 remove max-md:min-w-11
+<           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+>           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-h-11 max-md:inline-flex max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 59ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:23 remove max-md:min-h-11
+<           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+>           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:inline-flex max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 59ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:23 remove max-md:inline-flex
+<           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+>           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 62ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:23 remove max-md:items-center
+<           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+>           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:justify-center"><X className="w-5 h-5" /></button>
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 62ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:23 remove max-md:justify-center
+<           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:items-center max-md:justify-center"><X className="w-5 h-5" /></button>
+>           <button onClick={onClose} aria-label="Đóng" className="p-1 text-gray-500 max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:items-center"><X className="w-5 h-5" /></button>
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 58ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:27 remove max-md:text-sm
+<           <button onClick={onClose} className="w-full bg-brand-primary text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full max-md:text-sm max-md:min-h-11">
+>           <button onClick={onClose} className="w-full bg-brand-primary text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full max-md:min-h-11">
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 61ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+=== MUTATION: src/features/catalog/CatalogFilterDrawer.tsx:27 remove max-md:min-h-11
+<           <button onClick={onClose} className="w-full bg-brand-primary text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full max-md:text-sm max-md:min-h-11">
+>           <button onClick={onClose} className="w-full bg-brand-primary text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full max-md:text-sm">
+--- mutated:
+     × title, close X and view CTA carry the max-md: tokens 62ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 1 passed (2)
+--- reverted:
+      Tests  2 passed (2)
+
+SUMMARY: 8 mutations, 8 RED after mutation, 8 GREEN after revert, 0 unexpected

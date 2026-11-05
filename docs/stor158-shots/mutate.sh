@@ -2,7 +2,7 @@
 # STOR-158 mutation check (r:7f8cd4dc): for EVERY max-md: token of CatalogFilterDrawer.tsx, on its own line,
 # remove that one token, run the guarding test (expect RED), restore the file byte-for-byte, run again (expect GREEN).
 # Output -> docs/stor158-shots/mutation.log. Run from the repo root: bash docs/stor158-shots/mutate.sh
-set -u
+set -u -o pipefail
 D=docs/stor158-shots; LOG=$D/mutation.log; T=src/__tests__/stor158_filter_drawer_mobile.test.tsx
 BK=$(mktemp -d); trap 'rm -rf "$BK"' EXIT
 : > $LOG
