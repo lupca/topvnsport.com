@@ -179,7 +179,7 @@ export default function App() {
               element={
                 <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4" id="not-found">
                   <h1 className="font-display font-black text-2xl text-gray-900">Không tìm thấy trang</h1>
-                  <Link to="/" className="inline-block text-sm font-bold text-brand-primary hover:underline">Về trang chủ</Link>
+                  <Link to="/" className="inline-block text-sm font-bold text-brand-primary hover:underline max-md:inline-flex max-md:items-center max-md:min-h-[44px]">Về trang chủ</Link>
                 </div>
               }
             />
