@@ -33,7 +33,7 @@ const BADGE_BG: Partial<Record<NonNullable<Product['badge']>, string>> = {
   HOT: 'bg-brand-primary'
 };
 
-const badgeClass = 'font-display text-[9.5px] sm:text-[11px] font-extrabold tracking-[0.04em] uppercase px-1.5 sm:px-2 py-0.5 text-white';
+const badgeClass = 'font-display text-[0.875rem] md:text-[11px] font-extrabold tracking-[0.04em] uppercase px-1.5 sm:px-2 py-0.5 text-white';
 
 export default function ProductCard({ product, onQuickView, onAddToCart }: ProductCardProps) {
   const navigate = useNavigate();
@@ -103,7 +103,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
           />
         ) : (
           <div
-            className="w-full h-full flex flex-col items-center justify-center gap-1 text-ink-muted text-[11px] font-semibold"
+            className="w-full h-full flex flex-col items-center justify-center gap-1 text-ink-muted text-[0.875rem] md:text-[11px] font-semibold"
             data-testid="image-placeholder"
           >
             <ImageOff className="w-8 h-8" aria-hidden="true" />
@@ -149,7 +149,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
       <div className="px-1.5 pt-2 pb-2.5 sm:px-3.5 sm:pt-3.5 sm:pb-4 flex-1 flex flex-col cursor-pointer" onClick={goToDetail}>
         {/* Tầng 2: thương hiệu · ngành hàng + tồn kho */}
         {(product.brand || product.category || inStock) && (
-          <div className="flex items-center justify-between gap-1 mb-1 font-mono text-[10px] sm:text-[11.5px] font-bold uppercase tracking-[0.04em] text-brand-primary">
+          <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-1 mb-1 font-mono text-[0.875rem] md:text-[11.5px] font-bold uppercase tracking-[0.04em] text-brand-primary">
             <span className="min-w-0 truncate">
               {product.brand && <span data-testid="brand-label">{product.brand}</span>}
               {product.brand && product.category && <span className="hidden sm:inline"> · </span>}
@@ -157,7 +157,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
             </span>
             {inStock && (
               <span
-                className="shrink-0 inline-flex items-center gap-1 normal-case tracking-normal text-[9.5px] sm:text-[10.5px] text-[#166534] bg-[#dcfce7] px-1.5 py-px rounded"
+                className="shrink-0 inline-flex items-center gap-1 normal-case tracking-normal text-[0.875rem] md:text-[10.5px] text-[#166534] bg-[#dcfce7] px-1.5 py-px rounded"
                 data-testid="stock-tag"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#166534]" aria-hidden="true" />
@@ -168,14 +168,14 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
         )}
 
         {/* Tầng 3: tên 2 dòng */}
-        <h3 className="text-[13px] sm:text-[15.5px] font-semibold leading-[1.42] text-ink-primary group-hover:text-brand-primary line-clamp-2 min-h-[36px] sm:min-h-[44px] mb-1.5 sm:mb-2">
+        <h3 className="text-[0.875rem] md:text-[15.5px] font-semibold leading-[1.42] text-ink-primary group-hover:text-brand-primary line-clamp-2 min-h-[43px] md:min-h-[44px] mb-1.5 sm:mb-2">
           {product.name}
         </h3>
 
         {/* Tầng 4: xem trước biến thể thật */}
         {(colorDots.length > 0 || variantText.length > 0) && (
           <div
-            className="hidden sm:flex items-center justify-between gap-2 mb-2 pb-2 border-b border-dashed border-[#e4e4e7] text-[11.5px] font-semibold text-ink-secondary"
+            className="hidden sm:flex items-center justify-between gap-2 mb-2 pb-2 border-b border-dashed border-[#e4e4e7] text-[0.875rem] md:text-[11.5px] font-semibold text-ink-secondary"
             data-testid="variant-preview-row"
           >
             <span className="inline-flex items-center gap-1.5">
@@ -190,7 +190,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
               ))}
             </span>
             {variantText.length > 0 && (
-              <span className="font-mono text-[11px] truncate" data-testid="variant-text">
+              <span className="font-mono text-[0.875rem] md:text-[11px] truncate" data-testid="variant-text">
                 {variantText.join(' · ')}
               </span>
             )}
@@ -209,7 +209,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
                 <span className="font-display text-[14.5px] sm:text-[17.5px] font-extrabold text-brand-sale tabular-nums" data-testid="sale-price">
                   {(salePrice ?? 0).toLocaleString('vi-VN')}đ
                 </span>
-                <span className="text-[11px] sm:text-[12.5px] font-semibold text-ink-muted line-through tabular-nums" data-testid="original-price">
+                <span className="text-[0.875rem] md:text-[12.5px] font-semibold text-ink-muted line-through tabular-nums" data-testid="original-price">
                   {(originalPrice ?? 0).toLocaleString('vi-VN')}đ
                 </span>
               </>
@@ -231,11 +231,11 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
                 onAddToCart(product, e);
               }}
               disabled={cartBlocked}
-              className={`[@media(hover:hover)]:hidden shrink-0 p-2 rounded-full transition ${
+              className={`[@media(hover:hover)]:hidden shrink-0 min-w-11 min-h-11 md:min-w-auto md:min-h-auto p-2 rounded-full transition ${
                 cartBlocked ? 'bg-gray-200 text-ink-muted cursor-not-allowed' : 'bg-brand-primary text-white'
               }`}
             >
-              <ShoppingCart className="w-4 h-4" />
+              <ShoppingCart className="w-4 h-4 max-md:mx-auto" />
             </button>
           )}
         </div>
@@ -250,7 +250,7 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
                 e.stopPropagation();
                 goToDetail();
               }}
-              className="w-full mt-0.5 flex items-center justify-between gap-1 border border-brand-primary bg-[#e8f1fb] text-brand-secondary hover:bg-brand-primary hover:text-white text-[10.5px] sm:text-[11.5px] font-bold px-1.5 sm:px-[7px] py-[3px] transition"
+              className="w-full mt-0.5 flex items-center justify-between gap-1 border border-brand-primary bg-[#e8f1fb] text-brand-secondary hover:bg-brand-primary hover:text-white min-h-11 md:min-h-auto text-[0.875rem] md:text-[11.5px] font-bold px-1.5 sm:px-[7px] py-[3px] transition"
             >
               <span className="sm:hidden">Chọn cước &amp; kg</span>
               <span className="hidden sm:inline">Đan cước O2O</span>
