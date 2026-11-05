@@ -165,7 +165,7 @@ export default function CatalogPage() {
                     dispatch(setSelectedBrand(selectedBrand.filter(b => b !== brand)));
                   }
                 }}
-                className="rounded border-gray-300 text-brand-primary focus:ring-brand-primary/40"
+                className="rounded border-gray-300 text-brand-primary focus:ring-brand-primary/40 max-md:w-11 max-md:h-11"
               />
               <span>{brand}</span>
             </label>
