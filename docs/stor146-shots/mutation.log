@@ -1,0 +1,618 @@
+=== MUTATION: back button: remove max-md:min-h-[44px] (src/components/product-detail/ProductPurchaseSection.tsx)
+<         className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-brand-primary font-medium mb-6 transition max-md:min-h-[44px]"
+>         className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-brand-primary font-medium mb-6 transition"
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: brand pill: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<               <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm shadow-xs max-md:text-sm">
+>               <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm shadow-xs">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 51ms
+     × colour buttons are 44x44 and the colour row wraps below md 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: badge pill: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<               <span className="text-[10px] bg-purple-600 text-white font-extrabold uppercase px-2 py-0.5 rounded-sm max-md:text-sm">
+>               <span className="text-[10px] bg-purple-600 text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: characteristics pill: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<               <span className="text-[10px] bg-gray-900 text-yellow-400 font-extrabold uppercase px-2 py-0.5 rounded-sm border border-yellow-400 max-md:text-sm">
+>               <span className="text-[10px] bg-gray-900 text-yellow-400 font-extrabold uppercase px-2 py-0.5 rounded-sm border border-yellow-400">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 48ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Giá bán hiện tại': remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<             <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold max-md:text-sm">Giá bán hiện tại</p>
+>             <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Giá bán hiện tại</p>
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 49ms
+     × colour buttons are 44x44 and the colour row wraps below md 6ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: discount pill: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<             <span className="bg-brand-primary text-white text-[11px] font-black px-3 py-1.5 rounded-full max-md:text-sm">
+>             <span className="bg-brand-primary text-white text-[11px] font-black px-3 py-1.5 rounded-full">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 56ms
+     × colour buttons are 44x44 and the colour row wraps below md 6ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tier label: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<                     <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5 max-md:text-sm">{tier.name}</label>
+>                     <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">{tier.name}</label>
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tier option button: remove max-md:min-h-[44px] (src/components/product-detail/ProductPurchaseSection.tsx)
+<                             className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
+>                             className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-w-[44px] max-md:text-sm ${
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 51ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tier option button: remove max-md:min-w-[44px] (src/components/product-detail/ProductPurchaseSection.tsx)
+<                             className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
+>                             className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:text-sm ${
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 84ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tier option button: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<                             className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
+>                             className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] ${
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 60ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Hết' badge: remove max-md:static (src/components/product-detail/ProductPurchaseSection.tsx)
+<                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:ml-1.5 max-md:text-sm">
+>                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:inline-block max-md:ml-1.5 max-md:text-sm">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 102ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Hết' badge: remove max-md:inline-block (src/components/product-detail/ProductPurchaseSection.tsx)
+<                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:ml-1.5 max-md:text-sm">
+>                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:ml-1.5 max-md:text-sm">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 95ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Hết' badge: remove max-md:ml-1.5 (src/components/product-detail/ProductPurchaseSection.tsx)
+<                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:ml-1.5 max-md:text-sm">
+>                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:text-sm">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 81ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Hết' badge: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:ml-1.5 max-md:text-sm">
+>                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:ml-1.5">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 47ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: colour label: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5 max-md:text-sm">Phối màu / Phiên bản</label>
+>                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Phối màu / Phiên bản</label>
+--- mutated:
+     × colour buttons are 44x44 and the colour row wraps below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: colour row: remove max-md:flex-wrap (src/components/product-detail/ProductPurchaseSection.tsx)
+<                 <div className="flex gap-2 max-md:flex-wrap">
+>                 <div className="flex gap-2">
+--- mutated:
+     × colour buttons are 44x44 and the colour row wraps below md 25ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: colour button: remove max-md:min-h-[44px] (src/components/product-detail/ProductPurchaseSection.tsx)
+<                       className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
+>                       className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-w-[44px] max-md:text-sm ${
+--- mutated:
+     × colour buttons are 44x44 and the colour row wraps below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: colour button: remove max-md:min-w-[44px] (src/components/product-detail/ProductPurchaseSection.tsx)
+<                       className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
+>                       className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:text-sm ${
+--- mutated:
+     × colour buttons are 44x44 and the colour row wraps below md 19ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: colour button: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<                       className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
+>                       className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] ${
+--- mutated:
+     × colour buttons are 44x44 and the colour row wraps below md 10ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: add-to-cart CTA: remove max-md:min-h-[44px] (src/components/product-detail/ProductPurchaseSection.tsx)
+<             className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition max-md:min-h-[44px] max-md:text-sm ${
+>             className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition max-md:text-sm ${
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 50ms
+     × colour buttons are 44x44 and the colour row wraps below md 6ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: stores CTA: remove max-md:min-h-[44px] (src/components/product-detail/ProductPurchaseSection.tsx)
+<             className="btn-outline rounded-sm py-3.5 px-6 text-xs uppercase tracking-wider flex items-center justify-center gap-2 max-md:min-h-[44px] max-md:text-sm"
+>             className="btn-outline rounded-sm py-3.5 px-6 text-xs uppercase tracking-wider flex items-center justify-center gap-2 max-md:text-sm"
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 64ms
+     × colour buttons are 44x44 and the colour row wraps below md 11ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: add-to-cart CTA: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<             className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition max-md:min-h-[44px] max-md:text-sm ${
+>             className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition max-md:min-h-[44px] ${
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 47ms
+     × colour buttons are 44x44 and the colour row wraps below md 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: stores CTA: remove max-md:text-sm (src/components/product-detail/ProductPurchaseSection.tsx)
+<             className="btn-outline rounded-sm py-3.5 px-6 text-xs uppercase tracking-wider flex items-center justify-center gap-2 max-md:min-h-[44px] max-md:text-sm"
+>             className="btn-outline rounded-sm py-3.5 px-6 text-xs uppercase tracking-wider flex items-center justify-center gap-2 max-md:min-h-[44px]"
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 48ms
+     × colour buttons are 44x44 and the colour row wraps below md 5ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: stringing caption: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<             <p className="text-[11px] text-gray-400 max-md:text-sm">Chọn cước và lực căng tùy biến theo trình độ</p>
+>             <p className="text-[11px] text-gray-400">Chọn cước và lực căng tùy biến theo trình độ</p>
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: toggle label: remove max-md:min-h-[44px] (src/components/product-detail/StringingAssistant.tsx)
+<         <label className="relative inline-flex items-center cursor-pointer max-md:min-h-[44px] max-md:min-w-[44px] max-md:justify-center">
+>         <label className="relative inline-flex items-center cursor-pointer max-md:min-w-[44px] max-md:justify-center">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 51ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: toggle label: remove max-md:min-w-[44px] (src/components/product-detail/StringingAssistant.tsx)
+<         <label className="relative inline-flex items-center cursor-pointer max-md:min-h-[44px] max-md:min-w-[44px] max-md:justify-center">
+>         <label className="relative inline-flex items-center cursor-pointer max-md:min-h-[44px] max-md:justify-center">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 83ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: toggle label: remove max-md:justify-center (src/components/product-detail/StringingAssistant.tsx)
+<         <label className="relative inline-flex items-center cursor-pointer max-md:min-h-[44px] max-md:min-w-[44px] max-md:justify-center">
+>         <label className="relative inline-flex items-center cursor-pointer max-md:min-h-[44px] max-md:min-w-[44px]">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 95ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: toggle track: remove max-md:relative (src/components/product-detail/StringingAssistant.tsx)
+<           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary max-md:relative" />
+>           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary" />
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 90ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Bước 1' label: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<             <label className="block text-xs font-bold uppercase text-gray-500 max-md:text-sm">Bước 1: Chọn mẫu dây cước</label>
+>             <label className="block text-xs font-bold uppercase text-gray-500">Bước 1: Chọn mẫu dây cước</label>
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 48ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: string row: remove max-md:min-h-[44px] (src/components/product-detail/StringingAssistant.tsx)
+<                         className={`p-2.5 rounded-lg border transition flex justify-between items-center max-md:min-h-[44px] ${
+>                         className={`p-2.5 rounded-lg border transition flex justify-between items-center ${
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 48ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: string name: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<                           <p className="font-bold text-xs text-gray-900 max-md:text-sm">{optionName}</p>
+>                           <p className="font-bold text-xs text-gray-900">{optionName}</p>
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: string metadata: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<                             <p className="text-[10px] text-gray-400 font-mono max-md:text-sm">{metadata}</p>
+>                             <p className="text-[10px] text-gray-400 font-mono">{metadata}</p>
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 47ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: string price: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<                         <span className="text-xs font-extrabold text-brand-primary max-md:text-sm">
+>                         <span className="text-xs font-extrabold text-brand-primary">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 53ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Bước 2' label: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<               <label className="text-xs font-bold uppercase text-gray-500 max-md:text-sm">Bước 2: Chọn lực căng (Số Kg/Lbs)</label>
+>               <label className="text-xs font-bold uppercase text-gray-500">Bước 2: Chọn lực căng (Số Kg/Lbs)</label>
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 50ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tension range: remove max-md:h-11 (src/components/product-detail/StringingAssistant.tsx)
+<               className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none max-md:h-11 max-md:py-[19px] max-md:bg-clip-content"
+>               className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none max-md:py-[19px] max-md:bg-clip-content"
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 54ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tension range: remove max-md:py-[19px] (src/components/product-detail/StringingAssistant.tsx)
+<               className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none max-md:h-11 max-md:py-[19px] max-md:bg-clip-content"
+>               className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none max-md:h-11 max-md:bg-clip-content"
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 48ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tension range: remove max-md:bg-clip-content (src/components/product-detail/StringingAssistant.tsx)
+<               className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none max-md:h-11 max-md:py-[19px] max-md:bg-clip-content"
+>               className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none max-md:h-11 max-md:py-[19px]"
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 48ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tension ticks: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<             <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1 max-md:text-sm max-md:flex-wrap max-md:gap-x-2">
+>             <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1 max-md:flex-wrap max-md:gap-x-2">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 47ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tension ticks: remove max-md:flex-wrap (src/components/product-detail/StringingAssistant.tsx)
+<             <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1 max-md:text-sm max-md:flex-wrap max-md:gap-x-2">
+>             <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1 max-md:text-sm max-md:gap-x-2">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 91ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tension ticks: remove max-md:gap-x-2 (src/components/product-detail/StringingAssistant.tsx)
+<             <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1 max-md:text-sm max-md:flex-wrap max-md:gap-x-2">
+>             <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1 max-md:text-sm max-md:flex-wrap">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 85ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tension tooltip: remove max-md:text-sm (src/components/product-detail/StringingAssistant.tsx)
+<             <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-[11px] text-gray-600 leading-relaxed flex items-start gap-2 max-md:text-sm">
+>             <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-[11px] text-gray-600 leading-relaxed flex items-start gap-2">
+--- mutated:
+     × every target is 44px and every text >=14px below md; layout classes pinned 46ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tab button: remove max-md:min-h-[44px] (src/components/product-detail/ProductDetailTabs.tsx)
+<             className={`pb-3 px-4 whitespace-nowrap shrink-0 text-sm font-bold max-md:min-h-[44px] uppercase tracking-wider border-b-2 transition ${
+>             className={`pb-3 px-4 whitespace-nowrap shrink-0 text-sm font-bold uppercase tracking-wider border-b-2 transition ${
+--- mutated:
+     × details: tabs 44px tall, all text >=14px below md 8ms
+     × tech: tabs 44px tall, all text >=14px below md 6ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: tab button: text-sm back to text-xs md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<             className={`pb-3 px-4 whitespace-nowrap shrink-0 text-sm font-bold max-md:min-h-[44px] uppercase tracking-wider border-b-2 transition ${
+>             className={`pb-3 px-4 whitespace-nowrap shrink-0 text-xs md:text-sm font-bold max-md:min-h-[44px] uppercase tracking-wider border-b-2 transition ${
+--- mutated:
+     × details: tabs 44px tall, all text >=14px below md 8ms
+     × tech: tabs 44px tall, all text >=14px below md 6ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 2 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: 'Điểm nổi bật': remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                   <p className="font-bold text-gray-900 text-xs uppercase text-brand-primary max-md:text-sm">Điểm nổi bật:</p>
+>                   <p className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Điểm nổi bật:</p>
+--- mutated:
+     × details: tabs 44px tall, all text >=14px below md 7ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: details spec heading: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<               <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider mb-4 text-brand-primary max-md:text-sm">Thông số cơ bản:</h4>
+>               <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider mb-4 text-brand-primary">Thông số cơ bản:</h4>
+--- mutated:
+     × details: tabs 44px tall, all text >=14px below md 10ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: details spec rows: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<               <div className="space-y-2.5 text-xs text-gray-600 font-mono max-md:text-sm">
+>               <div className="space-y-2.5 text-xs text-gray-600 font-mono">
+--- mutated:
+     × details: tabs 44px tall, all text >=14px below md 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge label Trọng lượng: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Trọng lượng (Weight)</p>
+>                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Trọng lượng (Weight)</p>
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge label Điểm Cân Bằng: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Điểm Cân Bằng (Balance)</p>
+>                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Điểm Cân Bằng (Balance)</p>
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge label Độ Cứng Thân: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Độ Cứng Thân (Stiffness)</p>
+>                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Độ Cứng Thân (Stiffness)</p>
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge label Sức Căng Khung: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Sức Căng Khung (Max Tension)</p>
+>                     <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Sức Căng Khung (Max Tension)</p>
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge caption weight: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-xs text-gray-400 max-md:text-sm">{product.specs.weight}</p>
+>                     <p className="text-xs text-gray-400">{product.specs.weight}</p>
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 11ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge caption balance: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-xs text-gray-400 max-md:text-sm">
+>                     <p className="text-xs text-gray-400">
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge caption stiffness: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-xs text-gray-400 max-md:text-sm">{product.specs.stiffness}</p>
+>                     <p className="text-xs text-gray-400">{product.specs.stiffness}</p>
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: gauge caption tension: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                     <p className="text-xs text-gray-400 max-md:text-sm">
+>                     <p className="text-xs text-gray-400">
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 11ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: stiffness gauge word: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                       <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none max-md:text-sm">
+>                       <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none">
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: attribute table head: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                       <tr className="border-b border-gray-100 text-gray-500 text-xs uppercase max-md:text-sm">
+>                       <tr className="border-b border-gray-100 text-gray-500 text-xs uppercase">
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: technology name: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                       <span className="text-[10px] bg-brand-light text-brand-primary font-bold px-2.5 py-1 rounded-sm uppercase tracking-widest block w-max mb-2 max-md:text-sm">
+>                       <span className="text-[10px] bg-brand-light text-brand-primary font-bold px-2.5 py-1 rounded-sm uppercase tracking-widest block w-max mb-2">
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== MUTATION: technology description: remove max-md:text-sm (src/components/product-detail/ProductDetailTabs.tsx)
+<                       <p className="text-xs text-gray-600 leading-normal max-md:text-sm">{technology.description}</p>
+>                       <p className="text-xs text-gray-600 leading-normal">{technology.description}</p>
+--- mutated:
+     × tech: tabs 44px tall, all text >=14px below md 9ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 3 passed (4)
+--- reverted:
+      Tests  4 passed (4)
+
+=== LIVE MUTATION: 'Hết' badge: remove max-md:static (live measure.cjs) (src/components/product-detail/ProductPurchaseSection.tsx)
+<                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:ml-1.5 max-md:text-sm">
+>                               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:inline-block max-md:ml-1.5 max-md:text-sm">
+--- mutated:
+    back=219x44 options=[Đen 60x44, Xanh 68x44] tabs=270x44,384x44 caption=14.875px hetFs=14.875 hetInside=no
+    back=219x44 options=[Đen 60x44, Xanh 68x44] tabs=270x44,384x44 caption=14.875px hetFs=14.875 hetInside=no gauges=4 attrRows=1 gaugeFit=4/4
+    back=219x44 options=[Đen 60x44, Xanh 68x44] tabs=270x44,384x44 caption=14.875px hetFs=14.875 hetInside=no
+measure exit=1
+--- reverted:
+pdp-racket:details 390 targets=0 text=0 sw=390 imgTop=249 missing=none (of 11 targets)
+pdp-racket:tech 390 targets=0 text=0 sw=390 imgTop=249 missing=none (of 11 targets)
+stopped dev server pid 2056842; 0 failure(s)
+measure exit=0
+
+=== LIVE MUTATION: stiffness gauge word: remove max-md:text-sm (live measure.cjs) (src/components/product-detail/ProductDetailTabs.tsx)
+<                       <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none max-md:text-sm">
+>                       <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none">
+--- mutated:
+pdp-racket:tech 360 targets=0 text=1 sw=360 imgTop=249 missing=none (of 11 targets) FAIL text
+pdp-racket:tech 390 targets=0 text=1 sw=390 imgTop=249 missing=none (of 11 targets) FAIL text
+pdp-racket:tech 430 targets=0 text=1 sw=430 imgTop=249 missing=none (of 11 targets) FAIL text
+measure exit=1
+--- reverted:
+pdp-racket:details 390 targets=0 text=0 sw=390 imgTop=249 missing=none (of 11 targets)
+pdp-racket:tech 390 targets=0 text=0 sw=390 imgTop=249 missing=none (of 11 targets)
+stopped dev server pid 2060807; 0 failure(s)
+measure exit=0
+
+SUMMARY: 60 mutations, 60 RED after mutation, 60 GREEN after revert, 0 unexpected

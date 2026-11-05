@@ -91,10 +91,10 @@ export default function StringingAssistant({
         <div className="flex items-center gap-2">
           <div>
             <h3 className="font-bold text-sm text-gray-900 uppercase">Dịch vụ đan cước chuyên nghiệp</h3>
-            <p className="text-[11px] text-gray-400">Chọn cước và lực căng tùy biến theo trình độ</p>
+            <p className="text-[11px] text-gray-400 max-md:text-sm">Chọn cước và lực căng tùy biến theo trình độ</p>
           </div>
         </div>
-        <label className="relative inline-flex items-center cursor-pointer">
+        <label className="relative inline-flex items-center cursor-pointer max-md:min-h-[44px] max-md:min-w-[44px] max-md:justify-center">
           <input
             type="checkbox"
             checked={isEnabled}
@@ -120,14 +120,14 @@ export default function StringingAssistant({
             }}
             className="sr-only peer"
           />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary" />
+          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-primary max-md:relative" />
         </label>
       </div>
 
       {isEnabled && (
         <div className="space-y-4 animate-in slide-in-from-top-3 duration-200">
           <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase text-gray-500">Bước 1: Chọn mẫu dây cước</label>
+            <label className="block text-xs font-bold uppercase text-gray-500 max-md:text-sm">Bước 1: Chọn mẫu dây cước</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[160px] overflow-y-auto pr-1">
               {stringingVariation && (
                 stringingVariation.options
@@ -152,7 +152,7 @@ export default function StringingAssistant({
                           if (isBlocked) return;
                           selectString(optionName);
                         }}
-                        className={`p-2.5 rounded-lg border transition flex justify-between items-center ${
+                        className={`p-2.5 rounded-lg border transition flex justify-between items-center max-md:min-h-[44px] ${
                           isBlocked
                             ? 'bg-gray-100 border-gray-200 opacity-60 cursor-not-allowed'
                             : isSelected
@@ -161,13 +161,13 @@ export default function StringingAssistant({
                         }`}
                       >
                         <div>
-                          <p className="font-bold text-xs text-gray-900">{optionName}</p>
+                          <p className="font-bold text-xs text-gray-900 max-md:text-sm">{optionName}</p>
                           {/* Không khớp được sản phẩm cước thật -> không bịa loại/độ dày, chỉ hiện tên lựa chọn */}
                           {metadata && (
-                            <p className="text-[10px] text-gray-400 font-mono">{metadata}</p>
+                            <p className="text-[10px] text-gray-400 font-mono max-md:text-sm">{metadata}</p>
                           )}
                         </div>
-                        <span className="text-xs font-extrabold text-brand-primary">
+                        <span className="text-xs font-extrabold text-brand-primary max-md:text-sm">
                           {isHet ? 'Hết' : diffPrice === undefined ? '' : diffPrice > 0 ? `+${diffPrice.toLocaleString('vi-VN')}đ` : 'Miễn phí'}
                         </span>
                       </div>
@@ -179,7 +179,7 @@ export default function StringingAssistant({
 
           <div className="space-y-2 pt-2 border-t border-gray-100">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-bold uppercase text-gray-500">Bước 2: Chọn lực căng (Số Kg/Lbs)</label>
+              <label className="text-xs font-bold uppercase text-gray-500 max-md:text-sm">Bước 2: Chọn lực căng (Số Kg/Lbs)</label>
               <span className="text-base font-extrabold text-brand-primary font-mono">{tension.toFixed(1)} kg</span>
             </div>
 
@@ -190,16 +190,16 @@ export default function StringingAssistant({
               step="0.5"
               value={tension}
               onChange={(event) => onSetTension(parseFloat(event.target.value))}
-              className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none"
+              className="w-full accent-brand-primary cursor-pointer h-1.5 bg-gray-100 rounded-lg appearance-none max-md:h-11 max-md:py-[19px] max-md:bg-clip-content"
             />
 
-            <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1">
+            <div className="flex justify-between text-[10px] text-gray-400 font-mono px-1 max-md:text-sm max-md:flex-wrap max-md:gap-x-2">
               <span>9 kg (Học sinh)</span>
               <span>10.5 kg (Mức căng phổ thông)</span>
               <span>13 kg (VĐV Chuyên nghiệp)</span>
             </div>
 
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-[11px] text-gray-600 leading-relaxed flex items-start gap-2">
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 text-[11px] text-gray-600 leading-relaxed flex items-start gap-2 max-md:text-sm">
               <span>{getTensionTooltip(tension)}</span>
             </div>
           </div>
