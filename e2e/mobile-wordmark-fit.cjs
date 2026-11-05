@@ -71,8 +71,22 @@ async function main() {
         await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (r) => r.continue());
         await route.go(page);
         await page.evaluate(() => window.scrollTo(0, 0));
-        const font = await page.evaluate(async () => { await document.fonts.ready; const ok = document.fonts.check('800 18px Montserrat'); const wm = document.querySelector('[data-testid=mobile-sticky-bar] img[alt="TopVNSport Logo"]').parentElement; return ok && getComputedStyle(wm).fontFamily.includes('Montserrat'); });
-        if (!font) throw new Error('Montserrat 800 not loaded (fonts.googleapis.com unreachable?); refusing to measure a fallback font');
+        // fonts.check() is true when nothing needs loading, so force the load and require a face with status 'loaded'
+        const font = await page.evaluate(async () => {
+          // load() resolves with the faces covering these glyphs (the latin subset); a failed file rejects or leaves one unloaded
+          let faces;
+          try { faces = await document.fonts.load('800 18px Montserrat', 'TOPVNSPORT'); } catch (e) { return false; }
+          if (!faces.length || faces.some((f) => f.status !== 'loaded')) return false;
+          await document.fonts.ready;
+          const loaded = [...document.fonts].some((f) => {
+            if (!/Montserrat/i.test(f.family) || f.status !== 'loaded') return false;
+            const [lo, hi = lo] = String(f.weight).split(/\s+/).map(Number); // '800' or variable range '100 900'
+            return lo <= 800 && 800 <= hi;
+          });
+          const wm = document.querySelector('[data-testid=mobile-sticky-bar] img[alt="TopVNSport Logo"]').parentElement;
+          return loaded && getComputedStyle(wm).fontFamily.includes('Montserrat');
+        });
+        if (!font) throw new Error('Montserrat 800 chưa tải (no loaded Montserrat 800 face in document.fonts; fonts.googleapis.com/gstatic.com unreachable?); refusing to measure a fallback font');
         const m = await measure(page);
         if (!m) throw new Error('[data-testid=mobile-sticky-bar] missing');
         const why = [];
