@@ -38,7 +38,7 @@ export default function MobilePurchaseBar({
       <button
         onClick={onBuyNow}
         disabled={isOutOfStock || stockUnknown || !hasPrice}
-        className={`text-xs px-4 py-2.5 rounded-sm flex items-center gap-1.5 shrink-0 shadow-sm transition ${
+        className={`min-h-[44px] -my-px text-xs px-4 py-2.5 rounded-sm flex items-center gap-1.5 shrink-0 shadow-sm transition ${
           isOutOfStock || stockUnknown || !hasPrice
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'btn-primary'

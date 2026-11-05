@@ -188,7 +188,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
       </button>
       <div 
         onClick={() => navigate('/')} 
-        className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none min-w-0 truncate max-[399px]:text-[15px]"
+        className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 min-h-[44px] leading-[44px] min-w-0 truncate max-[399px]:text-[15px]"
       >
         <img src={LOGO_SRC} alt="TopVNSport Logo" className="inline-block w-6 h-6 rounded-md object-cover align-middle mr-1.5 max-[399px]:mr-1" />
         TOPVN<span className="text-brand-primary">SPORT</span>
