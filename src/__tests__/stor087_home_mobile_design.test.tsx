@@ -90,11 +90,11 @@ describe('STOR-087 hamburger ẩn trên "/" dưới md, còn ở "/catalog"', ()
 });
 
 describe('STOR-087 eyebrow SPECIALTY STORE và chip tách viên theo tab Mobile', () => {
-  it('eyebrow mobile md:hidden, chữ SPECIALTY STORE, 10px tracking 0.12em; eyebrow desktop hidden md:block 14em', () => {
+  it('eyebrow mobile md:hidden, chữ SPECIALTY STORE, 14px tracking 0.12em (STOR-144 MOB-F); eyebrow desktop hidden md:block 14em', () => {
     renderHome([prod('1')]);
     const mobile = screen.getByTestId('hub-eyebrow-mobile');
     expect(mobile.textContent).toBe('SPECIALTY STORE');
-    expect(cls(mobile)).toEqual(expect.arrayContaining(['md:hidden', 'font-mono', 'text-[10px]', 'tracking-[0.12em]', 'uppercase', 'text-brand-primary']));
+    expect(cls(mobile)).toEqual(expect.arrayContaining(['md:hidden', 'font-mono', 'text-[14px]', 'tracking-[0.12em]', 'uppercase', 'text-brand-primary']));
     const desktop = screen.getByTestId('hub-eyebrow');
     expect(cls(desktop)).toEqual(expect.arrayContaining(['hidden', 'md:block', 'text-xs', 'tracking-[0.14em]']));
     // eyebrow mobile nằm TRƯỚC eyebrow desktop (stor073 (1) vẫn thấy hub-eyebrow trên h1).
@@ -131,7 +131,7 @@ describe('STOR-087 eyebrow SPECIALTY STORE và chip tách viên theo tab Mobile'
     expect(screen.queryByTestId('featured-subtitle')).toBeNull();
     const mobile = screen.getByTestId('featured-subtitle-mobile');
     expect(mobile.textContent).toBe('Chạm vào thẻ sản phẩm để chọn loại cước & số kg');
-    expect(cls(mobile)).toEqual(expect.arrayContaining(['md:hidden', 'text-xs', 'font-semibold', 'text-ink-secondary']));
+    expect(cls(mobile)).toEqual(expect.arrayContaining(['md:hidden', 'text-[14px]', 'font-semibold', 'text-ink-secondary']));
     // phụ đề mobile nằm ngay dưới h2.
     expect(screen.getByRole('heading', { level: 2, name: 'SẢN PHẨM NỔI BẬT' }).nextElementSibling).toBe(mobile);
     cleanup();

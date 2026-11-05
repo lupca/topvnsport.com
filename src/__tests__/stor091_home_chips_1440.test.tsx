@@ -75,10 +75,10 @@ describe('STOR-091 desktop chip bar and chip styles (1440px)', () => {
 
       // Mobile tokens below md must still be present
       expect(c).toContain('max-md:rounded-full');
-      expect(c).toContain('max-md:min-h-[40px]');
+      expect(c).toContain('max-md:min-h-[44px]');
       expect(c).toContain('max-md:px-[14px]');
       expect(c).toContain('max-md:py-[8px]');
-      expect(c).toContain('text-[13px]');
+      expect(c).toContain('text-[14px]');
       expect(c).toContain('gap-1.5');
     }
   });
