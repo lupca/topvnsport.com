@@ -25,8 +25,10 @@ export default function HomePage() {
   const categories = useAppSelector(state => state.appData.categories ?? []);
   const productsError = useAppSelector(state => state.appData.productsError);
   // STOR-141: tồn không tải được -> không biết còn hàng; kệ "Tất cả" không lọc theo tồn (không giả Hết hàng).
+  // STOR-154: stockError=false nhưng không SP nào có tồn đã biết (mọi stock undefined) cũng là tồn chưa rõ, xử lý y như STOR-141.
   const stockError = useAppSelector(state => state.appData.stockError);
-  const inStockOrUnknown = (p: { stock?: number }) => stockError || (p.stock ?? 0) > 0;
+  const stockUnknown = stockError || !products.some(p => p.stock !== undefined);
+  const inStockOrUnknown = (p: { stock?: number }) => stockUnknown || (p.stock ?? 0) > 0;
 
   const inStockFirst = sortProducts(products, 'in-stock-first');
   const allInStock = inStockFirst.filter(inStockOrUnknown);
@@ -128,7 +130,7 @@ export default function HomePage() {
 
       {(allInStock.length > 0 || sortedCategories.length > 0) && (
         <section ref={shelfRef} data-testid="instock-shelf" className="scroll-mt-[88px] md:max-[949px]:scroll-mt-[300px] min-[949px]:scroll-mt-[252px] max-w-[1280px] mx-auto px-4 md:px-[24px]">
-          {stockError && <p role="status" data-testid="shelf-stock-error" className="text-center text-sm font-medium text-red-700 pt-5">Chưa tải được tình trạng hàng.</p>}
+          {stockUnknown && <p role="status" data-testid="shelf-stock-error" className="text-center text-sm font-medium text-red-700 pt-5">Chưa tải được tình trạng hàng.</p>}
           <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 md:pb-6 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
           {allInStock.some(hasO2OStringing) && (
             <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-xs font-semibold text-ink-secondary mt-0.5 pb-6 max-md:mt-[2px] max-md:pb-[14px]">
