@@ -13,7 +13,7 @@ import cartReducer, {
 } from '../features/cart/cartSlice';
 import { applyWmsStock, parseWmsStock } from '../services/sport-api/wmsStock';
 import { getAdminUnitsFromFixture, pickAdminUnits } from './fixtures/adminUnits';
-import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
+import { QUOTE_200_FLAT } from './fixtures/shippingQuote';
 import type { Product, ProductVariant } from '../types';
 
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn().mockResolvedValue(undefined) } }));
@@ -24,7 +24,7 @@ vi.mock('../services/sportApi', () => ({
     verifyOtp: async () => ({ success: true, verification_token: 'tok-1' }),
     createOrder: (...a: unknown[]) => createOrderMock(...a),
     getAdminUnits: (...a: [string, string?]) => getAdminUnitsFromFixture(a[0]),
-    getShippingQuote: async () => QUOTE_200_FALLBACK,
+    getShippingQuote: async () => QUOTE_200_FLAT,
     createSepayCheckout: async () => ({ action: 'https://pay.example', fields: {} })
   }
 }));
