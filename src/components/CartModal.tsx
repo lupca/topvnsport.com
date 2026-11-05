@@ -324,6 +324,10 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const quoteOptions = currentQuote?.status === 'ok' ? currentQuote.data!.options : null;
   const selectedOption = quoteOptions?.find(o => o.delivery_option === deliveryOption);
   const selectedFee: number | null = isUsable(selectedOption) ? selectedOption.shipping_fee : null;
+  // Giảm phí vận chuyển: mọi số đọc nguyên từ báo giá OMS (spec c55789ce), trình duyệt không cộng/trừ.
+  const shippingDiscount = selectedFee !== null ? selectedOption?.shipping_discount ?? 0 : 0;
+  const quoteVoucher = currentQuote?.status === 'ok' ? currentQuote.data!.voucher : undefined;
+  const voucherMessage = selectedFee !== null ? selectedOption?.voucher_message ?? null : null;
   // Chưa có giá thì nói đúng lý do (không dùng chung một câu cho mọi ca).
   const shippingFeePlaceholder = currentQuote?.status === 'loading' ? 'Đang tính phí...'
     : currentQuote?.status === 'error' ? 'Chưa tính được phí'
@@ -442,6 +446,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         receiver_ward_code: ward.code,
         delivery_option: deliveryOption,
         payment_method: paymentMethod === 'cod' ? 'COD' : 'SEPAY',
+        // Spec a4918ed8 §5: gửi lại mức giảm khách đã thấy -> OMS không thu cao hơn số đã hiện.
+        ...(typeof selectedOption?.shipping_discount === 'number' ? { shipping_discount: selectedOption.shipping_discount } : {}),
         ...(attribution ? { attribution } : {}),
       });
     } catch (err: any) {
@@ -465,7 +471,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           ? body.message
           : typeof body?.detail?.[0]?.msg === 'string' && body.detail[0].msg.trim() ? body.detail[0].msg : null;
         await popupService.alert(omsMessage ?? ORDER_REJECTED_MESSAGE);
-        if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE' || isReceiverAddressError(body)) retryQuote();
+        if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE' || body?.code === 'SHIPPING_VOUCHER_NOT_APPLICABLE' || isReceiverAddressError(body)) retryQuote();
       } else if (isOutcomeUnknown(err)) {
         setOrderUncertain(UNCERTAIN_ORDER_MESSAGE);
         await popupService.alert(UNCERTAIN_ORDER_MESSAGE);
@@ -861,7 +867,9 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                             <p className="font-bold text-[11px] text-gray-900">{label}</p>
                             {usable ? (
                               <p className="text-[10px] text-gray-400">
-                                {opt.eta_days !== null && <>Dự kiến {opt.eta_days} ngày • </>}{formatMoney(opt.shipping_fee)}
+                                {opt.eta_days !== null && <>Dự kiến {opt.eta_days} ngày • </>}
+                                {(opt.shipping_discount ?? 0) > 0 && <span className="line-through mr-1">{formatMoney(opt.shipping_fee_original ?? null)}</span>}
+                                {formatMoney(opt.shipping_fee)}
                                 {opt.is_fallback && <span className="block text-amber-600 font-semibold">Phí tạm tính</span>}
                               </p>
                             ) : (
@@ -872,6 +880,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                       );
                     })}
                   </div>
+                )}
+                {shippingDiscount > 0 && quoteVoucher?.name && (
+                  <p className="text-[11px] text-brand-sale font-semibold">Đã áp dụng: {quoteVoucher.name}</p>
+                )}
+                {voucherMessage && <p className="text-[11px] text-amber-700">{voucherMessage}</p>}
+                {quoteVoucher?.valid === false && quoteVoucher.message && quoteVoucher.message !== voucherMessage && (
+                  <p className="text-[11px] text-amber-700">{quoteVoucher.message}</p>
                 )}
               </div>
 
@@ -990,6 +1005,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               )}
               <SummaryRow
                 label="Phí vận chuyển:"
+                struckValue={shippingDiscount > 0 ? formatMoney(selectedOption?.shipping_fee_original ?? null) : null}
                 value={
                   <>
                     {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
@@ -997,6 +1013,9 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   </>
                 }
               />
+              {shippingDiscount > 0 && (
+                <SummaryRow label="Giảm phí vận chuyển:" value={`−${formatMoney(shippingDiscount)}`} isAccent />
+              )}
               <div className="flex justify-between text-sm border-t border-gray-200 pt-1.5 mt-1.5 font-bold">
                 <span className="text-gray-900">Tổng cộng thanh toán:</span>
                 <span className="text-brand-primary font-display text-base">{formatMoney(orderTotal)}</span>

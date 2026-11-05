@@ -94,6 +94,8 @@ export type CreateOrderPayload = {
   delivery_option: DeliveryOption;
   payment_method: 'COD' | 'SEPAY';
   attribution?: Record<string, string>;
+  // Spec a4918ed8: ECHO of the shipping discount the shopper saw; OMS returns 422 if it shrank and the fee rose.
+  shipping_discount?: number;
 };
 
 
@@ -116,6 +118,10 @@ export type ShippingQuoteOption = {
   shipping_fee: number | null;
   eta_days: number | null;
   is_fallback: boolean;
+  // Spec c55789ce (OMS develop): optional until OMS main emits them; absent = no voucher.
+  shipping_fee_original?: number | null;
+  shipping_discount?: number;
+  voucher_message?: string | null;
 };
 
 export type ShippingQuote = {
@@ -124,6 +130,7 @@ export type ShippingQuote = {
   receiver_ward_code: string;
   is_fallback: boolean;
   options: ShippingQuoteOption[];
+  voucher?: { code: string | null; name: string | null; valid: boolean | null; message: string | null };
 };
 
 export type SendOtpResponse = {
