@@ -6,6 +6,9 @@ Quét mobile "trước khi sửa": chụp mọi route ở 360x800, 390x844, 430x
     node e2e/mobile-audit/audit.cjs              # chụp + đo, ghi docs/mobile-audit/{before/,desktop-baseline/,before.json,before.md}
     node e2e/mobile-audit/audit.cjs --report-only   # viết lại before.md từ before.json có sẵn (đổi template, không mở trình duyệt)
     node e2e/mobile-audit/audit.cjs --only=cart,checkout --width=390   # chạy một phần để gỡ lỗi (không ghi before.json/md)
+    node e2e/mobile-audit/audit.cjs --label=after   # STOR-150: quét lại -> after/, after.json (scannedSha); ảnh 1440 + geometry.json vào DESKTOP_OUT (mặc định <tmp>/mobile-audit-after-1440), không đè desktop-baseline/
+    node e2e/mobile-audit/compare.cjs            # after.md: bảng trước/sau + so 1440 với desktop-baseline/ (pixel diff, gán lý do; vùng khác không rõ lý do -> exit 1)
+    node e2e/mobile-audit/compare.cjs --selftest # 2 dòng PASS (giải mã PNG, pixel diff)
     node e2e/mobile-audit/competitors.cjs        # đo header mobile của đối thủ, chỉ đọc
     node e2e/mobile-guard-390.cjs                # chốt chặn CI (STOR-149): 390x844, MOB-A ≤120px + MOB-D, exit 1 nếu lỗi
 
