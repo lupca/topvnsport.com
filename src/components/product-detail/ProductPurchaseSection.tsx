@@ -63,27 +63,28 @@ export default function ProductPurchaseSection({
   return (
     <>
       <button
+        data-testid="pdp-back"
         onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-brand-primary font-medium mb-6 transition"
+        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-brand-primary font-medium mb-6 transition max-md:min-h-[44px]"
       >
         <ArrowLeft className="w-4 h-4" /> Quay lại danh mục sản phẩm
       </button>
 
-      <div className="space-y-6">
+      <div data-testid="pdp-purchase" className="space-y-6">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             {product.brand && (
-              <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm shadow-xs">
+              <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm shadow-xs max-md:text-sm">
                 {product.brand}
               </span>
             )}
             {product.badge && (
-              <span className="text-[10px] bg-purple-600 text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">
+              <span className="text-[10px] bg-purple-600 text-white font-extrabold uppercase px-2 py-0.5 rounded-sm max-md:text-sm">
                 {product.badge}
               </span>
             )}
             {product.characteristics && (
-              <span className="text-[10px] bg-gray-900 text-yellow-400 font-extrabold uppercase px-2 py-0.5 rounded-sm border border-yellow-400">
+              <span className="text-[10px] bg-gray-900 text-yellow-400 font-extrabold uppercase px-2 py-0.5 rounded-sm border border-yellow-400 max-md:text-sm">
                 {product.characteristics}
               </span>
             )}
@@ -96,7 +97,7 @@ export default function ProductPurchaseSection({
 
         <div className="bg-brand-light/50 p-4 rounded-xl border border-blue-100 flex items-center justify-between">
           <div>
-            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">Giá bán hiện tại</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold max-md:text-sm">Giá bán hiện tại</p>
             <div className="flex items-end gap-2.5 mt-1">
               <span className="text-2xl md:text-3xl font-extrabold text-brand-primary font-display" data-testid="purchase-price">
                 {hasPrice ? formatVnd(totalDisplayPrice) : 'Liên hệ để biết giá'}
@@ -109,7 +110,7 @@ export default function ProductPurchaseSection({
             </div>
           </div>
           {hasPrice && hasDiscount && discountPercent > 0 && (
-            <span className="bg-brand-primary text-white text-[11px] font-black px-3 py-1.5 rounded-full">
+            <span className="bg-brand-primary text-white text-[11px] font-black px-3 py-1.5 rounded-full max-md:text-sm">
               TIẾT KIỆM {discountPercent}%
             </span>
           )}
@@ -126,7 +127,7 @@ export default function ProductPurchaseSection({
 
                 return (
                   <div key={tier.tier_index} id={`tier-select-${tier.tier_index}`}>
-                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">{tier.name}</label>
+                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5 max-md:text-sm">{tier.name}</label>
                     <div className="flex flex-wrap gap-2">
                       {tier.options.map((option) => {
                         // Tầng kia là tầng cước: gộp mọi cước (không khoá màu còn bản có cước).
@@ -146,7 +147,7 @@ export default function ProductPurchaseSection({
                             data-stock={stockForOption.kind === 'known' ? stockForOption.stock : stockForOption.kind}
                             onClick={() => !optionOutOfStock && setValue(option)}
                             disabled={optionOutOfStock}
-                            className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition ${
+                            className={`relative text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
                               optionOutOfStock
                                 ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60 line-through'
                                 : selectedValue === option
@@ -156,7 +157,7 @@ export default function ProductPurchaseSection({
                           >
                             {option}
                             {optionHet && (
-                              <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold">
+                              <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] px-1 py-0.5 rounded-sm font-bold max-md:static max-md:inline-block max-md:ml-1.5 max-md:text-sm">
                                 Hết
                               </span>
                             )}
@@ -176,13 +177,13 @@ export default function ProductPurchaseSection({
 
             {product.colors && product.colors.length > 0 && (
               <div>
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">Phối màu / Phiên bản</label>
-                <div className="flex gap-2">
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5 max-md:text-sm">Phối màu / Phiên bản</label>
+                <div className="flex gap-2 max-md:flex-wrap">
                   {product.colors.map((color) => (
                     <button
                       key={color}
                       onClick={() => onSetSelectedColor(color)}
-                      className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition ${
+                      className={`text-xs px-3.5 py-2 rounded-lg border font-bold transition max-md:min-h-[44px] max-md:min-w-[44px] max-md:text-sm ${
                         selectedColor === color
                           ? 'bg-brand-primary border-brand-primary text-white shadow-md'
                           : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
@@ -225,7 +226,7 @@ export default function ProductPurchaseSection({
           <button
             onClick={onAddToCart}
             disabled={isOutOfStock || stockUnknown || !hasPrice}
-            className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition ${
+            className={`flex-1 rounded-sm px-6 py-3 uppercase tracking-wider text-xs flex items-center justify-center gap-2 shadow-sm transition max-md:min-h-[44px] max-md:text-sm ${
               isOutOfStock || stockUnknown || !hasPrice
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'btn-primary'
@@ -237,7 +238,7 @@ export default function ProductPurchaseSection({
 
           <button
             onClick={() => navigate('/stores')}
-            className="btn-outline rounded-sm py-3.5 px-6 text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+            className="btn-outline rounded-sm py-3.5 px-6 text-xs uppercase tracking-wider flex items-center justify-center gap-2 max-md:min-h-[44px] max-md:text-sm"
           >
             <Phone className="w-4.5 h-4.5" /> Trải nghiệm tại cửa hàng
           </button>

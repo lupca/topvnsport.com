@@ -24,7 +24,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
   );
 
   return (
-    <div className="mt-14 border-t border-gray-100 pt-10">
+    <div data-testid="pdp-tabs" className="mt-14 border-t border-gray-100 pt-10">
       <div className="flex overflow-x-auto border-b border-gray-200">
         {[
           { id: 'details', label: 'Mô tả thực tế & Cảm nhận' },
@@ -33,7 +33,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id as DetailTab)}
-            className={`pb-3 px-4 whitespace-nowrap shrink-0 text-xs md:text-sm font-bold uppercase tracking-wider border-b-2 transition ${
+            className={`pb-3 px-4 whitespace-nowrap shrink-0 text-sm font-bold max-md:min-h-[44px] uppercase tracking-wider border-b-2 transition ${
               activeTab === tab.id
                 ? 'border-brand-primary text-brand-primary'
                 : 'border-transparent text-gray-400 hover:text-gray-700'
@@ -56,7 +56,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
               )}
               {product.features && product.features.length > 0 && (
                 <div className="space-y-2 mt-4">
-                  <p className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Điểm nổi bật:</p>
+                  <p className="font-bold text-gray-900 text-xs uppercase text-brand-primary max-md:text-sm">Điểm nổi bật:</p>
                   <ul className="list-disc pl-5 space-y-1.5">
                     {product.features.map((feature, index) => (
                       <li key={index}>{feature}</li>
@@ -68,8 +68,8 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
 
             {hasRacketSpecData && (
             <div className="lg:col-span-4 bg-gray-50 rounded-xl p-5 border border-gray-100">
-              <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider mb-4 text-brand-primary">Thông số cơ bản:</h4>
-              <div className="space-y-2.5 text-xs text-gray-600 font-mono">
+              <h4 className="font-bold text-gray-900 text-xs uppercase tracking-wider mb-4 text-brand-primary max-md:text-sm">Thông số cơ bản:</h4>
+              <div className="space-y-2.5 text-xs text-gray-600 font-mono max-md:text-sm">
                 {/* Thông số riêng của vợt (nếu có) -- KHÔNG thay thế attributes thật bên dưới */}
                 {isRacket && product.specs.weight && (
                   <div className="flex justify-between border-b border-gray-100 pb-1.5">
@@ -117,7 +117,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
 
                 {product.specs.weight && (
                   <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Trọng lượng (Weight)</p>
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Trọng lượng (Weight)</p>
                     <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90">
                         <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
@@ -134,13 +134,13 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                       </svg>
                       <div className="absolute font-mono text-sm font-bold text-white">{product.specs.weight.split(' ')[0]}</div>
                     </div>
-                    <p className="text-xs text-gray-400">{product.specs.weight}</p>
+                    <p className="text-xs text-gray-400 max-md:text-sm">{product.specs.weight}</p>
                   </div>
                 )}
 
                 {typeof product.specs.balance === 'number' && (
                   <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Điểm Cân Bằng (Balance)</p>
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Điểm Cân Bằng (Balance)</p>
                     <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90">
                         <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
@@ -157,7 +157,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                       </svg>
                       <div className="absolute font-mono text-sm font-bold text-white">{product.specs.balance}mm</div>
                     </div>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-400 max-md:text-sm">
                       {product.specs.balance > 295
                         ? 'Nặng đầu (Tấn Công)'
                         : product.specs.balance < 285
@@ -169,7 +169,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
 
                 {product.specs.stiffness && (
                   <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Độ Cứng Thân (Stiffness)</p>
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Độ Cứng Thân (Stiffness)</p>
                     <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90">
                         <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
@@ -184,17 +184,17 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                           strokeDashoffset={product.specs.stiffness.includes('Cứng') ? '60' : '170'}
                         />
                       </svg>
-                      <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none">
+                      <div className="absolute font-sans text-[10px] font-bold text-white text-center px-2 truncate leading-none max-md:text-sm">
                         {product.specs.stiffness.split(' ')[0]}
                       </div>
                     </div>
-                    <p className="text-xs text-gray-400">{product.specs.stiffness}</p>
+                    <p className="text-xs text-gray-400 max-md:text-sm">{product.specs.stiffness}</p>
                   </div>
                 )}
 
                 {typeof product.specs.maxTension === 'number' && (
                   <div className="text-center p-4 bg-gray-900 rounded-xl border border-gray-800 space-y-3">
-                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase">Sức Căng Khung (Max Tension)</p>
+                    <p className="text-[10px] font-bold tracking-wider text-gray-500 uppercase max-md:text-sm">Sức Căng Khung (Max Tension)</p>
                     <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90">
                         <circle cx="48" cy="48" r="40" className="stroke-gray-800" strokeWidth="6" fill="transparent" />
@@ -211,7 +211,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                       </svg>
                       <div className="absolute font-mono text-sm font-bold text-white">{product.specs.maxTension} Lbs</div>
                     </div>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-400 max-md:text-sm">
                       {`Lên tới ~ ${Math.round((product.specs.maxTension / 2.20462) * 10) / 10} Kg`}
                     </p>
                   </div>
@@ -228,7 +228,7 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left">
                     <thead>
-                      <tr className="border-b border-gray-100 text-gray-500 text-xs uppercase">
+                      <tr className="border-b border-gray-100 text-gray-500 text-xs uppercase max-md:text-sm">
                         <th className="py-2 pr-3">Thuộc tính</th>
                         <th className="py-2">Giá trị</th>
                       </tr>
@@ -261,10 +261,10 @@ export default function ProductDetailTabs({ product, isRacket, activeTab, onTabC
                       key={index}
                       className="bg-gray-50 border border-gray-100 rounded-xl p-4 hover:bg-brand-light/20 transition duration-200"
                     >
-                      <span className="text-[10px] bg-brand-light text-brand-primary font-bold px-2.5 py-1 rounded-sm uppercase tracking-widest block w-max mb-2">
+                      <span className="text-[10px] bg-brand-light text-brand-primary font-bold px-2.5 py-1 rounded-sm uppercase tracking-widest block w-max mb-2 max-md:text-sm">
                         {technology.name}
                       </span>
-                      <p className="text-xs text-gray-600 leading-normal">{technology.description}</p>
+                      <p className="text-xs text-gray-600 leading-normal max-md:text-sm">{technology.description}</p>
                     </div>
                   ))}
                 </div>

@@ -7,3 +7,4 @@ coverage/
 .env*
 !.env.example
 !docs/stor110-shots/mutation.log
+!docs/stor146-shots/mutation.log
