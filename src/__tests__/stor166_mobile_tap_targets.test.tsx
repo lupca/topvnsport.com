@@ -29,6 +29,14 @@ describe('STOR-166 vùng bấm 44px dưới md', () => {
     has(screen.getByRole('link', { name: 'Tất' }), ['max-md:min-w-[44px]', 'max-md:justify-center']);
   });
 
+  it("gạch chân link đang chọn nằm trên span chữ, không kéo theo ô 44px dưới md", () => {
+    render(<MemoryRouter initialEntries={['/catalog?category=c1']}><MainNav items={[{ code: 'c1', label: 'Tất' }]} /></MemoryRouter>);
+    const link = screen.getByRole('link', { name: 'Tất' });
+    const span = link.querySelector('span')!;
+    has(span, ['max-md:relative', 'after:absolute', 'after:inset-x-0', 'after:bottom-0', 'max-md:after:bottom-[-13px]', 'after:h-[3px]']);
+    expect(link.className).not.toContain('after:');
+  });
+
   it.each([['trái', 'max-md:left-[2px]'], ['phải', 'max-md:right-[2px]']])('mũi tên %s: ô bấm 44px trong suốt, vòng 30px nằm trên icon', (dir, side) => {
     render(<ProductMediaGallery productName="Vợt" image="/a.webp" gallery={['/b.webp']} />);
     const arrow = screen.getByRole('button', { name: `Cuộn danh sách ảnh sang ${dir}` });

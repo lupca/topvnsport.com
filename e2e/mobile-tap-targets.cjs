@@ -47,6 +47,24 @@ const check = (label, ok, detail) => report(label, ok ? [] : [detail], ok ? '' :
 
 const wordmark = (page) => page.locator('[data-testid=mobile-sticky-bar] img[alt="TopVNSport Logo"]').locator('xpath=..');
 const tatLink = (page) => page.getByRole('navigation', { name: 'Điều hướng chính' }).getByRole('link', { name: 'Tất', exact: true });
+// The active underline must span the text, not the 44px hit box, and sit on the link's bottom edge.
+const underline = async (page, w) => {
+  await open(page, '/catalog?category=VC001999', tatLink(page));
+  const u = await tatLink(page).evaluate((a) => {
+    const span = a.querySelector('span');
+    const after = getComputedStyle(span, '::after');
+    const range = document.createRange();
+    range.selectNodeContents(span);
+    const box = a.getBoundingClientRect();
+    const ref = getComputedStyle(span).position === 'relative' ? span.getBoundingClientRect() : box;
+    return { line: parseFloat(after.width), text: range.getBoundingClientRect().width, bottom: ref.bottom - parseFloat(after.bottom), link: box.bottom, height: after.height };
+  });
+  const why = [];
+  if (Math.abs(u.line - u.text) > 0.5) why.push(`line ${u.line} != text ${u.text}`);
+  if (Math.abs(u.bottom - u.link) > 0.5) why.push(`line bottom ${u.bottom} != link bottom ${u.link}`);
+  if (u.height !== '3px') why.push(`line height ${u.height}`);
+  report(`w=${w} active 'Tất' underline`, why, `${u.line}px`);
+};
 const arrow = (page, dir) => page.getByRole('button', { name: `Cuộn danh sách ảnh sang ${dir}` });
 const barButton = (page) => page.locator('div.sticky.bottom-0 button');
 const popupBtn = (page, name) => page.getByRole('alertdialog').getByRole('button', { name });
@@ -66,6 +84,7 @@ async function phone(browser, w, h) {
   await page.route('**/public/voma-categories*', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATS) }));
   const walk = w === 390;
   try {
+    await underline(page, w);
     await open(page, '/catalog', tatLink(page));
     await min44(w, 'wordmark', wordmark(page));
     await min44(w, "nav 'Tất'", tatLink(page));
@@ -156,6 +175,7 @@ async function tablet(browser) {
   await stub(page);
   await page.route('**/public/voma-categories*', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(CATS) }));
   try {
+    await underline(page, w);
     await open(page, '/catalog', tatLink(page));
     const t = await size(tatLink(page));
     report(`w=${w} nav 'Tất' keeps text width`, t.w >= TAP ? [`${t.w}px wide`] : [], `${t.w}x${t.h}`);
