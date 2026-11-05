@@ -99,6 +99,11 @@ describe('STOR-147 bước 1 (giỏ): nút đóng, tăng/giảm, xoá, nhãn', (
     guard(screen.getByRole('button', { name: 'Tăng số lượng' }), 'quantity plus', ...MIN_TAP);
     guard(screen.getByTitle('Xóa sản phẩm'), 'remove item', 'max-md:min-w-11', 'max-md:min-h-11', 'max-md:flex', 'max-md:items-center', 'max-md:justify-center');
     guard(screen.getByRole('button', { name: /Tiến hành thanh toán/ }), 'checkout CTA', 'max-md:text-sm', 'max-md:min-h-11');
+    // Round-1 finding 26b59220: the 44px −/+/remove widen the row past the drawer at 360px unless the middle column
+    // may shrink and the qty/price row may wrap (measured by docs/stor147-shots/measure.cjs cart-long).
+    const qtyRow = screen.getByRole('button', { name: 'Giảm số lượng' }).parentElement!.parentElement as HTMLElement;
+    guard(qtyRow, 'qty/price row', 'max-md:flex-wrap', 'max-md:gap-y-1');
+    guard(qtyRow.parentElement, 'cart line middle column', 'max-md:min-w-0');
     guard(screen.getByText(/Đan cước|Phân loại|SL:/, { selector: 'p' }).closest('div')!, 'cart line text', 'max-md:text-sm');
   });
 

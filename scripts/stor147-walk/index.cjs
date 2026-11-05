@@ -3,7 +3,7 @@
 // 'Hoàn thành mua sắm'. Then SePay: '/payments' is HELD, the step-3 'Đang chuyển…' state is measured, then released as 502
 // and the error state is measured. Every non-127.0.0.1 request is aborted by audit.cjs stub(); hosts are logged.
 // Measures every target box (<44px), input font (<16px) / height (<44px), text (<14px) inside #cart-drawer-modal, and
-// scrollWidth <= clientWidth for the modal and its panel at steps 1-3. Screenshots -> docs/stor147-shots/.
+// no sideways scroll on any overflow-x:auto element in the drawer + nothing past the panel edge at steps 1-3. Screenshots -> docs/stor147-shots/.
 //   node scripts/stor147-walk            (PORT default 4447; PLAYWRIGHT=<path> optional)
 // Exit 1 on any finding.
 const { spawn } = require('child_process');
@@ -49,15 +49,22 @@ async function measure(page, label, vw) {
       const fs = parseFloat(getComputedStyle(p).fontSize);
       if (fs < 14) small.add(`${fs}px "${n.nodeValue.trim().slice(0, 22)}"`);
     }
+    // Round-1 finding 2d033600: the overlay and panel cannot scroll sideways; the inner overflow-y-auto body can. Check
+    // every element whose overflow-x is auto/scroll, and every visible element sticking out past the panel edge.
     const panel = d.firstElementChild;
-    return { targets, inputs, small: [...small], overflow: [d.scrollWidth, d.clientWidth, panel.scrollWidth, panel.clientWidth] };
+    const pr = panel.getBoundingClientRect();
+    const overflow = [];
+    for (const el of [d, ...d.querySelectorAll('*')]) {
+      const tag = `${el.tagName.toLowerCase()}.${String(el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className).trim().split(/\s+/).slice(0, 2).join('.')}`;
+      if (/auto|scroll/.test(getComputedStyle(el).overflowX) && el.scrollWidth > el.clientWidth) overflow.push(`${tag} scrolls ${el.scrollWidth}/${el.clientWidth}`);
+      if (el !== d && vis(el)) { const r = el.getBoundingClientRect(); if (r.right > pr.right + 0.5 || r.left < pr.left - 0.5) overflow.push(`${tag} sticks out ${Math.round(r.left)}..${Math.round(r.right)} of panel ${Math.round(pr.left)}..${Math.round(pr.right)}`); }
+    }
+    return { targets, inputs, small: [...small], overflow };
   });
   if (m.error) { findings++; log(`FAIL ${label}@${vw}: ${m.error}`); return; }
-  const [sw, cw, psw, pcw] = m.overflow;
-  const bad = [...m.targets.map((t) => `target ${t}`), ...m.inputs.map((i) => `input ${i}`), ...m.small.map((s) => `text ${s}`)];
-  if (sw > cw || psw > pcw) bad.push(`horizontal overflow modal ${sw}/${cw} panel ${psw}/${pcw}`);
+  const bad = [...m.targets.map((t) => `target ${t}`), ...m.inputs.map((i) => `input ${i}`), ...m.small.map((s) => `text ${s}`), ...m.overflow.map((o) => `overflow ${o}`)];
   findings += bad.length;
-  log(`${bad.length ? 'FAIL' : 'PASS'} ${label}@${vw}: targets<44=${m.targets.length} inputs=${m.inputs.length} text<14=${m.small.length} modal=${sw}/${cw} panel=${psw}/${pcw}`);
+  log(`${bad.length ? 'FAIL' : 'PASS'} ${label}@${vw}: targets<44=${m.targets.length} inputs=${m.inputs.length} text<14=${m.small.length} overflowX=${m.overflow.length}`);
   for (const b of bad) log(`    ${b}`);
   await page.screenshot({ path: path.join(SHOTS, `${label}-${vw}.png`) });
 }
@@ -67,8 +74,8 @@ const settle = async (page) => { await page.waitForLoadState('networkidle').catc
 const loaded = async (page) => { await page.locator('#api-loading-state').waitFor({ state: 'detached', timeout: 30000 }); await settle(page); };
 const drawerClose = (page) => page.locator('#cart-drawer-modal .p-4.border-b > button');
 
-async function addAndOpenCart(page) {
-  await page.goto(`${BASE}/product/${SIMPLE_SLUG}`); await loaded(page);
+async function addAndOpenCart(page, slug = SIMPLE_SLUG) {
+  await page.goto(`${BASE}/product/${slug}`); await loaded(page);
   await page.getByRole('button', { name: /Mua ngay|Thêm vào giỏ hàng/ }).filter({ visible: true }).first().tap();
   if (!(await page.getByText('Giỏ Hàng Của Bạn').isVisible().catch(() => false))) {
     await page.getByRole('button', { name: /Giỏ/ }).filter({ visible: true }).first().tap();
@@ -104,6 +111,14 @@ async function walkWidth(browser, vw) {
     await measure(page, 'cart', vw);
     await page.getByRole('button', { name: 'Tăng số lượng' }).tap();
     await page.getByRole('button', { name: 'Giảm số lượng' }).tap();
+    await page.getByTitle('Xóa sản phẩm').tap();
+    await page.getByText(/Giỏ hàng của bạn đang trống/).waitFor();
+    await drawerClose(page).tap();
+    // 1b. widest row (finding 26b59220): 2.890.000đ shoe (audit.cjs simpleDefs[0]) at qty 4 = 11.560.000đ, then remove
+    await addAndOpenCart(page, 'san-pham-audit-1');
+    for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Tăng số lượng' }).tap();
+    await page.getByText('11.560.000').first().waitFor();
+    await measure(page, 'cart-long', vw);
     await page.getByTitle('Xóa sản phẩm').tap();
     await page.getByText(/Giỏ hàng của bạn đang trống/).waitFor();
     await drawerClose(page).tap();

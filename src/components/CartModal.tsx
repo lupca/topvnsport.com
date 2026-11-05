@@ -626,7 +626,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5" data-testid="cart-line">
                           <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
-                          <div className="flex-1 space-y-1">
+                          <div className="flex-1 space-y-1 max-md:min-w-0">
                             <span className="text-[10px] font-mono font-bold text-brand-primary uppercase max-md:text-sm">{item.brand}</span>
                             <h4 className="font-bold text-xs text-gray-900 line-clamp-1 leading-normal max-md:text-sm">{item.name}</h4>
 
@@ -654,7 +654,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                               <p className="text-[10px] text-red-600 font-semibold max-md:text-sm">{warningMessage}</p>
                             )}
 
-                            <div className="flex justify-between items-center pt-1.5">
+                            <div className="flex justify-between items-center pt-1.5 max-md:flex-wrap max-md:gap-y-1">
                               <div className="flex items-center gap-2 text-xs text-gray-400 max-md:text-sm">
                                 <button
                                   type="button"

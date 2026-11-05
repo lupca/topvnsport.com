@@ -2,7 +2,8 @@
 // Fixtures, ROUTES, stub and waitPort come from e2e/mobile-audit/audit.cjs (not copied). Rules d (targets <44px, inline
 // mid-sentence links exempt) and e (text <14px) are audit.cjs measureInPage rules d/e verbatim, run inside SCOPE only.
 // Rule f (this file only, audit.cjs untouched): form inputs/selects/textareas with font-size <16px or height <44px.
-// Rule b (this file): the drawer root scrollWidth must be <= clientWidth (no horizontal scroll in the modal).
+// Rule b (this file): no element in the drawer scrolls sideways (overflow-x auto/scroll with scrollWidth > clientWidth)
+// and no visible element sticks out past the panel edge. (Round 1 checked only the overlay, which cannot scroll.)
 // Vite is started --strictPort and killed by its recorded PID (r:0b30a607).
 //   node docs/stor147-shots/measure.cjs                     360/390/430: one `route width targets/text/inputs/overflowX` line each; exit 1 if any
 //   node docs/stor147-shots/measure.cjs --dump <file>       768/1440: page rect + full computed style of every scoped element -> JSON
@@ -16,7 +17,7 @@ const path = require('path');
 
 process.env.PLAYWRIGHT ||= path.dirname(require.resolve('playwright-core/package.json'));
 process.env.PORT ||= '4430';
-const { stub, ROUTES, waitPort } = require('../../e2e/mobile-audit/audit.cjs');
+const { stub, ROUTES, waitPort, BASE } = require('../../e2e/mobile-audit/audit.cjs');
 const { chromium } = require('playwright-core');
 
 const ROOT = path.join(__dirname, '..', '..');
@@ -72,10 +73,27 @@ function rulesDE(selectors) {
   }
   const inputs = roots.flatMap(ALL).filter((el) => el.matches('input:not([type=hidden]),select,textarea') && vis(el));
   const badInputs = inputs.map((el) => ({ el, fs: parseFloat(cs(el).fontSize), r: el.getBoundingClientRect() })).filter(({ fs, r }) => fs < 16 || r.height < 43.5);
+  // Rule b: the overlay and panel cannot scroll sideways; the inner overflow-y-auto body can (its overflow-x computes to
+  // auto). So check EVERY element in the drawer whose overflow-x is auto/scroll, and every visible element that sticks
+  // out past the panel's left/right edge (clipped off-screen). Worst offender -> overflowX [scrollWidth, clientWidth].
   const drawer = document.querySelector('#cart-drawer-modal');
-  const overflowX = [drawer.scrollWidth, drawer.clientWidth];
+  const pr = drawer.firstElementChild.getBoundingClientRect();
+  const overflowSample = [];
+  let overflowX = [drawer.scrollWidth, drawer.clientWidth];
+  for (const el of ALL(drawer)) {
+    const s = cs(el);
+    if (/auto|scroll/.test(s.overflowX) && el.scrollWidth > el.clientWidth) {
+      overflowSample.push(`${sel(el)} scrolls ${el.scrollWidth}/${el.clientWidth}`);
+      if (el.scrollWidth - el.clientWidth > overflowX[0] - overflowX[1]) overflowX = [el.scrollWidth, el.clientWidth];
+    }
+    if (el !== drawer && vis(el)) {
+      const r = el.getBoundingClientRect();
+      if (r.right > pr.right + 0.5 || r.left < pr.left - 0.5) overflowSample.push(`${sel(el)} sticks out ${Math.round(r.left)}..${Math.round(r.right)} of panel ${Math.round(pr.left)}..${Math.round(pr.right)}`);
+    }
+  }
+  if (overflowSample.length && overflowX[0] <= overflowX[1]) overflowX = [overflowX[1] + 1, overflowX[1]];
   return {
-    inputs: badInputs.length, inputSample: badInputs.slice(0, 8).map(({ el, fs, r }) => `${sel(el)} ${fs}px h=${Math.round(r.height)} "${txt(el)}"`), overflowX,
+    inputs: badInputs.length, overflowSample: overflowSample.slice(0, 8), inputSample: badInputs.slice(0, 8).map(({ el, fs, r }) => `${sel(el)} ${fs}px h=${Math.round(r.height)} "${txt(el)}"`), overflowX,
     targets: smallT.length, totalTargets: targets.length, text: smallText.size,
     targetSample: smallT.slice(0, 8).map(({ el, r }) => `${sel(el)} ${Math.round(r.width)}x${Math.round(r.height)} "${txt(el)}"`),
     textSample: [...smallText].slice(0, 8).map(([el, fs]) => `${sel(el)} ${fs}px "${txt(el)}"`),
@@ -104,6 +122,19 @@ async function main() {
   const wide = !!(dumpFile || diffFile);
   const routes = IDS.map((id) => ROUTES.find((r) => r.id === id));
   if (routes.some((r) => !r)) throw new Error('audit.cjs ROUTES is missing a route');
+  // Worst-case row width (round-1 finding 26b59220): the audit fixture's priciest simple product, 'Giày ... 65 Z3 Wide'
+  // 2.890.000đ (audit.cjs simpleDefs[0], slug san-pham-audit-1), at qty 4 -> line total 11.560.000đ (8 digits).
+  routes.splice(1, 0, { id: 'cart-long', go: async (page) => {
+    const click = (loc) => loc.evaluate((el) => el.click());
+    await page.goto(`${BASE}/product/san-pham-audit-1`);
+    await page.locator('#api-loading-state').waitFor({ state: 'detached', timeout: 30000 });
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await click(page.getByRole('button', { name: /Mua ngay|Thêm vào giỏ hàng/ }).filter({ visible: true }).first());
+    if (!(await page.getByText('Giỏ Hàng Của Bạn').isVisible().catch(() => false))) await click(page.getByRole('button', { name: /Giỏ/ }).filter({ visible: true }).first());
+    await page.getByText('Giỏ Hàng Của Bạn').waitFor();
+    for (let i = 0; i < 3; i++) await click(page.getByRole('button', { name: 'Tăng số lượng' }));
+    await page.getByText('11.560.000').first().waitFor();
+  } });
   const taken = await new Promise((res) => net.connect(+process.env.PORT, '127.0.0.1').once('connect', function () { this.destroy(); res(true); }).once('error', () => res(false)));
   if (taken) { console.log(`ERROR port ${process.env.PORT} already taken; set PORT to a free port`); process.exitCode = 1; return; }
   const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--port', process.env.PORT, '--strictPort', '--host', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
@@ -131,6 +162,7 @@ async function main() {
             if (m.error) throw new Error(m.error);
             if (m.targets || m.text || m.inputs || m.overflowX[0] > m.overflowX[1]) failures++;
             console.log(`${route.id} ${vw} targets=${m.targets} text=${m.text} inputs=${m.inputs} overflowX=${m.overflowX[0]}/${m.overflowX[1]} (of ${m.totalTargets} targets) scope=${scope.join('+')}`);
+            for (const s of m.overflowSample) console.log(`    overflow ${s}`);
             for (const s of m.inputSample) console.log(`    input  ${s}`);
             for (const s of m.targetSample) console.log(`    target ${s}`);
             for (const s of m.textSample) console.log(`    text   ${s}`);
