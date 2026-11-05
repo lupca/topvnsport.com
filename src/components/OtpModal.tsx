@@ -182,7 +182,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, need
   return (
     <div className="fixed inset-0 bg-black/60 z-55 flex items-center justify-center p-4 animate-in fade-in duration-200" id="otp-verification-modal">
       <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl relative animate-in zoom-in-95 duration-200">
-        <button onClick={handleClose} className="absolute right-4 top-4 text-gray-400 hover:text-gray-900 transition" type="button">
+        <button onClick={handleClose} className="absolute right-4 top-4 text-gray-400 hover:text-gray-900 transition max-md:right-1 max-md:top-1 max-md:min-w-11 max-md:min-h-11 max-md:flex max-md:items-center max-md:justify-center" type="button">
           <X className="w-5 h-5" />
         </button>
 
@@ -192,13 +192,13 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, need
           </div>
           <div>
             <h3 className="font-display font-black text-lg text-gray-900 uppercase">Xác Thực Số Điện Thoại</h3>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 mt-1 max-md:text-sm">
               Mã xác thực OTP gồm 6 chữ số đã được gửi tới số điện thoại <strong className="text-gray-900">{phoneNumber}</strong>.
             </p>
           </div>
 
           {errorMessage && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg border border-red-100 flex items-start gap-2 text-xs text-left">
+            <div className="bg-red-50 text-red-600 p-3 rounded-lg border border-red-100 flex items-start gap-2 text-xs text-left max-md:text-sm">
               <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{errorMessage}</span>
             </div>
@@ -223,7 +223,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, need
                 type="button"
                 onClick={triggerSendOtp}
                 disabled={cooldown > 0 || isSending}
-                className={`flex-1 border border-gray-300 font-bold text-xs uppercase py-3 rounded-xl transition ${
+                className={`flex-1 border border-gray-300 font-bold text-xs uppercase py-3 rounded-xl transition max-md:text-sm max-md:min-h-11 ${
                   cooldown > 0 || isSending
                     ? 'text-gray-400 bg-gray-50 cursor-not-allowed border-gray-200'
                     : 'text-gray-700 hover:bg-gray-50'
@@ -235,7 +235,7 @@ export default function OtpModal({ isOpen, phoneNumber, onClose, onSuccess, need
               <button
                 type="submit"
                 disabled={locked || isVerifying || otpCode.length !== 6}
-                className={`flex-1 text-white font-bold text-xs uppercase py-3 rounded-xl flex items-center justify-center gap-1.5 ${
+                className={`flex-1 text-white font-bold text-xs uppercase py-3 rounded-xl max-md:text-sm max-md:min-h-11 flex items-center justify-center gap-1.5 ${
                   locked || isVerifying || otpCode.length !== 6 ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'
                 }`}
               >
