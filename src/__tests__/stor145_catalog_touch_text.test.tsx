@@ -135,6 +135,11 @@ describe('STOR-145 CatalogPage: thanh công cụ và trạng thái rỗng dướ
     expectClasses(note.parentElement!.querySelector('button'), ['shrink-0', 'min-w-11', 'min-h-11', 'md:min-w-auto', 'md:min-h-auto', 'p-1']);
     expectClasses(note.parentElement!.querySelector('button svg'), ['max-md:mx-auto']);
   });
+  it('đầu trang: nhãn "TopVNSport Product Directory" text-sm md:text-xs; đoạn mô tả text-sm', () => {
+    renderCatalog([card]);
+    expectClasses(screen.getByText('TopVNSport Product Directory'), ['text-sm', 'md:text-xs']);
+    expectClasses(screen.getByText(/Lọc nhanh thông số cây vợt/), ['text-sm']);
+  });
   it('trạng thái rỗng "Làm mới bộ lọc": min-h-11 text-sm, md:min-h-auto md:text-xs', () => {
     renderCatalog([card], { searchQuery: 'zzzz' });
     expectClasses(screen.getByRole('button', { name: 'Làm mới bộ lọc' }), ['min-h-11', 'md:min-h-auto', 'text-sm', 'md:text-xs']);

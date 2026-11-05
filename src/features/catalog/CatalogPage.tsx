@@ -273,11 +273,11 @@ export default function CatalogPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 animate-in fade-in duration-300">
       <div className="text-center mb-10">
-        <span className="text-xs bg-brand-light text-brand-primary font-bold px-3 py-1 rounded-full border border-blue-100 uppercase tracking-widest">TopVNSport Product Directory</span>
+        <span className="text-sm md:text-xs bg-brand-light text-brand-primary font-bold px-3 py-1 rounded-full border border-blue-100 uppercase tracking-widest">TopVNSport Product Directory</span>
         <h1 className="font-display font-black text-2xl md:text-4xl text-gray-900 tracking-tight uppercase mt-2">
           DANH MỤC THIẾT BỊ <span className="text-brand-primary">CẦU LÔNG</span>
         </h1>
-        <p className="text-xs md:text-sm text-gray-500 max-w-lg mx-auto mt-2">
+        <p className="text-sm text-gray-500 max-w-lg mx-auto mt-2">
           Lọc nhanh thông số cây vợt lý tưởng theo cân nặng, điểm cân bằng tĩnh, độ cứng đũa và phân khúc tài chính tối ưu nhất.
         </p>
       </div>
