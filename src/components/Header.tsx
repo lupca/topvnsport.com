@@ -170,11 +170,11 @@ export default function Header({ cartCount, openCart, products, categories, cate
   return (
     <>
     {/* Mobile Top Row: dưới md chỉ hàng này dính đầu trang (STOR-133, MOB-A); dải đen, ô tìm kiếm, thanh danh mục cuộn theo trang. */}
-    <div data-testid="mobile-sticky-bar" className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-100 shadow-xs flex items-center justify-between gap-2 px-4 py-2 max-[399px]:gap-1 max-[399px]:px-3">
+    <div data-testid="mobile-sticky-bar" className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-100 shadow-xs flex items-center justify-between gap-2 px-4 py-2 max-[399px]:gap-0.5 max-[399px]:px-2">
       <button
         type="button"
         onClick={() => setIsMobileMenuOpen(true)}
-        className={`${currentView === 'home' ? 'hidden ' : ''}p-1 -ml-1 text-gray-700 hover:text-brand-primary rounded-lg transition shrink-0`}
+        className={`${currentView === 'home' ? 'hidden' : 'inline-flex'} items-center justify-center w-[44px] h-[44px] -ml-2 text-gray-700 hover:text-brand-primary rounded-lg transition shrink-0`}
         aria-label="Open mobile menu"
       >
         <Menu className="w-6 h-6" />
@@ -182,7 +182,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
       <button
         type="button"
         onClick={() => navigate('/stores')}
-        className="min-h-[44px] border border-ink-primary text-ink-primary text-xs font-bold px-2.5 max-[399px]:px-2 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
+        className="inline-flex items-center min-h-[44px] border border-ink-primary text-ink-primary text-[14px] font-bold px-2.5 max-[399px]:px-1 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
       >
         Đan cước
       </button>
@@ -197,7 +197,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
         type="button"
         onClick={openCart}
         aria-label="Giỏ hàng"
-        className="bg-ink-primary text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-brand-primary transition shrink-0 tabular-nums"
+        className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-ink-primary text-white text-[14px] font-bold px-3 max-[399px]:px-1.5 py-1.5 rounded-full hover:bg-brand-primary transition shrink-0 tabular-nums"
       >
         Giỏ ({cartCount})
       </button>
@@ -236,7 +236,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
 
       {/* Mobile Black Strip */}
       {/* Trang chủ: lề 7/10px như tab Mobile (390px) của thiết kế. Chữ tĩnh, không chấm trạng thái: storefront không có nguồn giờ hoạt động. */}
-      <div data-testid="mobile-showroom-strip" className={`md:hidden bg-ink-primary text-white text-center text-[11.5px] font-bold ${currentView === 'home' ? 'py-[7px] px-[10px]' : 'py-1.5 px-3'}`}>
+      <div data-testid="mobile-showroom-strip" className={`md:hidden bg-ink-primary text-white text-center text-sm font-bold ${currentView === 'home' ? 'py-[7px] px-[10px]' : 'py-1.5 px-3'}`}>
         Đan vợt chuẩn quốc tế 30p
       </div>
 
@@ -268,14 +268,14 @@ export default function Header({ cartCount, openCart, products, categories, cate
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.trim().length >= 2 && setShowSearchDropdown(true)}
               onKeyDown={(e) => { if (e.key === 'Enter') submitSearch(); }}
-              className={`${currentView === 'home' ? 'hidden md:block ' : ''}w-full min-w-0 bg-transparent text-xs md:text-[14px] font-semibold text-ink-primary placeholder:text-ink-muted placeholder:font-normal focus:outline-hidden`}
+              className={`${currentView === 'home' ? 'hidden md:block ' : ''}w-full min-w-0 max-md:min-h-[44px] bg-transparent text-base md:text-[14px] md:leading-[calc(1/0.75)] font-semibold text-ink-primary placeholder:text-ink-muted placeholder:font-normal focus:outline-hidden`}
             />
             {searchQuery !== '' && (
               <button
                 type="button"
                 aria-label="Xoá từ khoá"
                 onClick={() => setSearchQuery('')}
-                className="p-1 text-gray-400 hover:text-gray-700 shrink-0 mr-1"
+                className="p-1 text-gray-400 hover:text-gray-700 shrink-0 mr-1 max-md:inline-flex max-md:items-center max-md:justify-center max-md:w-[44px] max-md:h-[44px] max-md:-ml-2 max-md:mr-0"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -286,7 +286,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
             <button
               type="button"
               onClick={submitSearch}
-              className="bg-ink-primary hover:bg-brand-primary text-white text-xs md:text-[12px] md:leading-[normal] font-bold px-3 md:px-[12px] py-1.5 md:py-[6px] rounded-full transition shrink-0"
+              className="bg-ink-primary hover:bg-brand-primary max-md:inline-flex max-md:items-center max-md:justify-center max-md:min-h-[44px] max-md:min-w-[44px] text-white text-sm md:text-[12px] md:leading-[normal] font-bold px-3 md:px-[12px] py-1.5 md:py-[6px] rounded-full transition shrink-0"
             >
               Tìm kiếm
             </button>

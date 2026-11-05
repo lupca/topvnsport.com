@@ -76,11 +76,11 @@ describe('STOR-094 header 1440 theo thiết kế', () => {
     has(box, ['border', 'pl-3.5', 'pr-1.5', 'py-1']);
   });
 
-  it('input: md 14px (mobile text-xs), placeholder không đổi trên mọi tuyến', () => {
+  it('input: md 14px + line-height 1/0.75 (mobile text-base, STOR-143), placeholder không đổi trên mọi tuyến', () => {
     for (const path of ['/', '/catalog', '/stores']) {
       renderHeader(path);
       const input = screen.getByPlaceholderText(PLACEHOLDER);
-      has(input, ['text-xs', 'md:text-[14px]']);
+      has(input, ['text-base', 'md:text-[14px]', 'md:leading-[calc(1/0.75)]']);
       cleanup();
     }
   });
@@ -89,7 +89,7 @@ describe('STOR-094 header 1440 theo thiết kế', () => {
     renderHeader();
     const btn = screen.getByRole('button', { name: 'Tìm kiếm' });
     has(btn, ['md:text-[12px]', 'md:leading-[normal]', 'md:px-[12px]', 'md:py-[6px]']);
-    has(btn, ['text-xs', 'px-3', 'py-1.5']);
+    has(btn, ['text-sm', 'px-3', 'py-1.5']);
   });
 
   it('pill showroom giữ nguyên chữ, không .live-dot, không "Đang mở cửa"', () => {

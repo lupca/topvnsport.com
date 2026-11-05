@@ -17,7 +17,7 @@ interface MainNavProps {
 const ACTIVE_UNDERLINE = 'text-brand-primary after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:bg-brand-primary';
 
 const linkClass = (active: boolean) =>
-  `relative inline-flex items-center py-[13px] font-display font-extrabold text-[13.5px] leading-[1.5] tracking-[0.03em] uppercase hover:text-brand-primary ${active ? ACTIVE_UNDERLINE : 'text-ink-primary'}`;
+  `relative inline-flex items-center py-[13px] font-display font-extrabold text-sm md:text-[13.5px] leading-[1.5] tracking-[0.03em] uppercase hover:text-brand-primary ${active ? ACTIVE_UNDERLINE : 'text-ink-primary'}`;
 
 export default function MainNav({ items, children }: MainNavProps) {
   const { pathname, search } = useLocation();
