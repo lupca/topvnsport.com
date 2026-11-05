@@ -41,7 +41,7 @@ export default function AdminUnitPicker({
       className="space-y-1"
       onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpen(false); }}
     >
-      <label className="text-[10px] font-bold text-gray-400 uppercase">{label} *</label>
+      <label className="text-[10px] font-bold text-gray-400 uppercase max-md:text-sm">{label} *</label>
       <input
         ref={inputRef}
         type="text"
@@ -65,19 +65,19 @@ export default function AdminUnitPicker({
           // Chờ bàn phím ảo hiện rồi đưa ô lên đầu vùng cuộn để danh sách không bị che.
           setTimeout(() => inputRef.current?.scrollIntoView?.({ block: 'start', behavior: 'smooth' }), 250);
         }}
-        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition disabled:opacity-50"
+        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition disabled:opacity-50 max-md:text-base max-md:min-h-11"
       />
-      {loading && <p className="text-[11px] text-gray-500">Đang tải…</p>}
+      {loading && <p className="text-[11px] text-gray-500 max-md:text-sm">Đang tải…</p>}
       {error && (
-        <div className="flex items-center gap-2 text-[11px] text-red-600 font-semibold" role="alert">
+        <div className="flex items-center gap-2 text-[11px] text-red-600 font-semibold max-md:text-sm" role="alert">
           <span>{error}</span>
-          <button type="button" onClick={onRetry} className="underline text-brand-primary">Thử lại</button>
+          <button type="button" onClick={onRetry} className="underline text-brand-primary max-md:min-h-11">Thử lại</button>
         </div>
       )}
-      {fieldError && <p className="text-[11px] text-red-600 font-semibold" role="alert">{fieldError}</p>}
+      {fieldError && <p className="text-[11px] text-red-600 font-semibold max-md:text-sm" role="alert">{fieldError}</p>}
       {open && !error && !loading && units && (
         <ul role="listbox" aria-label={label} className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg bg-white divide-y divide-gray-100">
-          {options.length === 0 && <li className="px-3 py-2 text-[11px] text-gray-400">Không có kết quả</li>}
+          {options.length === 0 && <li className="px-3 py-2 text-[11px] text-gray-400 max-md:text-sm">Không có kết quả</li>}
           {options.map(u => (
             <li
               key={u.code}
@@ -85,7 +85,7 @@ export default function AdminUnitPicker({
               aria-selected={value?.code === u.code}
               onMouseDown={e => e.preventDefault()}
               onClick={() => choose(u)}
-              className={`px-3 py-2.5 text-xs cursor-pointer hover:bg-gray-50 ${value?.code === u.code ? 'font-bold text-brand-primary' : 'text-gray-800'}`}
+              className={`px-3 py-2.5 text-xs cursor-pointer hover:bg-gray-50 ${value?.code === u.code ? 'font-bold text-brand-primary' : 'text-gray-800'} max-md:text-sm max-md:min-h-11`}
             >
               {u.name}
             </li>

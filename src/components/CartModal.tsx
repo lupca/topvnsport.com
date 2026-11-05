@@ -593,7 +593,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               {step === 1 ? 'Giỏ Hàng Của Bạn' : step === 2 || placedOrder?.method === 'sepay' ? 'Thanh Toán Đơn Hàng' : 'Đặt Hàng Thành Công'}
             </span>
           </div>
-          <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-900 transition">
+          <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-900 transition max-md:min-w-11 max-md:min-h-11 max-md:inline-flex max-md:items-center max-md:justify-center">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -603,12 +603,12 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           {step === 1 && (
             <div className="space-y-4">
               {pending && (
-                <div role="status" className="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] p-3 rounded-lg space-y-2">
+                <div role="status" className="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] p-3 rounded-lg space-y-2 max-md:text-sm">
                   <p>Đơn {pending.order.orderNumber} chưa thanh toán.</p>
                   {pending.error && <p>{pending.error}</p>}
                   <div className="flex gap-3">
-                    <button type="button" disabled={isPaying} onClick={() => void openSepay(pending.order, 'reminder')} className="underline font-bold">Thanh toán lại</button>
-                    <button type="button" onClick={() => { clearPending(); setPending(null); }} className="underline">Bỏ nhắc</button>
+                    <button type="button" disabled={isPaying} onClick={() => void openSepay(pending.order, 'reminder')} className="underline font-bold max-md:min-h-11">Thanh toán lại</button>
+                    <button type="button" onClick={() => { clearPending(); setPending(null); }} className="underline max-md:min-h-11">Bỏ nhắc</button>
                   </div>
                 </div>
               )}
@@ -626,15 +626,15 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5" data-testid="cart-line">
                           <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
-                          <div className="flex-1 space-y-1">
-                            <span className="text-[10px] font-mono font-bold text-brand-primary uppercase">{item.brand}</span>
-                            <h4 className="font-bold text-xs text-gray-900 line-clamp-1 leading-normal">{item.name}</h4>
+                          <div className="flex-1 space-y-1 max-md:min-w-0">
+                            <span className="text-[10px] font-mono font-bold text-brand-primary uppercase max-md:text-sm">{item.brand}</span>
+                            <h4 className="font-bold text-xs text-gray-900 line-clamp-1 leading-normal max-md:text-sm">{item.name}</h4>
 
                             {/* Selected Specs info -- nhãn phân loại dựng từ tên
                                 tầng thật (xem buildVariantLabel), không phải
                                 chuỗi cứng "Phiên bản: {weight} | {color}". Sản
                                 phẩm không có tầng nào -> không có gì để hiện. */}
-                            <div className="text-[10px] text-gray-500 font-mono space-y-0.5">
+                            <div className="text-[10px] text-gray-500 font-mono space-y-0.5 max-md:text-sm">
                               {item.variantLabel && (
                                 <p>• Phân loại: <strong className="text-gray-700">{item.variantLabel}</strong></p>
                               )}
@@ -651,17 +651,17 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                                 thị món hàng, không tự xoá, chỉ báo để khách
                                 tự xoá/chọn lại. */}
                             {warningMessage && (
-                              <p className="text-[10px] text-red-600 font-semibold">{warningMessage}</p>
+                              <p className="text-[10px] text-red-600 font-semibold max-md:text-sm">{warningMessage}</p>
                             )}
 
-                            <div className="flex justify-between items-center pt-1.5">
-                              <div className="flex items-center gap-2 text-xs text-gray-400">
+                            <div className="flex justify-between items-center pt-1.5 max-md:flex-wrap max-md:gap-y-1">
+                              <div className="flex items-center gap-2 text-xs text-gray-400 max-md:text-sm">
                                 <button
                                   type="button"
                                   aria-label="Giảm số lượng"
                                   disabled={item.quantity <= 1}
                                   onClick={() => dispatch(updateCartItemQuantity({ id: item.id, quantity: item.quantity - 1 }))}
-                                  className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded-sm text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                                  className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded-sm text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed max-md:min-w-11 max-md:min-h-11"
                                 >
                                   <Minus className="w-3 h-3" />
                                 </button>
@@ -671,7 +671,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                                   aria-label="Tăng số lượng"
                                   disabled={(() => { const stock = variantStock(item); return typeof stock === 'number' && item.quantity >= stock; })()}
                                   onClick={() => dispatch(updateCartItemQuantity({ id: item.id, quantity: item.quantity + 1 }))}
-                                  className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded-sm text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                                  className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded-sm text-gray-700 disabled:opacity-40 disabled:cursor-not-allowed max-md:min-w-11 max-md:min-h-11"
                                 >
                                   <Plus className="w-3 h-3" />
                                 </button>
@@ -691,7 +691,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
                           <button
                             onClick={() => onRemoveItem(item.id)}
-                            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition h-max"
+                            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition h-max max-md:min-w-11 max-md:min-h-11 max-md:flex max-md:items-center max-md:justify-center"
                             title="Xóa sản phẩm"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -702,7 +702,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   </div>
 
                   {/* Trust warning */}
-                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-start gap-2 text-[11px] text-gray-500 leading-normal">
+                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-start gap-2 text-[11px] text-gray-500 leading-normal max-md:text-sm">
                     <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                     <span>Hóa đơn bán vợt kèm thẻ bảo hành chống gãy sập khung chính hãng.</span>
                   </div>
@@ -711,7 +711,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <div className="text-center py-16 space-y-3">
                   <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto" />
                   <p className="text-gray-500 text-sm">Giỏ hàng của bạn đang trống.</p>
-                  <button onClick={onClose} className="text-xs btn-primary px-4 py-2 rounded-sm">
+                  <button onClick={onClose} className="text-xs btn-primary px-4 py-2 rounded-sm max-md:text-sm max-md:min-h-11">
                     Mua Sắm Ngay &rarr;
                   </button>
                 </div>
@@ -722,21 +722,21 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           {step === 2 && (
             <form id="checkout-form" noValidate onSubmit={handleCheckoutSubmit} className="space-y-4">
               {orderUncertain && (
-                <div role="alert" className="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] p-3 rounded-lg space-y-2">
+                <div role="alert" className="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] p-3 rounded-lg space-y-2 max-md:text-sm">
                   <p>{orderUncertain}</p>
-                  <button type="button" onClick={() => setOrderUncertain(null)} className="underline font-bold">
+                  <button type="button" onClick={() => setOrderUncertain(null)} className="underline font-bold max-md:min-h-11">
                     Tôi đã kiểm tra, chưa có đơn — cho phép đặt lại
                   </button>
                 </div>
               )}
               <div className="space-y-2" data-testid="checkout-order-summary">
-                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary border-b border-gray-100 pb-1.5">Đơn hàng của bạn</h3>
+                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary border-b border-gray-100 pb-1.5 max-md:text-sm">Đơn hàng của bạn</h3>
                 <div className="divide-y divide-gray-100">
                   {cartItems.map((item, index) => (
-                    <div key={item.id} className="py-2 flex items-start justify-between gap-3 text-xs" data-testid="checkout-summary-line">
+                    <div key={item.id} className="py-2 flex items-start justify-between gap-3 text-xs max-md:text-sm" data-testid="checkout-summary-line">
                       <div className="min-w-0 flex-1 space-y-0.5">
                         <p className="font-bold text-gray-900 line-clamp-1">{item.name}</p>
-                        <p className="text-[10px] text-gray-500 font-mono">
+                        <p className="text-[10px] text-gray-500 font-mono max-md:text-sm">
                           {item.variantLabel ? `Phân loại: ${item.variantLabel} · ` : ''}SL: <strong className="text-gray-800">{item.quantity}</strong>
                         </p>
                       </div>
@@ -755,22 +755,22 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 </div>
               </div>
               <div className="space-y-3">
-                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary border-b border-gray-100 pb-1.5">Thông tin nhận hàng</h3>
+                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary border-b border-gray-100 pb-1.5 max-md:text-sm">Thông tin nhận hàng</h3>
                 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Họ và tên người nhận *</label>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase max-md:text-sm">Họ và tên người nhận *</label>
                   <input
                     type="text"
                     required
                     placeholder="Ví dụ: Nguyễn Văn A"
                     value={fullName}
                     onChange={e => setFullName(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition max-md:text-base max-md:min-h-11"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Số điện thoại liên hệ *</label>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase max-md:text-sm">Số điện thoại liên hệ *</label>
                   <input
                     type="tel"
                     inputMode="tel"
@@ -784,20 +784,20 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                     }}
                     onBlur={() => setPhoneTouched(true)}
                     aria-invalid={showPhoneError}
-                    className={`w-full bg-gray-50 border ${showPhoneError ? 'border-red-500' : 'border-gray-200'} rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition`}
+                    className={`w-full bg-gray-50 border ${showPhoneError ? 'border-red-500' : 'border-gray-200'} rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition max-md:text-base max-md:min-h-11`}
                   />
-                  {showPhoneError && <p role="alert" className="text-[11px] text-red-600">{PHONE_ERROR_MESSAGE}</p>}
+                  {showPhoneError && <p role="alert" className="text-[11px] text-red-600 max-md:text-sm">{PHONE_ERROR_MESSAGE}</p>}
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase">Địa chỉ cụ thể (Số nhà, Ngõ/Hẻm, Đường) *</label>
+                  <label className="text-[10px] font-bold text-gray-400 uppercase max-md:text-sm">Địa chỉ cụ thể (Số nhà, Ngõ/Hẻm, Đường) *</label>
                   <input
                     type="text"
                     required
                     placeholder="Ví dụ: Số 12 Chùa Hà"
                     value={address}
                     onChange={e => setAddress(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition max-md:text-base max-md:min-h-11"
                   />
                 </div>
 
@@ -833,19 +833,19 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
               {/* Shipping Method */}
               <div className="space-y-2 pt-3 border-t border-gray-100">
-                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Phương thức vận chuyển</h3>
-                {!currentQuote && <p className="text-[11px] text-gray-400">Chọn tỉnh/thành phố và phường/xã để xem phí giao hàng.</p>}
-                {currentQuote?.status === 'loading' && <p className="text-[11px] text-gray-400">Đang lấy báo giá vận chuyển...</p>}
+                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary max-md:text-sm">Phương thức vận chuyển</h3>
+                {!currentQuote && <p className="text-[11px] text-gray-400 max-md:text-sm">Chọn tỉnh/thành phố và phường/xã để xem phí giao hàng.</p>}
+                {currentQuote?.status === 'loading' && <p className="text-[11px] text-gray-400 max-md:text-sm">Đang lấy báo giá vận chuyển...</p>}
                 {currentQuote?.status === 'error' && (
-                  <div role="alert" className="text-[11px] text-red-600 font-semibold space-y-1.5">
+                  <div role="alert" className="text-[11px] text-red-600 font-semibold space-y-1.5 max-md:text-sm">
                     <p>{currentQuote.message}</p>
                     {currentQuote.retryable && (
-                      <button type="button" onClick={retryQuote} className="underline text-brand-primary">Thử lại</button>
+                      <button type="button" onClick={retryQuote} className="underline text-brand-primary max-md:min-h-11">Thử lại</button>
                     )}
                   </div>
                 )}
                 {quoteOptions && !quoteOptions.some(isUsable) && (
-                  <p role="alert" className="text-[11px] text-red-600 font-semibold">{NO_DELIVERY_MESSAGE}</p>
+                  <p role="alert" className="text-[11px] text-red-600 font-semibold max-md:text-sm">{NO_DELIVERY_MESSAGE}</p>
                 )}
                 {quoteOptions && (
                   <div className="grid grid-cols-2 gap-2.5">
@@ -864,16 +864,16 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                         >
                           <Truck className="w-4 h-4 text-brand-primary shrink-0" />
                           <div className="min-w-0">
-                            <p className="font-bold text-[11px] text-gray-900">{label}</p>
+                            <p className="font-bold text-[11px] text-gray-900 max-md:text-sm">{label}</p>
                             {usable ? (
-                              <p className="text-[10px] text-gray-400">
+                              <p className="text-[10px] text-gray-400 max-md:text-sm">
                                 {opt.eta_days !== null && <>Dự kiến {opt.eta_days} ngày • </>}
                                 {(opt.shipping_discount ?? 0) > 0 && <span className="line-through mr-1">{formatMoney(opt.shipping_fee_original ?? null)}</span>}
                                 {formatMoney(opt.shipping_fee)}
                                 {opt.is_fallback && <span className="block text-amber-600 font-semibold">Phí tạm tính</span>}
                               </p>
                             ) : (
-                              <p className="text-[10px] text-red-600">{opt.unavailable_reason}</p>
+                              <p className="text-[10px] text-red-600 max-md:text-sm">{opt.unavailable_reason}</p>
                             )}
                           </div>
                         </button>
@@ -882,17 +882,17 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   </div>
                 )}
                 {shippingDiscount > 0 && quoteVoucher?.name && (
-                  <p className="text-[11px] text-brand-sale font-semibold">Đã áp dụng: {quoteVoucher.name}</p>
+                  <p className="text-[11px] text-brand-sale font-semibold max-md:text-sm">Đã áp dụng: {quoteVoucher.name}</p>
                 )}
-                {voucherMessage && <p className="text-[11px] text-amber-700">{voucherMessage}</p>}
+                {voucherMessage && <p className="text-[11px] text-amber-700 max-md:text-sm">{voucherMessage}</p>}
                 {quoteVoucher?.valid === false && quoteVoucher.message && quoteVoucher.message !== voucherMessage && (
-                  <p className="text-[11px] text-amber-700">{quoteVoucher.message}</p>
+                  <p className="text-[11px] text-amber-700 max-md:text-sm">{quoteVoucher.message}</p>
                 )}
               </div>
 
               {/* Payment Method */}
               <div className="space-y-2 pt-3 border-t border-gray-100">
-                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary">Phương thức thanh toán</h3>
+                <h3 className="font-bold text-gray-900 text-xs uppercase text-brand-primary max-md:text-sm">Phương thức thanh toán</h3>
                 <div className="grid grid-cols-2 gap-2.5">
                   <div
                     onClick={() => setPaymentMethod('sepay')}
@@ -900,8 +900,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   >
                     <QrCode className="w-4 h-4 text-brand-primary shrink-0" />
                     <div>
-                      <p className="font-bold text-[11px] text-gray-900">SePay QR Code</p>
-                      <p className="text-[10px] text-emerald-600 font-semibold">Chuyển khoản QR</p>
+                      <p className="font-bold text-[11px] text-gray-900 max-md:text-sm">SePay QR Code</p>
+                      <p className="text-[10px] text-emerald-600 font-semibold max-md:text-sm">Chuyển khoản QR</p>
                     </div>
                   </div>
 
@@ -911,8 +911,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   >
                     <CreditCard className="w-4 h-4 text-brand-primary shrink-0" />
                     <div>
-                      <p className="font-bold text-[11px] text-gray-900">Thanh toán COD</p>
-                      <p className="text-[10px] text-gray-400">Trả khi nhận hàng</p>
+                      <p className="font-bold text-[11px] text-gray-900 max-md:text-sm">Thanh toán COD</p>
+                      <p className="text-[10px] text-gray-400 max-md:text-sm">Trả khi nhận hàng</p>
                     </div>
                   </div>
                 </div>
@@ -925,7 +925,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               {paymentError ? (
                 <>
                   <h3 className="font-display font-black text-lg text-gray-900 uppercase">Chưa mở được trang thanh toán</h3>
-                  <p role="alert" className="text-xs text-red-600 font-semibold">
+                  <p role="alert" className="text-xs text-red-600 font-semibold max-md:text-sm">
                     Đã tạo đơn {placedOrder.orderNumber}. Chưa mở được trang thanh toán: {paymentError}
                   </p>
                   {!paymentFinal && (
@@ -933,7 +933,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                       type="button"
                       onClick={() => void openSepay(placedOrder, 'step3')}
                       disabled={isPaying}
-                      className={`w-full text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm ${isPaying ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                      className={`w-full text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm ${isPaying ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'} max-md:text-sm max-md:min-h-11`}
                     >
                       {isPaying ? 'Đang xử lý...' : 'Thanh toán lại'}
                     </button>
@@ -941,13 +941,13 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   <button
                     type="button"
                     onClick={() => { setStep(1); setPlacedOrder(null); setPaymentError(null); setPaymentFinal(false); }}
-                    className="w-full border border-gray-300 text-gray-700 font-bold text-xs uppercase tracking-wider py-3 rounded-sm"
+                    className="w-full border border-gray-300 text-gray-700 font-bold text-xs uppercase tracking-wider py-3 rounded-sm max-md:text-sm max-md:min-h-11"
                   >
                     Quay về giỏ hàng
                   </button>
                 </>
               ) : (
-                <p className="text-xs text-gray-500">Đã tạo đơn {placedOrder.orderNumber}. Đang chuyển tới trang thanh toán SePay...</p>
+                <p className="text-xs text-gray-500 max-md:text-sm">Đã tạo đơn {placedOrder.orderNumber}. Đang chuyển tới trang thanh toán SePay...</p>
               )}
             </div>
           )}
@@ -956,11 +956,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
             <div className="text-center py-8 space-y-4 animate-in zoom-in-95 duration-200">
               <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto" />
               <h3 className="font-display font-black text-xl text-gray-900 uppercase">ĐẶT HÀNG THÀNH CÔNG!</h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 max-md:text-sm">
                 Cảm ơn bạn đã tin tưởng TopVNSport. Cửa hàng đang đóng gói và chuẩn bị bàn giao cho bưu cục vận chuyển.
               </p>
               
-              <div className="bg-gray-50 p-4 rounded-xl text-left border border-gray-100 text-xs text-gray-700 space-y-2 font-mono">
+              <div className="bg-gray-50 p-4 rounded-xl text-left border border-gray-100 text-xs text-gray-700 space-y-2 font-mono max-md:text-sm">
                 {placedOrder?.orderNumber && <p>• <strong>Mã đơn hàng:</strong> {placedOrder.orderNumber}</p>}
                 <p>• <strong>Người nhận:</strong> {fullName}</p>
                 <p>• <strong>Số điện thoại:</strong> {phone}</p>
@@ -977,7 +977,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 </p>
               </div>
 
-              <div className="bg-brand-light p-3 rounded-lg border border-blue-100 text-left text-[11px] text-brand-secondary flex items-start gap-2 leading-relaxed">
+              <div className="bg-brand-light p-3 rounded-lg border border-blue-100 text-left text-[11px] text-brand-secondary flex items-start gap-2 leading-relaxed max-md:text-sm">
                 <ShieldCheck className="w-4.5 h-4.5 shrink-0 mt-0.5" />
                 <span>
                   Đơn hàng của bạn sẽ được bảo hành trực tiếp thông qua số điện thoại mua hàng tại tất cả hơn 80 chi nhánh TopVNSport toàn quốc.
@@ -990,7 +990,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         {/* Footer actions of drawer */}
         {cartItems.length > 0 && step < 3 && (
           <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-3">
-            <div className="space-y-1.5 text-xs text-gray-600 font-mono">
+            <div className="space-y-1.5 text-xs text-gray-600 font-mono max-md:text-sm">
               <SummaryRow
                 label="Tổng tiền hàng:"
                 struckValue={hasPromotion ? formatMoney(summary.originalItemsTotal) : null}
@@ -1009,7 +1009,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 value={
                   <>
                     {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
-                    {selectedFee !== null && selectedOption?.is_fallback && <span className="block text-amber-600 text-[10px]">Phí tạm tính</span>}
+                    {selectedFee !== null && selectedOption?.is_fallback && <span className="block text-amber-600 text-[10px] max-md:text-sm">Phí tạm tính</span>}
                   </>
                 }
               />
@@ -1033,7 +1033,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 disabled={!canCheckout}
                 className={`w-full text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${
                   canCheckout ? 'btn-primary' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
+                } max-md:text-sm max-md:min-h-11`}
               >
                 {isLoadingProducts ? 'Đang tải...' : <>Tiến hành thanh toán &rarr;</>}
               </button>
@@ -1042,7 +1042,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-sm transition"
+                  className="border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold text-xs uppercase tracking-wider px-4 py-3 rounded-sm transition max-md:text-sm max-md:min-h-11"
                 >
                   Quay lại
                 </button>
@@ -1050,7 +1050,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                   type="submit"
                   form="checkout-form"
                   disabled={isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked}
-                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'}`}
+                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'} max-md:text-sm max-md:min-h-11`}
                 >
                   {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng'}
                 </button>
@@ -1061,7 +1061,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           <div className="p-4 border-t border-gray-100 bg-gray-50">
             <button
               onClick={handleFinish}
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full transition"
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full transition max-md:text-sm max-md:min-h-11"
             >
               Hoàn thành mua sắm
             </button>
