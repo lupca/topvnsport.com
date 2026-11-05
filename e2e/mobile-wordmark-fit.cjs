@@ -1,6 +1,6 @@
 // STOR-160 (goal 2c881ad4, MOB-A c4cd5fa6): on non-home pages the TOPVNSPORT wordmark in the mobile sticky bar must be
 // whole (scrollWidth <= clientWidth) at 360-430px, with the bar one row <=62px and menu/cart >=44x44, 'Đan cước' >=44px tall.
-// Below 430px the bar must also use the compact padding/gap (max-[430px] tokens).
+// Below 480px the bar must also use the compact padding/gap (max-[480px] tokens).
 // Sweep: widths x cart count (0, 99 seeded via localStorage 'cart_items') x routes (catalog, pdp-simple).
 // Fixtures/routes/waitPort come from e2e/mobile-audit/audit.cjs. Vite --strictPort, killed by its recorded PID (r:0b30a607).
 //   node e2e/mobile-wordmark-fit.cjs      one PASS/FAIL line per route/width/cart, exit 1 on any failure. PORT (default 4431).
@@ -13,7 +13,7 @@ process.env.PORT ||= '4431';
 const { stub, ROUTES, waitPort, PRODUCTS } = require('./mobile-audit/audit.cjs');
 const { chromium } = require('playwright-core');
 
-const WIDTHS = [360, 390, 399, 412, 414, 430];
+const WIDTHS = [360, 390, 399, 412, 414, 430, 431, 479, 480];
 const CARTS = [0, 99];
 const IDS = ['catalog', 'pdp-simple'];
 const MAX_BAR = 62;
@@ -66,8 +66,13 @@ async function main() {
       try {
         await page.addInitScript((seed) => { localStorage.setItem('cart_items', seed); }, cartSeed(cart));
         await stub(page);
+        // production draws the wordmark in Google Fonts Montserrat 800 (src/index.css @import); stub() aborts every
+        // non-local request, which would measure a narrower fallback font. Routes registered later win in Playwright.
+        await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (r) => r.continue());
         await route.go(page);
         await page.evaluate(() => window.scrollTo(0, 0));
+        const font = await page.evaluate(async () => { await document.fonts.ready; const ok = document.fonts.check('800 18px Montserrat'); const wm = document.querySelector('[data-testid=mobile-sticky-bar] img[alt="TopVNSport Logo"]').parentElement; return ok && getComputedStyle(wm).fontFamily.includes('Montserrat'); });
+        if (!font) throw new Error('Montserrat 800 not loaded (fonts.googleapis.com unreachable?); refusing to measure a fallback font');
         const m = await measure(page);
         if (!m) throw new Error('[data-testid=mobile-sticky-bar] missing');
         const why = [];
@@ -78,10 +83,10 @@ async function main() {
         if (m.menu.w < TAP || m.menu.h < TAP) why.push(`menu ${m.menu.w}x${m.menu.h} < 44`);
         if (m.cart.w < TAP || m.cart.h < TAP) why.push(`cart ${m.cart.w}x${m.cart.h} < 44`);
         if (m.dan.h < TAP) why.push(`Đan cước h=${m.dan.h} < 44`);
-        // the fix: compact bar spacing (max-[430px]:px-2 = 0.5rem, gap-0.5 = 0.125rem) must apply at every width < 430;
+        // the fix: compact bar spacing (max-[480px]:px-2 = 0.5rem, gap-0.5 = 0.125rem) must apply at every width < 480 (Tailwind v4 max-[480px] = width < 480px);
         // the wordmark alone has slack (any one of the four tokens frees enough at 412), so guard the bar tokens directly
-        if (w < 430 && m.padL !== 0.5) why.push(`bar padding-left ${m.padL}rem != 0.5rem (max-[430px]:px-2 not active)`);
-        if (w < 430 && m.gap !== 0.125) why.push(`bar gap ${m.gap}rem != 0.125rem (max-[430px]:gap-0.5 not active)`);
+        if (w < 480 && m.padL !== 0.5) why.push(`bar padding-left ${m.padL}rem != 0.5rem (max-[480px]:px-2 not active)`);
+        if (w < 480 && m.gap !== 0.125) why.push(`bar gap ${m.gap}rem != 0.125rem (max-[480px]:gap-0.5 not active)`);
         if (m.docSw > w) why.push(`page scrollWidth ${m.docSw} > ${w}`);
         if (why.length) failures++;
         console.log(`${label} ${why.length ? 'FAIL' : 'PASS'} pad=${m.padL}rem gap=${m.gap}rem wordmark=${m.sw}/${m.cw} bar=${m.bar}px menu=${m.menu.w}x${m.menu.h} dan.h=${m.dan.h} cart=${m.cart.w}x${m.cart.h}${why.length ? ' -- ' + why.join('; ') : ''}`);
