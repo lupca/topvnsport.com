@@ -6,6 +6,9 @@
 //   node e2e/mobile-audit/audit.cjs --selftest      8 PASS/FAIL lines (one planted violation per measurement + clean control)
 //   node e2e/mobile-audit/audit.cjs --report-only   rewrite before.md from the existing before.json
 //   node e2e/mobile-audit/audit.cjs --only=cart --width=390   debug subset (writes nothing outside before/ and does not touch before.json/md)
+//   node e2e/mobile-audit/audit.cjs --label=after   STOR-150 re-scan -> after/ + after.json; 1440 shots + geometry.json go to DESKTOP_OUT
+//                                                   (default <tmp>/mobile-audit-after-1440) so desktop-baseline/ is never overwritten;
+//                                                   after.md is written by compare.cjs
 // PLAYWRIGHT=<path to playwright(-core)> optional. PORT (default 4428). OUT (default docs/mobile-audit).
 const { spawn, execSync } = require('child_process');
 const fs = require('fs');
@@ -17,6 +20,10 @@ const ROOT = path.join(__dirname, '..', '..');
 const PORT = Number(process.env.PORT || 4428);
 const BASE = `http://127.0.0.1:${PORT}`;
 const OUT = process.env.OUT || path.join(ROOT, 'docs', 'mobile-audit');
+const LABEL = (process.argv.find((a) => a.startsWith('--label=')) || '--label=before').slice(8);
+if (!['before', 'after'].includes(LABEL)) throw new Error(`--label must be before|after, got ${LABEL}`);
+const AFTER_DESKTOP_OUT = process.env.DESKTOP_OUT || path.join(require('os').tmpdir(), 'mobile-audit-after-1440');
+const DESKTOP_OUT = LABEL === 'before' ? path.join(OUT, 'desktop-baseline') : AFTER_DESKTOP_OUT;
 const MOBILE_WIDTHS = [[360, 800], [390, 844], [430, 932], [768, 1024]];
 const PHONE_WIDTHS = [360, 390, 430]; // MOB-A/B/C/E/F/G apply here; MOB-D applies at all four
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -471,11 +478,11 @@ ${issueRows.join('\n')}
 async function main() {
   const onlyArg = (process.argv.find((a) => a.startsWith('--only=')) || '').slice(7);
   const widthArg = Number((process.argv.find((a) => a.startsWith('--width=')) || '').slice(8)) || 0;
-  if (process.argv.includes('--report-only')) { writeReport(JSON.parse(fs.readFileSync(path.join(OUT, 'before.json'), 'utf8'))); console.log('rewrote before.md from before.json'); return; } // template-only change, no browser
+  if (process.argv.includes('--report-only') && LABEL === 'before') { writeReport(JSON.parse(fs.readFileSync(path.join(OUT, 'before.json'), 'utf8'))); console.log('rewrote before.md from before.json'); return; } // template-only change, no browser
   const full = !onlyArg && !widthArg;
   const routes = ROUTES.filter((r) => !onlyArg || onlyArg.split(',').includes(r.id));
   const widths = MOBILE_WIDTHS.filter(([w]) => !widthArg || w === widthArg);
-  for (const d of ['before', 'desktop-baseline']) fs.mkdirSync(path.join(OUT, d), { recursive: true });
+  for (const d of [path.join(OUT, LABEL), DESKTOP_OUT]) fs.mkdirSync(d, { recursive: true });
 
   const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--port', String(PORT), '--strictPort', '--host', '127.0.0.1'], { cwd: ROOT, stdio: 'ignore' });
   console.log('dev server pid', server.pid);
@@ -484,6 +491,7 @@ async function main() {
     await waitPort();
     browser = await chromium.launch();
     const records = [];
+    const geometry = {}; // 1440 page size + landmark boxes (after only): explains a desktop pixel diff in compare.cjs
     const shoot = async (route, vw, vh, mobile) => {
       const ctx = await browser.newContext({ viewport: { width: vw, height: vh }, isMobile: mobile, hasTouch: mobile, deviceScaleFactor: 1, reducedMotion: 'reduce' });
       const page = await ctx.newPage();
@@ -492,11 +500,28 @@ async function main() {
       await stub(page);
       try {
         await route.go(page);
-        const file = path.join(OUT, mobile ? 'before' : 'desktop-baseline', `${route.id}-${vw}.png`);
+        const file = path.join(mobile ? path.join(OUT, LABEL) : DESKTOP_OUT, `${route.id}-${vw}.png`);
         await page.screenshot({ path: file });
+        // 'Không tải được…' on screen = the /api 503 issue of goal f7549ebc, not a layout defect (flagged, never counted as MOB-x)
+        const apiError = await page.evaluate(() => /Không tải được/.test(document.body.innerText));
         if (mobile) {
           const m = await page.evaluate(measureInPage, {});
-          records.push({ route: route.id, width: vw, ...m, pageErrors: errors.slice(0, 3) });
+          records.push({ route: route.id, width: vw, ...m, apiError, pageErrors: errors.slice(0, 3) });
+        } else if (LABEL === 'after') {
+          // every visible element in the first screen, viewport coords (= screenshot coords); text masked like measureInPage
+          geometry[route.id] = await page.evaluate(() => {
+            const els = [];
+            for (const el of document.body.querySelectorAll('*')) {
+              const r = el.getBoundingClientRect(), st = getComputedStyle(el);
+              if (r.width < 2 || r.height < 2 || r.bottom <= 0 || r.top >= innerHeight || st.visibility === 'hidden' || st.display === 'none') continue;
+              const cls = typeof el.className === 'string' ? el.className.trim().split(/\s+/).slice(0, 3).join('.') : '';
+              els.push({ sel: el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (cls ? '.' + cls : ''), fixed: st.position === 'fixed',
+                x0: Math.round(r.left), y0: Math.round(r.top), x1: Math.round(r.right), y1: Math.round(r.bottom),
+                t: (el.getAttribute('aria-label') || (el.children.length ? '' : el.textContent) || '').replace(/\s+/g, ' ').trim().replace(/\d{6,}/g, '#').replace(/\S*@\S*/g, '@').slice(0, 28) });
+            }
+            return { scrollY: Math.round(scrollY), scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight, els };
+          });
+          geometry[route.id].apiError = apiError;
         }
         console.log('ok', route.id, vw);
       } catch (e) {
@@ -512,9 +537,18 @@ async function main() {
     }
     if (full && !fails) {
       records.sort((a, b) => ROUTES.findIndex((r) => r.id === a.route) - ROUTES.findIndex((r) => r.id === b.route) || a.width - b.width);
-      fs.writeFileSync(path.join(OUT, 'before.json'), JSON.stringify(records, null, 1) + '\n');
-      writeReport(records);
-      console.log('wrote before.json + before.md,', records.length, 'records');
+      if (LABEL === 'after') {
+        // short SHA: the full one may hold a 6+ digit run, which the no-personal-data grep on after.json would flag
+        let sha = execSync('git rev-parse --short=12 HEAD', { cwd: ROOT }).toString().trim();
+        if (execSync('git status --porcelain -- src index.html package.json vite.config.ts', { cwd: ROOT }).toString().trim()) sha += '+dirty';
+        fs.writeFileSync(path.join(OUT, 'after.json'), JSON.stringify({ scannedSha: sha, records }, null, 1) + '\n');
+        fs.writeFileSync(path.join(DESKTOP_OUT, 'geometry.json'), JSON.stringify(geometry, null, 1) + '\n');
+        console.log('wrote after.json,', records.length, 'records; 1440 shots + geometry.json in', DESKTOP_OUT, '; now run compare.cjs');
+      } else {
+        fs.writeFileSync(path.join(OUT, 'before.json'), JSON.stringify(records, null, 1) + '\n');
+        writeReport(records);
+        console.log('wrote before.json + before.md,', records.length, 'records');
+      }
     } else if (!full) {
       console.log(JSON.stringify(records.map((r) => ({ route: r.route, width: r.width, scope: r.scope, a: r.a_top_fixed, b: [r.b_overflow_x.scrollWidth, r.b_overflow_x.clientWidth], c: r.c_nav_rows, d: r.d_small_targets.count, e: r.e_small_text.count, f: r.f_small_inputs.count, g: r.g_bottom_overlap, h: r.h_promo_lines.lines, v: violations(r).map((x) => x.mob) }))));
     }
@@ -528,5 +562,5 @@ async function main() {
   }
 }
 
-module.exports = { measureInPage, stub, ROUTES, waitPort, BASE, PRODUCTS, STOCK };
+module.exports = { measureInPage, stub, ROUTES, waitPort, BASE, PRODUCTS, STOCK, violations, MOBILE_WIDTHS, PHONE_WIDTHS, AFTER_DESKTOP_OUT, OUT };
 if (require.main === module) { if (process.argv.includes('--selftest')) selftest(); else main(); }
