@@ -73,7 +73,10 @@ async function main() {
         await page.evaluate(() => window.scrollTo(0, 0));
         // fonts.check() is true when nothing needs loading, so force the load and require a face with status 'loaded'
         const font = await page.evaluate(async () => {
-          try { await document.fonts.load('800 18px Montserrat', 'TOPVNSPORT'); } catch (e) { /* blocked: face stays unloaded */ }
+          // load() resolves with the faces covering these glyphs (the latin subset); a failed file rejects or leaves one unloaded
+          let faces;
+          try { faces = await document.fonts.load('800 18px Montserrat', 'TOPVNSPORT'); } catch (e) { return false; }
+          if (!faces.length || faces.some((f) => f.status !== 'loaded')) return false;
           await document.fonts.ready;
           const loaded = [...document.fonts].some((f) => {
             if (!/Montserrat/i.test(f.family) || f.status !== 'loaded') return false;
