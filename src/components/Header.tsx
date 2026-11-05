@@ -169,8 +169,8 @@ export default function Header({ cartCount, openCart, products, categories, cate
 
   return (
     <>
-    {/* Mobile Top Row: dưới md chỉ hàng này dính đầu trang (STOR-133, MOB-A); dải đen, ô tìm kiếm, thanh danh mục cuộn theo trang. */}
-    <div data-testid="mobile-sticky-bar" className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-100 shadow-xs flex items-center justify-between gap-2 px-4 py-2 max-[399px]:gap-0.5 max-[399px]:px-2">
+    {/* Mobile Top Row: dưới md chỉ hàng này dính đầu trang (STOR-133, MOB-A); dải đen, ô tìm kiếm, thanh danh mục cuộn theo trang. max-[480px] khép lề, max-[399px] thu nhỏ chữ để TOPVNSPORT (Montserrat 800) đủ chữ ở 360–430px (STOR-160). */}
+    <div data-testid="mobile-sticky-bar" className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-100 shadow-xs flex items-center justify-between gap-2 px-4 py-2 max-[480px]:gap-0.5 max-[480px]:px-2">
       <button
         type="button"
         onClick={() => setIsMobileMenuOpen(true)}
@@ -182,22 +182,22 @@ export default function Header({ cartCount, openCart, products, categories, cate
       <button
         type="button"
         onClick={() => navigate('/stores')}
-        className="inline-flex items-center min-h-[44px] border border-ink-primary text-ink-primary text-[14px] font-bold px-2.5 max-[399px]:px-1 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
+        className="inline-flex items-center min-h-[44px] border border-ink-primary text-ink-primary text-[14px] font-bold px-2.5 max-[480px]:px-1 py-1 rounded-sm hover:bg-ink-primary hover:text-white transition shrink-0"
       >
         Đan cước
       </button>
       <div 
         onClick={() => navigate('/')} 
-        className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none min-w-0 truncate"
+        className="cursor-pointer font-display font-extrabold text-lg tracking-tight text-gray-900 leading-none min-w-0 truncate max-[399px]:text-[15px]"
       >
-        <img src={LOGO_SRC} alt="TopVNSport Logo" className="inline-block w-6 h-6 rounded-md object-cover align-middle mr-1.5" />
+        <img src={LOGO_SRC} alt="TopVNSport Logo" className="inline-block w-6 h-6 rounded-md object-cover align-middle mr-1.5 max-[399px]:mr-1" />
         TOPVN<span className="text-brand-primary">SPORT</span>
       </div>
       <button 
         type="button"
         onClick={openCart}
         aria-label="Giỏ hàng"
-        className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-ink-primary text-white text-[14px] font-bold px-3 max-[399px]:px-1.5 py-1.5 rounded-full hover:bg-brand-primary transition shrink-0 tabular-nums"
+        className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] bg-ink-primary text-white text-[14px] font-bold px-3 max-[480px]:px-1.5 py-1.5 rounded-full hover:bg-brand-primary transition shrink-0 tabular-nums"
       >
         Giỏ ({cartCount})
       </button>

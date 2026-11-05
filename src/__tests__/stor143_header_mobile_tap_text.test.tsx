@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 // STOR-143 (goal 2c881ad4): khung đầu trang dưới md đạt MOB-E (vùng bấm ≥44px, MOB-E 5c6e5961) và MOB-F (chữ ≥14px,
-// ô nhập ≥16px) mà hàng dính vẫn một hàng ≤120px (MOB-A c4cd5fa6) và TOPVNSPORT không bị cắt ở 360px
-// (max-[399px] khép lề/khoảng cách, chữ 14px). Desktop: mọi token đổi đều có md: trả lại giá trị cũ.
-// Số đo thật (bbox/computed style 360/390/430/1440) đo bằng playwright; ở đây khoá token.
+// ô nhập ≥16px) mà hàng dính vẫn một hàng ≤120px (MOB-A c4cd5fa6) và TOPVNSPORT không bị cắt ở 360–430px (STOR-160)
+// (max-[480px] khép lề/khoảng cách, max-[399px] chữ TOPVNSPORT 15px, chữ nút 14px). Desktop: mọi token đổi đều có md: trả lại giá trị cũ.
+// Số đo thật với font Montserrat: node e2e/mobile-wordmark-fit.cjs; ở đây khoá token.
 import React from 'react';
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
 import { Category } from '../types';
@@ -26,10 +26,10 @@ function renderHeader(pathname = '/catalog') {
 describe('STOR-143 header mobile: vùng bấm 44px, chữ ≥14px, ô tìm 16px', () => {
   afterEach(cleanup);
 
-  it('hàng dính: khép lề/khoảng cách dưới 400px để TOPVNSPORT không bị cắt ở 360px', () => {
+  it('hàng dính: khép lề/khoảng cách dưới 480px để TOPVNSPORT không bị cắt ở 360–430px (STOR-160)', () => {
     renderHeader();
     const bar = screen.getByTestId('mobile-sticky-bar');
-    has(bar, ['max-[399px]:px-2', 'max-[399px]:gap-0.5', 'px-4', 'gap-2']);
+    has(bar, ['max-[480px]:px-2', 'max-[480px]:gap-0.5', 'px-4', 'gap-2']);
   });
 
   it('nút menu 44x44 (inline-flex căn giữa, -ml-2); trên "/" vẫn ẩn', () => {
@@ -42,16 +42,23 @@ describe('STOR-143 header mobile: vùng bấm 44px, chữ ≥14px, ô tìm 16px'
     expect(cls(menu)).not.toContain('inline-flex');
   });
 
-  it("'Đan cước': cao 44px, chữ 14px, lề px-1 dưới 400px", () => {
+  it("'Đan cước': cao 44px, chữ 14px, lề px-1 dưới 480px", () => {
     renderHeader();
-    has(screen.getByRole('button', { name: 'Đan cước' }), ['inline-flex', 'items-center', 'min-h-[44px]', 'text-[14px]', 'max-[399px]:px-1']);
+    has(screen.getByRole('button', { name: 'Đan cước' }), ['inline-flex', 'items-center', 'min-h-[44px]', 'text-[14px]', 'max-[480px]:px-1']);
   });
 
-  it("'Giỏ (N)': 44x44 tối thiểu, chữ 14px, lề px-1.5 dưới 400px; nhãn và số đếm không đổi", () => {
+  it("'Giỏ (N)': 44x44 tối thiểu, chữ 14px, lề px-1.5 dưới 480px; nhãn và số đếm không đổi", () => {
     renderHeader();
     const cart = screen.getAllByRole('button', { name: 'Giỏ hàng' }).find(b => b.textContent === 'Giỏ (12)')!;
     expect(cart).toBeDefined();
-    has(cart, ['inline-flex', 'items-center', 'min-h-[44px]', 'min-w-[44px]', 'text-[14px]', 'max-[399px]:px-1.5']);
+    has(cart, ['inline-flex', 'items-center', 'min-h-[44px]', 'min-w-[44px]', 'text-[14px]', 'max-[480px]:px-1.5']);
+  });
+
+  it('TOPVNSPORT: dưới 399px chữ 15px (≥14px), logo mr-1 để đủ chữ ở 360px với Giỏ (99) (STOR-160); ≥399px giữ text-lg, mr-1.5', () => {
+    renderHeader();
+    const logo = within(screen.getByTestId('mobile-sticky-bar')).getByAltText('TopVNSport Logo');
+    has(logo.parentElement!, ['text-lg', 'max-[399px]:text-[15px]', 'truncate']);
+    has(logo, ['mr-1.5', 'max-[399px]:mr-1']);
   });
 
   it.each(['/', '/catalog'])('%s: dải showroom chữ text-sm', (path) => {

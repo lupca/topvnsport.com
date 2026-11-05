@@ -88,21 +88,21 @@ describe('STOR-068: Mobile header row fits viewport and guards class tokens', ()
   });
 });
 
-describe('STOR-071: wordmark stays whole at 375/390px via max-[399px] spacing', () => {
-  it('G1: mobile row tightens gap and padding below 400px', () => {
+describe('STOR-071/STOR-160: wordmark stays whole at 360–430px via max-[480px] spacing', () => {
+  it('G1: mobile row tightens gap and padding below 480px (Tailwind v4: width < 480px, so 430px itself is compact)', () => {
     const { container } = setupHeader(12);
     const { mobileRow } = getMobileRowElements(container);
-    expect(mobileRow.classList.contains('max-[399px]:gap-0.5')).toBe(true);
-    expect(mobileRow.classList.contains('max-[399px]:px-2')).toBe(true);
+    expect(mobileRow.classList.contains('max-[480px]:gap-0.5')).toBe(true);
+    expect(mobileRow.classList.contains('max-[480px]:px-2')).toBe(true);
     // md+ spacing unchanged
     expect(mobileRow.classList.contains('gap-2')).toBe(true);
     expect(mobileRow.classList.contains('px-4')).toBe(true);
   });
 
-  it('G2: Đan cước button tightens padding below 400px', () => {
+  it('G2: Đan cước button tightens padding below 480px (Tailwind v4: width < 480px, so 430px itself is compact)', () => {
     const { container } = setupHeader(12);
     const { danCuocBtn } = getMobileRowElements(container);
-    expect(danCuocBtn.classList.contains('max-[399px]:px-1')).toBe(true);
+    expect(danCuocBtn.classList.contains('max-[480px]:px-1')).toBe(true);
     expect(danCuocBtn.classList.contains('px-2.5')).toBe(true);
   });
 });
