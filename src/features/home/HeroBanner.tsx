@@ -16,7 +16,7 @@ const prefersReducedMotion = () => Boolean(window.matchMedia?.(REDUCED_MOTION).m
 // key?: repo không có @types/react nên prop key phải khai báo (như ProductCard).
 function Slide({ banner, active, index, count }: { key?: number; banner: HeroBannerItem; active: boolean; index: number; count: number }) {
   const { headline, subline, cta, image } = banner;
-  const ctaClass = 'mt-4 md:mt-7 inline-flex h-10 md:h-12 items-center bg-surface px-5 md:px-8 font-display text-[13px] md:text-[15px] font-extrabold uppercase tracking-[0.04em] text-brand-secondary transition-colors hover:bg-brand-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+  const ctaClass = 'mt-4 md:mt-7 inline-flex h-[44px] md:h-12 items-center bg-surface px-5 md:px-8 font-display text-[14px] md:text-[15px] font-extrabold uppercase tracking-[0.04em] text-brand-secondary transition-colors hover:bg-brand-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
   return (
     <div
       data-testid="hero-banner"
@@ -31,7 +31,7 @@ function Slide({ banner, active, index, count }: { key?: number; banner: HeroBan
       <div className="absolute inset-y-0 right-0 w-[52%] bg-gradient-to-r from-brand-secondary to-transparent" aria-hidden="true" />
       <div className={`relative z-10 flex h-full w-[62%] md:w-[50%] flex-col justify-center pr-3 md:pr-0 ${GUTTER} pb-8 text-white`}>
         <h2 className="min-w-0 break-words line-clamp-3 font-display text-[22px] leading-[1.15] md:text-[46px] md:leading-[1.2] font-black">{headline}</h2>
-        <p className="mt-2 md:mt-4 min-w-0 break-words line-clamp-3 text-[13px] leading-[18px] md:text-[19px] md:leading-[28px] font-medium">{subline}</p>
+        <p className="mt-2 md:mt-4 min-w-0 break-words line-clamp-3 text-[14px] leading-[18px] md:text-[19px] md:leading-[28px] font-medium">{subline}</p>
         {/* Link của react-router giữ nguyên href tel:/ngoài-SPA, chỉ điều hướng SPA với đường dẫn trong site. */}
         <Link to={cta.href} data-testid="hero-banner-cta" className={`${ctaClass} self-start`}>{cta.label}</Link>
       </div>
@@ -84,7 +84,7 @@ function Carousel({ banners }: { banners: HeroBannerItem[] }) {
         </div>
 
         <div className={`absolute bottom-3 md:bottom-6 z-20 flex items-center gap-3 ${GUTTER}`}>
-          <div data-testid="slider-dots" className="flex items-center gap-2.5">
+          <div data-testid="slider-dots" className="flex items-center gap-2.5 max-md:gap-0">
             {banners.map((_, i) => (
               <button
                 key={i}
@@ -93,8 +93,11 @@ function Carousel({ banners }: { banners: HeroBannerItem[] }) {
                 aria-label={`Xem banner ${i + 1}/${count}`}
                 aria-current={i === index ? 'true' : undefined}
                 onClick={() => setIndex(i)}
-                className={`relative h-[8px] rounded-full before:absolute before:-inset-[10px] before:content-[''] transition-all duration-200 ${i === index ? 'w-[28px] bg-white' : 'w-[8px] bg-white/50 hover:bg-white/80'}`}
-              />
+                // Dưới md nút là vùng chạm 44x44, chấm 8px (đang chọn rộng 28) nằm trong span; từ md giữ nguyên chấm + vùng chạm ::before.
+                className={`relative max-md:flex max-md:h-11 max-md:min-w-11 max-md:items-center max-md:justify-center md:h-[8px] md:rounded-full md:before:absolute md:before:-inset-[10px] md:before:content-[''] md:transition-all md:duration-200 ${i === index ? 'md:w-[28px] md:bg-white' : 'md:w-[8px] md:bg-white/50 md:hover:bg-white/80'}`}
+              >
+                <span aria-hidden="true" className={`md:hidden h-[8px] rounded-full transition-all duration-200 ${i === index ? 'w-[28px] bg-white' : 'w-[8px] bg-white/50'}`} />
+              </button>
             ))}
           </div>
           <button
@@ -103,7 +106,7 @@ function Carousel({ banners }: { banners: HeroBannerItem[] }) {
             aria-pressed={paused}
             aria-label={paused ? 'Phát tiếp' : 'Tạm dừng'}
             onClick={() => setPaused(p => !p)}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/70 text-white transition-colors hover:bg-white/20"
+            className="inline-flex h-8 w-8 max-md:h-11 max-md:w-11 items-center justify-center rounded-full border border-white/70 text-white transition-colors hover:bg-white/20"
           >
             {paused ? <Play className="h-3.5 w-3.5" aria-hidden="true" /> : <Pause className="h-3.5 w-3.5" aria-hidden="true" />}
           </button>

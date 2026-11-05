@@ -88,7 +88,7 @@ export default function HomePage() {
       {sortedCategories.length > 0 && (
         <section data-testid="badminton-hub-header" className="max-w-[1280px] mx-auto px-4 md:px-[24px] pt-2 max-md:mb-0">
           <div className="title-box text-center mb-4">
-            <p data-testid="hub-eyebrow-mobile" className="md:hidden font-mono text-[10px] font-bold tracking-[0.12em] uppercase text-brand-primary mb-1.5">
+            <p data-testid="hub-eyebrow-mobile" className="md:hidden font-mono text-[14px] font-bold tracking-[0.12em] uppercase text-brand-primary mb-1.5">
               SPECIALTY STORE
             </p>
             <p data-testid="hub-eyebrow" className="hidden md:block font-mono text-xs font-bold tracking-[0.14em] uppercase text-brand-primary mb-1.5">
@@ -115,7 +115,7 @@ export default function HomePage() {
                   key={chip.id}
                   data-testid={`cate-pill-${chip.code}`}
                   onClick={() => pickCategory(chip.code)}
-                  className={`min-h-11 max-md:min-h-[40px] md:min-h-[44px] max-md:rounded-full md:rounded-[999px] px-3 max-md:px-[14px] md:px-[18px] py-1.5 max-md:py-[8px] md:py-[8px] text-[13px] md:text-[14.5px] font-bold whitespace-nowrap transition flex items-center gap-1.5 md:gap-[7px] max-md:!font-sans md:font-sans! ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
+                  className={`min-h-11 max-md:min-h-[44px] md:min-h-[44px] max-md:rounded-full md:rounded-[999px] px-3 max-md:px-[14px] md:px-[18px] py-1.5 max-md:py-[8px] md:py-[8px] text-[14px] md:text-[14.5px] font-bold whitespace-nowrap transition flex items-center gap-1.5 md:gap-[7px] max-md:!font-sans md:font-sans! ${active ? ACTIVE_CHIP : 'max-md:border max-md:border-line-tag max-md:bg-[#f4f4f5] bg-transparent text-ink-primary hover:bg-white/75 hover:text-brand-primary'}`}
                 >
                   <span>{chip.label}</span>
                   <span className="max-md:font-sans md:font-mono md:text-[11.5px] tabular-nums md:opacity-[0.88]">({chip.count})</span>
@@ -133,7 +133,7 @@ export default function HomePage() {
           {stockUnknown && <p role="status" data-testid="shelf-stock-error" className="text-center text-sm font-medium text-red-700 pt-5">Chưa tải được tình trạng hàng.</p>}
           <h2 className={`text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase pt-5 md:pb-6 max-md:pt-[22px] ${allInStock.some(hasO2OStringing) ? '' : 'max-md:pb-[14px]'}`}>SẢN PHẨM NỔI BẬT</h2>
           {allInStock.some(hasO2OStringing) && (
-            <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-xs font-semibold text-ink-secondary mt-0.5 pb-6 max-md:mt-[2px] max-md:pb-[14px]">
+            <p data-testid="featured-subtitle-mobile" className="md:hidden text-center text-[14px] font-semibold text-ink-secondary mt-0.5 pb-6 max-md:mt-[2px] max-md:pb-[14px]">
               Chạm vào thẻ sản phẩm để chọn loại cước &amp; số kg
             </p>
           )}
@@ -234,7 +234,7 @@ export default function HomePage() {
                     </div>
                   )}
                   <div className="px-3 py-3.5 max-md:px-0 max-md:py-[6px] text-center">
-                    <h3 className="text-sm max-md:text-[13px] md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition max-md:!font-sans">{label}</h3>
+                    <h3 className="text-sm max-md:text-[14px] md:text-[15.5px] font-extrabold text-ink-primary line-clamp-2 group-hover:text-brand-primary transition max-md:!font-sans">{label}</h3>
                     {sub && <p data-testid="cat-tile-sub" className="hidden md:block text-[12px] font-semibold text-ink-secondary mt-[3px]">{sub}</p>}
                   </div>
                 </button>

@@ -3,6 +3,7 @@
 // section = pt 12 + hộp 290 (STOR-107: điều khiển nằm trong hộp), cách thanh chip 12px;
 // chip gọn 40px, số đếm cùng font nhãn; ô ngành ảnh vuông viền đen, chỉ tên, phụ đề ngành ẩn dưới md.
 // Tất cả là max-md: hoặc cặp md:<gốc> — 1440 không đổi.
+// STOR-144: dưới md dot là nút 44x44 (chấm 8px bên trong), nút dừng 44px, chip 44px, chữ ≥14px.
 import React from 'react';
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
@@ -53,20 +54,23 @@ describe('STOR-090 hero dưới md (STOR-107: banner theo cấu hình)', () => {
     expect(cls(screen.getByTestId('badminton-hub-header'))).toContain('max-md:mb-0');
   });
 
-  it('mỗi dot 8x8 (đang chọn rộng 28) với vùng chạm ::before tuyệt đối -10px', () => {
+  it('dot từ md: 8x8 (đang chọn rộng 28) vùng chạm ::before -10px; dưới md nút 44x44 chứa chấm 8px (STOR-144)', () => {
     renderHome([prod('1')]);
     const dots = [0, 1, 2].map(i => cls(screen.getByTestId(`slider-dot-${i}`)));
     for (const c of dots) {
-      expect(c).toEqual(expect.arrayContaining(['h-[8px]', 'relative', 'before:absolute', 'before:-inset-[10px]', "before:content-['']"]));
+      expect(c).toEqual(expect.arrayContaining(['md:h-[8px]', 'relative', 'md:before:absolute', 'md:before:-inset-[10px]', "md:before:content-['']", 'max-md:h-11', 'max-md:min-w-11']));
     }
-    expect(dots[0]).toEqual(expect.arrayContaining(['w-[28px]', 'bg-white']));
-    expect(dots[1]).toEqual(expect.arrayContaining(['w-[8px]', 'bg-white/50']));
+    expect(dots[0]).toEqual(expect.arrayContaining(['md:w-[28px]', 'md:bg-white']));
+    expect(dots[1]).toEqual(expect.arrayContaining(['md:w-[8px]', 'md:bg-white/50']));
+    const inner = [0, 1].map(i => cls(screen.getByTestId(`slider-dot-${i}`).firstElementChild!));
+    expect(inner[0]).toEqual(expect.arrayContaining(['md:hidden', 'h-[8px]', 'w-[28px]', 'bg-white']));
+    expect(inner[1]).toEqual(expect.arrayContaining(['md:hidden', 'h-[8px]', 'w-[8px]', 'bg-white/50']));
   });
 
-  it('nút dừng: tròn 32px, icon Lucide Pause -> Play, không ký tự ❚', () => {
+  it('nút dừng: tròn 32px từ md, 44px dưới md (STOR-144), icon Lucide Pause -> Play, không ký tự ❚', () => {
     renderHome([prod('1')]);
     const t = screen.getByTestId('slider-pause-toggle');
-    expect(cls(t)).toEqual(expect.arrayContaining(['h-8', 'w-8', 'rounded-full']));
+    expect(cls(t)).toEqual(expect.arrayContaining(['h-8', 'w-8', 'max-md:h-11', 'max-md:w-11', 'rounded-full']));
     const icon = () => t.querySelector('svg')!.getAttribute('class')!.split(/\s+/);
     expect(icon()).toContain('lucide-pause');
     fireEvent.click(t);
@@ -77,10 +81,10 @@ describe('STOR-090 hero dưới md (STOR-107: banner theo cấu hình)', () => {
 });
 
 describe('STOR-090 chip, tiêu đề nổi bật, ô ngành dưới md', () => {
-  it('chip cao 40 px 14 py 8 dưới md; số đếm cùng font nhãn dưới md, md+ mono 11.5px', () => {
+  it('chip cao 44 (STOR-144) px 14 py 8 dưới md; số đếm cùng font nhãn dưới md, md+ mono 11.5px', () => {
     renderHome([prod('1'), prod('2', { categoryCode: 'c2' })]);
     const pill = screen.getByTestId('cate-pill-ALL');
-    expect(cls(pill)).toEqual(expect.arrayContaining(['max-md:min-h-[40px]', 'max-md:px-[14px]', 'max-md:py-[8px]', 'min-h-11', 'md:px-[18px]', 'md:py-[8px]']));
+    expect(cls(pill)).toEqual(expect.arrayContaining(['max-md:min-h-[44px]', 'max-md:px-[14px]', 'max-md:py-[8px]', 'min-h-11', 'md:px-[18px]', 'md:py-[8px]']));
     const count = cls(pill.querySelectorAll('span')[1]);
     expect(count).toEqual(expect.arrayContaining(['md:font-mono', 'md:text-[11.5px]', 'md:opacity-[0.88]']));
     expect(count).not.toContain('font-mono');
@@ -110,7 +114,7 @@ describe('STOR-090 chip, tiêu đề nổi bật, ô ngành dưới md', () => {
     expect(sub.previousElementSibling?.textContent).toBe('Danh mục cầu lông');
   });
 
-  it('ô ngành: không viền/nền dưới md; ảnh vuông viền đen; nhãn 13px py 6; <p> duy nhất là phụ đề ẩn dưới md', () => {
+  it('ô ngành: không viền/nền dưới md; ảnh vuông viền đen; nhãn 14px (STOR-144) py 6; <p> duy nhất là phụ đề ẩn dưới md', () => {
     renderHome([prod('1')]);
     const tile = screen.getByTestId('cat-tile-c1');
     expect(cls(tile)).toEqual(expect.arrayContaining(['max-md:border-0', 'max-md:bg-transparent', 'border', 'bg-white']));
@@ -118,7 +122,7 @@ describe('STOR-090 chip, tiêu đề nổi bật, ô ngành dưới md', () => {
     expect(cls(img)).toEqual(expect.arrayContaining(['aspect-square', 'max-md:border', 'max-md:border-line-strong', 'md:border-b', 'md:border-line-tag']));
     expect(cls(img)).not.toContain('border-b');
     const h3 = tile.querySelector('h3')!;
-    expect(cls(h3)).toEqual(expect.arrayContaining(['max-md:text-[13px]', 'font-extrabold']));
+    expect(cls(h3)).toEqual(expect.arrayContaining(['max-md:text-[14px]', 'font-extrabold']));
     expect(cls(h3.parentElement!)).toEqual(expect.arrayContaining(['max-md:px-0', 'max-md:py-[6px]']));
     for (const p of tile.querySelectorAll('p')) {
       expect(p.getAttribute('data-testid')).toBe('cat-tile-sub');
