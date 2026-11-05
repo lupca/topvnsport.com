@@ -2,7 +2,8 @@
 // scrolling) and MOB-D 0d3a0143 (document scrollWidth <= innerWidth). Fixtures, routes and measureInPage come from
 // e2e/mobile-audit/audit.cjs (not copied). No screenshots. Vite is started --strictPort and killed by its PID (r:0b30a607).
 //   node e2e/mobile-guard-390.cjs      one line per route, exit 1 on any failure. PORT (default 4429).
-const { spawn } = require('child_process');
+const { spawn, execFileSync } = require('child_process');
+const net = require('net');
 const path = require('path');
 
 process.env.PLAYWRIGHT ||= path.dirname(require.resolve('playwright-core/package.json'));
@@ -17,11 +18,19 @@ const WIDTH = 390; // isMobile: Chromium widens the layout viewport to fit overf
 async function main() {
   const routes = IDS.map((id) => ROUTES.find((r) => r.id === id));
   if (routes.some((r) => !r)) throw new Error(`audit.cjs ROUTES is missing: ${IDS.filter((id, i) => !routes[i]).join(', ')}`);
+  // never measure a server we did not start: refuse a taken port up front
+  const taken = await new Promise((res) => net.connect(+process.env.PORT, '127.0.0.1').once('connect', function () { this.destroy(); res(true); }).once('error', () => res(false)));
+  if (taken) { console.log(`ERROR port ${process.env.PORT} already taken; set PORT to a free port`); process.exitCode = 1; return; }
   const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--port', process.env.PORT, '--strictPort', '--host', '127.0.0.1'], { cwd: path.join(__dirname, '..'), stdio: 'ignore' });
   console.log('dev server pid', server.pid);
+  const exited = new Promise((_, rej) => server.once('exit', (code) => rej(new Error(`dev server exited early (code ${code}); port ${process.env.PORT} taken?`))));
+  exited.catch(() => {});
   let browser, failures = 0;
   try {
-    await waitPort();
+    await Promise.race([waitPort(), exited]);
+    // the listener on PORT must be our recorded PID (ss -ltnp, r:0b30a607), else a foreign server answered waitPort
+    const owner = execFileSync('ss', ['-ltnpH', `sport = :${process.env.PORT}`], { encoding: 'utf8' });
+    if (server.exitCode !== null || !owner.includes(`pid=${server.pid},`)) throw new Error(`port ${process.env.PORT} is not served by dev server pid ${server.pid}`);
     browser = await chromium.launch();
     for (const route of routes) {
       const ctx = await browser.newContext({ viewport: { width: WIDTH, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1, reducedMotion: 'reduce' });
@@ -29,6 +38,8 @@ async function main() {
       try {
         await stub(page);
         await route.go(page);
+        // a crashed React tree also has no fixed/sticky elements (top=0) and would pass: require the header bar on document routes
+        if (route.id !== 'cart' && !(await page.$('[data-testid=mobile-sticky-bar]'))) throw new Error('not rendered: [data-testid=mobile-sticky-bar] missing');
         // read before measureInPage: it scrolls the page. cart = full-screen overlay (top area 0px): MOB-D only
         const [sw, iw] = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
         const m = await page.evaluate(measureInPage, {});
@@ -51,7 +62,9 @@ async function main() {
     console.log('ERROR', e.message.split('\n')[0]);
   } finally {
     if (browser) await browser.close();
-    process.kill(server.pid, 'SIGTERM'); // recorded PID only (r:0b30a607)
+    if (server.exitCode === null && server.signalCode === null) {
+      try { process.kill(server.pid, 'SIGTERM'); } catch (e) { if (e.code !== 'ESRCH') throw e; } // recorded PID only (r:0b30a607)
+    }
     console.log(`stopped dev server pid ${server.pid}; ${failures} failure(s)`);
     process.exitCode = failures ? 1 : 0;
   }
