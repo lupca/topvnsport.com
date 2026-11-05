@@ -273,7 +273,7 @@ export default function CatalogPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 animate-in fade-in duration-300">
       <div className="text-center mb-10">
-        <span className="text-sm md:text-xs bg-brand-light text-brand-primary font-bold px-3 py-1 rounded-full border border-blue-100 uppercase tracking-widest">TopVNSport Product Directory</span>
+        <span className="text-sm md:text-xs bg-brand-light text-brand-primary font-bold px-3 py-1 rounded-full border border-blue-100 uppercase tracking-widest max-md:tracking-normal">TopVNSport Product Directory</span>
         <h1 className="font-display font-black text-2xl md:text-4xl text-gray-900 tracking-tight uppercase mt-2">
           DANH MỤC THIẾT BỊ <span className="text-brand-primary">CẦU LÔNG</span>
         </h1>
@@ -293,7 +293,7 @@ export default function CatalogPage() {
           {searchQuery && (
             <div className="bg-brand-light border border-blue-100 rounded-xl p-3 flex justify-between items-center">
               <p className="text-sm md:text-xs text-brand-secondary">Đang tìm kết quả lọc theo từ khóa: <strong>\"{searchQuery}\"</strong></p>
-              <button onClick={() => dispatch(setSearchQuery(''))} className="shrink-0 min-w-11 min-h-11 md:min-w-auto md:min-h-auto p-1 text-brand-secondary hover:bg-brand-light rounded-full"><X className="w-4 h-4 max-md:mx-auto" /></button>
+              <button onClick={() => dispatch(setSearchQuery(''))} className="max-md:shrink-0 min-w-11 min-h-11 md:min-w-auto md:min-h-auto p-1 text-brand-secondary hover:bg-brand-light rounded-full"><X className="w-4 h-4 max-md:mx-auto" /></button>
             </div>
           )}
 

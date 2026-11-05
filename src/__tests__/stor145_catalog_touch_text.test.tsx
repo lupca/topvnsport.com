@@ -128,16 +128,16 @@ describe('STOR-145 CatalogPage: thanh công cụ và trạng thái rỗng dướ
     expectClasses(count, ['text-sm', 'md:text-xs']);
     expectClasses(count.parentElement, ['flex-wrap', 'md:flex-nowrap']);
   });
-  it('ghi chú tìm kiếm text-sm md:text-xs; nút xóa X min-w-11 min-h-11 md:min-w-auto md:min-h-auto p-1', () => {
+  it('ghi chú tìm kiếm text-sm md:text-xs; nút xóa X max-md:shrink-0 min-w-11 min-h-11 md:min-w-auto md:min-h-auto p-1', () => {
     renderCatalog([card], { searchQuery: 'zzzz' });
     const note = screen.getByText(/Đang tìm kết quả lọc theo từ khóa/);
     expectClasses(note, ['text-sm', 'md:text-xs']);
-    expectClasses(note.parentElement!.querySelector('button'), ['shrink-0', 'min-w-11', 'min-h-11', 'md:min-w-auto', 'md:min-h-auto', 'p-1']);
+    expectClasses(note.parentElement!.querySelector('button'), ['max-md:shrink-0', 'min-w-11', 'min-h-11', 'md:min-w-auto', 'md:min-h-auto', 'p-1']);
     expectClasses(note.parentElement!.querySelector('button svg'), ['max-md:mx-auto']);
   });
-  it('đầu trang: nhãn "TopVNSport Product Directory" text-sm md:text-xs; đoạn mô tả text-sm', () => {
+  it('đầu trang: nhãn "TopVNSport Product Directory" text-sm md:text-xs, max-md:tracking-normal (không xuống dòng ở 360/390); đoạn mô tả text-sm', () => {
     renderCatalog([card]);
-    expectClasses(screen.getByText('TopVNSport Product Directory'), ['text-sm', 'md:text-xs']);
+    expectClasses(screen.getByText('TopVNSport Product Directory'), ['text-sm', 'md:text-xs', 'tracking-widest', 'max-md:tracking-normal']);
     expectClasses(screen.getByText(/Lọc nhanh thông số cây vợt/), ['text-sm']);
   });
   it('trạng thái rỗng "Làm mới bộ lọc": min-h-11 text-sm, md:min-h-auto md:text-xs', () => {
