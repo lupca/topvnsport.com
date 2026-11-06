@@ -1,0 +1,18 @@
+dev server pid 1436790 port 4457
+step 1: cart open
+POST /api/oms/shipping-quote #1 -> 200 QUOTE_F1
+step 2: form filled (name, phone, address, COD, Hà Nội / Phường Kiểm Thử)
+F1 stubbed: failure sentence visible=true
+F1 stubbed: 'Thử lại' visible=true
+F1 stubbed: 'Xác nhận đặt hàng' disabled=true
+F1 stubbed: fee row="Phí vận chuyển: Chưa tính được phí" total row="Tổng cộng thanh toán:"
+F1 stubbed: form shows 30.000đ=false 50.000đ=false 0đ=false (items total row: Tổng tiền hàng: 150.000đ)
+F1 stubbed: form submit (Enter) -> POST /send-otp count=0, POST /api/oms/checkout/orders count=0
+POST /api/oms/shipping-quote #2 -> 200 QUOTE_V_Q1
+clicked 'Thử lại'
+after retry: quote POSTs=2; STANDARD card="Giao hàng chuẩn Dự kiến 2 ngày • 78.000đ"
+after retry: 'Xác nhận đặt hàng' disabled=false
+after retry: fee row="Phí vận chuyển: 78.000đ"
+after retry: clicked 'Xác nhận đặt hàng' -> POST /send-otp count=1, OTP input visible=true
+order placed: POST /api/oms/checkout/orders count=1, success screen shows AUDIT-0001=true
+stopped dev server pid 1436790

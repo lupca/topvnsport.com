@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
-// STOR-157: a failed shipping quote (is_fallback, spec 08893767) blocks checkout with no fee shown;
-// GA4/Meta purchase value = 201 total_amount (items + fee paid), GA4 shipping = 201 shipping_fee (spec a4918ed8, c4c05162).
-// Real CartModal + real src/lib/tracking.ts; only fetch, window.gtag and window.fbq are stubbed.
+// STOR-157: a failed shipping quote (is_fallback, spec 08893767) blocks checkout with no fee shown.
+// Real CartModal; only fetch is stubbed.
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
@@ -12,7 +11,8 @@ import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 import { PROVINCE_BODY, WARD_BODY, ERR_503, pickAdminUnits } from './fixtures/adminUnits';
 import {
-  QUOTE_V_Q1, QUOTE_F1, QUOTE_F3, QUOTE_FALLBACK_TOP_ONLY, QUOTE_FALLBACK_ONE_OPTION, ORDER_201_O1,
+  QUOTE_V_Q1, QUOTE_V_Q7, QUOTE_F1, QUOTE_F3, QUOTE_FALLBACK_TOP_ONLY, QUOTE_FALLBACK_ONE_OPTION,
+  ERR_SHIPPING_VOUCHER_NOT_APPLICABLE,
 } from './fixtures/shippingQuote';
 
 const alertMock = vi.fn().mockResolvedValue(undefined);
@@ -34,21 +34,14 @@ const item: CartItem = {
 type Reply = { status: number; body: unknown } | 'reject' | 'nobody500';
 let calls: { url: string; body: any }[];
 let quoteReplies: Reply[];
-let orderBody: unknown;
-let gtag: ReturnType<typeof vi.fn>;
-let fbq: ReturnType<typeof vi.fn>;
 
 const respond = (r: { status: number; body: unknown }) => ({ ok: r.status < 400, status: r.status, json: async () => r.body, text: async () => JSON.stringify(r.body) });
 const quoteCalls = () => calls.filter(c => c.url === '/api/oms/shipping-quote');
 const orderCalls = () => calls.filter(c => c.url.endsWith('/orders'));
 
 beforeEach(() => {
-  calls = []; alertMock.mockClear(); localStorage.clear();
+  calls = []; alertMock.mockClear(); localStorage.clear(); sessionStorage.clear();
   quoteReplies = [{ status: 200, body: QUOTE_V_Q1 }];
-  orderBody = ORDER_201_O1;
-  gtag = vi.fn(); fbq = vi.fn();
-  vi.stubGlobal('gtag', gtag);
-  vi.stubGlobal('fbq', fbq);
   vi.spyOn(console, 'error').mockImplementation(() => {});
   vi.stubGlobal('fetch', vi.fn(async (url: string, init: any) => {
     const body = init?.body ? JSON.parse(init.body) : undefined;
@@ -61,7 +54,8 @@ beforeEach(() => {
       return respond(r);
     }
     if (url.endsWith('/verify-otp')) return respond({ status: 200, body: { success: true, verification_token: 'vt-157' } });
-    if (url.endsWith('/orders')) return respond({ status: 201, body: orderBody });
+    // 422 keeps the OTP token and re-quotes, which is how a token holder lands on a failed quote.
+    if (url.endsWith('/orders')) return respond({ status: 422, body: ERR_SHIPPING_VOUCHER_NOT_APPLICABLE });
     return respond({ status: 200, body: { success: true } });
   }));
 });
@@ -105,13 +99,9 @@ async function placeOrder() {
   fireEvent.click(screen.getByRole('button', { name: 'Xác nhận OTP' }));
   await waitFor(() => expect(orderCalls()).toHaveLength(1));
 }
-const gaPurchase = async () => {
-  await waitFor(() => expect(gtag.mock.calls.some(c => c[0] === 'event' && c[1] === 'purchase')).toBe(true));
-  return gtag.mock.calls.find(c => c[0] === 'event' && c[1] === 'purchase')![2];
-};
-const metaPurchase = async () => {
-  await waitFor(() => expect(fbq.mock.calls.some(c => c[0] === 'track' && c[1] === 'Purchase')).toBe(true));
-  return fbq.mock.calls.find(c => c[0] === 'track' && c[1] === 'Purchase')![2];
+const pressEnter = async () => {
+  fireEvent.submit(document.getElementById('checkout-form')!);
+  await new Promise(r => setTimeout(r, 30));
 };
 
 describe('STOR-157 F1 quote (spec 08893767: 200, is_fallback true, 30000/50000)', () => {
@@ -148,15 +138,28 @@ describe('STOR-157 F1 quote (spec 08893767: 200, is_fallback true, 30000/50000)'
     expect(document.body.textContent).not.toContain('50.000đ');
   });
 
-  it('Enter in the form sends no POST to /api/oms/checkout/orders', async () => {
+  it('no token: Enter in the form sends no POST to /send-otp', async () => {
     await gotoStep2({ status: 200, body: QUOTE_F1 });
     await failureShown();
     fillForm();
-    fireEvent.submit(document.getElementById('checkout-form')!);
-    await new Promise(r => setTimeout(r, 30));
-    expect(calls.filter(c => c.url === '/api/oms/checkout/orders')).toHaveLength(0);
-    expect(orderCalls()).toHaveLength(0);
+    await pressEnter();
+    expect(calls.filter(c => c.url.endsWith('/send-otp'))).toHaveLength(0);
+  });
+
+  it('no token: Enter in the form opens no OTP input', async () => {
+    await gotoStep2({ status: 200, body: QUOTE_F1 });
+    await failureShown();
+    fillForm();
+    await pressEnter();
     expect(screen.queryByPlaceholderText('Nhập 6 số OTP')).toBeNull();
+  });
+
+  it('token held and re-quoted into F1: exactly one POST to /orders', async () => {
+    await gotoStep2({ status: 200, body: QUOTE_V_Q1 }, { status: 200, body: QUOTE_F1 });
+    await placeOrder();
+    await failureShown();
+    await pressEnter();
+    expect(orderCalls()).toHaveLength(1);
   });
 });
 
@@ -233,49 +236,12 @@ describe('STOR-157 transport errors', () => {
   });
 });
 
-describe('STOR-157 purchase tracking (order O1, spec a4918ed8)', () => {
-  it('GA4 purchase value is 248000', async () => {
-    await gotoStep2({ status: 200, body: QUOTE_V_Q1 });
-    await placeOrder();
-    expect((await gaPurchase()).value).toBe(248000);
-  });
-
-  it('GA4 purchase shipping is 48000', async () => {
-    await gotoStep2({ status: 200, body: QUOTE_V_Q1 });
-    await placeOrder();
-    expect((await gaPurchase()).shipping).toBe(48000);
-  });
-
-  it('Meta Purchase value is 248000', async () => {
-    await gotoStep2({ status: 200, body: QUOTE_V_Q1 });
-    await placeOrder();
-    expect((await metaPurchase()).value).toBe(248000);
-  });
-
-  it('Meta Purchase params have no shipping key', async () => {
-    await gotoStep2({ status: 200, body: QUOTE_V_Q1 });
-    await placeOrder();
-    expect(await metaPurchase()).not.toHaveProperty('shipping');
-  });
-
-  it('Meta Purchase params have no voucher key', async () => {
-    await gotoStep2({ status: 200, body: QUOTE_V_Q1 });
-    await placeOrder();
-    expect(await metaPurchase()).not.toHaveProperty('voucher');
-  });
-
-  it('Meta Purchase params have no discount key', async () => {
-    await gotoStep2({ status: 200, body: QUOTE_V_Q1 });
-    await placeOrder();
-    expect(await metaPurchase()).not.toHaveProperty('discount');
-  });
-
-  it('non-finite 201 shipping_fee: GA4 purchase params have no shipping key', async () => {
-    orderBody = { ...ORDER_201_O1, shipping_fee: 'NaN' };
-    await gotoStep2({ status: 200, body: QUOTE_V_Q1 });
-    await placeOrder();
-    const params = await gaPurchase();
-    expect(params.value).toBe(248000);
-    expect(params).not.toHaveProperty('shipping');
+describe('STOR-157 real zero fee (spec c55789ce Q7)', () => {
+  it("fee 0 with is_fallback false keeps 'Xác nhận đặt hàng' enabled", async () => {
+    await gotoStep2({ status: 200, body: QUOTE_V_Q7 });
+    await waitFor(() => expect(card('Giao hàng chuẩn').disabled).toBe(false));
+    expect(submitBtn()).not.toBeDisabled();
+    expect(within(shippingSection()).queryByText(FAILED)).toBeNull();
+    expect(feeRow().textContent).toMatch(ZERO_DONG);
   });
 });

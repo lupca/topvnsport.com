@@ -39,8 +39,6 @@ export interface TrackingOrderItem {
 export interface TrackingOrder {
   order_number: string;
   value: number;
-  // Phí ship khách trả (201 shipping_fee), chỉ gửi GA4.
-  shipping?: number;
   items: TrackingOrderItem[];
 }
 
@@ -297,7 +295,6 @@ export function purchase(order: TrackingOrder): void {
   safeGtag('event', 'purchase', {
     transaction_id: orderNumber,
     value,
-    ...(Number.isFinite(order.shipping) ? { shipping: order.shipping } : {}),
     currency: 'VND',
     items,
   });

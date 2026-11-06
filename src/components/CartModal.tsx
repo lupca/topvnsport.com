@@ -518,7 +518,6 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     purchase({
       order_number: order.order_number,
       value: serverTotal ?? clientTotal ?? 0,
-      shipping: placed.shippingFee ?? undefined,
       items: cartItems.map(item => ({
         id: item.productId,
         name: item.name,
@@ -1011,11 +1010,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               <SummaryRow
                 label="Phí vận chuyển:"
                 struckValue={shippingDiscount > 0 ? formatMoney(selectedOption?.shipping_fee_original ?? null) : null}
-                value={
-                  <>
-                    {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
-                  </>
-                }
+                value={selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
               />
               {shippingDiscount > 0 && (
                 <SummaryRow label="Giảm phí vận chuyển:" value={`−${formatMoney(shippingDiscount)}`} isAccent />

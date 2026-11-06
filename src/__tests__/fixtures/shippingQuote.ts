@@ -111,9 +111,3 @@ export const QUOTE_200_FLAT = {
   is_fallback: false,
   options: QUOTE_200_FALLBACK.options.map(o => ({ ...o, is_fallback: false })),
 };
-// POST /public/checkout/orders 201, spec a4918ed8 case O1 (AUTO voucher 30000 on STANDARD 78000, 2 x 100000 goods).
-// Amount keys verbatim from the spec; id/order_number added (the spec stores only the amount keys).
-export const ORDER_201_O1 = {
-  id: 157, order_number: 'DH-157-O1',
-  ...JSON.parse('{"total_amount":"248000.00","shipping_fee":"48000.00","delivery_option":"STANDARD","shipping_service_code":"SCN","shipping_fee_source":"SERVER_QUOTE","shipping_fee_original":"78000.00","shipping_discount":"30000.00","shipping_voucher":null}'),
-};

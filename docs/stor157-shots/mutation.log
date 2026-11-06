@@ -1,0 +1,67 @@
+STOR-157 mutations. Each: mutate src/components/CartModal.tsx, npm run test, restore, npm run test.
+
+## a: drop top-level is_fallback check
+RED: npm run test exit=1
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 single is_fallback flags (synthetic) > top-level is_fallback true shows the failure sentence
+Test Files  1 failed | 144 passed (145)
+Tests  1 failed | 1678 passed (1679)
+GREEN (reverted): npm run test exit=0
+Test Files  145 passed (145)
+Tests  1679 passed (1679)
+
+## b: drop per-option is_fallback check
+RED: npm run test exit=1
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 single is_fallback flags (synthetic) > per-option is_fallback true shows the failure sentence
+Test Files  1 failed | 144 passed (145)
+Tests  1 failed | 1678 passed (1679)
+GREEN (reverted): npm run test exit=0
+Test Files  145 passed (145)
+Tests  1679 passed (1679)
+
+## c: remove submit guard selectedFee===null
+RED: npm run test exit=1
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 khoá đặt đơn khi chưa có giá > AC43 submit form bước 2 khi báo giá lỗi -> không gọi send-otp
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 F1 quote (spec 08893767: 200, is_fallback true, 30000/50000) > no token: Enter in the form opens no OTP input
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 F1 quote (spec 08893767: 200, is_fallback true, 30000/50000) > no token: Enter in the form sends no POST to /send-otp
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 F1 quote (spec 08893767: 200, is_fallback true, 30000/50000) > token held and re-quoted into F1: exactly one POST to /orders
+Test Files  2 failed | 143 passed (145)
+Tests  4 failed | 1675 passed (1679)
+GREEN (reverted): npm run test exit=0
+Test Files  145 passed (145)
+Tests  1679 passed (1679)
+
+## d: remove selectedFee===null from disabled prop only
+RED: npm run test exit=1
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 hiện số OMS trả > AC10,24,25 fallback 200 (STOR-157: báo giá lỗi): câu lỗi, không thẻ 30.000đ, nút đặt đơn khoá
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 hiện số OMS trả > AC67 body THẬT của OMS dev (fallback, xã ADM1-01.W49827, STOR-157): câu lỗi, không thẻ 30.000đ, nút khoá
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 khoá đặt đơn khi chưa có giá > AC42 đang tải báo giá -> nút khoá
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > 401 detail chuỗi: câu đúng trong khu vận chuyển, Thử lại=401, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > 500 không body: câu đúng trong khu vận chuyển, Thử lại=500, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > 502 upstream_unreachable: câu đúng trong khu vận chuyển, Thử lại=502, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > AC30,33 422 SKU_NOT_FOUND: câu đúng trong khu vận chuyển, Thử lại=422, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > AC31,33 422 RECEIVER_WARD_PROVINCE_MISMATCH: câu đúng trong khu vận chuyển, Thử lại=422, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > AC32,33 422 schema: câu đúng trong khu vận chuyển, Thử lại=422, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > AC34,35 429: câu đúng trong khu vận chuyển, Thử lại=429, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 lỗi báo giá > AC36,37 503: câu đúng trong khu vận chuyển, Thử lại=503, nút đặt đơn khoá, không có thẻ
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 option không dùng được > AC22,23 cả hai unavailable: câu rõ + nút đặt đơn khoá
+FAIL  src/__tests__/stor049_loi_dia_chi_o.test.tsx > STOR-049 báo giá 422 địa chỉ -> lỗi ở ô > [S3] field_path null: lời OMS nguyên văn ở khối vận chuyển, không ô nào lỗi, không Thử lại, nút khoá
+FAIL  src/__tests__/stor049_loi_dia_chi_o.test.tsx > STOR-049 báo giá 422 địa chỉ -> lỗi ở ô > [S3] receiver_province_code: lời OMS dưới ô Tỉnh/Thành (alert), aria-invalid
+FAIL  src/__tests__/stor049_loi_dia_chi_o.test.tsx > STOR-049 báo giá 422 địa chỉ -> lỗi ở ô > [S3] receiver_ward_code: lời OMS dưới ô Phường/Xã (alert), aria-invalid; khối vận chuyển chỉ QUOTE_REJECTED, không Thử lại, nút khoá
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 F1 quote (spec 08893767: 200, is_fallback true, 30000/50000) > 'Xác nhận đặt hàng' is disabled
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 single is_fallback flags (synthetic) > per-option is_fallback true shows the failure sentence
+FAIL  src/__tests__/stor157_bao_gia_loi.test.tsx > STOR-157 single is_fallback flags (synthetic) > top-level is_fallback true shows the failure sentence
+Test Files  3 failed | 142 passed (145)
+Tests  18 failed | 1661 passed (1679)
+GREEN (reverted): npm run test exit=0
+Test Files  145 passed (145)
+Tests  1679 passed (1679)
+
+## e: move fallback check before the stale-key return
+RED: npm run test exit=1
+FAIL  src/__tests__/stor037_shipping_quote.test.tsx > STOR-037 gọi báo giá > AC29 kết quả của lần gọi cũ về sau lần mới -> hiện số của lần mới
+Test Files  1 failed | 144 passed (145)
+Tests  1 failed | 1678 passed (1679)
+GREEN (reverted): npm run test exit=0
+Test Files  145 passed (145)
+Tests  1679 passed (1679)
+

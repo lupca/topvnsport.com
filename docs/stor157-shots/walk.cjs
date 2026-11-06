@@ -32,14 +32,18 @@ const jsClick = (loc) => loc.evaluate((el) => el.click());
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1, reducedMotion: 'reduce' });
     const page = await ctx.newPage();
     await stub(page);
-    let quoteN = 0; let orderPosts = 0;
+    let quoteN = 0; let orderPosts = 0; let otpPosts = 0;
     await page.route('**/api/oms/shipping-quote', (route) => {
       quoteN += 1;
       const b = quoteN === 1 ? QUOTE_F1 : QUOTE_V_Q1;
       log(`POST /api/oms/shipping-quote #${quoteN} -> 200 ${quoteN === 1 ? 'QUOTE_F1' : 'QUOTE_V_Q1'}`);
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(b) });
     });
-    page.on('request', (r) => { if (r.method() === 'POST' && r.url().endsWith('/api/oms/checkout/orders')) orderPosts += 1; });
+    page.on('request', (r) => {
+      if (r.method() !== 'POST') return;
+      if (r.url().endsWith('/api/oms/checkout/orders')) orderPosts += 1;
+      if (r.url().endsWith('/send-otp')) otpPosts += 1;
+    });
 
     await page.goto(`${BASE}/product/san-pham-audit-8`); // audit.cjs SIMPLE_SLUG: one SKU, no tiers
     await page.locator('#api-loading-state').waitFor({ state: 'detached', timeout: 30000 });
@@ -76,7 +80,7 @@ const jsClick = (loc) => loc.evaluate((el) => el.click());
     await page.screenshot({ path: path.join(__dirname, '01-f1-quote-failed-390x844.png') });
     await page.locator('#checkout-form').evaluate((f) => f.requestSubmit());
     await sleep(800);
-    log(`F1 stubbed: form submit (Enter) -> POST /api/oms/checkout/orders count=${orderPosts}`);
+    log(`F1 stubbed: form submit (Enter) -> POST /send-otp count=${otpPosts}, POST /api/oms/checkout/orders count=${orderPosts}`);
     await page.screenshot({ path: path.join(__dirname, '02-f1-footer-disabled-390x844.png') });
 
     await jsClick(page.getByRole('button', { name: 'Thử lại' }));
@@ -88,6 +92,17 @@ const jsClick = (loc) => loc.evaluate((el) => el.click());
     log(`after retry: fee row="${(await page.getByText('Phí vận chuyển:').locator('..').innerText()).replace(/\s+/g, ' ')}"`);
     await std.scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(__dirname, '03-retry-q1-78000-390x844.png') });
+
+    await jsClick(btn);
+    const otp = page.getByPlaceholder('Nhập 6 số OTP');
+    await otp.waitFor();
+    log(`after retry: clicked 'Xác nhận đặt hàng' -> POST /send-otp count=${otpPosts}, OTP input visible=${await otp.isVisible()}`);
+    await otp.fill('123456');
+    await jsClick(page.getByRole('button', { name: 'Xác nhận OTP' }));
+    const success = page.getByText('AUDIT-0001').first();
+    await success.waitFor();
+    log(`order placed: POST /api/oms/checkout/orders count=${orderPosts}, success screen shows AUDIT-0001=${await success.isVisible()}`);
+    await page.screenshot({ path: path.join(__dirname, '04-order-success-390x844.png') });
   } catch (e) {
     log(`ERROR ${e.message.split('\n')[0]}`);
     process.exitCode = 1;
