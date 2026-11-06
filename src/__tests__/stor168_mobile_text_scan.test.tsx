@@ -6,7 +6,8 @@
 import React from 'react';
 import fs from 'node:fs';
 import path from 'node:path';
-import { describe, it, expect, afterEach } from 'vitest';
+import os from 'node:os';
+import { describe, it, expect, afterEach, afterAll } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -36,12 +37,26 @@ function renderHome(products: any[], productsError = false) {
 
 afterEach(cleanup);
 
-// Cỡ chữ gốc (không variant) dưới 14px, hoặc cỡ dưới md dưới 14px.
-const BASE_SMALL = /(?<![\w:-])text-(?:xs|\[(?:\d|1[0-3])(?:\.\d+)?px\])(?![\w-])/;
-const PHONE_SMALL = /(?<![\w-])max-md:text-(?:xs|\[(?:\d|1[0-3])(?:\.\d+)?px\])(?![\w-])/;
-// max-md:text-* đủ 14px trở lên (sm = 14px, base = 16px, ...).
-const PHONE_OK = /(?<![\w-])max-md:text-(?:sm|base|lg|xl|2xl|3xl|\[(?:1[4-9]|[2-9]\d)(?:\.\d+)?px\])(?![\w-])/;
-const isHit = (line: string) => (BASE_SMALL.test(line) || PHONE_SMALL.test(line)) && !PHONE_OK.test(line);
+// Parser cho mọi token text-* (không variant, hoặc max-md:). Quy đổi cố định: px = 1, rem và em = 16px, pt = 4/3 px
+// (không dùng 17px của html trong index.css). Dạng được nhận: text-xs/sm/base/lg/xl/2xl/3xl và text-[Npx|Nrem|Nem|Npt]
+// hoặc text-[length:Npx|...]. Giá trị khác (ví dụ text-[var(--x)]) bỏ qua.
+// Giới hạn đã biết: kiểm tra theo dòng, không theo từng token class. Dòng có token nhỏ và có một max-md:text-* >= 14px
+// cùng dòng sẽ bị bỏ qua (kể cả khi token nhỏ là max-md:). Ghi lại ở đây và trong báo cáo STOR-168 Round 2.
+const MIN = 14;
+const TW_SIZE_PX = new Map<string, number>([['xs', 12], ['sm', 14], ['base', 16], ['lg', 18], ['xl', 20], ['2xl', 24], ['3xl', 30]]);
+const UNIT_PX = new Map<string, number>([['px', 1], ['rem', 16], ['em', 16], ['pt', 4 / 3]]);
+const SIZE_TOKEN = /(?<![\w:\-[.])((?:[\w-]+:)*)text-(xs|sm|base|lg|xl|2xl|3xl|\[[^\]\s"'`]+\])(?![\w-])/g;
+export function sizePx(value: string): number | null {
+  if (TW_SIZE_PX.has(value)) return TW_SIZE_PX.get(value)!;
+  const m = /^\[(?:length:)?(\d*\.?\d+)(px|rem|em|pt)\]$/.exec(value);
+  return m ? parseFloat(m[1]) * UNIT_PX.get(m[2])! : null;
+}
+export function isHit(line: string): boolean {
+  const toks = [...line.matchAll(SIZE_TOKEN)].map((m) => ({ phone: m[1] === 'max-md:', base: m[1] === '', px: sizePx(m[2]) }));
+  const small = (t: { px: number | null }) => t.px !== null && t.px < MIN;
+  const phoneOk = toks.some((t) => t.phone && t.px !== null && t.px >= MIN);
+  return (toks.some((t) => t.phone && small(t)) || toks.some((t) => t.base && small(t))) && !phoneOk;
+}
 
 const walk = (dir: string): string[] =>
   fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -87,12 +102,15 @@ describe('STOR-168 nhãn Giảm đến trên trang chủ', () => {
   });
 });
 
-describe('STOR-168 quét chữ nhỏ trên điện thoại trong src', () => {
-  const hits = walk(SRC).flatMap((f) =>
+const scanTree = (root: string) =>
+  walk(root).flatMap((f) =>
     fs.readFileSync(f, 'utf8').split('\n')
-      .map((text, i) => ({ file: path.relative(SRC, f), line: i + 1, text }))
+      .map((text, i) => ({ file: path.relative(root, f), line: i + 1, text }))
       .filter((h) => isHit(h.text)),
   );
+
+describe('STOR-168 quét chữ nhỏ trên điện thoại trong src', () => {
+  const hits = scanTree(SRC);
   const allowed = (h: { file: string; text: string }) => ALLOW.some((a) => a.file === h.file && h.text.includes(a.marker));
 
   it('mọi dòng nhỏ không có override 14px đều nằm trong allowlist', () => {
@@ -106,5 +124,35 @@ describe('STOR-168 quét chữ nhỏ trên điện thoại trong src', () => {
     expect(ALLOW.every((a) => a.reason.trim().length >= 10)).toBe(true);
     expect(ALLOW).toHaveLength(16);
     expect(hits).toHaveLength(16);
+  });
+});
+
+// File mới giả lập trong thư mục tạm (cùng đường đi scanTree như src), không đụng src thật.
+describe('STOR-168 quét file mới: mỗi dạng cỡ chữ', () => {
+  const dirs: string[] = [];
+  const probe = (classes: string) => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'stor168-'));
+    dirs.push(dir);
+    fs.writeFileSync(path.join(dir, 'Probe.tsx'), `export const P = () => <p className="${classes}">x</p>;\n`);
+    return scanTree(dir);
+  };
+  afterAll(() => dirs.forEach((d) => fs.rmSync(d, { recursive: true, force: true })));
+
+  it.each([
+    ['text-[12px]', 'text-[12px] font-bold'],
+    ['text-[0.75rem]', 'text-[0.75rem] font-bold'],
+    ['text-[.7rem]', 'text-[.7rem] font-bold'],
+    ['text-[0.75em]', 'text-[0.75em] font-bold'],
+    ['text-[9pt] (= 12px)', 'text-[9pt] font-bold'],
+    ['text-[length:12px]', 'text-[length:12px] font-bold'],
+  ])('fail: %s', (_, classes) => {
+    expect(probe(classes)).toHaveLength(1);
+  });
+
+  it.each([
+    ['text-[0.875rem] (= 14px)', 'text-[0.875rem] font-bold'],
+    ['text-[12px] max-md:text-[20px] (max-md override)', 'text-[12px] max-md:text-[20px]'],
+  ])('pass: %s', (_, classes) => {
+    expect(probe(classes)).toEqual([]);
   });
 });
