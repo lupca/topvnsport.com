@@ -22,7 +22,7 @@ export default function SaleSection({ products, onQuickView, onAddToCart }: Sale
       <div className="flex flex-wrap items-center justify-center gap-3 pt-5 pb-6 max-md:pb-[14px]">
         <h2 className="text-center font-display font-black text-2xl max-md:text-[20px] max-md:leading-[30px] md:text-3xl text-ink-primary tracking-wide uppercase">Đang khuyến mãi</h2>
         {Number.isFinite(max) && max > 0 && (
-          <span data-testid="sale-max-badge" className="font-display text-[12px] md:text-[13px] font-extrabold uppercase px-2 py-1 bg-brand-sale text-white">
+          <span data-testid="sale-max-badge" className="font-display max-md:text-[14px] md:text-[13px] font-extrabold uppercase px-2 py-1 bg-brand-sale text-white">
             Giảm đến {max}%
           </span>
         )}

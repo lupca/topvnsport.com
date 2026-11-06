@@ -225,6 +225,36 @@ async function checkQuickView(browser, vp) {
   });
 }
 
+// STOR-168: home "Giảm đến N%" badge: exactly one, 14px below md (13px at 1440), one line, inside the viewport, no x-scroll.
+async function checkSaleBadge(browser, vp) {
+  const w = vp[0];
+  await withPage(browser, vp, { touch: w < 768 }, async (page) => {
+    await open(page, '/');
+    const m = await page.evaluate(() => {
+      const els = document.querySelectorAll('[data-testid=sale-max-badge]');
+      const el = els[0];
+      if (!el) return { count: els.length };
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const tops = new Set([...range.getClientRects()].map((r) => Math.round(r.top)));
+      const r = el.getBoundingClientRect();
+      const cs = getComputedStyle(el);
+      return { count: els.length, text: el.textContent.trim(), fs: parseFloat(cs.fontSize), lines: tops.size, left: r.left, right: r.right };
+    });
+    const why = [];
+    if (m.count !== 1) why.push(`${m.count} badges (expected 1; fixture or sale block missing)`);
+    else {
+      const want = w < 768 ? MIN : 13;
+      if (m.fs !== want) why.push(`font ${m.fs}px != ${want}px`);
+      if (!/^Giảm đến \d+%$/.test(m.text)) why.push(`text '${m.text}'`);
+      if (m.lines !== 1) why.push(`${m.lines} lines`);
+      if (m.left < 0 || m.right > w) why.push(`outside the viewport ${m.left}..${m.right}`);
+    }
+    report(`w=${w} sale badge`, why, m.count === 1 ? `${m.fs}px '${m.text}' right=${m.right}` : '');
+    await noScroll(page, `w=${w} sale badge no x-scroll`, w);
+  });
+}
+
 async function main() {
   const taken = await new Promise((res) => net.connect(+process.env.PORT, '127.0.0.1').once('connect', function () { this.destroy(); res(true); }).once('error', () => res(false)));
   if (taken) { console.log(`ERROR port ${process.env.PORT} already taken; set PORT to a free port`); process.exitCode = 1; return; }
@@ -238,7 +268,8 @@ async function main() {
     const owner = execFileSync('ss', ['-ltnpH', `sport = :${process.env.PORT}`], { encoding: 'utf8' });
     if (server.exitCode !== null || !owner.includes(`pid=${server.pid},`)) throw new Error(`port ${process.env.PORT} is not served by dev server pid ${server.pid}`);
     browser = await chromium.launch();
-    for (const vp of PHONES) for (const check of [checkBottomBar, checkPurchaseBar, checkDrawer, checkSearch, checkQuickView]) await check(browser, vp);
+    for (const vp of PHONES) for (const check of [checkBottomBar, checkPurchaseBar, checkDrawer, checkSearch, checkQuickView, checkSaleBadge]) await check(browser, vp);
+    await checkSaleBadge(browser, [1440, 900]);
   } catch (e) {
     failures++;
     console.log('ERROR', e.message.split('\n')[0]);
