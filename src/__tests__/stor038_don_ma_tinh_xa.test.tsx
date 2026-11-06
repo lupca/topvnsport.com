@@ -9,7 +9,7 @@ import appDataReducer from '../features/appData/appDataSlice';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 import { PROVINCE_BODY, WARD_BODY, pickAdminUnits } from './fixtures/adminUnits';
-import { QUOTE_200, QUOTE_200_FALLBACK, QUOTE_200_BOTH_UNAVAILABLE } from './fixtures/shippingQuote';
+import { QUOTE_200, QUOTE_200_FLAT, QUOTE_200_BOTH_UNAVAILABLE } from './fixtures/shippingQuote';
 import {
   CONTRACT_C_BODY, ORDER_201_STANDARD_COD, ORDER_201_EXPRESS_SEPAY, ERR_DELIVERY_OPTION_UNAVAILABLE,
   ERR_C_WARD_MISMATCH, ERR_C_SKU_NOT_FOUND, ERR_C_SCHEMA_MISSING_CODE, ERR_403_TOKEN,
@@ -153,13 +153,13 @@ describe('STOR-038 bước 3 theo response 201', () => {
     expect(screen.getByText('Phí vận chuyển:', { selector: 'strong' }).parentElement).toHaveTextContent('78.000đ');
   });
   it('AC19 Tổng hóa đơn thanh toán = total_amount 201, không phải tổng client', async () => {
-    quoteBody = QUOTE_200_FALLBACK; // client thấy 200.000 + 30.000 = 230.000đ
+    quoteBody = QUOTE_200_FLAT; // client thấy 200.000 + 30.000 = 230.000đ
     await sendOtpAndOrder();
     expect(await screen.findByText(/Tổng hóa đơn thanh toán: 278\.000đ/)).toBeInTheDocument();
     expect(screen.queryByText(/230\.000đ/, { selector: 'p' })).toBeNull();
   });
   it('AC20 total 201 khác tổng khách thấy -> câu cập nhật + phí mới', async () => {
-    quoteBody = QUOTE_200_FALLBACK;
+    quoteBody = QUOTE_200_FLAT;
     await sendOtpAndOrder();
     expect(await screen.findByText(/^Phí vận chuyển đã được cập nhật theo báo giá mới nhất: 78\.000đ/)).toBeInTheDocument();
   });

@@ -96,3 +96,18 @@ export const ERR_SHIPPING_VOUCHER_NOT_APPLICABLE = {
   code: 'SHIPPING_VOUCHER_NOT_APPLICABLE', message: 'Ưu đãi phí vận chuyển không còn hiệu lực. Vui lòng thử lại.', field_path: 'shipping_discount',
   detail: { code: 'SHIPPING_VOUCHER_NOT_APPLICABLE', message: 'Ưu đãi phí vận chuyển không còn hiệu lực. Vui lòng thử lại.', field_path: 'shipping_discount' },
 };
+
+// STOR-157: quote failure bodies of OMS develop 8a49cc2 (spec 08893767), copied verbatim (r.text).
+// F1: network down, default fallback fees 30000/50000. F3: same with OMS_SHIPPING_FALLBACK_FEES all 0.
+export const QUOTE_F1 = JSON.parse('{"currency":"VND","receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","is_fallback":true,"options":[{"delivery_option":"STANDARD","available":true,"unavailable_reason":null,"service_code":null,"service_name":null,"shipping_fee":30000,"eta_days":null,"is_fallback":true,"shipping_fee_original":30000,"shipping_discount":0,"voucher_message":null},{"delivery_option":"EXPRESS","available":true,"unavailable_reason":null,"service_code":null,"service_name":null,"shipping_fee":50000,"eta_days":null,"is_fallback":true,"shipping_fee_original":50000,"shipping_discount":0,"voucher_message":null}],"voucher":{"code":null,"name":null,"valid":null,"message":null}}');
+export const QUOTE_F3 = JSON.parse('{"currency":"VND","receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","is_fallback":true,"options":[{"delivery_option":"STANDARD","available":true,"unavailable_reason":null,"service_code":null,"service_name":null,"shipping_fee":0,"eta_days":null,"is_fallback":true,"shipping_fee_original":0,"shipping_discount":0,"voucher_message":null},{"delivery_option":"EXPRESS","available":true,"unavailable_reason":null,"service_code":null,"service_name":null,"shipping_fee":0,"eta_days":null,"is_fallback":true,"shipping_fee_original":0,"shipping_discount":0,"voucher_message":null}],"voucher":{"code":null,"name":null,"valid":null,"message":null}}');
+// SYNTHETIC (not an OMS capture): Q1 with only the top-level is_fallback set, every option is_fallback false.
+export const QUOTE_FALLBACK_TOP_ONLY = { ...QUOTE_V_Q1, is_fallback: true };
+// SYNTHETIC (not an OMS capture): Q1 with only the EXPRESS option is_fallback true, top level false.
+export const QUOTE_FALLBACK_ONE_OPTION = { ...QUOTE_V_Q1, options: [QUOTE_V_Q1.options[0], { ...QUOTE_V_Q1.options[1], is_fallback: true }] };
+// A plain quote with fees 30000/50000 and no fallback flag, for suites that only need some usable fee.
+export const QUOTE_200_FLAT = {
+  ...QUOTE_200_FALLBACK,
+  is_fallback: false,
+  options: QUOTE_200_FALLBACK.options.map(o => ({ ...o, is_fallback: false })),
+};

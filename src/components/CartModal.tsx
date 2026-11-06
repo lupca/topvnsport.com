@@ -253,6 +253,11 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       delivery_option: null,
     }).then(data => {
       if (quoteKeyRef.current !== quoteKey) return;
+      // is_fallback (spec 08893767 D2) = OMS không báo giá được: phí đoán, không cho đặt. Báo lỗi như quote lỗi.
+      if (data.is_fallback || data.options.some(o => o.is_fallback)) {
+        setQuote({ key: quoteKey, status: 'error', retryable: true, message: QUOTE_FAILED_MESSAGE });
+        return;
+      }
       setQuote({ key: quoteKey, status: 'ok', data });
       // Option đang chọn không dùng được nữa -> chuyển sang option còn dùng được.
       setDeliveryOption(cur => {
@@ -870,7 +875,6 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                                 {opt.eta_days !== null && <>Dự kiến {opt.eta_days} ngày • </>}
                                 {(opt.shipping_discount ?? 0) > 0 && <span className="line-through mr-1">{formatMoney(opt.shipping_fee_original ?? null)}</span>}
                                 {formatMoney(opt.shipping_fee)}
-                                {opt.is_fallback && <span className="block text-amber-600 font-semibold">Phí tạm tính</span>}
                               </p>
                             ) : (
                               <p className="text-[10px] text-red-600 max-md:text-sm">{opt.unavailable_reason}</p>
@@ -1006,12 +1010,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
               <SummaryRow
                 label="Phí vận chuyển:"
                 struckValue={shippingDiscount > 0 ? formatMoney(selectedOption?.shipping_fee_original ?? null) : null}
-                value={
-                  <>
-                    {selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
-                    {selectedFee !== null && selectedOption?.is_fallback && <span className="block text-amber-600 text-[10px] max-md:text-sm">Phí tạm tính</span>}
-                  </>
-                }
+                value={selectedFee !== null ? formatMoney(selectedFee) : shippingFeePlaceholder}
               />
               {shippingDiscount > 0 && (
                 <SummaryRow label="Giảm phí vận chuyển:" value={`−${formatMoney(shippingDiscount)}`} isAccent />

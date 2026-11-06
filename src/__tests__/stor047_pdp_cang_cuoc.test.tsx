@@ -8,7 +8,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import appDataReducer from '../features/appData/appDataSlice';
 import { buildConfiguredCartItem } from '../features/cart/cartSlice';
 import { getAdminUnitsFromFixture, pickAdminUnits } from './fixtures/adminUnits';
-import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
+import { QUOTE_200_FLAT } from './fixtures/shippingQuote';
 import fixture from './fixtures/stor047_stringing_tiers.fixture.json';
 import ProductDetailPage from '../components/ProductDetailPage';
 import CartModal from '../components/CartModal';
@@ -23,7 +23,7 @@ vi.mock('../services/sportApi', () => ({
     verifyOtp: vi.fn().mockResolvedValue({ success: true, verification_token: 'tok-123' }),
     createOrder: (...args: unknown[]) => createOrderMock(...args),
     getAdminUnits: (...a: [string, string?]) => getAdminUnitsFromFixture(a[0]),
-    getShippingQuote: async () => QUOTE_200_FALLBACK,
+    getShippingQuote: async () => QUOTE_200_FLAT,
     createSepayCheckout: vi.fn()
   }
 }));

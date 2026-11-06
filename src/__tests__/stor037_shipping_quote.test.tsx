@@ -185,14 +185,13 @@ describe('STOR-037 hiện số OMS trả', () => {
     expect(screen.queryByText('Phí tạm tính')).toBeNull();
   });
 
-  it('AC10,24,25 fallback 200: không "Dự kiến", thẻ và dòng phí ghi Phí tạm tính', async () => {
+  it('AC10,24,25 fallback 200 (STOR-157: báo giá lỗi): câu lỗi, không thẻ 30.000đ, nút đặt đơn khoá', async () => {
     quoteHandler = () => ok(QUOTE_200_FALLBACK);
     await gotoQuote();
-    await within(await findCard('Giao hàng chuẩn')).findByText(/30\.000đ/);
-    expect(screen.queryByText(/Dự kiến/)).toBeNull();
-    expect(within(await findCard('Giao hàng chuẩn')).getByText('Phí tạm tính')).toBeInTheDocument();
-    expect(within(await findCard('Giao hỏa tốc')).getByText('Phí tạm tính')).toBeInTheDocument();
-    expect(within(feeLine()).getByText('Phí tạm tính')).toBeInTheDocument();
+    expect(await within(shippingSection()).findByText('Chưa tính được phí vận chuyển. Vui lòng thử lại.')).toBeInTheDocument();
+    expect(screen.queryByText('Giao hàng chuẩn')).toBeNull();
+    expect(feeLine().textContent).not.toContain('30.000đ');
+    expect(submitBtn()).toBeDisabled();
   });
 
   it('AC13 bấm Giao hỏa tốc -> dòng phí 226.111đ', async () => {
@@ -203,13 +202,14 @@ describe('STOR-037 hiện số OMS trả', () => {
     expect(totalLine()).toHaveTextContent('426.111đ');
   });
 
-  it('AC67 body THẬT của OMS dev (fallback, xã ADM1-01.W49827): thẻ chuẩn 30.000đ + Phí tạm tính', async () => {
+  it('AC67 body THẬT của OMS dev (fallback, xã ADM1-01.W49827, STOR-157): câu lỗi, không thẻ 30.000đ, nút khoá', async () => {
     quoteHandler = () => ok(QUOTE_REAL_DEV);
     wardBody = WARD_BODY_REAL;
     await gotoQuote();
-    const std = await findCard('Giao hàng chuẩn');
-    expect(await within(std).findByText(/30\.000đ/)).toBeInTheDocument();
-    expect(within(std).getByText('Phí tạm tính')).toBeInTheDocument();
+    expect(await within(shippingSection()).findByText('Chưa tính được phí vận chuyển. Vui lòng thử lại.')).toBeInTheDocument();
+    expect(screen.queryByText('Giao hàng chuẩn')).toBeNull();
+    expect(feeLine().textContent).not.toContain('30.000đ');
+    expect(submitBtn()).toBeDisabled();
     expect(quoteCalls()[0].body.receiver_ward_code).toBe('ADM1-01.W49827');
   });
 });

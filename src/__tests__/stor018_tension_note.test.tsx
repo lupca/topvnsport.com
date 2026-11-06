@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import appDataReducer from '../features/appData/appDataSlice';
 import { getAdminUnitsFromFixture, pickAdminUnits } from './fixtures/adminUnits';
-import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
+import { QUOTE_200_FLAT } from './fixtures/shippingQuote';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 
@@ -27,7 +27,7 @@ vi.mock('../services/sportApi', () => ({
     verifyOtp: (...args: unknown[]) => verifyOtpMock(...args),
     createOrder: (...args: unknown[]) => createOrderMock(...args),
     getAdminUnits: (...a: [string, string?]) => getAdminUnitsFromFixture(a[0]),
-    getShippingQuote: async () => QUOTE_200_FALLBACK,
+    getShippingQuote: async () => QUOTE_200_FLAT,
     createSepayCheckout: vi.fn()
   }
 }));

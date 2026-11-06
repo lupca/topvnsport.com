@@ -13,7 +13,7 @@ import appDataReducer from '../features/appData/appDataSlice';
 import CartModal, { CartItem } from '../components/CartModal';
 import AdminUnitPicker from '../components/AdminUnitPicker';
 import { getAdminUnitsFromFixture, pickAdminUnits } from './fixtures/adminUnits';
-import { QUOTE_200_FALLBACK } from './fixtures/shippingQuote';
+import { QUOTE_200_FLAT } from './fixtures/shippingQuote';
 import { Product } from '../types';
 
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn().mockResolvedValue(undefined) } }));
@@ -79,7 +79,7 @@ beforeEach(() => {
   verifyOtpMock.mockResolvedValue({ success: true, verification_token: 'tok' });
   createOrderMock.mockResolvedValue({ id: 1, order_number: 'DH-9', total_amount: 1030000, shipping_fee: 30000 });
   sepayMock.mockResolvedValue({ action: 'https://pay.example/c', fields: { a: 'b' } });
-  quoteMock.mockResolvedValue(QUOTE_200_FALLBACK);
+  quoteMock.mockResolvedValue(QUOTE_200_FLAT);
   vi.spyOn(console, 'error').mockImplementation(() => {});
   vi.spyOn(HTMLFormElement.prototype, 'submit').mockImplementation(() => {});
 });
