@@ -1,0 +1,9 @@
+dev server pid 1579307 port 4469
+step 1: cart open
+POST /api/oms/shipping-quote -> 200 QUOTE_V_Q1
+step 2: form filled (name, phone, address, COD, Hà Nội / Phường Kiểm Thử), STANDARD 78.000đ
+POST /api/oms/checkout/orders -> 201 ORDER_201_O1
+step 3: success step shows DH-O1=true
+GA4 purchase {"transaction_id":"DH-O1","value":248000,"currency":"VND","shipping":48000,"items":[{"item_id":"9107","item_name":"Tất thể thao Yonex (3 đôi)","price":150000,"quantity":1}]}
+Meta Purchase {"value":248000,"currency":"VND","content_ids":["9107"],"contents":[{"id":"9107","quantity":1,"item_price":150000}],"content_type":"product"}
+stopped dev server pid 1579307

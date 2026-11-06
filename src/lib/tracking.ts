@@ -39,6 +39,7 @@ export interface TrackingOrderItem {
 export interface TrackingOrder {
   order_number: string;
   value: number;
+  shipping?: number;
   items: TrackingOrderItem[];
 }
 
@@ -296,6 +297,7 @@ export function purchase(order: TrackingOrder): void {
     transaction_id: orderNumber,
     value,
     currency: 'VND',
+    ...(Number.isFinite(order.shipping) ? { shipping: order.shipping } : {}),
     items,
   });
 

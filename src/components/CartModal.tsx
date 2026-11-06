@@ -518,6 +518,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     purchase({
       order_number: order.order_number,
       value: serverTotal ?? clientTotal ?? 0,
+      shipping: placed.shippingFee ?? undefined,
       items: cartItems.map(item => ({
         id: item.productId,
         name: item.name,

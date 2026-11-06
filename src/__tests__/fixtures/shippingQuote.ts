@@ -111,3 +111,12 @@ export const QUOTE_200_FLAT = {
   is_fallback: false,
   options: QUOTE_200_FALLBACK.options.map(o => ({ ...o, is_fallback: false })),
 };
+
+// STOR-169: POST /public/checkout/orders 201, captures.md oms-219 case O1 (spec a4918ed8 section 3, AUTO voucher 30000, quote STANDARD
+// 78000, 2 x 100000 goods). NOT a whole capture: the spec quotes only the amount keys, copied verbatim; id and order_number are added.
+export const ORDER_201_O1 = JSON.parse('{"id":7,"order_number":"DH-O1","total_amount":"248000.00","shipping_fee":"48000.00","delivery_option":"STANDARD","shipping_service_code":"SCN","shipping_fee_source":"SERVER_QUOTE","shipping_fee_original":"78000.00","shipping_discount":"30000.00","shipping_voucher":null}');
+// SYNTHETIC (not a 201 capture): O1 with shipping_voucher in the shape spec a4918ed8 section 7 gives for an AUTO voucher; the id comes
+// from the O1 DB readback (shipping_voucher_id 1), the name is a placeholder.
+export const ORDER_201_O1_VOUCHER = { ...ORDER_201_O1, shipping_voucher: { voucher_id: 1, code: null, name: 'Tên voucher giả' } };
+// SYNTHETIC (not a 201 capture): O1 with the order row amounts of spec c4c05162, full waiver case (original 30000, discount 30000, paid 0).
+export const ORDER_201_FULL_WAIVER = { ...ORDER_201_O1, total_amount: '110000.00', shipping_fee: '0.00', shipping_fee_original: '30000.00', shipping_discount: '30000.00' };
