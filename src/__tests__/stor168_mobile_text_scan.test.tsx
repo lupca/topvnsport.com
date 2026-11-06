@@ -37,22 +37,35 @@ function renderHome(products: any[], productsError = false) {
 
 afterEach(cleanup);
 
-// Parser cho mọi token text-* (không variant, hoặc max-md:). Quy đổi cố định: px = 1, rem và em = 16px, pt = 4/3 px
+// Parser cho mọi token text-*. Quy đổi cố định: px = 1, rem và em = 16px, pt = 4/3 px
 // (không dùng 17px của html trong index.css). Dạng được nhận: text-xs/sm/base/lg/xl/2xl/3xl và text-[Npx|Nrem|Nem|Npt]
 // hoặc text-[length:Npx|...]. Giá trị khác (ví dụ text-[var(--x)]) bỏ qua.
-// Giới hạn đã biết: kiểm tra theo dòng, không theo từng token class. Dòng có token nhỏ và có một max-md:text-* >= 14px
-// cùng dòng sẽ bị bỏ qua (kể cả khi token nhỏ là max-md:). Ghi lại ở đây và trong báo cáo STOR-168 Round 2.
+// Variant được đọc theo chuỗi (có thể xếp chồng, ví dụ dark:max-md:, sm:max-md:, max-md:hover:, max-[399px]:):
+//  - không có variant: base, áp mọi màn hình;
+//  - phone: chuỗi có một đoạn max-sm:, max-md:, max-lg:, max-xl:, max-2xl: hoặc max-[Npx]: với N >= 360
+//    (các đoạn này áp dụng ở 360-430px). Ví dụ max-[399px]: là phone, max-[320px]: thì không.
+// Variant khác (dark:, hover:, min-*, [&>p]:, ...) không được tính là base hay phone: text-* dưới các variant đó bị bỏ qua.
+// Giới hạn đã biết: (1) kiểm tra theo dòng, không theo từng token class. Dòng có token nhỏ và có một token phone >= 14px
+// cùng dòng sẽ bị bỏ qua. (2) Chuỗi variant có ':' trong ngoặc vuông (ví dụ [@media(min-width:768px)]:) không được tách đúng.
+// (3) max-[Nrem]: không được coi là phone. Ghi lại ở đây và trong báo cáo STOR-168 Round 3.
 const MIN = 14;
 const TW_SIZE_PX = new Map<string, number>([['xs', 12], ['sm', 14], ['base', 16], ['lg', 18], ['xl', 20], ['2xl', 24], ['3xl', 30]]);
 const UNIT_PX = new Map<string, number>([['px', 1], ['rem', 16], ['em', 16], ['pt', 4 / 3]]);
-const SIZE_TOKEN = /(?<![\w:\-[.])((?:[\w-]+:)*)text-(xs|sm|base|lg|xl|2xl|3xl|\[[^\]\s"'`]+\])(?![\w-])/g;
+const SIZE_TOKEN = /(?<![\w:\-[.])((?:(?:[\w-]+(?:\[[^\]\s"'`]+\])?|\[[^\]\s"'`]+\]):)*)text-(xs|sm|base|lg|xl|2xl|3xl|\[[^\]\s"'`]+\])(?![\w-])/g;
+const PHONE_VARIANT = /^max-(?:sm|md|lg|xl|2xl|\[(\d*\.?\d+)px\])$/;
+export function isPhoneChain(prefix: string): boolean {
+  return prefix.split(':').filter(Boolean).some((seg) => {
+    const m = PHONE_VARIANT.exec(seg);
+    return m !== null && (m[1] === undefined || parseFloat(m[1]) >= 360);
+  });
+}
 export function sizePx(value: string): number | null {
   if (TW_SIZE_PX.has(value)) return TW_SIZE_PX.get(value)!;
   const m = /^\[(?:length:)?(\d*\.?\d+)(px|rem|em|pt)\]$/.exec(value);
   return m ? parseFloat(m[1]) * UNIT_PX.get(m[2])! : null;
 }
 export function isHit(line: string): boolean {
-  const toks = [...line.matchAll(SIZE_TOKEN)].map((m) => ({ phone: m[1] === 'max-md:', base: m[1] === '', px: sizePx(m[2]) }));
+  const toks = [...line.matchAll(SIZE_TOKEN)].map((m) => ({ phone: isPhoneChain(m[1]), base: m[1] === '', px: sizePx(m[2]) }));
   const small = (t: { px: number | null }) => t.px !== null && t.px < MIN;
   const phoneOk = toks.some((t) => t.phone && t.px !== null && t.px >= MIN);
   return (toks.some((t) => t.phone && small(t)) || toks.some((t) => t.base && small(t))) && !phoneOk;
@@ -145,13 +158,21 @@ describe('STOR-168 quét file mới: mỗi dạng cỡ chữ', () => {
     ['text-[0.75em]', 'text-[0.75em] font-bold'],
     ['text-[9pt] (= 12px)', 'text-[9pt] font-bold'],
     ['text-[length:12px]', 'text-[length:12px] font-bold'],
+    ['dark:max-md:text-[12px] (F2, xếp chồng)', 'dark:max-md:text-[12px] font-bold'],
+    ['sm:max-md:text-xs (F2, xếp chồng)', 'sm:max-md:text-xs font-bold'],
+    ['max-sm:text-[0.75rem] (F3)', 'max-sm:text-[0.75rem] font-bold'],
+    ['max-lg:text-xs (F3)', 'max-lg:text-xs font-bold'],
+    ['max-[399px]:text-[12px] (F3)', 'max-[399px]:text-[12px] font-bold'],
+    ['max-md:hover:text-xs (F3)', 'max-md:hover:text-xs font-bold'],
   ])('fail: %s', (_, classes) => {
     expect(probe(classes)).toHaveLength(1);
   });
 
   it.each([
     ['text-[0.875rem] (= 14px)', 'text-[0.875rem] font-bold'],
+    ['text-[12pt] (= 16px)', 'text-[12pt] font-bold'],
     ['text-[12px] max-md:text-[20px] (max-md override)', 'text-[12px] max-md:text-[20px]'],
+    ['max-[399px]:text-[15px] (Header.tsx:191, không bị coi là nhỏ)', 'max-[399px]:text-[15px] font-bold'],
   ])('pass: %s', (_, classes) => {
     expect(probe(classes)).toEqual([]);
   });
