@@ -1,0 +1,122 @@
+STOR-169 mutations. Each runs alone: mutate, vitest, restore from a temp copy, vitest.
+Command: npx vitest run --config ./vitest.config.ts --dir src stor169
+Base files sha256: src/lib/tracking.ts=4c3231c5c5c7, src/components/CartModal.tsx=c8a6b8cff6de
+
+## e: shipping_discount added to value
+changed src/components/CartModal.tsx: value: (serverTotal ?? clientTotal ?? 0) + Number(order.shipping_discount),
+RED: exit=1
+Test Files  1 failed (1)
+Tests  2 failed | 9 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 O1 (fee paid 48000, original 78000, discount 30000) > GA4 purchase value is 248000
+AssertionError: expected 278000 to be 248000 // Object.is equality
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 O1 (fee paid 48000, original 78000, discount 30000) > Meta Purchase value is 248000
+AssertionError: expected 278000 to be 248000 // Object.is equality
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## f: GA4 shipping from shipping_fee_original
+changed src/components/CartModal.tsx: shipping: serverNumber(order.shipping_fee_original) ?? undefined,
+RED: exit=1
+Test Files  1 failed (1)
+Tests  4 failed | 7 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 O1 (fee paid 48000, original 78000, discount 30000) > GA4 purchase shipping is 48000
+AssertionError: expected 78000 to be 48000 // Object.is equality
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > full waiver (synthetic, fee 0.00, quote Q7): GA4 purchase shipping is 0
+AssertionError: expected 30000 to be +0 // Object.is equality
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > shipping_fee null: GA4 params have no shipping key
+AssertionError: expected { transaction_id: 'DH-O1', …(4) } to not have property "shipping"
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > shipping_fee NaN: GA4 params have no shipping key
+AssertionError: expected { transaction_id: 'DH-O1', …(4) } to not have property "shipping"
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## g: shipping always spread
+changed src/lib/tracking.ts: shipping: order.shipping,
+RED: exit=1
+Test Files  1 failed (1)
+Tests  3 failed | 8 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > shipping_fee null: GA4 params have no shipping key
+AssertionError: expected { transaction_id: 'DH-O1', …(4) } to not have property "shipping"
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > shipping_fee NaN: GA4 params have no shipping key
+AssertionError: expected { transaction_id: 'DH-O1', …(4) } to not have property "shipping"
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > purchase() given a NaN shipping: GA4 params have no shipping key
+AssertionError: expected { transaction_id: 'DH-NAN', …(4) } to not have property "shipping"
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## h1: shipping key in Meta params
+changed src/lib/tracking.ts: shipping: order.shipping,
+RED: exit=1
+Test Files  1 failed (1)
+Tests  2 failed | 9 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 O1 (fee paid 48000, original 78000, discount 30000) > Meta params have exactly the five keys of the current payload
+AssertionError: expected [ 'shipping', 'value', …(4) ] to deeply equal [ 'value', 'currency', …(3) ]
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > populated shipping_voucher (synthetic): Meta params keep the five keys
+AssertionError: expected [ 'shipping', 'value', …(4) ] to deeply equal [ 'value', 'currency', …(3) ]
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## h2: shipping_voucher key in Meta params (passed through from the 201)
+changed src/components/CartModal.tsx: shipping_voucher: order.shipping_voucher,
+changed src/lib/tracking.ts: shipping_voucher: (order as any).shipping_voucher,
+RED: exit=1
+Test Files  1 failed (1)
+Tests  2 failed | 9 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 O1 (fee paid 48000, original 78000, discount 30000) > Meta params have exactly the five keys of the current payload
+AssertionError: expected [ 'shipping_voucher', 'value', …(4) ] to deeply equal [ 'value', 'currency', …(3) ]
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > populated shipping_voucher (synthetic): Meta params keep the five keys
+AssertionError: expected [ 'shipping_voucher', 'value', …(4) ] to deeply equal [ 'value', 'currency', …(3) ]
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## h3: shipping_discount key in Meta params (passed through from the 201)
+changed src/components/CartModal.tsx: shipping_discount: order.shipping_discount,
+changed src/lib/tracking.ts: shipping_discount: (order as any).shipping_discount,
+RED: exit=1
+Test Files  1 failed (1)
+Tests  2 failed | 9 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 O1 (fee paid 48000, original 78000, discount 30000) > Meta params have exactly the five keys of the current payload
+AssertionError: expected [ 'shipping_discount', 'value', …(4) ] to deeply equal [ 'value', 'currency', …(3) ]
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > populated shipping_voucher (synthetic): Meta params keep the five keys
+AssertionError: expected [ 'shipping_discount', 'value', …(4) ] to deeply equal [ 'value', 'currency', …(3) ]
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## j: Number.isFinite replaced by truthiness
+changed src/lib/tracking.ts: ...(order.shipping ? { shipping: order.shipping } : {}),
+RED: exit=1
+Test Files  1 failed (1)
+Tests  1 failed | 10 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > full waiver (synthetic, fee 0.00, quote Q7): GA4 purchase shipping is 0
+AssertionError: expected undefined to be +0 // Object.is equality
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## j2: ?? replaced by || in the purchase() call
+changed src/components/CartModal.tsx: shipping: placed.shippingFee || undefined,
+RED: exit=1
+Test Files  1 failed (1)
+Tests  1 failed | 10 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > full waiver (synthetic, fee 0.00, quote Q7): GA4 purchase shipping is 0
+AssertionError: expected undefined to be +0 // Object.is equality
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
+
+## j3: extra, not in the task list: Number.isFinite replaced by !== undefined
+changed src/lib/tracking.ts: ...(order.shipping !== undefined ? { shipping: order.shipping } : {}),
+RED: exit=1
+Test Files  1 failed (1)
+Tests  1 failed | 10 passed (11)
+FAIL  src/__tests__/stor169_purchase_ga4_meta.test.tsx > STOR-169 other 201 bodies > purchase() given a NaN shipping: GA4 params have no shipping key
+AssertionError: expected { transaction_id: 'DH-NAN', …(4) } to not have property "shipping"
+GREEN (reverted, files byte-identical to base): exit=0
+Test Files  1 passed (1)
+Tests  11 passed (11)
