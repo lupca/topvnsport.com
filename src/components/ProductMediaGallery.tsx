@@ -119,7 +119,7 @@ export default function ProductMediaGallery({
           }}
           referrerPolicy="no-referrer"
         />
-        <div className="pointer-events-none absolute left-3 bottom-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] font-semibold text-white">
+        <div className="pointer-events-none absolute left-3 bottom-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] max-md:text-sm font-semibold text-white">
           <span className="hidden [@media(hover:hover)]:inline">Di chuột để zoom • </span>Chạm để phóng to
         </div>
       </div>

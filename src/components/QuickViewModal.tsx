@@ -49,13 +49,13 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
               
               <div className="space-y-4 pr-1">
                 <div className="space-y-1">
-                  {product.brand && <span className="text-[10px] bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">{product.brand}</span>}
+                  {product.brand && <span className="text-[10px] max-md:text-sm bg-brand-primary text-white font-extrabold uppercase px-2 py-0.5 rounded-sm">{product.brand}</span>}
                   <h3 className="font-display font-black text-lg text-gray-900 leading-snug">{product.name}</h3>
                 </div>
 
                 {product.description && (
                   <div className="md:max-h-56 md:overflow-y-auto pr-1 border border-gray-100 rounded-xl bg-gray-50/70 p-3">
-                    <p className="text-xs text-ink-secondary leading-relaxed font-normal whitespace-pre-line break-words">
+                    <p className="text-xs text-ink-secondary leading-relaxed font-normal whitespace-pre-line break-words max-md:text-sm">
                       {product.description}
                     </p>
                   </div>
@@ -68,7 +68,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                     product.specs.stiffness ||
                     typeof product.specs.balance === 'number' ||
                     typeof product.specs.maxTension === 'number') && (
-                  <div className="space-y-1.5 text-xs text-ink-muted font-mono py-3 border-t border-b border-gray-100">
+                  <div className="space-y-1.5 text-xs max-md:text-sm text-ink-muted font-mono py-3 border-t border-b border-gray-100">
                     {product.specs.weight && (
                       <div className="flex justify-between">
                         <span>Cân nặng:</span>
@@ -96,7 +96,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                   </div>
                 )}
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between max-md:flex-wrap max-md:gap-2">
                   <div>
                     {!hasPrice || !price ? (
                       <span className="text-sm font-bold text-gray-600 font-display" data-testid="no-price">Liên hệ để biết giá</span>
@@ -107,12 +107,12 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                             {price.salePrice.toLocaleString('vi-VN')}đ
                           </span>
                           {price.discountPercent > 0 && (
-                            <span className="text-[10px] font-extrabold bg-red-600 text-white px-2 py-0.5 rounded-sm" data-testid="discount-badge">
+                            <span className="text-[10px] max-md:text-sm font-extrabold bg-red-600 text-white px-2 py-0.5 rounded-sm" data-testid="discount-badge">
                               -{price.discountPercent}%
                             </span>
                           )}
                         </div>
-                        <span className="text-xs text-gray-400 line-through block leading-none" data-testid="original-price">
+                        <span className="text-xs max-md:text-sm text-gray-400 line-through block leading-none" data-testid="original-price">
                           {price.originalPrice.toLocaleString('vi-VN')}đ
                         </span>
                       </>
@@ -122,7 +122,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                       </span>
                     )}
                     {outOfStock && (
-                      <p className="text-xs text-red-500 font-semibold mt-1">Tạm hết hàng</p>
+                      <p className="text-xs max-md:text-sm text-red-500 font-semibold mt-1">Tạm hết hàng</p>
                     )}
                   </div>
                   <button
@@ -137,7 +137,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
                       onClose();
                     }}
                     disabled={outOfStock || stockUnknown || !hasPrice}
-                    className={`text-xs font-bold uppercase tracking-wider px-6 py-2.5 rounded-full flex items-center gap-1.5 transition shadow-sm focus:outline-hidden ${
+                    className={`text-xs max-md:text-sm font-bold uppercase tracking-wider px-6 py-2.5 rounded-full flex items-center gap-1.5 transition shadow-sm focus:outline-hidden ${
                       outOfStock || stockUnknown || !hasPrice
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         : 'bg-brand-primary hover:bg-brand-secondary text-white hover:shadow-md focus:ring-2 focus:ring-brand-primary/30'

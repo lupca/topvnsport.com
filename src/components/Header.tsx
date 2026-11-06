@@ -296,7 +296,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
           {/* Dưới md: z-[45] < z-50 của mobile-sticky-bar để khi cuộn, giỏ/Đan cước/logo vẫn nằm trên (STOR-134). */}
           {showSearchDropdown && (
             <div className="absolute top-full left-0 right-0 mt-3 bg-white border border-gray-100 rounded-xl shadow-sm z-[45] md:z-50 overflow-hidden divide-y divide-gray-50 animate-in fade-in slide-in-from-top-2 duration-150">
-              <div className="bg-gray-50 px-4 py-2 text-[11px] font-semibold text-gray-400 tracking-wider uppercase">Kết quả tìm kiếm phù hợp</div>
+              <div className="bg-gray-50 px-4 py-2 text-[11px] max-md:text-sm font-semibold text-gray-400 tracking-wider uppercase">Kết quả tìm kiếm phù hợp</div>
               {searchResults.length > 0 ? (
                 searchResults.map(p => (
                   <div
@@ -306,16 +306,16 @@ export default function Header({ cartCount, openCart, products, categories, cate
                   >
                     <img src={p.image} alt={p.name} className="w-10 h-10 object-cover rounded-md border border-gray-100" referrerPolicy="no-referrer" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-gray-900 truncate">{p.name}</p>
+                      <p className="text-xs max-md:text-sm font-semibold text-gray-900 truncate">{p.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        {p.brand && <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-sm font-mono font-bold uppercase">{p.brand}</span>}
-                        {p.specs.weight && <span className="text-[10px] text-gray-400">{p.specs.weight}</span>}
+                        {p.brand && <span className="text-[10px] max-md:text-sm bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-sm font-mono font-bold uppercase">{p.brand}</span>}
+                        {p.specs.weight && <span className="text-[10px] max-md:text-sm text-gray-400">{p.specs.weight}</span>}
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs font-bold text-brand-primary">{p.price === undefined ? 'Liên hệ để biết giá' : `${getPriceDisplay(p).salePrice.toLocaleString('vi-VN')}đ`}</p>
+                      <p className="text-xs max-md:text-sm font-bold text-brand-primary">{p.price === undefined ? 'Liên hệ để biết giá' : `${getPriceDisplay(p).salePrice.toLocaleString('vi-VN')}đ`}</p>
                       {p.price !== undefined && getPriceDisplay(p).hasActivePromotion && (
-                        <p className="text-[10px] text-gray-400 line-through">{getPriceDisplay(p).originalPrice.toLocaleString('vi-VN')}đ</p>
+                        <p className="text-[10px] max-md:text-sm text-gray-400 line-through">{getPriceDisplay(p).originalPrice.toLocaleString('vi-VN')}đ</p>
                       )}
                     </div>
                   </div>
@@ -328,7 +328,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
                   navigate(`/catalog?search=${encodeURIComponent(searchQuery)}`);
                   setShowSearchDropdown(false);
                 }} 
-                className="p-2.5 bg-brand-light text-center text-xs font-semibold text-brand-primary hover:bg-brand-light cursor-pointer transition"
+                className="p-2.5 bg-brand-light text-center text-xs max-md:text-sm font-semibold text-brand-primary hover:bg-brand-light cursor-pointer transition"
               >
                 Xem tất cả kết quả cho "{searchQuery}"
               </div>
@@ -401,13 +401,13 @@ export default function Header({ cartCount, openCart, products, categories, cate
                   {/* Shop Section */}
                   {sortedCategories.length > 0 && (
                     <div className="space-y-2">
-                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Danh Mục Sản Phẩm</h4>
+                      <h4 className="text-[10px] max-md:text-sm font-bold uppercase tracking-wider text-brand-primary">Danh Mục Sản Phẩm</h4>
                       <div className="grid grid-cols-1 gap-1">
                         {sortedCategories.map((category) => (
                           <button
                             key={category.id}
                             onClick={() => { navigate(`/catalog?category=${encodeURIComponent(category.code)}`); setIsMobileMenuOpen(false); }}
-                            className={`w-full text-left py-2 px-3 rounded-lg text-xs font-semibold flex items-center gap-2 ${currentView === 'catalog' && new URLSearchParams(location.search).get('category') === category.code ? 'bg-brand-light text-brand-primary' : 'text-gray-700 hover:bg-gray-50'}`}
+                            className={`w-full text-left py-2 px-3 rounded-lg text-xs max-md:text-sm font-semibold flex items-center gap-2 ${currentView === 'catalog' && new URLSearchParams(location.search).get('category') === category.code ? 'bg-brand-light text-brand-primary' : 'text-gray-700 hover:bg-gray-50'}`}
                           >
                             <ChevronRight className="w-4 h-4 text-gray-400 shrink-0" />
                             {getCategoryLabel(category, categories)}
@@ -418,13 +418,13 @@ export default function Header({ cartCount, openCart, products, categories, cate
                   )}
                   {sortedCategories.length === 0 && hasCatalogLoadError && (
                     <div className="space-y-2">
-                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Danh Mục Sản Phẩm</h4>
+                      <h4 className="text-[10px] max-md:text-sm font-bold uppercase tracking-wider text-brand-primary">Danh Mục Sản Phẩm</h4>
                       <div className="rounded-lg bg-red-50 border border-red-200 p-3 space-y-2">
-                        <p className="text-xs font-medium text-red-700">Chưa tải được danh mục sản phẩm.</p>
+                        <p className="text-xs max-md:text-sm font-medium text-red-700">Chưa tải được danh mục sản phẩm.</p>
                         <button
                           type="button"
                           onClick={handleRetryCatalog}
-                          className="text-xs font-bold text-white bg-brand-primary hover:bg-brand-secondary px-3 py-1.5 rounded-md transition"
+                          className="text-xs max-md:text-sm font-bold text-white bg-brand-primary hover:bg-brand-secondary px-3 py-1.5 rounded-md transition"
                         >
                           Thử lại
                         </button>
@@ -434,13 +434,13 @@ export default function Header({ cartCount, openCart, products, categories, cate
 
                   {/* Hot Brands Section */}
                   <div className="space-y-2">
-                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-primary">Thương Hiệu Hot</h4>
+                    <h4 className="text-[10px] max-md:text-sm font-bold uppercase tracking-wider text-brand-primary">Thương Hiệu Hot</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {getBrands(products).map(brand => (
                         <button
                           key={brand}
                           onClick={() => { navigate(`/catalog?brand=${encodeURIComponent(brand)}`); setIsMobileMenuOpen(false); }}
-                          className="text-[11px] font-bold px-2.5 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-gray-700 hover:bg-brand-light hover:text-brand-primary transition"
+                          className="text-[11px] max-md:text-sm font-bold px-2.5 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-gray-700 hover:bg-brand-light hover:text-brand-primary transition"
                         >
                           {brand}
                         </button>
@@ -449,7 +449,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
                   </div>
 
                   {/* Additional Options */}
-                  <div className="space-y-1.5 border-t border-gray-100 pt-4 text-xs font-semibold text-gray-700">
+                  <div className="space-y-1.5 border-t border-gray-100 pt-4 text-xs max-md:text-sm font-semibold text-gray-700">
                     <button 
                       onClick={() => { navigate('/stores'); setIsMobileMenuOpen(false); }}
                       className="w-full text-left py-2.5 px-2 hover:bg-gray-50 rounded-lg flex items-center gap-2"
@@ -462,7 +462,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
               </div>
 
               {/* Drawer Footer info */}
-              <div className="p-4 border-t border-gray-100 bg-gray-50 text-[10px] text-gray-400 font-medium space-y-1">
+              <div className="p-4 border-t border-gray-100 bg-gray-50 text-[10px] max-md:text-sm text-gray-400 font-medium space-y-1">
                 <p>Hotline: 097 6007006</p>
                 <p>© TopVNSport • O2O Badminton Hub</p>
               </div>
@@ -473,7 +473,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
 
       <MainNav items={navItems}>
         {sortedCategories.length === 0 && hasCatalogLoadError && (
-          <div className="flex items-center justify-center gap-3 text-xs pb-3">
+          <div className="flex items-center justify-center gap-3 text-xs max-md:text-sm pb-3">
             <span className="text-red-700 font-medium">Chưa tải được danh mục sản phẩm.</span>
             <button
               type="button"

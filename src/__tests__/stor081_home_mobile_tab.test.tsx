@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 // STOR-081: trang chủ dưới md theo tab 'Khung nhìn Mobile (390px)' của public/design/index.html —
 // hàng chip ngành cuộn ngang, banner hộp 290px (STOR-107), ẩn thanh lọc nhanh/đếm/sắp xếp, lưới khoảng dọc 16px,
-// ô danh mục vuông, nút xem tất cả rộng hết khối, nhãn thanh dưới 11px #18181b.
+// ô danh mục vuông, nút xem tất cả rộng hết khối, nhãn thanh dưới 14px (STOR-167, MOB-F) #18181b.
 // Mỗi thay đổi chỉ ở class gốc (dưới md); giá trị cũ nằm sau md: để 1440 không đổi.
 import React from 'react';
 import { describe, it, expect, afterEach, vi } from 'vitest';
@@ -99,11 +99,12 @@ describe('STOR-081 MobileBottomNav theo tab Mobile', () => {
   const renderNav = () =>
     render(<MobileBottomNav pathname="/" navigate={vi.fn() as any} cartCount={0} onOpenCart={vi.fn()} />);
 
-  it('nhãn 11px, giữ đủ 4 nhãn', () => {
+  it('nhãn 14px (STOR-167), giữ đủ 4 nhãn', () => {
     renderNav();
     for (const label of LABELS) {
       const span = screen.getByText(label);
-      expect(cls(span)).toContain('text-[11px]');
+      expect(cls(span)).toContain('text-[14px]');
+      expect(cls(span)).not.toContain('text-[11px]');
       expect(cls(span)).not.toContain('text-[10px]');
     }
   });

@@ -31,14 +31,14 @@ export default function MobilePurchaseBar({
           referrerPolicy="no-referrer"
         />
         <div className="min-w-0">
-          <h4 className="font-bold text-xs text-gray-900 truncate">{productName}</h4>
-          <p className="text-brand-primary font-bold text-xs font-mono">{hasPrice ? formatVnd(totalDisplayPrice) : 'Liên hệ để biết giá'}</p>
+          <h4 className="font-bold text-[14px] text-gray-900 truncate">{productName}</h4>
+          <p className={`text-brand-primary font-bold text-[14px]${hasPrice ? ' font-mono' : ''}`}>{hasPrice ? formatVnd(totalDisplayPrice) : 'Liên hệ để biết giá'}</p>
         </div>
       </div>
       <button
         onClick={onBuyNow}
         disabled={isOutOfStock || stockUnknown || !hasPrice}
-        className={`min-h-[44px] -my-px text-xs px-4 py-2.5 rounded-sm flex items-center gap-1.5 shrink-0 shadow-sm transition ${
+        className={`min-h-[44px] -my-px text-[14px] px-4 py-2.5 rounded-sm flex items-center gap-1.5 shrink-0 shadow-sm transition ${
           isOutOfStock || stockUnknown || !hasPrice
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'btn-primary'
