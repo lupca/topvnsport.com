@@ -179,6 +179,9 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const [appliedCode, setAppliedCode] = useState<string | null>(null);
   const [voucherError, setVoucherError] = useState<string | null>(null);
   const [validating, setValidating] = useState(false);
+  // Option mà mã đã áp dụng được OMS xác nhận gần nhất. Khác option đang chọn -> phải kiểm lại (voucherChecking).
+  const [validatedFor, setValidatedFor] = useState<DeliveryOption | null>(null);
+  const voucherChecking = !!appliedCode && validatedFor !== deliveryOption;
   // Một báo giá cho mỗi bộ (giỏ, tỉnh, xã, mã đã áp dụng). null = chưa chọn xã.
   const quoteKey = province && ward
     ? JSON.stringify([cartItems.map(i => [i.skuCode, i.quantity]), province.code, ward.code, appliedCode])
@@ -285,6 +288,34 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     });
   }, [isOpen, step, quoteKey, retryTick]);
 
+  // Mã đã áp dụng nhưng chưa được kiểm cho option đang chọn (đổi option) -> hỏi lại OMS với option hiện tại.
+  // Kết quả về muộn (đã đổi option/bỏ mã khác) bị bỏ qua qua cờ ignore. Lỗi -> bỏ mã, báo lời OMS.
+  useEffect(() => {
+    if (!isOpen || step !== 2 || !province || !ward || !voucherChecking || !appliedCode) return;
+    const sentOption = deliveryOption;
+    let ignore = false;
+    sportApi.validateVoucher({
+      items: cartItems.map(i => ({ sku_code: i.skuCode!, quantity: i.quantity })),
+      receiver_province_code: province.code,
+      receiver_ward_code: ward.code,
+      code: appliedCode,
+      delivery_option: sentOption,
+      ...(phoneValid ? { customer_phone: phoneNormalized } : {}),
+    }).then(res => {
+      if (ignore) return;
+      setValidatedFor(sentOption);
+      if (!res.valid) {
+        setAppliedCode(null);
+        setVoucherError(res.message);
+      }
+    }).catch((err: any) => {
+      if (ignore) return;
+      setAppliedCode(null);
+      setVoucherError(err.message);
+    });
+    return () => { ignore = true; };
+  }, [isOpen, step, quoteKey, appliedCode, deliveryOption, validatedFor]);
+
   const retryQuote = () => {
     quoteKeyRef.current = null;
     setRetryTick(t => t + 1);
@@ -353,17 +384,20 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     if (!canApply || !province || !ward) return;
     setVoucherError(null);
     setValidating(true);
+    const sentOption = deliveryOption;
     try {
       const res = await sportApi.validateVoucher({
         items: cartItems.map(i => ({ sku_code: i.skuCode!, quantity: i.quantity })),
         receiver_province_code: province.code,
         receiver_ward_code: ward.code,
         code: voucherCode,
-        delivery_option: deliveryOption,
+        delivery_option: sentOption,
         ...(phoneValid ? { customer_phone: phoneNormalized } : {}),
       });
-      if (res.valid) setAppliedCode(voucherCode);
-      else setVoucherError(res.message);
+      if (res.valid) {
+        setAppliedCode(voucherCode);
+        setValidatedFor(sentOption);
+      } else setVoucherError(res.message);
     } catch (err: any) {
       setVoucherError(err.message);
     } finally {
@@ -392,7 +426,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
   const handleCheckoutSubmit = async (e?: React.FormEvent, tokenOverride?: string) => {
     if (e) e.preventDefault();
-    if (orderUncertain || isSubmitting) return;
+    if (orderUncertain || isSubmitting || voucherChecking || validating) return;
 
     // Kiểm SKU của MỌI món hàng TRƯỚC bất kỳ lời gọi API nào (kể cả sendOtp)
     // -- khách không nhận OTP/không bị tạo hồ sơ khách hàng rồi mới bị chặn.
@@ -1107,8 +1141,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                 <button
                   type="submit"
                   form="checkout-form"
-                  disabled={isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked}
-                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'} max-md:text-sm max-md:min-h-11`}
+                  disabled={isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked || voucherChecking || validating}
+                  className={`flex-1 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-sm flex items-center justify-center gap-1.5 ${isSubmitting || !!orderUncertain || selectedFee === null || phoneBlocked || voucherChecking || validating ? 'bg-brand-primary/50 cursor-not-allowed' : 'btn-primary'} max-md:text-sm max-md:min-h-11`}
                 >
                   {isSubmitting ? 'Đang xử lý...' : paymentMethod === 'sepay' ? 'Thanh toán SePay QR →' : 'Xác nhận đặt hàng'}
                 </button>

@@ -4,14 +4,14 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, cleanup, act } from '@testing-library/react';
 import appDataReducer from '../features/appData/appDataSlice';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 import { PROVINCE_BODY, WARD_BODY, pickAdminUnits } from './fixtures/adminUnits';
 import {
   QUOTE_V_Q1, QUOTE_V_Q3, QUOTE_V_TWO_AUTO, QUOTE_F1, QUOTE_200_BOTH_UNAVAILABLE, ORDER_201_O1,
-  VALIDATE_V1, VALIDATE_V2, VALIDATE_V5, VALIDATE_V7, ERR_VALIDATE_V8, VALIDATE_V1_REQUEST, VALIDATE_V2_REQUEST,
+  VALIDATE_V1, VALIDATE_V1_NOT_APPLIED, VALIDATE_V2, VALIDATE_V5, VALIDATE_V7, ERR_VALIDATE_V8, VALIDATE_V1_REQUEST, VALIDATE_V2_REQUEST,
 } from './fixtures/shippingQuote';
 
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn().mockResolvedValue(undefined) } }));
@@ -371,5 +371,214 @@ describe('STOR-163 after the order', () => {
     fireEvent.click(screen.getByRole('button', { name: /Tiến hành thanh toán/ }));
     await waitFor(() => expect(quoteCalls()).toHaveLength(3));
     expect(quoteCalls()[2].body).not.toHaveProperty('voucher_code');
+  });
+});
+
+// STOR-164: re-validate on option switch, failures, order guards.
+const switchTo = (label: 'Giao hàng chuẩn' | 'Giao hỏa tốc') => fireEvent.click(screen.getByText(label));
+const alertText = () => screen.queryByRole('alert');
+const orderBtn = () => screen.getByRole('button', { name: /Thanh toán SePay QR|Xác nhận đặt hàng/ }) as HTMLButtonElement;
+// Flush a held validate reply, so a negative assertion does not pass before the reply lands.
+async function flushValidate(release: () => void) {
+  await act(async () => { release(); await validateGate; });
+}
+// Form filled as in the STOR-163 order test, so a submit would reach send-otp without the guard.
+function fillForm() {
+  fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Văn A' } });
+  typePhone('0987654321');
+  fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: '12 Phố Huế' } });
+}
+const submitForm = () => fireEvent.submit(document.getElementById('checkout-form')!);
+const otpCalls = () => calls.filter(c => c.url.endsWith('/send-otp'));
+const orderCalls = () => calls.filter(c => c.url.endsWith('/orders'));
+
+describe('STOR-164 re-validate on option switch', () => {
+  it('Switching option with a code applied POSTs validate-voucher once', async () => {
+    await applied();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    await screen.findByRole('button', { name: 'Xoá' });
+    expect(validateCalls()).toHaveLength(2);
+  });
+
+  it('That POST carries the newly selected delivery_option', async () => {
+    await applied();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    expect(validateCalls()[1].body.delivery_option).toBe('STANDARD');
+  });
+
+  it('That POST names the code under the key code', async () => {
+    await applied();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    expect(validateCalls()[1].body.code).toBe('HOAQUOC30K');
+  });
+
+  it('That POST body has no key voucher_code', async () => {
+    await applied();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    expect(validateCalls()[1].body).not.toHaveProperty('voucher_code');
+  });
+
+  it('After a V1 reply the code stays applied', async () => {
+    await applied();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    await screen.findByRole('button', { name: 'Xoá' });
+    expect(screen.getByText('HOAQUOC30K')).toBeInTheDocument();
+  });
+
+  it('After a valid:true applied:false reply the code stays applied', async () => {
+    await applied();
+    validateReply = { status: 200, body: VALIDATE_V1_NOT_APPLIED };
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    await waitFor(() => expect(feeRow()).toHaveTextContent('Phí vận chuyển'));
+    expect(screen.getByText('HOAQUOC30K')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Xoá' })).toBeInTheDocument();
+  });
+
+  it('A V2 reply (valid:false) removes the applied code', async () => {
+    await applied();
+    validateReply = { status: 200, body: VALIDATE_V2 };
+    switchTo('Giao hàng chuẩn');
+    await screen.findByRole('alert');
+    expect(screen.queryByRole('button', { name: 'Xoá' })).toBeNull();
+    await waitFor(() => expect(input()).toBeInTheDocument());
+  });
+
+  it("After a V2 reply the page shows OMS's message verbatim", async () => {
+    await applied();
+    validateReply = { status: 200, body: VALIDATE_V2 };
+    switchTo('Giao hàng chuẩn');
+    expect(await screen.findByRole('alert')).toHaveTextContent(VALIDATE_V2.message);
+  });
+
+  it('A V8 422 DELIVERY_OPTION_UNAVAILABLE reply removes the applied code', async () => {
+    await applied();
+    validateReply = { status: 422, body: ERR_VALIDATE_V8 };
+    switchTo('Giao hàng chuẩn');
+    await screen.findByRole('alert');
+    expect(screen.queryByRole('button', { name: 'Xoá' })).toBeNull();
+  });
+
+  it('After a V8 reply the page shows the OMS message verbatim', async () => {
+    await applied();
+    validateReply = { status: 422, body: ERR_VALIDATE_V8 };
+    switchTo('Giao hàng chuẩn');
+    expect(await screen.findByRole('alert')).toHaveTextContent(ERR_VALIDATE_V8.message);
+  });
+
+  it('After a drop, the next quote request body has no voucher_code', async () => {
+    await applied();
+    validateReply = { status: 200, body: VALIDATE_V2 };
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(quoteCalls()).toHaveLength(3));
+    expect(quoteCalls()[2].body).not.toHaveProperty('voucher_code');
+  });
+
+  it('The reason line is still visible after the post-drop quote loads', async () => {
+    await applied();
+    validateReply = { status: 200, body: VALIDATE_V2 };
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(quoteCalls()).toHaveLength(3));
+    await waitFor(() => expect(feeRow()).toHaveTextContent('78.000đ'));
+    expect(alertText()).toHaveTextContent(VALIDATE_V2.message);
+  });
+
+  it('A late V2 reply for an old option keeps the code', async () => {
+    await applied();
+    const release = holdValidate();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    switchTo('Giao hỏa tốc');
+    validateReply = { status: 200, body: VALIDATE_V2 };
+    await flushValidate(release);
+    expect(screen.getByRole('button', { name: 'Xoá' })).toBeInTheDocument();
+    expect(alertText()).toBeNull();
+  });
+
+  it('A late reply after the code was removed shows no reason', async () => {
+    await applied();
+    const release = holdValidate();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    fireEvent.click(removeBtn());
+    validateReply = { status: 200, body: VALIDATE_V2 };
+    await flushValidate(release);
+    expect(alertText()).toBeNull();
+  });
+
+  it('An apply reply after an option switch triggers a re-validation', async () => {
+    await gotoQuote('EXPRESS');
+    const release = holdValidate();
+    clickApply('HOAQUOC30K');
+    await waitFor(() => expect(validateCalls()).toHaveLength(1));
+    switchTo('Giao hàng chuẩn');
+    await flushValidate(release);
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    expect(validateCalls()[1].body.delivery_option).toBe('STANDARD');
+  });
+
+  it('The validate body omits customer_phone for an invalid phone', async () => {
+    await gotoQuote('EXPRESS');
+    typePhone('0123');
+    clickApply('HOAQUOC30K');
+    await screen.findByRole('button', { name: 'Xoá' });
+    await waitFor(() => expect(feeRow()).toHaveTextContent('15.000đ'));
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    expect(validateCalls()[1].body).not.toHaveProperty('customer_phone');
+  });
+});
+
+describe('STOR-164 order button while re-validating or applying', () => {
+  it('The order button is disabled while a re-validation is in flight', async () => {
+    await applied();
+    const release = holdValidate();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    expect(orderBtn().disabled).toBe(true);
+    await flushValidate(release);
+  });
+
+  it('The order button is enabled after a valid re-validation reply', async () => {
+    await applied();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    await waitFor(() => expect(orderBtn().disabled).toBe(false));
+  });
+
+  it('A submit during re-validation does not call send-otp', async () => {
+    await applied();
+    fillForm();
+    const release = holdValidate();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    submitForm();
+    await flushValidate(release);
+    expect(otpCalls()).toHaveLength(0);
+  });
+
+  it('A submit during re-validation does not call orders', async () => {
+    await applied();
+    fillForm();
+    const release = holdValidate();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    submitForm();
+    await flushValidate(release);
+    expect(orderCalls()).toHaveLength(0);
+  });
+
+  it('The order button is disabled while the apply-time validating flag is set', async () => {
+    await gotoQuote('EXPRESS');
+    const release = holdValidate();
+    clickApply('HOAQUOC30K');
+    await waitFor(() => expect(validateCalls()).toHaveLength(1));
+    expect(orderBtn().disabled).toBe(true);
+    await flushValidate(release);
   });
 });
