@@ -3,7 +3,7 @@ import rawData from '../../data.json';
 import { delay, OMS_CHECKOUT_PROXY_URL, OMS_PROXY_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { mapPmiProduct } from './productMappers';
 import { applyWmsStock, parseWmsStock, stockCodesOf, tagStockCodes } from './wmsStock';
-import { AdminUnit, ApiListResponse, CreateOrderPayload, PmiProduct, SendOtpResponse, ShippingQuote, ShippingQuoteRequest, VerifyOtpResponse } from './types';
+import { AdminUnit, ApiListResponse, CreateOrderPayload, PmiProduct, SendOtpResponse, ShippingQuote, ShippingQuoteRequest, VerifyOtpResponse, VoucherValidateRequest, VoucherValidateResponse } from './types';
 
 // STOR-137: GET danh mục/sản phẩm/tồn thử lại khi lỗi tạm (5xx, lỗi mạng, quá
 // 12 s mỗi lần -- cold start đo 9.2 s): 3 lần, chờ 1000 rồi 2000 ms. 4xx (cả 404)
@@ -369,6 +369,8 @@ async function getShippingQuote(request: ShippingQuoteRequest): Promise<Shipping
   return data;
 }
 
+const validateVoucher = (request: VoucherValidateRequest): Promise<VoucherValidateResponse> =>
+  omsCall(`${OMS_CHECKOUT_PROXY_URL}/validate-voucher`, postJson(request));
 const createOrder = (orderData: CreateOrderPayload) => omsCall(`${OMS_CHECKOUT_PROXY_URL}/orders`, postJson(orderData));
 
 async function createSepayCheckout(orderNumber: string) {
@@ -401,6 +403,7 @@ export const sportApi = {
   getAdminUnits,
   getShippingQuote,
   createOrder,
+  validateVoucher,
   createSepayCheckout,
   sendOtp,
   verifyOtp,

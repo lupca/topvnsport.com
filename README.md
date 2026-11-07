@@ -41,5 +41,5 @@ docker compose -f docker-compose.prod.yml up  # Prod (nginx serving static)
 ## API Integration
 
 - Fetches product catalog from PMI
-- Creates orders via OMS (with OTP verification) through the same-origin `/api/oms/checkout/{send-otp,verify-otp,orders,payments}` proxy (POST only, whitelisted; catalog-grant token attached server-side)
+- Creates orders via OMS (with OTP verification) through the same-origin `/api/oms/checkout/{send-otp,verify-otp,orders,payments,validate-voucher}` proxy (POST only, whitelisted; catalog-grant token attached server-side)
 - Checks real-time stock via WMS `/public/stock`
