@@ -96,6 +96,8 @@ export type CreateOrderPayload = {
   attribution?: Record<string, string>;
   // Spec a4918ed8: ECHO of the shipping discount the shopper saw; OMS returns 422 if it shrank and the fee rose.
   shipping_discount?: number;
+  // Applied shipping voucher, sent only when validated for delivery_option (OMS-219 O1e).
+  voucher_code?: string;
 };
 
 

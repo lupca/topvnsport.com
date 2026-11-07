@@ -517,6 +517,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
         payment_method: paymentMethod === 'cod' ? 'COD' : 'SEPAY',
         // Spec a4918ed8 §5: gửi lại mức giảm khách đã thấy -> OMS không thu cao hơn số đã hiện.
         ...(typeof selectedOption?.shipping_discount === 'number' ? { shipping_discount: selectedOption.shipping_discount } : {}),
+        // Mã chỉ gửi khi OMS đã xác nhận cho đúng option đang chọn.
+        ...(appliedCode && validatedFor === deliveryOption ? { voucher_code: appliedCode } : {}),
         ...(attribution ? { attribution } : {}),
       });
     } catch (err: any) {
@@ -540,6 +542,8 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
           ? body.message
           : typeof body?.detail?.[0]?.msg === 'string' && body.detail[0].msg.trim() ? body.detail[0].msg : null;
         await popupService.alert(omsMessage ?? ORDER_REJECTED_MESSAGE);
+        // Mã không dùng được cho đơn -> bỏ mã, báo giá lại không mã. field_path shipping_discount: giữ mã, báo giá lại.
+        if (body?.code === 'SHIPPING_VOUCHER_NOT_APPLICABLE' && body?.field_path === 'voucher_code') setAppliedCode(null);
         if (body?.code === 'DELIVERY_OPTION_UNAVAILABLE' || body?.code === 'SHIPPING_VOUCHER_NOT_APPLICABLE' || isReceiverAddressError(body)) retryQuote();
       } else if (isOutcomeUnknown(err)) {
         setOrderUncertain(UNCERTAIN_ORDER_MESSAGE);

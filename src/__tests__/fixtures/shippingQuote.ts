@@ -135,3 +135,17 @@ export const ORDER_201_O1 = JSON.parse('{"id":7,"order_number":"DH-O1","total_am
 export const ORDER_201_O1_VOUCHER = { ...ORDER_201_O1, shipping_voucher: { voucher_id: 1, code: null, name: 'Tên voucher giả' } };
 // SYNTHETIC (not a 201 capture): O1 with the order row amounts of spec c4c05162, full waiver case (original 30000, discount 30000, paid 0).
 export const ORDER_201_FULL_WAIVER = { ...ORDER_201_O1, total_amount: '110000.00', shipping_fee: '0.00', shipping_fee_original: '30000.00', shipping_discount: '30000.00' };
+
+// STOR-171 fixtures. Wire bodies are JSON.parse of the verbatim text (r:f04e3ee5).
+// POST /public/checkout/orders 422, RESPONSE line of O1e in voma-oms origin/develop docs/evidence/oms-219/captures.md.
+export const ERR_ORDER_O1E = JSON.parse('{"code":"SHIPPING_VOUCHER_NOT_APPLICABLE","message":"Mã chỉ áp dụng cho Giao tiêu chuẩn","field_path":"voucher_code","detail":{"code":"SHIPPING_VOUCHER_NOT_APPLICABLE","message":"Mã chỉ áp dụng cho Giao tiêu chuẩn","field_path":"voucher_code"}}');
+// validate-voucher V9 (unknown SKU 422), oms-218 captures.md: only the code, message and field_path keys are kept (detail is dropped).
+export const ERR_VALIDATE_V9 = JSON.parse('{"code":"SKU_NOT_FOUND","message":"Không tìm thấy sản phẩm có mã KHONG-TON-TAI.","field_path":"items[0].sku_code"}');
+// validate-voucher V10 (ward outside province), oms-218 captures.md: same body as the quote's Q13.
+export const ERR_VALIDATE_V10 = ERR_WARD_MISMATCH;
+// validate-voucher V11 (delivery_option missing, pydantic 422), RESPONSE line in oms-218 captures.md.
+export const ERR_VALIDATE_V11 = JSON.parse('{"detail":[{"loc":["body","delivery_option"],"msg":"Trường này là bắt buộc","type":"missing"}]}');
+// Gateway 401 of spec 500c4fbd (validate-voucher), RESPONSE line of V12/V13 in oms-218 captures.md.
+export const ERR_GATEWAY_401 = JSON.parse('{"detail":"Yêu cầu đặt hàng công khai thiếu hoặc sai thông tin xác thực gian hàng. Vui lòng tải lại trang rồi thử lại."}');
+// 429 RATE_LIMITED of spec fae8d7ae, the same text as RATE_LIMITED in stor035_oms_admin_units_quote_proxy.test.ts (message is the spec's "<vi>" placeholder).
+export const ERR_RATE_LIMITED_429 = JSON.parse('{"code":"RATE_LIMITED","message":"<vi>","retry_after_seconds":30,"detail":{"code":"RATE_LIMITED","message":"<vi>","retry_after_seconds":30}}');
