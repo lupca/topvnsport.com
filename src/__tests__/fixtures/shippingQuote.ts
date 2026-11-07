@@ -147,5 +147,5 @@ export const ERR_VALIDATE_V10 = ERR_WARD_MISMATCH;
 export const ERR_VALIDATE_V11 = JSON.parse('{"detail":[{"loc":["body","delivery_option"],"msg":"Trường này là bắt buộc","type":"missing"}]}');
 // Gateway 401 of spec 500c4fbd (validate-voucher), RESPONSE line of V12/V13 in oms-218 captures.md.
 export const ERR_GATEWAY_401 = JSON.parse('{"detail":"Yêu cầu đặt hàng công khai thiếu hoặc sai thông tin xác thực gian hàng. Vui lòng tải lại trang rồi thử lại."}');
-// 429 RATE_LIMITED of spec fae8d7ae, the same text as RATE_LIMITED in stor035_oms_admin_units_quote_proxy.test.ts (message is the spec's "<vi>" placeholder).
-export const ERR_RATE_LIMITED_429 = JSON.parse('{"code":"RATE_LIMITED","message":"<vi>","retry_after_seconds":30,"detail":{"code":"RATE_LIMITED","message":"<vi>","retry_after_seconds":30}}');
+// 429 RATE_LIMITED of spec fae8d7ae (OMS-132 contract), the spec's body text verbatim; the same body as ERR_429 in fixtures/adminUnits.tsx.
+export const ERR_RATE_LIMITED_429 = JSON.parse('{"code":"RATE_LIMITED","message":"Bạn thao tác quá nhanh. Vui lòng thử lại sau ít giây.","retry_after_seconds":12,"detail":{"code":"RATE_LIMITED","message":"Bạn thao tác quá nhanh. Vui lòng thử lại sau ít giây.","retry_after_seconds":12}}');

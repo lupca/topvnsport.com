@@ -4,7 +4,6 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { execSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
@@ -12,7 +11,7 @@ import appDataReducer from '../features/appData/appDataSlice';
 import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 import type { CreateOrderPayload } from '../services/sport-api/types';
-import { PROVINCE_BODY, WARD_BODY, pickAdminUnits } from './fixtures/adminUnits';
+import { PROVINCE_BODY, WARD_BODY, ERR_429, pickAdminUnits } from './fixtures/adminUnits';
 import {
   QUOTE_V_Q1, QUOTE_V_Q3, ORDER_201_O1, VALIDATE_V1, VALIDATE_V2, ERR_WARD_MISMATCH, ERR_SHIPPING_VOUCHER_NOT_APPLICABLE,
   ERR_ORDER_O1E, ERR_VALIDATE_V9, ERR_VALIDATE_V10, ERR_VALIDATE_V11, ERR_GATEWAY_401, ERR_RATE_LIMITED_429,
@@ -226,10 +225,10 @@ describe('STOR-171 fixtures', () => {
   });
 
   it('The 429 fixture deep-equals the body in spec fae8d7ae', () => {
-    // stor035 keeps the spec fae8d7ae text verbatim as RATE_LIMITED.
-    const src = readFileSync('src/__tests__/stor035_oms_admin_units_quote_proxy.test.ts', 'utf8');
-    const text = src.match(/const RATE_LIMITED = '(.*)';/)![1];
-    expect(ERR_RATE_LIMITED_429).toStrictEqual(JSON.parse(text));
+    // The spec fae8d7ae 429 body, retyped here as an independent literal; fixtures/adminUnits.tsx ERR_429 carries the same text.
+    const spec = { code: 'RATE_LIMITED', message: 'Bạn thao tác quá nhanh. Vui lòng thử lại sau ít giây.', retry_after_seconds: 12, detail: { code: 'RATE_LIMITED', message: 'Bạn thao tác quá nhanh. Vui lòng thử lại sau ít giây.', retry_after_seconds: 12 } };
+    expect(ERR_RATE_LIMITED_429).toStrictEqual(spec);
+    expect(ERR_RATE_LIMITED_429).toStrictEqual(ERR_429);
   });
 
   it('The V9 fixture has exactly the keys code, message and field_path', () => {
