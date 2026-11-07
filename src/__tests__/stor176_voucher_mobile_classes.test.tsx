@@ -70,14 +70,29 @@ async function applied() {
 }
 
 describe('STOR-176 voucher mobile classes', () => {
-  it('voucher input carries max-md:text-base and max-md:min-h-11', async () => {
+  it('voucher input carries max-md:text-base', async () => {
     await gotoQuote();
-    expect(input()).toHaveClass('max-md:text-base', 'max-md:min-h-11');
+    expect(input()).toHaveClass('max-md:text-base');
+  });
+
+  it('voucher input carries max-md:min-h-11', async () => {
+    await gotoQuote();
+    expect(input()).toHaveClass('max-md:min-h-11');
+  });
+
+  it("'Áp dụng' carries max-md:text-base", async () => {
+    await gotoQuote();
+    expect(applyBtn()).toHaveClass('max-md:text-base');
   });
 
   it("'Áp dụng' carries max-md:min-h-11", async () => {
     await gotoQuote();
     expect(applyBtn()).toHaveClass('max-md:min-h-11');
+  });
+
+  it("'Xoá' carries max-md:text-base", async () => {
+    await applied();
+    expect(removeBtn()).toHaveClass('max-md:text-base');
   });
 
   it("'Xoá' carries max-md:min-h-11", async () => {
