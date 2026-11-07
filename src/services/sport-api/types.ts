@@ -107,6 +107,7 @@ export type ShippingQuoteRequest = {
   receiver_province_code: string;
   receiver_ward_code: string;
   delivery_option: DeliveryOption | null;
+  voucher_code?: string;
 };
 
 export type ShippingQuoteOption = {
@@ -122,6 +123,7 @@ export type ShippingQuoteOption = {
   shipping_fee_original?: number | null;
   shipping_discount?: number;
   voucher_message?: string | null;
+  voucher_name?: string | null;
 };
 
 export type ShippingQuote = {
@@ -131,6 +133,28 @@ export type ShippingQuote = {
   is_fallback: boolean;
   options: ShippingQuoteOption[];
   voucher?: { code: string | null; name: string | null; valid: boolean | null; message: string | null };
+};
+
+// POST /public/checkout/validate-voucher (spec 500c4fbd). The key is `code`; OMS is extra=forbid.
+export type VoucherValidateRequest = {
+  code: string;
+  items: { sku_code: string; quantity: number }[];
+  receiver_province_code: string;
+  receiver_ward_code: string;
+  delivery_option: DeliveryOption;
+  customer_phone?: string;
+};
+
+export type VoucherValidateResponse = {
+  valid: boolean;
+  applied: boolean;
+  voucher_name: string | null;
+  delivery_type: string | null;
+  discount_kind: string | null;
+  shipping_fee_original: number;
+  shipping_discount: number;
+  shipping_fee: number;
+  message: string | null;
 };
 
 export type SendOtpResponse = {

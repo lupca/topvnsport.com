@@ -106,6 +106,7 @@ const OMS_PATH_METHODS: Record<string, string> = {
   'checkout/verify-otp': 'POST',
   'checkout/orders': 'POST',
   'checkout/payments': 'POST',
+  'checkout/validate-voucher': 'POST',
   'shipping-quote': 'POST',
   'admin-units': 'GET',
 };

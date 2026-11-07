@@ -61,17 +61,29 @@ export const WARD_BODY_REAL = {
 };
 
 // STOR-155: bodies of OMS develop 8a49cc2 POST /public/shipping-quote with vouchers (spec c55789ce, captures.md oms-218).
-// Q1 and Q3 are copied verbatim from the spec (r.text).
+// Q1 is copied verbatim from the spec (r.text); Q3 is replaced below by the OMS cd53022 text.
 export const QUOTE_V_Q1 = JSON.parse('{"currency":"VND","receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","is_fallback":false,"options":[{"delivery_option":"STANDARD","available":true,"unavailable_reason":null,"service_code":"SCN","service_name":"Chuyển phát nhanh","shipping_fee":78000,"eta_days":2,"is_fallback":false,"shipping_fee_original":78000,"shipping_discount":0,"voucher_message":null},{"delivery_option":"EXPRESS","available":true,"unavailable_reason":null,"service_code":"VHT","service_name":"Hỏa tốc thỏa thuận","shipping_fee":226111,"eta_days":1,"is_fallback":false,"shipping_fee_original":226111,"shipping_discount":0,"voucher_message":null}],"voucher":{"code":null,"name":null,"valid":null,"message":null}}');
-export const QUOTE_V_Q3 = JSON.parse('{"currency":"VND","receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","is_fallback":false,"options":[{"delivery_option":"STANDARD","available":true,"unavailable_reason":null,"service_code":"VTP","service_name":"Chuyển phát tiêu chuẩn","shipping_fee":35000,"eta_days":2,"is_fallback":false,"shipping_fee_original":35000,"shipping_discount":0,"voucher_message":"Mã chỉ áp dụng cho Giao hoả tốc"},{"delivery_option":"EXPRESS","available":true,"unavailable_reason":null,"service_code":"VHT","service_name":"Chuyển phát nhanh","shipping_fee":15000,"eta_days":1,"is_fallback":false,"shipping_fee_original":45000,"shipping_discount":30000,"voucher_message":null}],"voucher":{"code":"HOAQUOC30K","name":"Freeship hỏa tốc tháng 11","valid":true,"message":null}}');
+// QUOTE_V_Q3 is OMS cd53022 WIRED_QUOTE_200 (backend/tests/test_shipping_voucher_quote.py), verbatim, with voucher_name per option.
+// QUOTE_V_TWO_AUTO and VALIDATE_*/ERR_VALIDATE_V8 are verbatim from cd53022 too (captures.md oms-218 V1/V2/V5/V7/V8);
+// scripts/stor163-walk/check-fixtures.mjs proves them against the producer.
+export const QUOTE_V_Q3 = JSON.parse('{"currency":"VND","receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","is_fallback":false,"options":[{"delivery_option":"STANDARD","available":true,"unavailable_reason":null,"service_code":"VTP","service_name":"Chuyển phát tiêu chuẩn","shipping_fee":35000,"eta_days":2,"is_fallback":false,"shipping_fee_original":35000,"shipping_discount":0,"voucher_message":"Mã chỉ áp dụng cho Giao hoả tốc","voucher_name":null},{"delivery_option":"EXPRESS","available":true,"unavailable_reason":null,"service_code":"VHT","service_name":"Chuyển phát nhanh","shipping_fee":15000,"eta_days":1,"is_fallback":false,"shipping_fee_original":45000,"shipping_discount":30000,"voucher_message":null,"voucher_name":"Freeship hỏa tốc tháng 11"}],"voucher":{"code":"HOAQUOC30K","name":"Freeship hỏa tốc tháng 11","valid":true,"message":null}}');
+export const QUOTE_V_TWO_AUTO = JSON.parse('{"currency":"VND","receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","is_fallback":false,"options":[{"delivery_option":"STANDARD","available":true,"unavailable_reason":null,"service_code":"VTP","service_name":"Chuyển phát tiêu chuẩn","shipping_fee":0,"eta_days":2,"is_fallback":false,"shipping_fee_original":35000,"shipping_discount":35000,"voucher_message":null,"voucher_name":"Freeship giao thường"},{"delivery_option":"EXPRESS","available":true,"unavailable_reason":null,"service_code":"VHT","service_name":"Chuyển phát nhanh","shipping_fee":15000,"eta_days":1,"is_fallback":false,"shipping_fee_original":45000,"shipping_discount":30000,"voucher_message":null,"voucher_name":"Freeship hỏa tốc tháng 11"}],"voucher":{"code":null,"name":"Freeship giao thường","valid":true,"message":null}}');
+export const VALIDATE_V1 = JSON.parse('{"valid":true,"applied":true,"voucher_name":"Freeship hỏa tốc tháng 11","delivery_type":"EXPRESS","discount_kind":"FIXED_AMOUNT","shipping_fee_original":45000,"shipping_discount":30000,"shipping_fee":15000,"message":null}');
+export const VALIDATE_V2 = JSON.parse('{"valid":false,"applied":false,"voucher_name":null,"delivery_type":null,"discount_kind":null,"shipping_fee_original":45000,"shipping_discount":0,"shipping_fee":45000,"message":"Mã chỉ áp dụng cho Giao tiêu chuẩn"}');
+export const VALIDATE_V5 = JSON.parse('{"valid":false,"applied":false,"voucher_name":null,"delivery_type":null,"discount_kind":null,"shipping_fee_original":45000,"shipping_discount":0,"shipping_fee":45000,"message":"Mã đã hết hạn sử dụng"}');
+export const VALIDATE_V7 = JSON.parse('{"valid":false,"applied":false,"voucher_name":null,"delivery_type":null,"discount_kind":null,"shipping_fee_original":45000,"shipping_discount":0,"shipping_fee":45000,"message":"Bạn đã dùng mã này đủ số lần cho phép"}');
+export const ERR_VALIDATE_V8 = JSON.parse('{"code":"DELIVERY_OPTION_UNAVAILABLE","message":"Hình thức giao hàng đã chọn hiện không khả dụng cho địa chỉ này. Vui lòng chọn hình thức khác.","field_path":"delivery_option","detail":{"code":"DELIVERY_OPTION_UNAVAILABLE","message":"Hình thức giao hàng đã chọn hiện không khả dụng cho địa chỉ này. Vui lòng chọn hình thức khác.","field_path":"delivery_option"}}');
+export const VALIDATE_V1_REQUEST = JSON.parse('{"items":[{"sku_code":"TVS-AO-88D-01","quantity":1}],"receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","code":"HOAQUOC30K","delivery_option":"EXPRESS","customer_phone":"0900000001"}');
+export const VALIDATE_V2_REQUEST = JSON.parse('{"items":[{"sku_code":"TVS-AO-88D-01","quantity":1}],"receiver_province_code":"ADM1-01","receiver_ward_code":"ADM1-01.W49886","code":"THUONGDI","delivery_option":"EXPRESS"}');
 // The spec quotes Q7 and Q8 only as fragments: the amount and message keys plus the voucher block, all verbatim.
 // The rest of each option (service, eta) comes from Q3, which uses the same fake upstream (VTP 35000 / VHT 45000).
 const [q3Std, q3Exp] = QUOTE_V_Q3.options;
 export const QUOTE_V_Q7 = {
   ...QUOTE_V_Q3,
   options: [
-    { ...q3Std, shipping_fee: 0, shipping_fee_original: 35000, shipping_discount: 35000, voucher_message: null },
-    { ...q3Exp, shipping_fee: 45000, shipping_fee_original: 45000, shipping_discount: 0, voucher_message: 'Mã chỉ áp dụng cho Giao tiêu chuẩn' },
+    // voucher_name values are derived (not captured): STANDARD carries the voucher name, EXPRESS null.
+    { ...q3Std, shipping_fee: 0, shipping_fee_original: 35000, shipping_discount: 35000, voucher_message: null, voucher_name: 'Chỉ giao thường' },
+    { ...q3Exp, shipping_fee: 45000, shipping_fee_original: 45000, shipping_discount: 0, voucher_message: 'Mã chỉ áp dụng cho Giao tiêu chuẩn', voucher_name: null },
   ],
   voucher: JSON.parse('{"code":"THUONGDI","name":"Chỉ giao thường","valid":true,"message":null}'),
 };
@@ -79,8 +91,9 @@ const MIN_MSG = 'Đơn hàng chưa đạt giá trị tối thiểu 500.000đ đ�
 export const QUOTE_V_Q8 = {
   ...QUOTE_V_Q3,
   options: [
-    { ...q3Std, shipping_fee: 35000, shipping_fee_original: 35000, shipping_discount: 0, voucher_message: MIN_MSG },
-    { ...q3Exp, shipping_fee: 45000, shipping_fee_original: 45000, shipping_discount: 0, voucher_message: MIN_MSG },
+    // voucher_name null on both options is derived (not captured): the voucher did not apply.
+    { ...q3Std, shipping_fee: 35000, shipping_fee_original: 35000, shipping_discount: 0, voucher_message: MIN_MSG, voucher_name: null },
+    { ...q3Exp, shipping_fee: 45000, shipping_fee_original: 45000, shipping_discount: 0, voucher_message: MIN_MSG, voucher_name: null },
   ],
   voucher: JSON.parse('{"code":"MIN500K","name":null,"valid":false,"message":"Đơn hàng chưa đạt giá trị tối thiểu 500.000đ để dùng mã"}'),
 };
