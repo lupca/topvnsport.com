@@ -174,9 +174,14 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
   const [quote, setQuote] = useState<QuoteState | null>(null);
   const quoteKeyRef = useRef<string | null>(null);
   const [retryTick, setRetryTick] = useState(0);
-  // Một báo giá cho mỗi bộ (giỏ, tỉnh, xã). null = chưa chọn xã.
+  // Mã giảm phí vận chuyển: một mã mỗi lúc; số tiền chỉ đọc từ báo giá gọi lại với voucher_code.
+  const [voucherInput, setVoucherInput] = useState('');
+  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [voucherError, setVoucherError] = useState<string | null>(null);
+  const [validating, setValidating] = useState(false);
+  // Một báo giá cho mỗi bộ (giỏ, tỉnh, xã, mã đã áp dụng). null = chưa chọn xã.
   const quoteKey = province && ward
-    ? JSON.stringify([cartItems.map(i => [i.skuCode, i.quantity]), province.code, ward.code])
+    ? JSON.stringify([cartItems.map(i => [i.skuCode, i.quantity]), province.code, ward.code, appliedCode])
     : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneTouched, setPhoneTouched] = useState(false);
@@ -251,6 +256,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
       receiver_province_code: province.code,
       receiver_ward_code: ward.code,
       delivery_option: null,
+      ...(appliedCode ? { voucher_code: appliedCode } : {}),
     }).then(data => {
       if (quoteKeyRef.current !== quoteKey) return;
       // is_fallback (spec 08893767 D2) = OMS không báo giá được: phí đoán, không cho đặt. Báo lỗi như quote lỗi.
@@ -340,6 +346,30 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
     : 'Chọn địa chỉ để tính phí';
   const orderTotal = itemsTotal === null || selectedFee === null ? null : itemsTotal + selectedFee;
   const formatMoney = (value: number | null) => (value === null ? '' : `${value.toLocaleString('vi-VN')}đ`);
+  const voucherCode = voucherInput.trim();
+  const canApply = voucherCode !== '' && !validating && selectedFee !== null;
+
+  const handleApplyVoucher = async () => {
+    if (!canApply || !province || !ward) return;
+    setVoucherError(null);
+    setValidating(true);
+    try {
+      const res = await sportApi.validateVoucher({
+        items: cartItems.map(i => ({ sku_code: i.skuCode!, quantity: i.quantity })),
+        receiver_province_code: province.code,
+        receiver_ward_code: ward.code,
+        code: voucherCode,
+        delivery_option: deliveryOption,
+        ...(phoneValid ? { customer_phone: phoneNormalized } : {}),
+      });
+      if (res.valid) setAppliedCode(voucherCode);
+      else setVoucherError(res.message);
+    } catch (err: any) {
+      setVoucherError(err.message);
+    } finally {
+      setValidating(false);
+    }
+  };
 
   // Chặn NGAY từ bước 1 -- có món SKU không hợp lệ thì không cho mở bước
   // thanh toán/OTP, thay vì để lọt tới sau sendOtp rồi
@@ -529,6 +559,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
 
     // Đơn đã tạo trên OMS -> xoá giỏ NGAY, chống đặt trùng (kể cả khi bước thanh toán lỗi).
     onClearCart();
+    setAppliedCode(null);
     setStep(3);
     if (paymentMethod === 'sepay') await openSepay(placed, 'step3');
   };
@@ -886,8 +917,35 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                     })}
                   </div>
                 )}
-                {shippingDiscount > 0 && quoteVoucher?.name && (
-                  <p className="text-[11px] text-brand-sale font-semibold max-md:text-sm">Đã áp dụng: {quoteVoucher.name}</p>
+                {quoteOptions && !appliedCode && (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      maxLength={64}
+                      autoComplete="off"
+                      aria-label="Mã giảm phí vận chuyển"
+                      placeholder="Mã giảm phí vận chuyển"
+                      value={voucherInput}
+                      onChange={e => setVoucherInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key !== 'Enter') return;
+                        e.preventDefault(); // Enter ở ô mã không được gửi form đặt hàng
+                        void handleApplyVoucher();
+                      }}
+                      className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 focus:outline-hidden focus:border-brand-primary focus:bg-white transition max-md:text-base max-md:min-h-11"
+                    />
+                    <button type="button" disabled={!canApply} onClick={() => void handleApplyVoucher()} className="shrink-0 border border-brand-primary text-brand-primary font-bold rounded-lg px-3 py-2 text-sm transition disabled:opacity-50 disabled:cursor-not-allowed max-md:text-base max-md:min-h-11">Áp dụng</button>
+                  </div>
+                )}
+                {appliedCode && (
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="min-w-0 break-all font-bold text-sm text-gray-900 max-md:text-base">{appliedCode}</span>
+                    <button type="button" onClick={() => { setAppliedCode(null); setVoucherError(null); }} className="shrink-0 border border-brand-primary text-brand-primary font-bold rounded-lg px-3 py-2 text-sm transition disabled:opacity-50 disabled:cursor-not-allowed max-md:text-base max-md:min-h-11">Xoá</button>
+                  </div>
+                )}
+                {voucherError && <p role="alert" className="text-[11px] text-red-600 font-semibold max-md:text-sm">{voucherError}</p>}
+                {shippingDiscount > 0 && selectedOption?.voucher_name && (
+                  <p className="text-[11px] text-brand-sale font-semibold max-md:text-sm">Đã áp dụng: {selectedOption.voucher_name}</p>
                 )}
                 {voucherMessage && <p className="text-[11px] text-amber-700 max-md:text-sm">{voucherMessage}</p>}
                 {quoteVoucher?.valid === false && quoteVoucher.message && quoteVoucher.message !== voucherMessage && (
