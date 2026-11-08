@@ -10,7 +10,7 @@ import CartModal, { CartItem } from '../components/CartModal';
 import { Product } from '../types';
 import { PROVINCE_BODY, WARD_BODY, pickAdminUnits } from './fixtures/adminUnits';
 import {
-  QUOTE_V_Q1, QUOTE_V_Q3, VALIDATE_V1,
+  QUOTE_V_Q1, QUOTE_V_Q3, VALIDATE_V1, VALIDATE_V2,
   ERR_VALIDATE_V9, ERR_VALIDATE_V10, ERR_VALIDATE_V11, ERR_GATEWAY_401, ERR_RATE_LIMITED_429,
 } from './fixtures/shippingQuote';
 
@@ -123,5 +123,17 @@ describe('STOR-172 validate-voucher failure on Áp dụng', () => {
     await screen.findByRole('button', { name: 'Xoá' });
     expect(await screen.findByText(/Đã áp dụng:/)).toBeInTheDocument();
     expect(quoteCalls().at(-1)!.body.voucher_code).toBe('HOAQUOC30K');
+  });
+
+  it("A valid:false 200 reply on 'Áp dụng' shows the message and applies no code", async () => {
+    validate = { status: 200, body: VALIDATE_V2 };
+    await ready();
+    fireEvent.click(applyBtn());
+    expect(await screen.findByRole('alert')).toHaveTextContent(VALIDATE_V2.message);
+    expect(validateCalls()).toHaveLength(1);
+    expect(screen.queryByRole('button', { name: 'Xoá' })).toBeNull();
+    expect(screen.queryByText('HOAQUOC30K')).toBeNull();
+    expect(applyBtn().disabled).toBe(false);
+    expect(orderBtn().disabled).toBe(false);
   });
 });
