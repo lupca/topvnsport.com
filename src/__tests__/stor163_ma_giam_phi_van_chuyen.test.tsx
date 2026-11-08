@@ -581,4 +581,17 @@ describe('STOR-164 order button while re-validating or applying', () => {
     expect(orderBtn().disabled).toBe(true);
     await flushValidate(release);
   });
+
+  it('A submit during re-validation with a fresh phone does not call send-otp', async () => {
+    await applied();
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: Nguyễn Văn A'), { target: { value: 'Nguyễn Văn A' } });
+    typePhone('0987654329');
+    fireEvent.change(screen.getByPlaceholderText('Ví dụ: Số 12 Chùa Hà'), { target: { value: '12 Phố Huế' } });
+    const release = holdValidate();
+    switchTo('Giao hàng chuẩn');
+    await waitFor(() => expect(validateCalls()).toHaveLength(2));
+    submitForm();
+    await flushValidate(release);
+    expect(otpCalls()).toHaveLength(0);
+  });
 });
