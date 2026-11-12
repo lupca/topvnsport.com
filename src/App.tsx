@@ -163,7 +163,7 @@ export default function App() {
         </div>
       )}
 
-      <main className="flex-1">
+      <main className="flex-1 min-h-svh">
         <ScrollToTop />
         <Suspense fallback={<PageLoader />}>
           <Routes>
