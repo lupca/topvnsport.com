@@ -17,7 +17,7 @@ describe('catalog cache (stale-while-revalidate)', () => {
     saveCatalog({ a: 1 }, 1000);
     expect(loadCatalog(1000 + 5)).toEqual({ a: 1 });
     expect(loadCatalog(1000 + CATALOG_CACHE_TTL_MS)).toBeNull();
-    localStorage.setItem('tvs.catalog.v1', '{broken');
+    localStorage.setItem('tvs.catalog.v2', '{broken');
     expect(loadCatalog()).toBeNull();
   });
 

@@ -2,7 +2,7 @@ import type { Product } from '../../types';
 
 // Stale-while-revalidate: the last good catalog in localStorage paints a return visit at once;
 // fetchAppData then refreshes it. Storage may be missing/full/blocked: every access is try/catch.
-const KEY = 'tvs.catalog.v1';
+const KEY = 'tvs.catalog.v2';
 export const CATALOG_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 declare global {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MapPin, Phone, Clock, Calendar } from 'lucide-react';
 import { Branch, Product } from '../types';
 
@@ -14,16 +14,10 @@ interface StoreLocatorProps {
 
 export default function StoreLocator({ branches, products, initialBranchId, onClose }: StoreLocatorProps) {
   const [selectedCity, setSelectedCity] = useState<'Tất cả' | 'Hà Nội' | 'TP. Hồ Chí Minh' | 'Đà Nẵng' | 'Hải Dương'>('Tất cả');
-  const [activeBranch, setActiveBranch] = useState<Branch>(
-    branches.find(b => b.id === initialBranchId) || branches[0]
-  );
-
-  // Synchronize state if branches or initialBranchId changes asynchronously
-  useEffect(() => {
-    if (branches.length > 0) {
-      setActiveBranch(prev => prev || branches.find(b => b.id === initialBranchId) || branches[0]);
-    }
-  }, [branches, initialBranchId]);
+  const [activeBranchId, setActiveBranchId] = useState<string | undefined>(initialBranchId);
+  // Đọc lại từ `branches` mỗi lần render: dữ liệu mới về (sau bản đệm) thay luôn chi nhánh đang chọn.
+  const activeBranch = branches.find(b => b.id === activeBranchId) || branches[0];
+  const setActiveBranch = (b: Branch) => setActiveBranchId(b.id);
 
   const filteredBranches = selectedCity === 'Tất cả' 
     ? branches 
