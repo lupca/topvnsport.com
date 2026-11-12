@@ -51,4 +51,11 @@ describe('server-inlined product', () => {
     expect(m[1]).not.toContain('</script');
     expect(html).not.toContain('data-catalog-preload');
   });
+
+  it('product pages get the bundle CSS as a blocking link again (the SPA shell defers it)', () => {
+    const deferred = SHELL.replace('</head>', `<link rel="stylesheet" crossorigin href="/assets/a.css" media="print" onload="this.media='all'" data-deferred-css><noscript><link rel="stylesheet" href="/assets/a.css"></noscript></head>`);
+    const html = renderProductPage(deferred, product('590'), 'https://www.topvnsport.com/product/590');
+    expect(html).toContain('<link rel="stylesheet" crossorigin href="/assets/a.css">');
+    expect(html).not.toContain('data-deferred-css');
+  });
 });

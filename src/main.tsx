@@ -12,7 +12,17 @@ import { captureAttribution } from './lib/attribution.ts';
 initTracking();
 captureAttribution();
 
-createRoot(document.getElementById('root')!).render(
+// index.html loads the bundle CSS without blocking (see vite.config.ts): render only once it is applied, never unstyled.
+function cssReady(): Promise<void> {
+  const link = document.querySelector<HTMLLinkElement>('link[data-deferred-css]');
+  if (!link || link.media !== 'print') return Promise.resolve();
+  return new Promise(resolve => {
+    link.addEventListener('load', () => resolve(), { once: true });
+    link.addEventListener('error', () => resolve(), { once: true });
+  });
+}
+
+void cssReady().then(() => createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
@@ -22,4 +32,4 @@ createRoot(document.getElementById('root')!).render(
       </BrowserRouter>
     </Provider>
   </StrictMode>,
-);
+));

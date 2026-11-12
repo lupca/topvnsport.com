@@ -80,6 +80,8 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
     .replace(/<title>([\s\S]*?)<\/title>/, (_m, shellTitle: string) =>
       `<title data-shell-title="${shellTitle.replace(/"/g, '&quot;')}">${name}</title>`)
     // The product page paints from window.__PRODUCT__ (no catalog wait), so the shell's catalog preloads are dropped.
+    // Server-rendered text must not show unstyled: the bundle CSS blocks again here (the SPA shell defers it).
+    .replace(/(<link rel="stylesheet"[^>]*?) media="print" onload="[^"]*" data-deferred-css/, '$1')
     .replace(/[ \t]*<link\b[^>]*\bdata-catalog-preload\b[^>]*>\s*/g, '')
     .replace('</head>', () => `  <script type="application/ld+json">${jsonLd}</script>\n    ${headTags}\n  </head>`)
     .replace('<div id="root"></div>', () => `<div id="root">${body}</div>\n    <script>window.__PRODUCT__=${inlineJson(product)}</script>`);

@@ -3,9 +3,23 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+// The bundle CSS blocked the first paint (~0.4 s on throttled mobile): load it without blocking so the
+// inline #boot block paints at TTFB. main.tsx holds the first React render until the sheet is applied.
+// api/product.ts turns it back into a blocking link on product pages (server-rendered text must be styled).
+const deferBundleCss = () => ({
+  name: 'defer-bundle-css',
+  transformIndexHtml: {
+    order: 'post' as const,
+    handler: (html: string) => html.replace(
+      /<link rel="stylesheet" crossorigin href="([^"]+\.css)">/,
+      (_m, href) => `<link rel="stylesheet" crossorigin href="${href}" media="print" onload="this.media='all'" data-deferred-css><noscript><link rel="stylesheet" href="${href}"></noscript>`
+    )
+  }
+});
+
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), deferBundleCss()],
     build: {
       chunkSizeWarningLimit: 500,
       rollupOptions: {

@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" />
     <style>
       /* Static first paint before any JS: grey blocks sized like the product grid; hidden once React fills #root. */
+      /* match Tailwind preflight so applying the deferred bundle CSS moves nothing */
+      body{margin:0}#boot,#boot *{box-sizing:border-box}
       #boot{background:#f9fafb;min-height:100svh;padding:72px 16px 0}
       #boot p{margin:0 0 16px;text-align:center;font:900 20px/1 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#111827}
       #boot div{border-radius:12px;background:#e5e7eb}
