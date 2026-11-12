@@ -1,15 +1,47 @@
 {
-  "regions": ["hkg1"],
+  "regions": [
+    "hkg1"
+  ],
   "functions": {
-    "api/product.ts": { "includeFiles": "dist/index.html" }
+    "api/product.ts": {
+      "includeFiles": "dist/index.html"
+    }
   },
+  "redirects": [
+    {
+      "source": "/product/hoa-toc-vot-cau-long-yonex-astrox-88d-tour-2024-e-nhom-chinh-hang-tang-tui-quan-can-an-cuoc",
+      "destination": "/product/590",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/api/pmi/:path*", "destination": "/api/pmi/[...path]?path=:path*" },
-    { "source": "/api/wms/:path*", "destination": "/api/wms/[...path]?path=:path*" },
-    { "source": "/api/oms/:path*", "destination": "/api/oms/[...path]?path=:path*" },
-    { "source": "/robots.txt", "destination": "/api/robots" },
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    { "source": "/product/:slug", "destination": "/api/product?slug=:slug" },
-    { "source": "/((?!api/|robots\\.txt(?:/|$)|sitemap\\.xml(?:/|$)).*)", "destination": "/index.html" }
+    {
+      "source": "/api/pmi/:path*",
+      "destination": "/api/pmi/[...path]?path=:path*"
+    },
+    {
+      "source": "/api/wms/:path*",
+      "destination": "/api/wms/[...path]?path=:path*"
+    },
+    {
+      "source": "/api/oms/:path*",
+      "destination": "/api/oms/[...path]?path=:path*"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/api/robots"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/product/:slug",
+      "destination": "/api/product?slug=:slug"
+    },
+    {
+      "source": "/((?!api/|robots\\.txt(?:/|$)|sitemap\\.xml(?:/|$)).*)",
+      "destination": "/index.html"
+    }
   ]
 }
