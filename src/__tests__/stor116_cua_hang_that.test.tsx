@@ -36,7 +36,8 @@ describe('STOR-122 /stores một showroom thật', () => {
     expect(b.phone).toBe(PHONE);
     expect(b.city).toBe('Hà Nội');
     expect('schedule' in b).toBe(false);
-    expect(b.mapEmbedUrl).toBe(`https://maps.google.com/maps?q=${encodeURIComponent(ADDRESS)}&z=16&output=embed`);
+    // Google chưa nhận tên phường mới "Đông Ngạc" (ra nhầm Cầu Giấy) nên bản đồ tìm theo địa chỉ cũ của cùng ngõ.
+    expect(b.mapEmbedUrl).toBe(`https://maps.google.com/maps?q=${encodeURIComponent('141/3 Lê Văn Hiến, Đức Thắng, Bắc Từ Liêm, Hà Nội')}&z=16&output=embed`);
   });
 
   test('render: một thẻ, bản đồ đúng địa chỉ, không khung bản đồ giữ chỗ', async () => {
@@ -44,7 +45,7 @@ describe('STOR-122 /stores một showroom thật', () => {
     expect(container.querySelectorAll('h4')).toHaveLength(1);
     expect(container.querySelector('h4')!.textContent).toBe(NAME);
     expect(container.textContent).toContain(ADDRESS);
-    expect(container.querySelector('iframe')!.getAttribute('src')).toContain(encodeURIComponent(ADDRESS));
+    expect(container.querySelector('iframe')!.getAttribute('src')).toContain(encodeURIComponent('141/3 Lê Văn Hiến'));
     expect(container.textContent).not.toContain('Bản đồ cửa hàng đang được cập nhật');
   });
 
