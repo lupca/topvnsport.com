@@ -27,7 +27,7 @@ async function renderReal() {
 }
 
 describe('STOR-122 /stores một showroom thật', () => {
-  test('dữ liệu: đúng một chi nhánh, không lịch, không bản đồ', async () => {
+  test('dữ liệu: đúng một chi nhánh, không lịch, bản đồ theo đúng địa chỉ thật', async () => {
     const branches = await sportApi.getBranches();
     expect(branches).toHaveLength(1);
     const [b] = branches;
@@ -36,15 +36,15 @@ describe('STOR-122 /stores một showroom thật', () => {
     expect(b.phone).toBe(PHONE);
     expect(b.city).toBe('Hà Nội');
     expect('schedule' in b).toBe(false);
-    expect('mapEmbedUrl' in b).toBe(false);
+    expect(b.mapEmbedUrl).toBe(`https://maps.google.com/maps?q=${encodeURIComponent(ADDRESS)}&z=16&output=embed`);
   });
 
-  test('render: một thẻ, không iframe, không khung bản đồ giữ chỗ', async () => {
+  test('render: một thẻ, bản đồ đúng địa chỉ, không khung bản đồ giữ chỗ', async () => {
     const { container } = await renderReal();
     expect(container.querySelectorAll('h4')).toHaveLength(1);
     expect(container.querySelector('h4')!.textContent).toBe(NAME);
     expect(container.textContent).toContain(ADDRESS);
-    expect(container.querySelector('iframe')).toBeNull();
+    expect(container.querySelector('iframe')!.getAttribute('src')).toContain(encodeURIComponent(ADDRESS));
     expect(container.textContent).not.toContain('Bản đồ cửa hàng đang được cập nhật');
   });
 
