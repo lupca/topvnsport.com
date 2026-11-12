@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductDetailPage from '../../components/ProductDetailPage';
 import { addCartItemAndOpen, buildConfiguredCartItem, describeSkuSelection } from '../cart/cartSlice';
 import { StringOption } from '../../types';
-import { findProductBySlug } from '../../utils/productSlug';
+import { findProductBySlug, getProductPath } from '../../utils/productSlug';
 import { viewItem } from '../../lib/tracking.ts';
 import { getPdpPrice, initialTierValue } from '../../components/product-detail/helpers';
 import { fetchAppData } from '../appData/appDataSlice';
@@ -18,6 +18,7 @@ export default function ProductDetailRoute() {
   const stringOptions = useAppSelector(state => state.appData.stringOptions);
   const productsError = useAppSelector(state => state.appData.productsError);
   const product = findProductBySlug(products, slug);
+  const { search, hash } = useLocation();
 
   useEffect(() => {
     if (product) {
@@ -40,6 +41,11 @@ export default function ProductDetailRoute() {
         <Link to="/" className="inline-block text-sm font-bold text-brand-primary hover:underline">Về trang chủ</Link>
       </div>
     );
+  }
+
+  // Old name-based link opened in-app: move to the permanent id URL (the server does the same with a 301).
+  if (slug !== undefined && decodeURIComponent(slug).toLowerCase() !== product.id.toLowerCase()) {
+    return <Navigate replace to={`${getProductPath(product)}${search}${hash}`} />;
   }
 
   const handleAddToCartWithSpecs = (

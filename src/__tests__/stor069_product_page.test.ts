@@ -299,6 +299,8 @@ const row = (sku_code: string, qty: number) => ({
   sku_code, qty_available: qty, qty_on_hand: qty, qty_reserved: 0,
   stock_status: qty > 0 ? 'in_stock' : 'out_of_stock', low_stock_threshold: 5, threshold_source: 'default',
 });
+// Canonical URLs are ids; these name slugs are the legacy aliases of the mocked products.
+const ID_OF: Record<string, string> = { 'vot-yonex-astrox-99': '101', 'vot-yonex-astrox-99-2': '102', 'cuoc-bg65-titanium': '103', 'giay-lining': '104', 'vot-lining-none': '105', 'vot-khong-gia': '106' };
 const WMS_BODY = { stock: { S101: 5, S103: 0 }, items: [row('S101', 5), row('S103', 0)] };
 
 type StockOpt = { status?: number; body?: any; reject?: boolean; hang?: boolean };
@@ -325,6 +327,12 @@ function mockFetch(opts: { reject?: boolean; status?: number; body?: any; stock?
       return { status: 200, json: async () => [{ id: 1, code: 'vot', name: 'Vợt' }] } as any;
     }
     if (opts.status && opts.status !== 200) return { status: opts.status, json: async () => ({}) } as any;
+    const single = url.match(/\/public\/products\/(\d+)$/);
+    if (single) {
+      if (opts.body !== undefined) return { status: 200, json: async () => opts.body.items?.[0] ?? opts.body } as any;
+      const hit = [...PAGE1, ...PAGE2].find((p) => String(p.id) === single[1]);
+      return { status: hit ? 200 : 404, json: async () => hit ?? {} } as any;
+    }
     if (opts.body !== undefined) return { status: 200, json: async () => opts.body } as any;
     const page2 = url.includes('page=2');
     return { status: 200, json: async () => ({ items: page2 ? PAGE2 : PAGE1, total: 4, pages: 2 }) } as any;
@@ -333,7 +341,7 @@ function mockFetch(opts: { reject?: boolean; status?: number; body?: any; stock?
 
 describe('STOR-069 api/product handler', () => {
   const ORIGINAL_ENV = { ...process.env };
-  const get = (slug: string, headers: Record<string, string> = {}) => ({ method: 'GET', query: { slug }, headers });
+  const get = (slug: string, headers: Record<string, string> = {}) => ({ method: 'GET', query: { slug: ID_OF[slug] ?? slug }, headers });
 
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -365,7 +373,7 @@ describe('STOR-069 api/product handler', () => {
     expect(res.body.indexOf('application/ld+json')).toBeLessThan(res.body.indexOf('</head>'));
     const data = jsonLd(res.body);
     expect(data.sku).toBe('S101');
-    expect(data.offers).toEqual({ '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: 'https://www.topvnsport.com/product/vot-yonex-astrox-99', availability: 'https://schema.org/InStock' });
+    expect(data.offers).toEqual({ '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: 'https://www.topvnsport.com/product/101', availability: 'https://schema.org/InStock' });
   });
 
   it('serves a product from page 2 of the PIM list', async () => {
@@ -384,7 +392,7 @@ describe('STOR-069 api/product handler', () => {
       const res = makeRes();
       await productHandler(get(slug), res);
       const canonical = res.body.match(/<link rel="canonical" href="([^"]+)"/)[1];
-      expect(canonical).toBe(`https://www.topvnsport.com/product/${slug}`);
+      expect(canonical).toBe(`https://www.topvnsport.com/product/${ID_OF[slug]}`);
       expect(locs).toContain(canonical);
     }
   });
@@ -392,7 +400,7 @@ describe('STOR-069 api/product handler', () => {
   it('a spoofed host header does not change the canonical', async () => {
     const res = makeRes();
     await productHandler(get('cuoc-bg65-titanium', { host: 'evil.example', 'x-forwarded-host': 'evil.example' }), res);
-    expect(res.body).toContain('href="https://www.topvnsport.com/product/cuoc-bg65-titanium"');
+    expect(res.body).toContain('href="https://www.topvnsport.com/product/103"');
     expect(res.body).not.toContain('evil.example');
   });
 
@@ -450,9 +458,9 @@ describe('STOR-069 api/product handler', () => {
 
 describe('STOR-078 WMS stock, availability and cache headers', () => {
   const ORIGINAL_ENV = { ...process.env };
-  const get = (slug: string) => ({ method: 'GET', query: { slug }, headers: {} });
+  const get = (slug: string) => ({ method: 'GET', query: { slug: ID_OF[slug] ?? slug }, headers: {} });
   const SLUG = 'vot-yonex-astrox-99';
-  const OFFER = { '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: `https://www.topvnsport.com/product/${SLUG}` };
+  const OFFER = { '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: `https://www.topvnsport.com/product/${ID_OF[SLUG]}` };
   const KNOWN_HEADERS = { 'Cache-Control': 'public, max-age=0, s-maxage=300', 'Vercel-CDN-Cache-Control': 'max-age=60, stale-while-revalidate=300' };
   const stockCalls = () => (global.fetch as any).mock.calls.filter((c: any[]) => String(c[0]).includes('/public/stock'));
   const run = async (slug: string, opts: Parameters<typeof mockFetch>[0] = {}) => {
@@ -500,7 +508,7 @@ describe('STOR-078 WMS stock, availability and cache headers', () => {
 
   it('a SKU absent from a loaded stock map gives OutOfStock', async () => {
     const res = await run('vot-yonex-astrox-99-2'); // S102 has no WMS row
-    expect(jsonLd(res.body).offers).toEqual({ ...OFFER, url: 'https://www.topvnsport.com/product/vot-yonex-astrox-99-2', availability: 'https://schema.org/OutOfStock' });
+    expect(jsonLd(res.body).offers).toEqual({ ...OFFER, url: 'https://www.topvnsport.com/product/102', availability: 'https://schema.org/OutOfStock' });
   });
 
   it('the PIM variant stock never supplies availability (PIM stock 3, WMS qty 0 -> OutOfStock)', async () => {

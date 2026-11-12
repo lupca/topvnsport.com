@@ -40,9 +40,10 @@ describe('product slug utilities', () => {
     expect(findProductBySlug(products, '1002')?.id).toBe('1002');
   });
 
-  test('builds product detail path with slug', () => {
+  test('canonical product path is the id, so a rename never changes it', () => {
     const slugById = buildProductSlugById(products);
     expect(getProductSlug(products[0], slugById)).toBe('yonex-astrox-100zz-kurenai');
-    expect(getProductPath(products[0], slugById)).toBe('/product/yonex-astrox-100zz-kurenai');
+    expect(getProductPath(products[0])).toBe('/product/1001');
+    expect(getProductPath({ ...products[0], name: 'Renamed', slug: 'renamed' })).toBe('/product/1001');
   });
 });

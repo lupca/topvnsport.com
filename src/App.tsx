@@ -32,7 +32,7 @@ import CheckoutCallbackPage from './features/checkout/CheckoutCallbackPage';
 import { pageView } from './lib/tracking.ts';
 import { captureAttribution } from './lib/attribution.ts';
 import { SITE_ORIGIN } from './config/storefront';
-import { buildProductSlugById, findProductBySlug, getProductPath } from './utils/productSlug';
+import { findProductBySlug, getProductPath } from './utils/productSlug';
 import { productHeadValues, readShellHead, syncHead } from './utils/productHead';
 
 // Read once at load, before any route change rewrites the head.
@@ -82,7 +82,7 @@ export default function App() {
       product = undefined; // malformed %-escape in the slug
     }
     syncHead(document, product
-      ? productHeadValues(product, `${SITE_ORIGIN}${getProductPath(product, buildProductSlugById(products))}`)
+      ? productHeadValues(product, `${SITE_ORIGIN}${getProductPath(product)}`)
       : null, SHELL_HEAD);
   }, [location.pathname, products]);
 

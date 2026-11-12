@@ -35,18 +35,19 @@ export function getProductSlug(product: Product, slugById?: Record<string, strin
   return (product.slug || '').trim().toLowerCase() || slugifyProductName(product.name);
 }
 
-export function getProductPath(product: Product, slugById?: Record<string, string>): string {
-  return `/product/${encodeURIComponent(getProductSlug(product, slugById))}`;
+// Canonical URL = the PIM product id, which never changes on rename. Name slugs (getProductSlug) are legacy aliases that 301 here.
+export function getProductPath(product: Product): string {
+  return `/product/${encodeURIComponent(product.id)}`;
 }
 
 export function findProductBySlug(products: Product[], slugOrId?: string): Product | undefined {
   if (!slugOrId) return undefined;
 
   const decoded = decodeURIComponent(slugOrId).toLowerCase();
-  const slugById = buildProductSlugById(products);
-  const productBySlug = products.find(product => slugById[product.id] === decoded);
-  if (productBySlug) return productBySlug;
+  const byId = products.find(product => product.id.toLowerCase() === decoded);
+  if (byId) return byId;
 
-  return products.find(product => product.id.toLowerCase() === decoded)
+  const slugById = buildProductSlugById(products);
+  return products.find(product => slugById[product.id] === decoded)
     ?? products.find(product => product.vomaSlug === decoded);
 }

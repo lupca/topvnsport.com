@@ -25,6 +25,7 @@ vi.mock('../services/sportApi', () => ({ sportApi: api }));
 vi.mock('@topvnsport/ui-kit', () => ({ popupService: { alert: vi.fn() } }));
 
 import App from '../App';
+import { buildProductSlugById } from '../utils/productSlug';
 
 // Verbatim live PIM /public/products items 638 (images), 632 (no image), 630 + 626 (same name -> '-2' twin).
 const ITEMS = PIM_ITEMS as any[];
@@ -48,7 +49,11 @@ beforeEach(() => {
   delete process.env.WMS_API_URL;
   global.fetch = vi.fn().mockImplementation(async (url: string) => ({
     status: 200,
-    json: async () => (url.includes('/public/voma-categories') ? [] : { items: ITEMS, total: ITEMS.length, pages: 1 }),
+    json: async () => {
+      const one = url.match(/\/public\/products\/(\d+)$/);
+      if (one) return ITEMS.find((p) => String(p.id) === one[1]);
+      return url.includes('/public/voma-categories') ? [] : { items: ITEMS, total: ITEMS.length, pages: 1 };
+    },
   })) as any;
   api.getProducts.mockResolvedValue(ITEMS.map((p) => mapPmiProduct(p, [])));
 });
@@ -125,15 +130,20 @@ describe('STOR-085 api/product with the VOMA slug', () => {
 
   const canonicalOf = (html: string) => html.match(/<link rel="canonical" href="([^"]*)"/)?.[1];
 
-  it('VOMA slug and id return 200 with the storefront slug canonical', async () => {
+  it('id returns 200 with the id canonical; VOMA slug and name slug 301 to it', async () => {
     const locs = await sitemapProductPaths();
+    const legacySlugs = buildProductSlugById(ITEMS.map((p) => mapPmiProduct(p, [])!)); // what the old name URLs were, '-2' twin included
     for (const [i, item] of ITEMS.entries()) {
-      for (const slug of [item.slug, String(item.id)]) {
+      const ok = makeRes();
+      await productHandler({ method: 'GET', query: { slug: String(item.id) }, headers: {} }, ok);
+      expect(ok.statusCode).toBe(200);
+      expect(ok.body).toContain(`<h1>`);
+      expect(canonicalOf(ok.body)).toBe(`${SITE_ORIGIN}${locs[i]}`);
+      for (const slug of [item.slug, legacySlugs[String(item.id)]]) {
         const res = makeRes();
-        await productHandler({ method: 'GET', query: { slug }, headers: {} }, res);
-        expect(res.statusCode, slug).toBe(200);
-        expect(res.body).toContain(`<h1>`);
-        expect(canonicalOf(res.body), slug).toBe(`${SITE_ORIGIN}${locs[i]}`);
+        await productHandler({ method: 'GET', query: { slug }, url: `/api/product?slug=${slug}&gclid=x`, headers: {} }, res);
+        expect(res.statusCode, slug).toBe(301);
+        expect(res.headers.Location, slug).toBe(`${locs[i]}?gclid=x`);
       }
     }
   });

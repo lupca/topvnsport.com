@@ -3,7 +3,7 @@ import path from 'node:path';
 import { CDN_CACHE_CONTROL, resolveCatalogGrantToken } from './_catalogProxy.js';
 import { SITE_ORIGIN } from '../src/config/storefront.js';
 import { productHeadValues, PRODUCT_HEAD_MARK, PRODUCT_HEAD_TAGS, PRODUCT_SHELL_VALUE } from '../src/utils/productHead.js';
-import { buildProductSlugById, getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
+import { getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
 import { mapPmiProduct } from '../src/services/sport-api/productMappers.js';
 import { applyWmsStock, parseWmsStock } from '../src/services/sport-api/wmsStock.js';
 import { aggregateStock, getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
@@ -104,6 +104,24 @@ async function fetchAllProducts(baseUrl: string, token: string): Promise<Product
   return items.map((p) => mapPmiProduct(p, [])).filter((p): p is Product => p !== null);
 }
 
+// Original query string minus the rewrite's own `slug` param (ad params ride along on the redirect).
+export function queryOf(req: any): string {
+  const url: string = req?.url ?? '';
+  const i = url.indexOf('?');
+  const params = new URLSearchParams(i === -1 ? '' : url.slice(i + 1));
+  params.delete('slug');
+  return params.size > 0 ? `?${params}` : '';
+}
+
+async function fetchOneProduct(baseUrl: string, token: string, id: string): Promise<Product | undefined | 'error'> {
+  const resp = await fetch(`${baseUrl}/public/products/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+  if (resp.status === 404) return undefined;
+  if (resp.status !== 200) return 'error';
+  const data = await resp.json();
+  if (!data || typeof data !== 'object' || data.id === undefined) return 'error'; // malformed is a failure, never a 404
+  return mapPmiProduct(data, []) ?? undefined;
+}
+
 // WMS stock map, or null on any failure. Malformed (neither stock object nor items array) is a failure, never zero stock.
 async function fetchWmsStockMap(token: string): Promise<Record<string, number> | null> {
   const wmsUrl = process.env.WMS_API_URL;
@@ -137,24 +155,36 @@ export default async function handler(req: any, res: any) {
 
   // WMS starts alongside the PIM pages; fetchWmsStockMap never throws.
   const stockPromise = fetchWmsStockMap(token);
-  let products: Product[] | null;
-  try {
-    products = await fetchAllProducts(baseUrl, token);
-  } catch (_error) {
-    products = null;
-  }
-  if (!products) return sendHtml(res, 200, 'no-store', shell);
-
   const slug = typeof req?.query?.slug === 'string' ? req.query.slug : undefined;
   let product: Product | undefined;
   try {
-    product = findProductBySlug(products, slug);
+    if (slug && /^\d+$/.test(slug)) {
+      // Canonical id URL (the hot path, every ad click): one product, not the whole catalog.
+      const one = await fetchOneProduct(baseUrl, token, slug);
+      if (one === 'error') return sendHtml(res, 200, 'no-store', shell);
+      product = one;
+    } else {
+      // Legacy name/PIM-slug URL: resolve against the catalog, then 301 to the id URL.
+      const products = await fetchAllProducts(baseUrl, token);
+      if (!products) return sendHtml(res, 200, 'no-store', shell);
+      product = findProductBySlug(products, slug);
+    }
   } catch (_error) {
-    product = undefined; // malformed %-escape in the slug
+    // malformed %-escape in the slug, or PIM unreachable: a slug that does not decode is 404, a fetch failure serves the shell
+    if (_error instanceof URIError) product = undefined;
+    else return sendHtml(res, 200, 'no-store', shell);
   }
   if (!product) return sendHtml(res, 404, 'no-store', shell);
 
-  const canonicalUrl = `${SITE_ORIGIN}${getProductPath(product, buildProductSlugById(products))}`;
+  const canonicalPath = getProductPath(product);
+  if (canonicalPath !== `/product/${slug}`) {
+    res.setHeader('Location', `${canonicalPath}${queryOf(req)}`);
+    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=3600');
+    res.status(301).send('');
+    return;
+  }
+
+  const canonicalUrl = `${SITE_ORIGIN}${canonicalPath}`;
   // A null map gives stock=undefined (never the PIM variant.stock) and a short/no-store response.
   const stockMap = await stockPromise;
   const [withStock] = applyWmsStock([product], stockMap);

@@ -1,5 +1,5 @@
 import { resolveCatalogGrantToken } from './_catalogProxy.js';
-import { slugifyProductName, buildProductSlugById, getProductPath } from '../src/utils/productSlug.js';
+import { slugifyProductName, getProductPath } from '../src/utils/productSlug.js';
 import { getCategoriesSortedByCount } from '../src/utils/categories.js';
 import type { Category, Product } from '../src/types.js';
 
@@ -108,12 +108,11 @@ export default async function handler(req: any, res: any) {
     }
 
     const keptCategories = getCategoriesSortedByCount(categories, products);
-    const slugById = buildProductSlugById(products);
 
     const urls: string[] = [
       `${SITE_ORIGIN}/`,
       ...keptCategories.map((c) => `${SITE_ORIGIN}/catalog?category=${encodeURIComponent(c.code)}`),
-      ...products.map((p) => `${SITE_ORIGIN}${getProductPath(p, slugById)}`),
+      ...products.map((p) => `${SITE_ORIGIN}${getProductPath(p)}`),
     ];
 
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');

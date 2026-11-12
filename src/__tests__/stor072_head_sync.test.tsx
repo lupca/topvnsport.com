@@ -49,7 +49,7 @@ const leftNothingOf = (p: any) => {
   for (const v of [h.description, h.ogDescription]) expect(v).not.toBe(p.description);
   expect(h.ogImage).not.toBe(p.gallery[0]);
   expect([h.title, h.ogTitle]).not.toContain(p.name);
-  expect([h.canonical, h.ogUrl].some(u => u?.includes('vot-yonex-astrox-99'))).toBe(false);
+  expect([h.canonical, h.ogUrl].some(u => u?.includes('/product/a1'))).toBe(false);
 };
 
 let navigate: (to: string) => void;
@@ -57,7 +57,7 @@ let navigate: (to: string) => void;
 describe('STOR-072 head sync on client-side navigation', () => {
   beforeAll(async () => {
     // Land on /product/A exactly as api/product.ts serves it.
-    const served = renderProductPage(INDEX_HTML, A, `${SITE_ORIGIN}/product/vot-yonex-astrox-99`);
+    const served = renderProductPage(INDEX_HTML, A, `${SITE_ORIGIN}/product/a1`);
     const doc = new DOMParser().parseFromString(served, 'text/html');
     document.head.innerHTML = doc.head.innerHTML;
     expect(document.title).toBe(A.name);
@@ -70,7 +70,7 @@ describe('STOR-072 head sync on client-side navigation', () => {
     const { Provider } = await import('react-redux');
     const { MemoryRouter, useNavigate } = await import('react-router-dom');
     const Nav = () => { navigate = useNavigate(); return null; };
-    render(<Provider store={store}><MemoryRouter initialEntries={['/product/vot-yonex-astrox-99']}><Nav /><App /></MemoryRouter></Provider>);
+    render(<Provider store={store}><MemoryRouter initialEntries={['/product/a1']}><Nav /><App /></MemoryRouter></Provider>);
     await waitFor(() => expect(store.getState().appData.products).toHaveLength(3));
   });
   afterAll(cleanup);
@@ -82,10 +82,10 @@ describe('STOR-072 head sync on client-side navigation', () => {
   it('product A landing keeps A head', async () => {
     await waitFor(() => expect(head()).toEqual({
       title: A.name,
-      canonical: `${SITE_ORIGIN}/product/vot-yonex-astrox-99`,
+      canonical: `${SITE_ORIGIN}/product/a1`,
       description: 'Mô tả A',
       ogTitle: A.name,
-      ogUrl: `${SITE_ORIGIN}/product/vot-yonex-astrox-99`,
+      ogUrl: `${SITE_ORIGIN}/product/a1`,
       ogDescription: 'Mô tả A',
       ogImage: 'https://cdn.voma.vn/a.jpg',
     }));
@@ -98,13 +98,13 @@ describe('STOR-072 head sync on client-side navigation', () => {
   });
 
   it('home -> B (no description, no absolute image) sets B title/canonical/og, omits the rest', async () => {
-    await go('/product/giay-lining');
+    await go('/product/b2');
     await headSoon({
       title: 'Giày Lining',
-      canonical: `${SITE_ORIGIN}/product/giay-lining`,
+      canonical: `${SITE_ORIGIN}/product/b2`,
       description: null,
       ogTitle: 'Giày Lining',
-      ogUrl: `${SITE_ORIGIN}/product/giay-lining`,
+      ogUrl: `${SITE_ORIGIN}/product/b2`,
       ogDescription: null,
       ogImage: null,
     });
@@ -113,26 +113,26 @@ describe('STOR-072 head sync on client-side navigation', () => {
   });
 
   it('B -> C updates every existing tag in place to C values', async () => {
-    await go('/product/cuoc-bg65');
+    await go('/product/c3');
     await headSoon({
       title: 'Cước BG65',
-      canonical: `${SITE_ORIGIN}/product/cuoc-bg65`,
+      canonical: `${SITE_ORIGIN}/product/c3`,
       description: 'Mô tả C',
       ogTitle: 'Cước BG65',
-      ogUrl: `${SITE_ORIGIN}/product/cuoc-bg65`,
+      ogUrl: `${SITE_ORIGIN}/product/c3`,
       ogDescription: 'Mô tả C',
       ogImage: 'https://cdn.voma.vn/c.jpg',
     });
   });
 
   it('C -> A (product to product) overwrites C values, no duplicates', async () => {
-    await go('/product/vot-yonex-astrox-99');
+    await go('/product/a1');
     await headSoon({
       title: A.name,
-      canonical: `${SITE_ORIGIN}/product/vot-yonex-astrox-99`,
+      canonical: `${SITE_ORIGIN}/product/a1`,
       description: 'Mô tả A',
       ogTitle: A.name,
-      ogUrl: `${SITE_ORIGIN}/product/vot-yonex-astrox-99`,
+      ogUrl: `${SITE_ORIGIN}/product/a1`,
       ogDescription: 'Mô tả A',
       ogImage: 'https://cdn.voma.vn/a.jpg',
     });
@@ -141,7 +141,7 @@ describe('STOR-072 head sync on client-side navigation', () => {
 
   it.each(['/catalog', '/stores', '/checkout/success', '/checkout/error', '/checkout/cancel', '/khong-co', '/product/khong-ton-tai'])(
     '%s shows the shell head', async (path) => {
-      await go('/product/cuoc-bg65');
+      await go('/product/c3');
       await headSoon({ title: 'Cước BG65' });
       await go(path);
       await headSoon(SHELL_HEAD);
@@ -169,8 +169,8 @@ describe('STOR-072 shell-owned head tags (finding 3c02e75f)', () => {
     title: SHELL_TITLE, canonical: 'https://shell/', description: 'shell desc', ogTitle: 'shell og', ogUrl: null, ogDescription: null, ogImage: 'https://shell/og.jpg',
   };
   const COUNT_SEL = 'link[rel="canonical"], meta[name="description"], meta[property^="og:"]';
-  const urlA = `${SITE_ORIGIN}/product/vot-yonex-astrox-99`;
-  const urlB = `${SITE_ORIGIN}/product/giay-lining`;
+  const urlA = `${SITE_ORIGIN}/product/a1`;
+  const urlB = `${SITE_ORIGIN}/product/b2`;
 
   it('landing on A -> shell restores the shell values, one copy each; -> B falls back to shell only where B lacks data', () => {
     const html = renderProductPage(SHELL, A, urlA);

@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import robotsHandler from '../../api/robots';
 import sitemapHandler, { SITE_ORIGIN, escapeXml } from '../../api/sitemap';
-import { buildProductSlugById, getProductPath } from '../utils/productSlug';
+import { getProductPath } from '../utils/productSlug';
 import { getCategoriesSortedByCount } from '../utils/categories';
 import type { Category, Product } from '../types';
 
@@ -329,9 +329,8 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
         categoryCode: categoryById.get(p.voma_category_id)?.code,
       } as Product));
 
-      const slugById = buildProductSlugById(mappedProducts);
       for (const p of mappedProducts) {
-        const expectedLoc = `${SITE_ORIGIN}${getProductPath(p, slugById)}`;
+        const expectedLoc = `${SITE_ORIGIN}${getProductPath(p)}`;
         expect(locs).toContain(expectedLoc);
       }
     });
@@ -346,7 +345,7 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
       const locs = Array.from(doc.querySelectorAll('loc')).map(el => el.textContent);
 
       // id 103 is on page 2
-      expect(locs.some(l => l?.includes('vot-lining-axforce-90'))).toBe(true);
+      expect(locs.some(l => l?.includes('/product/103'))).toBe(true);
     });
 
     it('a product missing from the second mock generation is not in the second sitemap', async () => {
@@ -354,15 +353,15 @@ describe('STOR-062: robots.txt and sitemap.xml SEO', () => {
       setupMockFetch();
       const res1 = makeRes();
       await sitemapHandler(req(), res1);
-      expect(res1.body).toContain('vot-lining-axforce-90');
+      expect(res1.body).toContain('/product/103');
 
       // 2nd generation with singlePageOnly (only product 101)
       setupMockFetch({ singlePageOnly: true });
       const res2 = makeRes();
       await sitemapHandler(req(), res2);
-      expect(res2.body).toContain('vot-yonex-astrox-88d-pro');
-      expect(res2.body).not.toContain('vot-lining-axforce-90');
-      expect(res2.body).not.toContain('giay-yonex-65z3');
+      expect(res2.body).toContain('/product/101');
+      expect(res2.body).not.toContain('/product/103');
+      expect(res2.body).not.toContain('/product/102');
     });
 
     it('a category code containing & \' < still yields parseable XML and loc text equals expected percent-encoded URL', async () => {
