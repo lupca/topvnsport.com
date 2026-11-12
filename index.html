@@ -7,6 +7,10 @@
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <!-- Start the catalog reads at HTML parse time instead of after the bundle runs. Same URLs as src/services/sport-api (PMI_PROXY_URL/WMS_PROXY_URL). api/product.ts strips these on product pages. -->
+    <link rel="preload" as="fetch" crossorigin data-catalog-preload href="/api/pmi/public/voma-categories" />
+    <link rel="preload" as="fetch" crossorigin data-catalog-preload href="/api/wms/public/stock" />
+    <link rel="preload" as="fetch" crossorigin data-catalog-preload href="/api/pmi/public/products?page=1&amp;limit=100" />
     <title>TopVNSport - Nền Tảng Thương Mại Điện Tử Cầu Lông Số 1 Việt Nam</title>
   </head>
   <body>

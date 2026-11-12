@@ -145,7 +145,7 @@ describe('STOR-141 banner: Thử lại tồn kho', () => {
 
     getStock.mockResolvedValueOnce({ 'SKU-1': 2 });
     fireEvent.click(retry);
-    expect(document.getElementById('api-loading-state')).toBeNull();
+    expect(document.getElementById('page-skeleton')).toBeNull();
     await waitFor(() => expect(store.getState().appData.stockError).toBe(false));
     expect(screen.queryByText(/Không tải được tồn kho\./)).toBeNull();
     expect(getProducts).toHaveBeenCalledTimes(1);

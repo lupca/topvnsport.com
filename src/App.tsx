@@ -4,7 +4,6 @@
  */
 
 import { lazy, MouseEvent, Suspense, useEffect, useState } from 'react';
-import { RefreshCw } from 'lucide-react';
 import { Link, matchPath, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from './app/hooks';
@@ -12,6 +11,7 @@ import FloatingContact from './components/FloatingContact';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import QuickViewModal from './components/QuickViewModal';
+import PageSkeleton from './components/PageSkeleton';
 import ScrollToTop from './components/ScrollToTop';
 import StoreLocator from './components/StoreLocator';
 import { fetchAppData, refetchStock } from './features/appData/appDataSlice';
@@ -27,6 +27,7 @@ import {
   setQuickViewProduct
 } from './features/cart/cartSlice';
 import HomePage from './features/home/HomePage';
+import ProductDetailRoute from './features/product/ProductDetailRoute';
 import MobileBottomNav from './features/navigation/MobileBottomNav';
 import CheckoutCallbackPage from './features/checkout/CheckoutCallbackPage';
 import { pageView } from './lib/tracking.ts';
@@ -39,15 +40,6 @@ import { productHeadValues, readShellHead, syncHead } from './utils/productHead'
 const SHELL_HEAD = readShellHead(document);
 
 const CartModal = lazy(() => import('./components/CartModal'));
-const ProductDetailRoute = lazy(() => import('./features/product/ProductDetailRoute'));
-
-function PageLoader() {
-  return (
-    <div className="min-h-[16rem] flex items-center justify-center" role="status" aria-label="Loading">
-      <RefreshCw className="w-8 h-8 text-brand-primary animate-spin" />
-    </div>
-  );
-}
 
 export default function App() {
   const navigate = useNavigate();
@@ -120,25 +112,6 @@ export default function App() {
     dispatch(addCartItemAndOpen(item));
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center font-sans antialiased" id="api-loading-state">
-        <div className="text-center space-y-4 max-w-sm px-6">
-          <div className="relative inline-flex">
-            <span className="absolute inline-flex h-12 w-12 rounded-full bg-brand-primary opacity-20 animate-ping"></span>
-            <div className="relative bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex items-center justify-center duration-1000">
-              <RefreshCw className="w-8 h-8 text-brand-primary animate-spin text-center" />
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <h3 className="font-display font-black text-gray-900 text-lg uppercase tracking-wider">TopVNSport</h3>
-            <p className="text-xs max-md:text-sm text-gray-500 font-medium">Đang tải sản phẩm...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`min-h-screen bg-gray-50 flex flex-col font-sans selection:bg-brand-primary selection:text-white antialiased ${isPdp ? '' : 'pb-16'} md:pb-0`}>
       <Header
@@ -165,26 +138,24 @@ export default function App() {
 
       <main className="flex-1 min-h-svh">
         <ScrollToTop />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/catalog" element={<CatalogPage />} />
-            <Route path="/product/:slug" element={<ProductDetailRoute />} />
-            <Route path="/stores" element={<StoreLocator branches={branches} products={products} />} />
-            <Route path="/checkout/success" element={<CheckoutCallbackPage status="success" />} />
-            <Route path="/checkout/error" element={<CheckoutCallbackPage status="error" />} />
-            <Route path="/checkout/cancel" element={<CheckoutCallbackPage status="cancel" />} />
-            <Route
-              path="*"
-              element={
-                <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4" id="not-found">
-                  <h1 className="font-display font-black text-2xl text-gray-900">Không tìm thấy trang</h1>
-                  <Link to="/" className="inline-block text-sm font-bold text-brand-primary hover:underline max-md:inline-flex max-md:items-center max-md:min-h-[44px]">Về trang chủ</Link>
-                </div>
-              }
-            />
-          </Routes>
-        </Suspense>
+        <Routes>
+          <Route path="/" element={isLoading ? <PageSkeleton /> : <HomePage />} />
+          <Route path="/catalog" element={isLoading ? <PageSkeleton /> : <CatalogPage />} />
+          <Route path="/product/:slug" element={<ProductDetailRoute />} />
+          <Route path="/stores" element={isLoading ? <PageSkeleton /> : <StoreLocator branches={branches} products={products} />} />
+          <Route path="/checkout/success" element={<CheckoutCallbackPage status="success" />} />
+          <Route path="/checkout/error" element={<CheckoutCallbackPage status="error" />} />
+          <Route path="/checkout/cancel" element={<CheckoutCallbackPage status="cancel" />} />
+          <Route
+            path="*"
+            element={
+              <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4" id="not-found">
+                <h1 className="font-display font-black text-2xl text-gray-900">Không tìm thấy trang</h1>
+                <Link to="/" className="inline-block text-sm font-bold text-brand-primary hover:underline max-md:inline-flex max-md:items-center max-md:min-h-[44px]">Về trang chủ</Link>
+              </div>
+            }
+          />
+        </Routes>
       </main>
 
       <Footer categories={categories} products={products} />
@@ -192,7 +163,7 @@ export default function App() {
       <FloatingContact isPdp={isPdp} />
 
       {hasOpenedCart && (
-        <Suspense fallback={<PageLoader />}>
+        <Suspense fallback={null}>
           <CartModal
             isOpen={isCartOpen}
             onClose={() => dispatch(closeCart())}

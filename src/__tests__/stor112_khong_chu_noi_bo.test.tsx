@@ -112,8 +112,10 @@ describe('STOR-112 chữ khách thấy không có từ nội bộ', () => {
   it('màn tải ban đầu', async () => {
     api.getProducts.mockReturnValue(new Promise(() => {}));
     const { container } = mount('/');
-    await waitFor(() => expect(container.querySelector('#api-loading-state')).not.toBeNull());
-    expect(container.textContent).toContain('Đang tải sản phẩm...');
+    await waitFor(() => expect(container.querySelector('#page-skeleton')).not.toBeNull());
+    // Header/footer are on screen already; no full-page spinner.
+    expect(container.querySelector('header')).not.toBeNull();
+    expect(container.querySelector('.animate-spin')).toBeNull();
     expectClean('loading');
   });
 

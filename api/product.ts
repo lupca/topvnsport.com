@@ -79,8 +79,10 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
     // data-shell-title keeps the shell title in the document so the SPA restores it off product pages.
     .replace(/<title>([\s\S]*?)<\/title>/, (_m, shellTitle: string) =>
       `<title data-shell-title="${shellTitle.replace(/"/g, '&quot;')}">${name}</title>`)
+    // The product page paints from window.__PRODUCT__ (no catalog wait), so the shell's catalog preloads are dropped.
+    .replace(/[ \t]*<link\b[^>]*\bdata-catalog-preload\b[^>]*>\s*/g, '')
     .replace('</head>', () => `  <script type="application/ld+json">${jsonLd}</script>\n    ${headTags}\n  </head>`)
-    .replace('<div id="root"></div>', () => `<div id="root">${body}</div>`);
+    .replace('<div id="root"></div>', () => `<div id="root">${body}</div>\n    <script>window.__PRODUCT__=${inlineJson(product)}</script>`);
 }
 
 function sendHtml(res: any, status: number, cacheControl: string, html: string) {

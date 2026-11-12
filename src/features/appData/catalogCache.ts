@@ -1,0 +1,40 @@
+import type { Product } from '../../types';
+
+// Stale-while-revalidate: the last good catalog in localStorage paints a return visit at once;
+// fetchAppData then refreshes it. Storage may be missing/full/blocked: every access is try/catch.
+const KEY = 'tvs.catalog.v1';
+export const CATALOG_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+
+declare global {
+  interface Window {
+    // Product api/product.ts already resolved server-side, inlined into the HTML.
+    __PRODUCT__?: Product;
+  }
+}
+
+export interface CatalogSnapshot<T> { savedAt: number; data: T }
+
+export function saveCatalog<T>(data: T, now = Date.now()): void {
+  try {
+    localStorage.setItem(KEY, JSON.stringify({ savedAt: now, data } satisfies CatalogSnapshot<T>));
+  } catch {
+    // quota / private mode: next visit simply starts cold
+  }
+}
+
+export function loadCatalog<T>(now = Date.now()): T | null {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return null;
+    const snap = JSON.parse(raw) as CatalogSnapshot<T>;
+    return snap && typeof snap.savedAt === 'number' && now - snap.savedAt < CATALOG_CACHE_TTL_MS ? snap.data : null;
+  } catch {
+    return null;
+  }
+}
+
+// Server-inlined product (window.__PRODUCT__) replaces the same id in `products` or leads the list.
+export function withInlinedProduct(products: Product[], inlined: Product | undefined): Product[] {
+  if (!inlined || typeof inlined !== 'object' || inlined.id === undefined) return products;
+  return [inlined, ...products.filter(p => String(p.id) !== String(inlined.id))];
+}

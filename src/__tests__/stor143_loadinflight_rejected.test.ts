@@ -49,6 +49,8 @@ describe('STOR-143 fetchAppData loadInFlight + timers', () => {
     vi.useFakeTimers();
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // jsdom's localStorage.setItem (the catalog cache) schedules a fake-timer of its own; this guard is about fetchWithRetry's timers.
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
   });
 
   afterEach(() => {

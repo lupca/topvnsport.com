@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sportApi } from '../../services/sportApi';
 import { applyWmsStock } from '../../services/sport-api/wmsStock';
 import { Branch, Category, Product, StringOption } from '../../types';
+import { loadCatalog, saveCatalog, withInlinedProduct } from './catalogCache';
 
 export interface AppDataState {
   products: Product[];
@@ -24,9 +25,25 @@ export interface AppDataState {
   // STOR-153: requestId của refetchStock hiện hành; fetchAppData.fulfilled xoá -> kết quả
   // refetch cũ về muộn bị bỏ qua. Optional để các literal AppDataState cũ vẫn hợp lệ.
   stockRefetchId?: string | null;
+  // Catalog painted from the browser cache: fetchAppData refreshes it in the background, no loading state.
+  catalogFromCache?: boolean;
 }
 
-const initialState: AppDataState = {
+type CatalogPayload = Pick<AppDataState, 'products' | 'branches' | 'stringOptions' | 'categories'>;
+
+export function buildInitialState(inlined: Product | undefined = typeof window === 'undefined' ? undefined : window.__PRODUCT__): AppDataState {
+  const cached = loadCatalog<CatalogPayload>();
+  return {
+    ...baseState,
+    ...(cached ?? {}),
+    // Server-inlined product: the PDP renders from it before any fetch; Home/Catalog still wait on isLoading.
+    products: withInlinedProduct(cached?.products ?? [], inlined),
+    isLoading: !cached,
+    catalogFromCache: !!cached
+  };
+}
+
+const baseState: AppDataState = {
   products: [],
   branches: [],
   stringOptions: [],
@@ -39,6 +56,8 @@ const initialState: AppDataState = {
   loadInFlight: false,
   stockRefetching: false
 };
+
+const initialState = buildInitialState();
 
 export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () => {
   // STOR-012: mỗi nguồn tải đúng 1 lần, truyền promise cho nơi cần dùng lại.
@@ -56,7 +75,7 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
   // branches không gọi mạng ném lỗi -- lỗi ở đó vẫn nổi lên.
   if (branches.status === 'rejected') throw branches.reason;
 
-  return {
+  const result = {
     products: products.status === 'fulfilled' ? products.value : [],
     productsError: products.status === 'rejected',
     categories: categories.status === 'fulfilled' ? categories.value : [],
@@ -66,6 +85,10 @@ export const fetchAppData = createAsyncThunk('appData/fetchAppData', async () =>
     stringOptionsError: stringOptions.status === 'rejected',
     stockError: stock.status === 'rejected'
   };
+  if (!result.productsError && !result.categoriesError && !result.stockError) {
+    saveCatalog<CatalogPayload>({ products: result.products, branches: result.branches, stringOptions: result.stringOptions, categories: result.categories });
+  }
+  return result;
 }, {
   condition: (_, { getState }) => !(getState() as { appData: AppDataState }).appData.loadInFlight
 });
@@ -88,14 +111,19 @@ const appDataSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(fetchAppData.pending, state => {
-        state.isLoading = true;
+        if (!state.catalogFromCache) state.isLoading = true;
         state.loadInFlight = true;
       })
       .addCase(fetchAppData.fulfilled, (state, action) => {
-        state.products = action.payload.products;
-        state.branches = action.payload.branches;
-        state.stringOptions = action.payload.stringOptions;
-        state.categories = action.payload.categories;
+        const failed = action.payload.productsError || action.payload.categoriesError;
+        // A failed load keeps what is already on screen (cached catalog / inlined product); the error banner still shows.
+        if (!(failed && state.products.length > 0)) {
+          state.products = action.payload.products;
+          state.branches = action.payload.branches;
+          state.stringOptions = action.payload.stringOptions;
+          state.categories = action.payload.categories;
+        }
+        state.catalogFromCache = false;
         state.productsError = action.payload.productsError;
         state.categoriesError = action.payload.categoriesError;
         state.stringOptionsError = action.payload.stringOptionsError;

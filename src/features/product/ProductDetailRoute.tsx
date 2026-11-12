@@ -10,6 +10,7 @@ import { viewItem } from '../../lib/tracking.ts';
 import { getPdpPrice, initialTierValue } from '../../components/product-detail/helpers';
 import { fetchAppData } from '../appData/appDataSlice';
 import HomeLoadState from '../home/HomeLoadState';
+import PageSkeleton from '../../components/PageSkeleton';
 
 export default function ProductDetailRoute() {
   const dispatch = useAppDispatch();
@@ -17,6 +18,7 @@ export default function ProductDetailRoute() {
   const products = useAppSelector(state => state.appData.products);
   const stringOptions = useAppSelector(state => state.appData.stringOptions);
   const productsError = useAppSelector(state => state.appData.productsError);
+  const isLoading = useAppSelector(state => state.appData.isLoading);
   const product = findProductBySlug(products, slug);
   const { search, hash } = useLocation();
 
@@ -32,6 +34,9 @@ export default function ProductDetailRoute() {
   }, [product?.id]);
 
   // STOR-141: catalog không tải được -> không biết SP có tồn tại; báo lỗi + Thử lại, không giả 404.
+  // No inlined/cached product yet: skeleton while the catalog loads, never a false 404.
+  if (!product && isLoading) return <PageSkeleton />;
+
   if (!product && productsError) return <HomeLoadState error onRetry={() => dispatch(fetchAppData())} />;
 
   if (!product) {

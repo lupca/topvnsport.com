@@ -107,12 +107,6 @@ describe('STOR-168 nhãn Giảm đến trên trang chủ', () => {
     expect(tokens).toEqual(expect.arrayContaining(['max-md:text-[14px]', 'md:text-[13px]']));
     expect(tokens.filter((t) => /^text-(xs|\[\d+(\.\d+)?px\])$/.test(t))).toEqual([]);
   });
-
-  it('dòng "Đang tải sản phẩm..." trong App.tsx có max-md:text-sm', () => {
-    const line = fs.readFileSync(path.resolve(SRC, 'App.tsx'), 'utf8').split('\n').find((l) => l.includes('Đang tải sản phẩm...'));
-    expect(line).toBeDefined();
-    expect(line!.split(/[\s"']/)).toContain('max-md:text-sm');
-  });
 });
 
 const scanTree = (root: string) =>
