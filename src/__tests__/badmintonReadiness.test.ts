@@ -91,9 +91,12 @@ describe('STOR-050 index.css High-Contrast Ink', () => {
   const css = readFileSync(resolve(__dirname, '../index.css'), 'utf8');
 
   it('bỏ font weight 300 khỏi Be Vietnam Pro', () => {
-    expect(css).not.toMatch(/0,300/);
-    expect(css).not.toMatch(/1,300/);
-    expect(css).toMatch(/Be\+Vietnam\+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700/);
+    // The Google Fonts URL moved from a CSS @import to a <link> in index.html (parallel, not chained behind the bundle CSS).
+    const html = readFileSync(resolve(__dirname, '../../index.html'), 'utf8');
+    expect(css).not.toContain('fonts.googleapis.com');
+    expect(html).not.toMatch(/0,300/);
+    expect(html).not.toMatch(/1,300/);
+    expect(html).toMatch(/Be\+Vietnam\+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700/);
   });
 
   it('định nghĩa đủ 7 biến màu High-Contrast Ink trong @theme', () => {

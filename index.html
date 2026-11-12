@@ -11,10 +11,25 @@
     <link rel="preload" as="fetch" crossorigin data-catalog-preload href="/api/pmi/public/voma-categories" />
     <link rel="preload" as="fetch" crossorigin data-catalog-preload href="/api/wms/public/stock" />
     <link rel="preload" as="fetch" crossorigin data-catalog-preload href="/api/pmi/public/products?page=1&amp;limit=100" />
+    <!-- Fonts as a parallel <link> (was a CSS @import, which chained Google CSS behind the bundle CSS before the first paint). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&amp;family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" />
+    <style>
+      /* Static first paint before any JS: grey blocks sized like the product grid; hidden once React fills #root. */
+      #boot{background:#f9fafb;min-height:100svh;padding:72px 16px 0}
+      #boot p{margin:0 0 16px;text-align:center;font:900 20px/1 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#111827}
+      #boot div{border-radius:12px;background:#e5e7eb}
+      #boot .g{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;background:none;border-radius:0}
+      #boot .g div{aspect-ratio:1/1.35}
+      @media(min-width:768px){#boot{padding:96px 24px 0}#boot .g{grid-template-columns:repeat(4,1fr);gap:24px;max-width:1280px;margin:0 auto}}
+      #root:not(:empty)~#boot{display:none}
+    </style>
     <title>TopVNSport - Nền Tảng Thương Mại Điện Tử Cầu Lông Số 1 Việt Nam</title>
   </head>
   <body>
     <div id="root"></div>
+    <div id="boot" aria-hidden="true"><p>TopVNSport</p><div class="g"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
