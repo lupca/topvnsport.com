@@ -129,8 +129,22 @@ describe('STOR-107 hero trên trang chủ', () => {
       expect(s.querySelectorAll('a')).toHaveLength(1);
       expect(s.querySelectorAll('img')).toHaveLength(1);
       expect(s.querySelector('a')!.getAttribute('href')).toBe(REAL[i].cta.href);
-      expect(s.querySelector('img')!.getAttribute('src')).toBe(REAL[i].image.src);
+      expect(s.querySelector('img')!.getAttribute('alt')).toBe(REAL[i].image.alt);
     }
+  });
+
+  it('SEO 13/11: ảnh banner 1 tải ngay (fetchpriority=high, srcset); banner sau chỉ tải khi banner 1 xong và là banner kế tiếp', () => {
+    for (const b of REAL) expect(existsSync(`public${b.image.src.replace(/\.webp$/, '-640.webp')}`), b.image.src).toBe(true);
+    renderBanner();
+    const imgs = () => slides().map(s => s.querySelector('img')!);
+    expect(imgs()[0].getAttribute('src')).toBe(REAL[0].image.src);
+    expect(imgs()[0].getAttribute('fetchpriority')).toBe('high');
+    expect(imgs()[0].getAttribute('srcset')).toBe(`${REAL[0].image.src.replace(/\.webp$/, '-640.webp')} 640w, ${REAL[0].image.src} 1024w`);
+    expect(imgs().slice(1).map(i => i.getAttribute('src'))).toEqual(REAL.slice(1).map(() => null));
+    fireEvent.load(imgs()[0]);
+    expect(imgs().map(i => i.getAttribute('src'))).toEqual(REAL.map((b, i) => (i <= 1 ? b.image.src : null)));
+    fireEvent.click(dots()[2]);
+    expect(imgs().map(i => i.getAttribute('src'))).toEqual(REAL.map((b, i) => (i <= 3 ? b.image.src : null)));
   });
 
   it('cấu hình sai: role=alert trong ô hero + console.error, không banner, không dot, không banner mặc định', () => {

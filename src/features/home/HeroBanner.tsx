@@ -2,6 +2,7 @@ import { TouchEvent, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Pause, Play } from 'lucide-react';
 import { HeroBannerItem, loadHeroBanners } from './heroBanners';
+import { BANNER_SIZE, BANNER_SIZES, bannerSrcSet } from './bannerImage';
 
 const AUTOPLAY_MS = 5000;
 const SWIPE_MIN_PX = 40;
@@ -14,7 +15,8 @@ const GUTTER = 'pl-5 md:pl-[max(24px,calc(50%-616px))]';
 const prefersReducedMotion = () => Boolean(window.matchMedia?.(REDUCED_MOTION).matches);
 
 // key?: repo không có @types/react nên prop key phải khai báo (như ProductCard).
-function Slide({ banner, active, index, count }: { key?: number; banner: HeroBannerItem; active: boolean; index: number; count: number }) {
+// load=false: the image is not requested yet (later slides wait until the first banner has loaded and they are next).
+function Slide({ banner, active, index, count, load, onLoad }: { key?: number; banner: HeroBannerItem; active: boolean; index: number; count: number; load: boolean; onLoad?: () => void }) {
   const { headline, subline, cta, image } = banner;
   const ctaClass = 'mt-4 md:mt-7 inline-flex h-[44px] md:h-12 items-center bg-surface px-5 md:px-8 font-display text-[14px] md:text-[15px] font-extrabold uppercase tracking-[0.04em] text-brand-secondary transition-colors hover:bg-brand-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
   return (
@@ -27,7 +29,18 @@ function Slide({ banner, active, index, count }: { key?: number; banner: HeroBan
       inert={!active}
       className="relative h-full w-full shrink-0"
     >
-      <img data-testid="hero-banner-image" src={image.src} alt={image.alt} className="absolute inset-y-0 right-0 h-full w-[52%] object-cover" />
+      <img
+        data-testid="hero-banner-image"
+        src={load ? image.src : undefined}
+        srcSet={load ? bannerSrcSet(image.src) : undefined}
+        sizes={BANNER_SIZES}
+        width={BANNER_SIZE}
+        height={BANNER_SIZE}
+        alt={image.alt}
+        fetchPriority={index === 0 ? 'high' : 'low'}
+        onLoad={onLoad}
+        className="absolute inset-y-0 right-0 h-full w-[52%] object-cover"
+      />
       <div className="absolute inset-y-0 right-0 w-[52%] bg-gradient-to-r from-brand-secondary to-transparent" aria-hidden="true" />
       <div className={`relative z-10 flex h-full w-[62%] md:w-[50%] flex-col justify-center pr-3 md:pr-0 ${GUTTER} pb-8 text-white`}>
         <h2 className="min-w-0 break-words line-clamp-3 font-display text-[22px] leading-[1.15] md:text-[46px] md:leading-[1.2] font-black">{headline}</h2>
@@ -46,6 +59,10 @@ function Carousel({ banners }: { banners: HeroBannerItem[] }) {
   const [hovered, setHovered] = useState(false);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [reduced] = useState(prefersReducedMotion);
+  // Slides after the first load once it has (it is the LCP image), and only the current and next one.
+  const [firstLoaded, setFirstLoaded] = useState(false);
+  const [reached, setReached] = useState(0);
+  useEffect(() => setReached(r => Math.max(r, index)), [index]);
   const autoplay = !paused && !hovered && !reduced && count > 1;
 
   useEffect(() => {
@@ -80,7 +97,9 @@ function Carousel({ banners }: { banners: HeroBannerItem[] }) {
           className={`absolute inset-0 flex ${reduced ? 'transition-none' : 'transition-transform duration-500 ease-out motion-reduce:transition-none'}`}
           style={{ transform: `translateX(-${index * 100}%)` }}
         >
-          {banners.map((b, i) => <Slide key={i} banner={b} active={i === index} index={i} count={count} />)}
+          {banners.map((b, i) => (
+            <Slide key={i} banner={b} active={i === index} index={i} count={count} load={i === 0 || (firstLoaded && i <= Math.max(reached, index) + 1)} onLoad={i === 0 ? () => setFirstLoaded(true) : undefined} />
+          ))}
         </div>
 
         <div className={`absolute bottom-3 md:bottom-6 z-20 flex items-center gap-3 ${GUTTER}`}>

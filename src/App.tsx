@@ -6,7 +6,9 @@
 import { lazy, MouseEvent, Suspense, useEffect, useState } from 'react';
 import { Link, matchPath, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { popupService } from '@topvnsport/ui-kit';
+import { useStore } from 'react-redux';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import type { RootState } from './app/store';
 import FloatingContact from './components/FloatingContact';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -90,7 +92,11 @@ export default function App() {
     if (isCartOpen) setHasOpenedCart(true);
   }, [isCartOpen]);
 
+  const appStore = useStore<RootState>();
   useEffect(() => {
+    // main.tsx may already have loaded the catalog (server-rendered landing): no second download.
+    const loaded = appStore.getState().appData;
+    if (!loaded.isLoading && !loaded.catalogFromCache && !loaded.productsError && !loaded.categoriesError && !loaded.stockError && loaded.products.length > 0) return;
     dispatch(fetchAppData()).catch(error => {
       console.error('Failed to fetch data from sportApi:', error);
     });
