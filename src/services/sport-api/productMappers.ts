@@ -241,6 +241,8 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     tier_variations: pmiProduct.tier_variations || [],
     variants: mappedVariants,
     seoTitle: pmiProduct.seo_title?.trim() || undefined,
+    seoDescription: pmiProduct.seo_description?.trim() || undefined,
+    updatedAt: pmiProduct.updated_at || undefined,
     defaultVariantId: pmiProduct.default_variant_id ?? undefined
   };
 }

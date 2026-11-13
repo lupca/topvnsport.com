@@ -84,7 +84,10 @@ export interface Product {
   colors?: string[];
   // PIM webstore listing: page <title> and the variant pre-selected on the PDP; undefined = not set.
   seoTitle?: string;
+  seoDescription?: string;
   defaultVariantId?: number;
+  // PIM products.updated_at (ISO): sitemap <lastmod>.
+  updatedAt?: string;
 }
 
 export interface TierVariation {

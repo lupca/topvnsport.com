@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import productHandler, { renderProductPage } from '../../api/product';
+import productHandler, { offerPolicies, renderProductPage } from '../../api/product';
 import sitemapHandler from '../../api/sitemap';
 import { NO_IMAGE_URL } from '../services/sport-api/constants';
 import { formatVnd } from '../components/product-detail/helpers';
@@ -34,16 +34,19 @@ const baseProduct = (over: Partial<Product> = {}): Product => ({
   ...over,
 } as Product);
 
+// SEO 13/11: every Offer carries priceValidUntil and the owner's policies (src/config/seo.ts).
+const OFFER_EXTRA = () => ({ priceValidUntil: expect.stringMatching(/^\d{4}-\d\d-\d\d$/), ...offerPolicies() });
+
 const headBlock = (html: string) => html.slice(html.indexOf('</title>'), html.indexOf('</head>'));
 const titleText = (html: string) => html.match(/<title[^>]*>([^<]*)<\/title>/)![1];
 const rootDiv = (html: string) => html.match(/<div id="root">([\s\S]*?)<\/div>/)![1];
 
 describe('STOR-069 renderProductPage', () => {
-  it('sets the bare escaped product name as title, no site suffix', () => {
+  it('SEO 13/11: title is the escaped cleaned name plus the site suffix when it fits', () => {
     const html = renderProductPage(SHELL, baseProduct({ name: 'A & B "C"' }), CANONICAL);
-    expect(titleText(html)).toBe('A &amp; B &quot;C&quot;');
+    expect(titleText(html)).toBe('A &amp; B &quot;C&quot; | Top VN Sport');
     expect(html.match(/<title[ >]/g)).toHaveLength(1);
-    expect(titleText(html)).not.toContain('TopVNSport');
+    expect(titleText(html)).not.toContain('Shell');
     // STOR-072: the shell title rides along in data-shell-title for the SPA, never as visible text.
     expect(html).toContain('<title data-shell-title="TopVNSport - Shell">');
   });
@@ -55,30 +58,30 @@ describe('STOR-069 renderProductPage', () => {
     expect(html).toMatch(/<meta property="og:[a-z]+" content="[^"]*" data-product-head \/>\n {2}<\/head>/);
     const head = headBlock(html);
     expect(head).toContain(`<link rel="canonical" href="${CANONICAL}" data-product-head />`);
-    expect(head).toContain('<meta property="og:title" content="Vợt Yonex Astrox 99" data-product-head />');
+    expect(head).toContain('<meta property="og:title" content="Vợt Yonex Astrox 99 | Top VN Sport" data-product-head />');
     expect(head).toContain(`<meta property="og:url" content="${CANONICAL}" data-product-head />`);
     // head tags sit together as one contiguous block
     expect(html.indexOf('rel="canonical"')).toBeGreaterThan(html.indexOf('</title>'));
   });
 
-  it('description present: meta description collapsed and <=160 chars, og:description, <p>', () => {
-    const desc = 'Dòng   vợt\n\ncông thủ   ' + 'x'.repeat(300);
+  it('description present: meta description collapsed and <=155 chars, og:description, <p>', () => {
+    const desc = 'Dòng   vợt\n\ncông thủ   ' + 'xx '.repeat(100);
     const html = renderProductPage(SHELL, baseProduct({ description: desc }), CANONICAL);
     const meta = html.match(/<meta name="description" content="([^"]*)" data-product-head \/>/)![1];
-    expect(meta.startsWith('Dòng vợt công thủ x')).toBe(true);
-    expect(meta.length).toBeLessThanOrEqual(160);
+    expect(meta.startsWith('Dòng vợt công thủ xx')).toBe(true);
+    expect(Array.from(meta).length).toBeLessThanOrEqual(155);
     expect(meta).not.toMatch(/\s{2,}|\n/);
-    expect(html).toMatch(/<meta property="og:description" content="Dòng vợt công thủ x+" data-product-head \/>/);
-    expect(rootDiv(html)).toContain(`<p>${desc}</p>`);
+    expect(html).toMatch(/<meta property="og:description" content="Dòng vợt công thủ[ x]+…" data-product-head \/>/);
+    expect(rootDiv(html)).toContain(`<p>${desc.trim()}</p>`);
   });
 
-  it('STOR-072: emoji at code points 159-160 is cut whole, never U+FFFD or a lone surrogate', () => {
-    const desc = '  a \n\t b  ' + 'x'.repeat(155) + '\u{1F3F8}\u{1F3F8}' + 'y'.repeat(20);
+  it('STOR-072: emoji at the cut is cut whole, never U+FFFD or a lone surrogate', () => {
+    const desc = 'x'.repeat(153) + '\u{1F3F8}\u{1F3F8}' + ' y';
     const html = renderProductPage(SHELL, baseProduct({ description: desc }), CANONICAL);
     const meta = html.match(/<meta name="description" content="([^"]*)" data-product-head \/>/)![1];
-    // collapsed "a b " = 4 code points, 155 x -> 159, first emoji is code point 160
-    expect(meta).toBe('a b ' + 'x'.repeat(155) + '\u{1F3F8}');
-    expect(Array.from(meta).length).toBe(160);
+    // no space in range: cut at 154 code points (153 x + the first emoji) plus the ellipsis
+    expect(meta).toBe('x'.repeat(153) + '\u{1F3F8}…');
+    expect(Array.from(meta).length).toBe(155);
     expect(meta).not.toContain('\uFFFD');
     expect(meta).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/);
     expect(new TextDecoder().decode(new TextEncoder().encode(meta))).not.toContain('\uFFFD');
@@ -138,11 +141,12 @@ describe('STOR-069 renderProductPage', () => {
     const html = renderProductPage(SHELL, baseProduct({ name: hostile, description: hostile }), CANONICAL);
     expect(html).not.toContain('<script>alert');
     const esc = '&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;&#39;&amp;$&amp;';
-    expect(titleText(html)).toBe(esc);
+    // Title/description are derived (cleaned) from the hostile text, then escaped; the raw text never appears.
+    expect(titleText(html)).toBe(`${esc} | Top VN Sport`);
     expect(html).toContain(`<h1>${esc}</h1>`);
     expect(html).toContain(`<p>${esc}</p>`);
-    expect(html).toContain(`<meta property="og:title" content="${esc}" data-product-head />`);
-    expect(html).toContain(`<meta name="description" content="${esc}" data-product-head />`);
+    expect(html).toContain(`<meta property="og:title" content="${esc} | Top VN Sport" data-product-head />`);
+    expect(html).toContain(`<meta name="description" content="script&gt;alert(&quot;x&quot;)&lt;/script&gt;&#39;&amp;$&amp;." data-product-head />`);
   });
 
   // STOR-070 adds the JSON-LD Offer; availability and CDN headers belong to the follow-up task.
@@ -185,7 +189,7 @@ describe('STOR-070 JSON-LD', () => {
       image: 'https://cdn.voma.vn/a.jpg',
       sku: 'SKU-DEF',
       brand: { '@type': 'Brand', name: 'Yonex' },
-      offers: { '@type': 'Offer', price: 1500000, priceCurrency: 'VND', url: CANONICAL },
+      offers: { '@type': 'Offer', price: 1500000, priceCurrency: 'VND', url: CANONICAL, ...OFFER_EXTRA() },
     });
     expect(typeof data.offers.price).toBe('number');
     expect(rootDiv(html)).toContain(`<p>${formatVnd(data.offers.price)}</p>`);
@@ -238,10 +242,12 @@ describe('STOR-070 JSON-LD', () => {
     } as any)).not.toHaveProperty('sku');
   });
 
-  it('brand is a Brand object; no brand key when absent or No Brand', () => {
+  it('brand is a Brand object; no brand key when absent or No Brand and the name has no known brand', () => {
     expect(ld({ brand: 'Yonex' }).brand).toEqual({ '@type': 'Brand', name: 'Yonex' });
     for (const brand of [undefined, '', '  ', 'No Brand', 'no brand', 'NoBrand', ' NO  BRAND ']) {
-      expect(ld({ brand })).not.toHaveProperty('brand');
+      expect(ld({ brand, name: 'Cuốn cán cao su non' })).not.toHaveProperty('brand');
+      // SEO 13/11: no brand attribute -> known brand found in the name (src/config/seo.ts KNOWN_BRANDS).
+      expect(ld({ brand }).brand).toEqual({ '@type': 'Brand', name: 'Yonex' });
     }
   });
 
@@ -374,7 +380,7 @@ describe('STOR-069 api/product handler', () => {
     expect(res.body.indexOf('application/ld+json')).toBeLessThan(res.body.indexOf('</head>'));
     const data = jsonLd(res.body);
     expect(data.sku).toBe('S101');
-    expect(data.offers).toEqual({ '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: 'https://www.topvnsport.com/product/101', availability: 'https://schema.org/InStock' });
+    expect(data.offers).toEqual({ '@type': 'Offer', sku: 'S101', price: 500000, priceCurrency: 'VND', url: 'https://www.topvnsport.com/product/101', availability: 'https://schema.org/InStock', ...OFFER_EXTRA() });
   });
 
   it('serves a product from page 2 of the PIM list', async () => {
@@ -461,7 +467,7 @@ describe('STOR-078 WMS stock, availability and cache headers', () => {
   const ORIGINAL_ENV = { ...process.env };
   const get = (slug: string) => ({ method: 'GET', query: { slug: ID_OF[slug] ?? slug }, headers: {} });
   const SLUG = 'vot-yonex-astrox-99';
-  const OFFER = { '@type': 'Offer', price: 500000, priceCurrency: 'VND', url: `https://www.topvnsport.com/product/${ID_OF[SLUG]}` };
+  const OFFER = { '@type': 'Offer', sku: 'S101', price: 500000, priceCurrency: 'VND', url: `https://www.topvnsport.com/product/${ID_OF[SLUG]}` , ...OFFER_EXTRA() };
   const KNOWN_HEADERS = { 'Cache-Control': 'public, max-age=0, s-maxage=300', 'Vercel-CDN-Cache-Control': 'max-age=60, stale-while-revalidate=300' };
   const stockCalls = () => (global.fetch as any).mock.calls.filter((c: any[]) => String(c[0]).includes('/public/stock'));
   const run = async (slug: string, opts: Parameters<typeof mockFetch>[0] = {}) => {
@@ -509,7 +515,7 @@ describe('STOR-078 WMS stock, availability and cache headers', () => {
 
   it('a SKU absent from a loaded stock map gives OutOfStock', async () => {
     const res = await run('vot-yonex-astrox-99-2'); // S102 has no WMS row
-    expect(jsonLd(res.body).offers).toEqual({ ...OFFER, url: 'https://www.topvnsport.com/product/102', availability: 'https://schema.org/OutOfStock' });
+    expect(jsonLd(res.body).offers).toEqual({ ...OFFER, sku: 'S102', url: 'https://www.topvnsport.com/product/102', availability: 'https://schema.org/OutOfStock' });
   });
 
   it('the PIM variant stock never supplies availability (PIM stock 3, WMS qty 0 -> OutOfStock)', async () => {

@@ -26,8 +26,19 @@
       #boot .g div{aspect-ratio:1/1.35}
       @media(min-width:768px){#boot{padding:96px 24px 0}#boot .g{grid-template-columns:repeat(4,1fr);gap:24px;max-width:1280px;margin:0 auto}}
       #root:not(:empty)~#boot{display:none}
+      /* api/page.ts server text (home, catalog) until React replaces #root; the bundle CSS is deferred, so it is styled here. */
+      #ssr{box-sizing:border-box;min-height:100svh;max-width:1280px;margin:0 auto;padding:16px;background:#f9fafb;color:#111827;font:15px/1.5 system-ui,sans-serif}
+      #ssr h1{margin:8px 0;font:900 22px/1.2 system-ui,sans-serif;text-transform:uppercase}
+      #ssr p{margin:0 0 16px;color:#4b5563}
+      #ssr .ssr-hero{display:block;width:100%;height:290px;object-fit:cover;margin:0 0 16px;background:#e5e7eb}
+      #ssr ul{list-style:none;margin:0 0 16px;padding:0}
+      #ssr li{padding:8px 0;border-bottom:1px solid #e5e7eb}
+      #ssr nav li{display:inline-block;margin:0 16px 0 0;border:0}
+      #ssr a{color:#111827}
+      @media(min-width:768px){#ssr{padding:24px}#ssr .ssr-hero{height:auto;aspect-ratio:1440/520;max-height:560px}}
     </style>
-    <title>TopVNSport - Nền Tảng Thương Mại Điện Tử Cầu Lông Số 1 Việt Nam</title>
+    <!-- vite.config.ts writes HOME_SEO.title (src/config/seo.ts) here at build time. -->
+    <title>Top VN Sport</title>
   </head>
   <body>
     <div id="root"></div>

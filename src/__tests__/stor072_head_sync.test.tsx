@@ -9,6 +9,8 @@ import { resolve } from 'node:path';
 import { renderProductPage } from '../../api/product';
 import { SITE_ORIGIN } from '../config/storefront';
 import { productHeadValues, readShellHead, syncHead } from '../utils/productHead';
+import { seoDescriptionFromText as D, seoTitleFromName as T } from '../utils/seoText';
+import { HOME_SEO } from '../config/seo';
 
 const A = {
   id: 'a1', name: 'Vợt Yonex Astrox 99', description: 'Mô tả A', gallery: ['https://cdn.voma.vn/a.jpg'],
@@ -60,7 +62,7 @@ describe('STOR-072 head sync on client-side navigation', () => {
     const served = renderProductPage(INDEX_HTML, A, `${SITE_ORIGIN}/product/a1`);
     const doc = new DOMParser().parseFromString(served, 'text/html');
     document.head.innerHTML = doc.head.innerHTML;
-    expect(document.title).toBe(A.name);
+    expect(document.title).toBe(T(A.name));
     api.getProducts.mockResolvedValue([A, B, C]);
     window.scrollTo = vi.fn() as any;
 
@@ -81,29 +83,32 @@ describe('STOR-072 head sync on client-side navigation', () => {
 
   it('product A landing keeps A head', async () => {
     await waitFor(() => expect(head()).toEqual({
-      title: A.name,
+      title: T(A.name),
       canonical: `${SITE_ORIGIN}/product/a1`,
-      description: 'Mô tả A',
-      ogTitle: A.name,
+      description: D('Mô tả A'),
+      ogTitle: T(A.name),
       ogUrl: `${SITE_ORIGIN}/product/a1`,
-      ogDescription: 'Mô tả A',
+      ogDescription: D('Mô tả A'),
       ogImage: 'https://cdn.voma.vn/a.jpg',
     }));
   });
 
-  it('A -> home restores the shell head: shell title, no canonical, no og/description', async () => {
+  it('SEO 13/11: A -> home sets the home head from src/config/seo.ts', async () => {
     await go('/');
-    await headSoon(SHELL_HEAD);
+    await headSoon({
+      title: HOME_SEO.title, canonical: `${SITE_ORIGIN}/`, description: HOME_SEO.description,
+      ogTitle: HOME_SEO.title, ogUrl: `${SITE_ORIGIN}/`, ogDescription: HOME_SEO.description, ogImage: HOME_SEO.ogImage.url,
+    });
     leftNothingOf(A);
   });
 
   it('home -> B (no description, no absolute image) sets B title/canonical/og, omits the rest', async () => {
     await go('/product/b2');
     await headSoon({
-      title: 'Giày Lining',
+      title: T('Giày Lining'),
       canonical: `${SITE_ORIGIN}/product/b2`,
       description: null,
-      ogTitle: 'Giày Lining',
+      ogTitle: T('Giày Lining'),
       ogUrl: `${SITE_ORIGIN}/product/b2`,
       ogDescription: null,
       ogImage: null,
@@ -115,12 +120,12 @@ describe('STOR-072 head sync on client-side navigation', () => {
   it('B -> C updates every existing tag in place to C values', async () => {
     await go('/product/c3');
     await headSoon({
-      title: 'Cước BG65',
+      title: T('Cước BG65'),
       canonical: `${SITE_ORIGIN}/product/c3`,
-      description: 'Mô tả C',
-      ogTitle: 'Cước BG65',
+      description: D('Mô tả C'),
+      ogTitle: T('Cước BG65'),
       ogUrl: `${SITE_ORIGIN}/product/c3`,
-      ogDescription: 'Mô tả C',
+      ogDescription: D('Mô tả C'),
       ogImage: 'https://cdn.voma.vn/c.jpg',
     });
   });
@@ -128,21 +133,28 @@ describe('STOR-072 head sync on client-side navigation', () => {
   it('C -> A (product to product) overwrites C values, no duplicates', async () => {
     await go('/product/a1');
     await headSoon({
-      title: A.name,
+      title: T(A.name),
       canonical: `${SITE_ORIGIN}/product/a1`,
-      description: 'Mô tả A',
-      ogTitle: A.name,
+      description: D('Mô tả A'),
+      ogTitle: T(A.name),
       ogUrl: `${SITE_ORIGIN}/product/a1`,
-      ogDescription: 'Mô tả A',
+      ogDescription: D('Mô tả A'),
       ogImage: 'https://cdn.voma.vn/a.jpg',
     });
-    expect(document.head.querySelectorAll('link[rel="canonical"], meta[property^="og:"], meta[name="description"]')).toHaveLength(6);
+    expect(document.head.querySelectorAll('link[rel="canonical"], meta[property^="og:"], meta[name="description"]')).toHaveLength(7); // + og:type
   });
 
-  it.each(['/catalog', '/stores', '/checkout/success', '/checkout/error', '/checkout/cancel', '/khong-co', '/product/khong-ton-tai'])(
+  it('SEO 13/11: /catalog sets the catalog head (title, canonical, description from the data)', async () => {
+    await go('/product/c3');
+    await go('/catalog');
+    await headSoon({ title: 'Tất cả sản phẩm cầu lông | Top VN Sport', canonical: `${SITE_ORIGIN}/catalog`, ogUrl: `${SITE_ORIGIN}/catalog` });
+    expect(head().description).toMatch(/^Sản phẩm cầu lông tại Top VN Sport: 3 sản phẩm/);
+  });
+
+  it.each(['/stores', '/checkout/success', '/checkout/error', '/checkout/cancel', '/khong-co', '/product/khong-ton-tai'])(
     '%s shows the shell head', async (path) => {
       await go('/product/c3');
-      await headSoon({ title: 'Cước BG65' });
+      await headSoon({ title: T('Cước BG65') });
       await go(path);
       await headSoon(SHELL_HEAD);
     });
@@ -181,7 +193,7 @@ describe('STOR-072 shell-owned head tags (finding 3c02e75f)', () => {
     expect(html).not.toMatch(/(href|content)="(https:\/\/shell\/|shell desc|shell og|https:\/\/shell\/og\.jpg)"/);
     const doc = new DOMParser().parseFromString(html, 'text/html');
     document.head.innerHTML = doc.head.innerHTML;
-    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(6); // product tags replaced the 4 shell tags
+    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(7); // product tags (incl. og:type) replaced the 4 shell tags
     expect(document.querySelector('link[rel="canonical"]')!.getAttribute('href')).toBe(urlA);
     const shell = readShellHead(document);
     expect(shell).toEqual({ title: SHELL_TITLE, tags: {
@@ -194,9 +206,9 @@ describe('STOR-072 shell-owned head tags (finding 3c02e75f)', () => {
 
     syncHead(document, productHeadValues(B, urlB), shell);
     expect(head()).toEqual({
-      title: B.name, canonical: urlB, description: 'shell desc', ogTitle: B.name, ogUrl: urlB, ogDescription: null, ogImage: 'https://shell/og.jpg',
+      title: T(B.name), canonical: urlB, description: 'shell desc', ogTitle: T(B.name), ogUrl: urlB, ogDescription: null, ogImage: 'https://shell/og.jpg',
     });
-    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(5);
+    expect(document.head.querySelectorAll(COUNT_SEL)).toHaveLength(6); // + og:type
 
     syncHead(document, null, shell);
     expect(head()).toEqual(SHELL_TAGS);
@@ -204,16 +216,17 @@ describe('STOR-072 shell-owned head tags (finding 3c02e75f)', () => {
   });
 });
 
-describe('STOR-072 the shell title lives only in index.html', () => {
-  it('src/ and api/ do not repeat it', async () => {
+describe('SEO 13/11: the shell/home title lives only in src/config/seo.ts', () => {
+  it('src/ (tests aside), api/ and index.html do not repeat it; vite writes it into the built shell', async () => {
     const { execSync } = await import('node:child_process');
     const root = resolve(__dirname, '../..');
-    const hits = execSync(`grep -rlF -- ${JSON.stringify(SHELL_TITLE)} src api || true`, { cwd: root }).toString().trim();
-    expect(hits).toBe('');
+    const hits = execSync(`grep -rlF -- ${JSON.stringify(HOME_SEO.title)} src api index.html || true`, { cwd: root }).toString().trim().split('\n').filter(f => f && !f.includes('__tests__'));
+    expect(hits).toEqual(['src/config/seo.ts']);
+    expect(readFileSync(resolve(root, 'vite.config.ts'), 'utf8')).toContain('HOME_SEO.title');
   });
 
-  it("api/product.ts inserts head tags through exactly one .replace('</head>', ...)", () => {
-    const src = readFileSync(resolve(__dirname, '../../api/product.ts'), 'utf8');
+  it("api/_render.ts inserts head tags through exactly one .replace('</head>', ...)", () => {
+    const src = readFileSync(resolve(__dirname, '../../api/_render.ts'), 'utf8');
     expect(src.match(/\.replace\('<\/head>'/g)).toHaveLength(1);
   });
 });

@@ -23,10 +23,10 @@ describe('webstore listing display fields (seo_title, default_variant_id)', () =
     expect([plain.seoTitle, plain.defaultVariantId]).toEqual([undefined, undefined]);
   });
 
-  it('<title> uses seoTitle (escaped), else the product name', () => {
+  it('<title> uses seoTitle (escaped), else the cleaned name with the site suffix', () => {
     const title = (p: Product) => renderProductPage(SHELL, p, 'https://x/product/1').match(/<title[^>]*>([^<]*)<\/title>/)![1];
     expect(title(product({ seoTitle: 'A & B | Top VN Sport' }))).toBe('A &amp; B | Top VN Sport');
-    expect(title(product())).toBe('Tên SP');
+    expect(title(product())).toBe('Tên SP | Top VN Sport');
   });
 
   it('pre-selects the default variant option, else the no-string option', () => {

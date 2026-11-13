@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
+import {HOME_SEO} from './src/config/seo';
 
 // The bundle CSS blocked the first paint (~0.4 s on throttled mobile): load it without blocking so the
 // inline #boot block paints at TTFB. main.tsx holds the first React render until the sheet is applied.
@@ -17,9 +18,15 @@ const deferBundleCss = () => ({
   }
 });
 
+// Shell <title> = the home title from the one SEO config (api/ replaces it per page; /stores etc. keep it).
+const shellTitle = () => ({
+  name: 'shell-title',
+  transformIndexHtml: (html: string) => html.replace(/<title>[^<]*<\/title>/, () => `<title>${HOME_SEO.title.replace(/[<&]/g, c => (c === '<' ? '&lt;' : '&amp;'))}</title>`)
+});
+
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), deferBundleCss()],
+    plugins: [react(), tailwindcss(), deferBundleCss(), shellTitle()],
     build: {
       chunkSizeWarningLimit: 500,
       rollupOptions: {

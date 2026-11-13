@@ -240,7 +240,7 @@ describe('STOR-112 chữ khách thấy không có từ nội bộ', () => {
   it('tiêu đề trang và index.html không có từ nội bộ', () => {
     const html = readFileSync(join(process.cwd(), 'index.html'), 'utf8');
     const visible = [html.match(/<title>([^<]*)<\/title>/)?.[1] ?? '', ...Array.from(html.matchAll(/<meta[^>]*content="([^"]*)"/g)).map((m) => m[1])];
-    expect(visible[0]).toContain('TopVNSport');
+    expect(visible[0]).toContain('Top VN Sport'); // SEO 13/11: SITE_NAME (src/config/seo.ts)
     expect(visible.join('\n')).not.toMatch(BANNED);
     mount('/');
     expect(document.title).not.toMatch(BANNED);

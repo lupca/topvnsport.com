@@ -1,96 +1,119 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { CDN_CACHE_CONTROL, resolveCatalogGrantToken } from './_catalogProxy.js';
+import { escapeHtml, inlineJson, renderPage, sendHtml } from './_render.js';
 import { SITE_ORIGIN } from '../src/config/storefront.js';
-import { productHeadValues, PRODUCT_HEAD_MARK, PRODUCT_HEAD_TAGS, PRODUCT_SHELL_VALUE } from '../src/utils/productHead.js';
+import { PRICE_VALID_DAYS, RETURN_POLICY, SHIPPING } from '../src/config/seo.js';
+import { productHeadValues } from '../src/utils/productHead.js';
+import { productBrand } from '../src/utils/seoText.js';
 import { getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
 import { mapPmiProduct } from '../src/services/sport-api/productMappers.js';
 import { applyWmsStock, parseWmsStock } from '../src/services/sport-api/wmsStock.js';
 import { aggregateStock, getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
-import type { Product } from '../src/types.js';
+import type { Product, ProductVariant } from '../src/types.js';
+
+export { escapeHtml };
 
 const PRODUCTS_PAGE_SIZE = 100;
 const NO_PRICE_TEXT = 'Liên hệ để biết giá';
 const WMS_TIMEOUT_MS = 4000;
+const SCHEMA_STOCK = (stock: number) => (stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock');
 
-export function escapeHtml(unsafe: string): string {
-  return unsafe.replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '\'': '&#39;', '"': '&quot;' })[c] as string);
+// Policy properties every Offer carries, read from src/config/seo.ts (owner decisions); off = omitted.
+export function offerPolicies(): Record<string, unknown> {
+  const days = (min: number, max: number) => ({ '@type': 'QuantitativeValue', minValue: min, maxValue: max, unitCode: 'DAY' });
+  return {
+    ...(SHIPPING.enabled && {
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: { '@type': 'MonetaryAmount', value: SHIPPING.rateVnd, currency: 'VND' },
+        shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'VN' },
+        deliveryTime: { '@type': 'ShippingDeliveryTime', handlingTime: days(...SHIPPING.handlingDays), transitTime: days(...SHIPPING.transitDays) },
+      },
+    }),
+    ...(RETURN_POLICY.enabled && {
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'VN',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: RETURN_POLICY.days,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+        ...(RETURN_POLICY.link && { merchantReturnLink: RETURN_POLICY.link }),
+      },
+    }),
+  };
 }
 
-// JSON for an inline <script>: '<' and U+2028/2029 are \u-escaped so a value can neither close the
-// script element nor break a JS parser. JSON.parse returns the original text.
-function inlineJson(value: unknown): string {
-  return JSON.stringify(value).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
-}
-
-// Pure: shell + product -> HTML. Missing data is omitted, never composed.
-export function renderProductPage(shell: string, product: Product, canonicalUrl: string): string {
-  const name = escapeHtml(product.name);
+// schema.org Product from the values the page shows. Offers only when the page shows a price (never on
+// NO_PRICE_TEXT): one Offer per priced variant (sku, its own price, its WMS availability), the variant the
+// page shows first; several prices -> AggregateOffer(lowPrice/highPrice/offerCount) around them.
+export function productJsonLd(product: Product, canonicalUrl: string, now = new Date()): Record<string, unknown> {
   const description = (product.description ?? '').trim();
-  const head = productHeadValues(product, canonicalUrl);
+  const image = product.gallery?.find((src) => /^https?:\/\/\S+$/i.test(src));
   const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));
   const priced = price.hasPrice && price.salePrice > 0;
-  // Availability only from WMS stock at the PDP's initial tiers; 'unknown' and 'none' omit it, never invented.
-  const stock = aggregateStock(product, initialTierValue(product, 1), initialTierValue(product, 2));
-  const availability = stock.kind === 'known'
-    ? { availability: stock.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }
-    : {};
-
-  // schema.org Product from the values the page shows. offers only when a price is shown, never on NO_PRICE_TEXT.
   const sku = price.matchedVariant?.sku_code ?? product.defaultSku;
-  const brand = product.brand?.trim();
-  const jsonLd = inlineJson({
+  const brand = productBrand(product);
+  const priceValidUntil = new Date(now.getTime() + PRICE_VALID_DAYS * 86400000).toISOString().slice(0, 10);
+  const base = { '@type': 'Offer', priceCurrency: 'VND', priceValidUntil, url: canonicalUrl, ...offerPolicies() };
+
+  let offers: Record<string, unknown> | undefined;
+  const variants = (product.variants ?? []).filter((v) => v.price > 0);
+  // Per-variant offers only when the page price is a variant's price (else the page price would be missing from them).
+  const first = price.matchedVariant;
+  if (priced && first && variants.includes(first)) {
+    const ordered: ProductVariant[] = [first, ...variants.filter((v) => v !== first)];
+    const list = ordered.map((v) => ({
+      ...base,
+      ...(v.sku_code && { sku: v.sku_code }),
+      price: v.computedPrice ?? v.price,
+      ...(v.stock !== undefined && { availability: SCHEMA_STOCK(v.stock) }),
+    }));
+    const prices = list.map((o) => o.price as number);
+    offers = new Set(prices).size === 1 && list.length === 1
+      ? list[0]
+      : { '@type': 'AggregateOffer', priceCurrency: 'VND', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: list.length, offers: list };
+  } else if (priced) {
+    // Availability only from WMS stock at the PDP's initial tiers; 'unknown' and 'none' omit it, never invented.
+    const stock = aggregateStock(product, initialTierValue(product, 1), initialTierValue(product, 2));
+    offers = { ...base, price: price.salePrice, ...(stock.kind === 'known' && { availability: SCHEMA_STOCK(stock.stock) }) };
+  }
+
+  return {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     ...(description && { description }),
-    ...(head.image && { image: head.image }),
+    ...(image && { image }),
     ...(sku && { sku }),
-    ...(brand && !/^no\s*brand$/i.test(brand) && { brand: { '@type': 'Brand', name: brand } }),
-    ...(priced && { offers: { '@type': 'Offer', price: price.salePrice, priceCurrency: 'VND', url: canonicalUrl, ...availability } }),
-  });
+    ...(brand && { brand: { '@type': 'Brand', name: brand } }),
+    ...(offers && { offers }),
+  };
+}
 
-  // A product tag replaces the shell's own copy (one canonical for crawlers); the shell value rides along in
-  // data-shell-value so the SPA can restore it off product pages. A field the product lacks keeps the shell tag.
-  let page = shell;
-  const headTags = PRODUCT_HEAD_TAGS
-    .filter(([, , , , field]) => head[field])
-    .map(([tag, keyAttr, key, valueAttr, field]) => {
-      let shellValue: string | undefined;
-      // Attribute-aware tag body: a quoted '>' stays inside its value; "'" only opens a quote right after '=' so an unquoted apostrophe stays plain.
-      const ATTRS = `(?:"[^"]*"|(?<==\\s*)'[^']*'|[^'">]|(?<!=\\s*)')*`;
-      page = page.replace(new RegExp(`[ \\t]*<${tag}\\b${ATTRS}?\\s${keyAttr}=(?:"${key}"|'${key}'|${key}(?=[\\s>]|/>))${ATTRS}>\\s*`, 'gi'), (m) => {
-        shellValue ??= m.match(new RegExp(`^[ \\t]*<${tag}\\b${ATTRS}?\\s${valueAttr}=(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i'))?.slice(1).find((v) => v !== undefined);
-        return '';
-      });
-      const carry = shellValue ? ` ${PRODUCT_SHELL_VALUE}="${shellValue.replace(/"/g, '&quot;')}"` : '';
-      return `<${tag} ${keyAttr}="${key}" ${valueAttr}="${escapeHtml(head[field]!)}" ${PRODUCT_HEAD_MARK}${carry} />`;
-    })
-    .join('\n    ');
-
+// Pure: shell + product -> HTML. Missing data is omitted, never composed.
+export function renderProductPage(shell: string, product: Product, canonicalUrl: string): string {
+  const description = (product.description ?? '').trim();
+  const head = productHeadValues(product, canonicalUrl);
+  const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));
+  const priced = price.hasPrice && price.salePrice > 0;
+  // Cover = the PIM cover when it is a real gallery URL (never NO_IMAGE_URL), else the first absolute gallery URL.
+  const cover = product.image && product.gallery?.includes(product.image) && /^https?:\/\//i.test(product.image) ? product.image : head.image;
   const body = [
-    `<h1>${name}</h1>`,
+    `<h1>${escapeHtml(product.name)}</h1>`,
+    // Cover photo for crawlers that do not run JS; square box, product photos are not cropped.
+    cover && `<img src="${escapeHtml(cover)}" alt="${escapeHtml(product.name)}" width="600" height="600" style="max-width:100%;height:auto;object-fit:contain">`,
     `<p>${escapeHtml(priced ? formatVnd(price.salePrice) : NO_PRICE_TEXT)}</p>`,
     description && `<p>${escapeHtml(description)}</p>`,
   ].filter(Boolean).join('');
 
-  // Function replacers: product strings may contain `$&`-style patterns.
-  return page
-    // data-shell-title keeps the shell title in the document so the SPA restores it off product pages.
-    .replace(/<title>([\s\S]*?)<\/title>/, (_m, shellTitle: string) =>
-      `<title data-shell-title="${shellTitle.replace(/"/g, '&quot;')}">${escapeHtml(head.title)}</title>`)
-    // The product page paints from window.__PRODUCT__ (no catalog wait), so the shell's catalog preloads are dropped.
-    // Server-rendered text must not show unstyled: the bundle CSS blocks again here (the SPA shell defers it).
-    .replace(/(<link rel="stylesheet"[^>]*?) media="print" onload="[^"]*" data-deferred-css/, '$1')
-    .replace(/[ \t]*<link\b[^>]*\bdata-catalog-preload\b[^>]*>\s*/g, '')
-    .replace('</head>', () => `  <script type="application/ld+json">${jsonLd}</script>\n    ${headTags}\n  </head>`)
-    .replace('<div id="root"></div>', () => `<div id="root">${body}</div>\n    <script>window.__PRODUCT__=${inlineJson(product)}</script>`);
-}
-
-function sendHtml(res: any, status: number, cacheControl: string, html: string) {
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.setHeader('Cache-Control', cacheControl);
-  res.status(status).send(html);
+  return renderPage(shell, head, {
+    jsonLd: productJsonLd(product, canonicalUrl),
+    root: body,
+    script: `window.__PRODUCT__=${inlineJson(product)}`,
+    productPage: true,
+  });
 }
 
 async function fetchAllProducts(baseUrl: string, token: string): Promise<Product[] | null> {
