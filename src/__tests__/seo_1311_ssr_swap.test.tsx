@@ -31,3 +31,14 @@ describe('App after a pre-loaded catalog', () => {
     cleanup();
   });
 });
+
+describe('catalog filters from the URL (applied by main.tsx before the first render)', () => {
+  it('category, brand and search come from the params; missing ones reset', async () => {
+    const { store } = await import('../app/store');
+    const { catalogFiltersFromUrl } = await import('../features/catalog/catalogSlice');
+    store.dispatch(catalogFiltersFromUrl(new URLSearchParams('category=VC001491&brand=Yonex&search=astrox')));
+    expect(store.getState().catalog).toMatchObject({ selectedCategory: 'VC001491', selectedBrand: ['Yonex'], searchQuery: 'astrox' });
+    store.dispatch(catalogFiltersFromUrl(new URLSearchParams('')));
+    expect(store.getState().catalog).toMatchObject({ selectedCategory: 'Tất cả', selectedBrand: [], searchQuery: '' });
+  });
+});

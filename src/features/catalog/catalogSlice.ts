@@ -69,4 +69,15 @@ export const {
   resetCatalogFilters
 } = catalogSlice.actions;
 
+// Catalog filters from the /catalog URL. App applies it on every URL change; main.tsx also applies it before the
+// first render of a server-rendered catalog landing, so the first paint already shows the filtered list.
+export const catalogFiltersFromUrl = (params: URLSearchParams) => (dispatch: (action: unknown) => unknown) => {
+  const categoryParam = params.get('category');
+  const searchParam = params.get('search');
+  const brandParam = params.get('brand');
+  dispatch(setSelectedCategory(categoryParam ? decodeURIComponent(categoryParam) : 'Tất cả'));
+  dispatch(setSelectedBrand(brandParam ? [brandParam] : []));
+  dispatch(setSearchQuery(searchParam ? decodeURIComponent(searchParam) : ''));
+};
+
 export default catalogSlice.reducer;

@@ -18,7 +18,7 @@ import ScrollToTop from './components/ScrollToTop';
 import StoreLocator from './components/StoreLocator';
 import { fetchAppData, refetchStock } from './features/appData/appDataSlice';
 import CatalogPage from './features/catalog/CatalogPage';
-import { setSearchQuery, setSelectedBrand, setSelectedCategory } from './features/catalog/catalogSlice';
+import { catalogFiltersFromUrl } from './features/catalog/catalogSlice';
 import {
   addCartItemAndOpen,
   buildDefaultCartItem,
@@ -104,13 +104,7 @@ export default function App() {
 
   useEffect(() => {
     if (location.pathname !== '/catalog') return;
-
-    const categoryParam = searchParams.get('category');
-    const searchParam = searchParams.get('search');
-    const brandParam = searchParams.get('brand');
-    dispatch(setSelectedCategory(categoryParam ? decodeURIComponent(categoryParam) : 'Tất cả'));
-    dispatch(setSelectedBrand(brandParam ? [brandParam] : []));
-    dispatch(setSearchQuery(searchParam ? decodeURIComponent(searchParam) : ''));
+    dispatch(catalogFiltersFromUrl(searchParams));
   }, [dispatch, location.pathname, searchParams]);
 
   const handleAddToCart = (product: (typeof products)[number], e?: MouseEvent) => {

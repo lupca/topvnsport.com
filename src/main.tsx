@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
 import { store } from './app/store.ts';
 import { fetchAppData } from './features/appData/appDataSlice.ts';
+import { catalogFiltersFromUrl } from './features/catalog/catalogSlice.ts';
 import './index.css';
 import { SystemPopupProvider } from '@topvnsport/ui-kit';
 import { initTracking } from './lib/tracking.ts';
@@ -30,6 +31,8 @@ function catalogReady(): Promise<unknown> {
   if (!document.getElementById('ssr') || !store.getState().appData.isLoading) return Promise.resolve();
   return Promise.race([store.dispatch(fetchAppData()), new Promise(resolve => setTimeout(resolve, SSR_WAIT_MS))]);
 }
+
+if (location.pathname === '/catalog') store.dispatch(catalogFiltersFromUrl(new URLSearchParams(location.search)));
 
 void Promise.all([cssReady(), catalogReady()]).then(() => createRoot(document.getElementById('root')!).render(
   <StrictMode>
