@@ -5,6 +5,9 @@
   "functions": {
     "api/product.ts": {
       "includeFiles": "dist/index.html"
+    },
+    "api/page.ts": {
+      "includeFiles": "{dist/index.html,src/config/heroBanners.json}"
     }
   },
   "redirects": [
