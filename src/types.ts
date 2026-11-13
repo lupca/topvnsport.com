@@ -82,6 +82,9 @@ export interface Product {
   badge?: 'NEW' | 'HOT' | 'SALE' | 'LIMITED' | 'PRO' | 'TOUR' | 'GAME' | 'PLAY';
   isWide?: boolean; // Specially for Shoes wide form
   colors?: string[];
+  // PIM webstore listing: page <title> and the variant pre-selected on the PDP; undefined = not set.
+  seoTitle?: string;
+  defaultVariantId?: number;
 }
 
 export interface TierVariation {

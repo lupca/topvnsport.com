@@ -13,7 +13,7 @@ export function productHeadValues(product: Product, canonical: string): ProductH
   // Cut by code points so an emoji at 159-160 is never split into a lone surrogate.
   const description = Array.from((product.description ?? '').replace(/\s+/g, ' ').trim()).slice(0, 160).join('').trim();
   const image = product.gallery?.find((src) => /^https?:\/\/\S+$/i.test(src));
-  return { title: product.name, canonical, ...(description && { description }), ...(image && { image }) };
+  return { title: product.seoTitle ?? product.name, canonical, ...(description && { description }), ...(image && { image }) };
 }
 
 // [tag, key attr, key, value attr, field]; order is the server's head-block order.

@@ -78,7 +78,7 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
   return page
     // data-shell-title keeps the shell title in the document so the SPA restores it off product pages.
     .replace(/<title>([\s\S]*?)<\/title>/, (_m, shellTitle: string) =>
-      `<title data-shell-title="${shellTitle.replace(/"/g, '&quot;')}">${name}</title>`)
+      `<title data-shell-title="${shellTitle.replace(/"/g, '&quot;')}">${escapeHtml(head.title)}</title>`)
     // The product page paints from window.__PRODUCT__ (no catalog wait), so the shell's catalog preloads are dropped.
     // Server-rendered text must not show unstyled: the bundle CSS blocks again here (the SPA shell defers it).
     .replace(/(<link rel="stylesheet"[^>]*?) media="print" onload="[^"]*" data-deferred-css/, '$1')

@@ -239,7 +239,9 @@ export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): P
     defaultSku: variants.find((variant) => Boolean(variant.sku_code))?.sku_code,
     colors,
     tier_variations: pmiProduct.tier_variations || [],
-    variants: mappedVariants
+    variants: mappedVariants,
+    seoTitle: pmiProduct.seo_title?.trim() || undefined,
+    defaultVariantId: pmiProduct.default_variant_id ?? undefined
   };
 }
 

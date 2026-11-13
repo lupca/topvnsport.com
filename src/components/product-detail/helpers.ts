@@ -118,11 +118,15 @@ export const aggregateStock = (product: Product, tier1: string, tier2: string): 
   return { kind: 'known', stock: 0 };
 };
 
-// Giá trị chọn sẵn khi mở trang: tầng có đúng 1 lựa chọn -> nó; tầng cước có
+// Giá trị chọn sẵn khi mở trang: biến thể chọn sẵn của listing webstore (PIM
+// default_variant_id) -> lựa chọn của nó; tầng có đúng 1 lựa chọn -> nó; tầng cước có
 // giá trị không-đan -> giá trị đó (công tắc đan cước TẮT); còn lại để trống.
 export const initialTierValue = (product: Product, tierIndex: number): string => {
   const tier = product.tier_variations?.find((tv) => tv.tier_index === tierIndex);
   if (!tier) return '';
+  const preset = product.variants?.find((v) => v.id !== undefined && v.id === product.defaultVariantId);
+  const presetOption = tierIndex === 1 ? preset?.tier_1_option : preset?.tier_2_option;
+  if (presetOption && tier.options.includes(presetOption)) return presetOption;
   if (tier.options.length === 1) return tier.options[0];
   if (isStringingTier(tier)) return tier.options.find(isNoStringOption) ?? '';
   return '';

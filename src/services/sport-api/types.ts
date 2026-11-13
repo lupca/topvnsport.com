@@ -71,6 +71,9 @@ export type PmiProduct = {
   original_price?: number;
   percentage_discount?: number;
   has_active_promotion?: boolean;
+  // Listing webstore của PIM: tiêu đề trang (<title>) và biến thể chọn sẵn; null = không đặt.
+  seo_title?: string | null;
+  default_variant_id?: number | null;
 };
 
 export type CreateOrderItem = {
