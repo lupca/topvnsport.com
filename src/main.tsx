@@ -24,12 +24,14 @@ function cssReady(): Promise<void> {
   });
 }
 
-// Server-rendered home/catalog (api/page.ts, #ssr): keep that content on screen until the catalog has
-// loaded (at most SSR_WAIT_MS), so React replaces it with the real page instead of the loading skeleton.
+// Server-rendered home/catalog (api/page.ts, #ssr): keep that content on screen until the catalog and the web
+// fonts have loaded (at most SSR_WAIT_MS), so React replaces it with the real page instead of the loading
+// skeleton, and a late font swap does not move the rendered page.
 const SSR_WAIT_MS = 6000;
 function catalogReady(): Promise<unknown> {
-  if (!document.getElementById('ssr') || !store.getState().appData.isLoading) return Promise.resolve();
-  return Promise.race([store.dispatch(fetchAppData()), new Promise(resolve => setTimeout(resolve, SSR_WAIT_MS))]);
+  if (!document.getElementById('ssr')) return Promise.resolve();
+  const catalog = store.getState().appData.isLoading ? store.dispatch(fetchAppData()) : undefined;
+  return Promise.race([Promise.all([catalog, document.fonts?.ready]), new Promise(resolve => setTimeout(resolve, SSR_WAIT_MS))]);
 }
 
 if (location.pathname === '/catalog') store.dispatch(catalogFiltersFromUrl(new URLSearchParams(location.search)));
