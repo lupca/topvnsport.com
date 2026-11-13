@@ -9,6 +9,13 @@ export { SITE_ORIGIN };
 
 const PRODUCTS_PAGE_SIZE = 100;
 
+// PIM updated_at (ISO, with or without zone) -> W3C datetime in UTC; anything unparsable -> no lastmod.
+export function lastmodOf(value: unknown): string | undefined {
+  if (typeof value !== 'string' || !value) return undefined;
+  const ms = Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(value) ? value : `${value}Z`);
+  return Number.isNaN(ms) ? undefined : new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z');
+}
+
 export function escapeXml(unsafe: string): string {
   return unsafe.replace(/[<>&'"]/g, (c) => {
     switch (c) {
@@ -22,9 +29,10 @@ export function escapeXml(unsafe: string): string {
   });
 }
 
-function renderSitemap(urls: string[]): string {
+// lastmod (W3C date) only where PIM gives the product's updated_at; never invented for home/categories.
+function renderSitemap(urls: { loc: string; lastmod?: string }[]): string {
   const items = urls
-    .map((url) => `  <url>\n    <loc>${escapeXml(url)}</loc>\n  </url>`)
+    .map(({ loc, lastmod }) => `  <url>\n    <loc>${escapeXml(loc)}</loc>${lastmod ? `\n    <lastmod>${escapeXml(lastmod)}</lastmod>` : ''}\n  </url>`)
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</urlset>\n`;
 }
@@ -104,15 +112,16 @@ export default async function handler(req: any, res: any) {
         name,
         slug: slugifyProductName(name),
         categoryCode: matchedCategory?.code,
+        updatedAt: lastmodOf(p?.updated_at),
       } as Product);
     }
 
     const keptCategories = getCategoriesSortedByCount(categories, products);
 
-    const urls: string[] = [
-      `${SITE_ORIGIN}/`,
-      ...keptCategories.map((c) => `${SITE_ORIGIN}/catalog?category=${encodeURIComponent(c.code)}`),
-      ...products.map((p) => `${SITE_ORIGIN}${getProductPath(p)}`),
+    const urls = [
+      { loc: `${SITE_ORIGIN}/` },
+      ...keptCategories.map((c) => ({ loc: `${SITE_ORIGIN}/catalog?category=${encodeURIComponent(c.code)}` })),
+      ...products.map((p) => ({ loc: `${SITE_ORIGIN}${getProductPath(p)}`, lastmod: p.updatedAt })),
     ];
 
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
