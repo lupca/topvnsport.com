@@ -71,7 +71,8 @@ describe('STOR-069 renderProductPage', () => {
     expect(meta.startsWith('Dòng vợt công thủ xx')).toBe(true);
     expect(Array.from(meta).length).toBeLessThanOrEqual(155);
     expect(meta).not.toMatch(/\s{2,}|\n/);
-    expect(html).toMatch(/<meta property="og:description" content="Dòng vợt công thủ[ x]+…" data-product-head \/>/);
+    // No sentence/clause boundary: word cut closed with a period, never a trailing "…" (review 14/11 item 5).
+    expect(html).toMatch(/<meta property="og:description" content="Dòng vợt công thủ[ x]+x\." data-product-head \/>/);
     expect(rootDiv(html)).toContain(`<p>${desc.trim()}</p>`);
   });
 
@@ -79,8 +80,8 @@ describe('STOR-069 renderProductPage', () => {
     const desc = 'x'.repeat(153) + '\u{1F3F8}\u{1F3F8}' + ' y';
     const html = renderProductPage(SHELL, baseProduct({ description: desc }), CANONICAL);
     const meta = html.match(/<meta name="description" content="([^"]*)" data-product-head \/>/)![1];
-    // no space in range: cut at 154 code points (153 x + the first emoji) plus the ellipsis
-    expect(meta).toBe('x'.repeat(153) + '\u{1F3F8}…');
+    // no space in range: cut at 154 code points (153 x + the first emoji) plus the closing period
+    expect(meta).toBe('x'.repeat(153) + '\u{1F3F8}.');
     expect(Array.from(meta).length).toBe(155);
     expect(meta).not.toContain('\uFFFD');
     expect(meta).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/);

@@ -49,9 +49,16 @@ export function seoDescriptionFromText(text: string | undefined): string | undef
   const head = chars(ended).slice(0, DESCRIPTION_MAX).join('');
   const ends = [...head.matchAll(/[.!?…](?=\s)/g)].map(m => m.index!);
   const lastEnd = ends.length ? ends[ends.length - 1] : -1;
-  // A sentence end in the first half would throw away most of the room; cut at a word then.
   if (lastEnd >= DESCRIPTION_MAX / 2) return head.slice(0, lastEnd + 1);
-  return `${cutAtWord(ended, DESCRIPTION_MAX - 1)}…`;
+  // No sentence end in the second half: the last clause boundary (comma/semicolon) there, closed with a period;
+  // else the full sentence(s) that fit, however short; else the last clause, else a word cut. Never a trailing "…".
+  const clauses = [...head.slice(0, DESCRIPTION_MAX - 1).matchAll(/[,;](?=\s)/g)].map(m => m.index!);
+  const lastClause = clauses.length ? clauses[clauses.length - 1] : -1;
+  const closed = (text: string) => `${text.replace(TRAILING_JUNK, '').replace(/[\s,;:–—-]+$/u, '')}.`;
+  if (lastClause >= DESCRIPTION_MAX / 2) return closed(head.slice(0, lastClause));
+  if (lastEnd > 0) return head.slice(0, lastEnd + 1);
+  if (lastClause > 0) return closed(head.slice(0, lastClause));
+  return closed(cutAtWord(ended, DESCRIPTION_MAX - 1));
 }
 
 const fold = (s: string) => s.normalize('NFC').toLowerCase();
