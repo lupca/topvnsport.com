@@ -37,6 +37,7 @@ import { captureAttribution } from './lib/attribution.ts';
 import { SITE_ORIGIN } from './config/storefront';
 import { findProductBySlug, getProductPath } from './utils/productSlug';
 import { catalogHead, homeHead, productHeadValues, readShellHead, syncHead, type ProductHead } from './utils/productHead';
+import { productJsonLd } from './utils/productJsonLd';
 
 // Read once at load, before any route change rewrites the head.
 const SHELL_HEAD = readShellHead(document);
@@ -73,6 +74,7 @@ export default function App() {
     const isCatalog = location.pathname === '/catalog';
     if ((slug || isCatalog) && products.length === 0) return; // catalog not loaded yet: keep the server head
     let head: ProductHead | null = null;
+    let jsonLd: unknown;
     if (slug) {
       let product;
       try {
@@ -81,12 +83,13 @@ export default function App() {
         product = undefined; // malformed %-escape in the slug
       }
       head = product ? productHeadValues(product, `${SITE_ORIGIN}${getProductPath(product)}`) : null;
+      jsonLd = product && productJsonLd(product, `${SITE_ORIGIN}${getProductPath(product)}`);
     } else if (location.pathname === '/') {
       head = homeHead();
     } else if (isCatalog && !searchParams.has('search') && !searchParams.has('brand')) {
       head = catalogHead(searchParams.get('category') || undefined, categories, products) ?? null;
     }
-    syncHead(document, head, SHELL_HEAD);
+    syncHead(document, head, SHELL_HEAD, jsonLd);
   }, [location.pathname, searchParams, products, categories]);
 
   useEffect(() => {

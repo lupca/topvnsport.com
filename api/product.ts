@@ -3,98 +3,21 @@ import path from 'node:path';
 import { CDN_CACHE_CONTROL, resolveCatalogGrantToken } from './_catalogProxy.js';
 import { escapeHtml, inlineJson, renderPage, sendHtml } from './_render.js';
 import { SITE_ORIGIN } from '../src/config/storefront.js';
-import { PRICE_VALID_DAYS, RETURN_POLICY, SHIPPING } from '../src/config/seo.js';
 import { productHeadValues } from '../src/utils/productHead.js';
-import { productBrand } from '../src/utils/seoText.js';
 import { getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
 import { mapPmiProduct } from '../src/services/sport-api/productMappers.js';
 import { applyWmsStock, parseWmsStock } from '../src/services/sport-api/wmsStock.js';
-import { aggregateStock, getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
+import { getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
+import { offerPolicies, productJsonLd } from '../src/utils/productJsonLd.js';
 import { getCategoryLabel } from '../src/utils/categories.js';
-import type { Category, Product, ProductVariant } from '../src/types.js';
+import type { Category, Product } from '../src/types.js';
 
-export { escapeHtml };
+export { escapeHtml, offerPolicies, productJsonLd };
 
 const PRODUCTS_PAGE_SIZE = 100;
 const NO_PRICE_TEXT = 'Liên hệ để biết giá';
 const WMS_TIMEOUT_MS = 4000;
 const PIM_CATEGORIES_TIMEOUT_MS = 4000;
-const SCHEMA_STOCK = (stock: number) => (stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock');
-
-// Policy properties every Offer carries, read from src/config/seo.ts (owner decisions); off = omitted.
-export function offerPolicies(): Record<string, unknown> {
-  const days = (min: number, max: number) => ({ '@type': 'QuantitativeValue', minValue: min, maxValue: max, unitCode: 'DAY' });
-  return {
-    ...(SHIPPING.enabled && {
-      shippingDetails: {
-        '@type': 'OfferShippingDetails',
-        shippingRate: { '@type': 'MonetaryAmount', value: SHIPPING.rateVnd, currency: 'VND' },
-        shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'VN' },
-        deliveryTime: { '@type': 'ShippingDeliveryTime', handlingTime: days(...SHIPPING.handlingDays), transitTime: days(...SHIPPING.transitDays) },
-      },
-    }),
-    ...(RETURN_POLICY.enabled && {
-      hasMerchantReturnPolicy: {
-        '@type': 'MerchantReturnPolicy',
-        applicableCountry: 'VN',
-        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
-        merchantReturnDays: RETURN_POLICY.days,
-        returnMethod: 'https://schema.org/ReturnByMail',
-        returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
-        ...(RETURN_POLICY.link && { merchantReturnLink: RETURN_POLICY.link }),
-      },
-    }),
-  };
-}
-
-// schema.org Product from the values the page shows. Offers only when the page shows a price (never on
-// NO_PRICE_TEXT): one Offer per priced variant (sku, its own price, its WMS availability), the variant the
-// page shows first leading; several variants -> AggregateOffer(lowPrice/highPrice/offerCount) around them,
-// also when no variant is preselected (two-tier products).
-export function productJsonLd(product: Product, canonicalUrl: string, now = new Date()): Record<string, unknown> {
-  const description = (product.description ?? '').trim();
-  const image = product.gallery?.find((src) => /^https?:\/\/\S+$/i.test(src));
-  const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));
-  const priced = price.hasPrice && price.salePrice > 0;
-  const sku = price.matchedVariant?.sku_code ?? product.defaultSku;
-  const brand = productBrand(product);
-  const priceValidUntil = new Date(now.getTime() + PRICE_VALID_DAYS * 86400000).toISOString().slice(0, 10);
-  const base = { '@type': 'Offer', priceCurrency: 'VND', priceValidUntil, url: canonicalUrl, ...offerPolicies() };
-
-  let offers: Record<string, unknown> | undefined;
-  const variants = (product.variants ?? []).filter((v) => v.price > 0);
-  if (priced && variants.length > 0) {
-    // One Offer per priced variant the web shows (PIM already dropped hidden ones), each with its sku, price and
-    // WMS availability; the variant the page shows first leads. Several -> AggregateOffer around them.
-    const first = price.matchedVariant && variants.includes(price.matchedVariant) ? price.matchedVariant : undefined;
-    const ordered: ProductVariant[] = first ? [first, ...variants.filter((v) => v !== first)] : variants;
-    const list = ordered.map((v) => ({
-      ...base,
-      ...(v.sku_code && { sku: v.sku_code }),
-      price: v.computedPrice ?? v.price,
-      ...(v.stock !== undefined && { availability: SCHEMA_STOCK(v.stock) }),
-    }));
-    const prices = list.map((o) => o.price as number);
-    offers = list.length === 1
-      ? list[0]
-      : { '@type': 'AggregateOffer', priceCurrency: 'VND', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: list.length, offers: list };
-  } else if (priced) {
-    // No priced variant: availability only from WMS stock at the PDP's initial tiers; 'unknown' and 'none' omit it, never invented.
-    const stock = aggregateStock(product, initialTierValue(product, 1), initialTierValue(product, 2));
-    offers = { ...base, price: price.salePrice, ...(stock.kind === 'known' && { availability: SCHEMA_STOCK(stock.stock) }) };
-  }
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    ...(description && { description }),
-    ...(image && { image }),
-    ...(sku && { sku }),
-    ...(brand && { brand: { '@type': 'Brand', name: brand } }),
-    ...(offers && { offers }),
-  };
-}
 
 type NavItem = { code: string; label: string };
 

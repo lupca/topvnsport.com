@@ -87,8 +87,15 @@ export function readShellHead(doc: Document): ShellHead {
 
 // head = null restores the shell. A product value wins; a field the product lacks falls back to the shell's
 // own tag, as in the server render (it only appends). One copy per tag survives; none if neither has a value.
-export function syncHead(doc: Document, head: ProductHead | null, shell: ShellHead): void {
+// jsonLd: the page's structured data (product pages); without it a server-rendered one is removed, never left stale.
+export function syncHead(doc: Document, head: ProductHead | null, shell: ShellHead, jsonLd?: unknown): void {
   doc.title = head?.title ?? shell.title;
+  const scripts = Array.from(doc.head.querySelectorAll('script[type="application/ld+json"]'));
+  scripts.slice(jsonLd ? 1 : 0).forEach((s) => s.remove());
+  if (jsonLd) {
+    const script = scripts[0] ?? doc.head.appendChild(Object.assign(doc.createElement('script'), { type: 'application/ld+json' }));
+    script.textContent = JSON.stringify(jsonLd);
+  }
   for (const [tag, keyAttr, key, valueAttr, field] of PRODUCT_HEAD_TAGS) {
     const value = head?.[field] ?? shell.tags[key];
     const copies = Array.from(doc.head.querySelectorAll(`${tag}[${keyAttr}="${key}"]`));
