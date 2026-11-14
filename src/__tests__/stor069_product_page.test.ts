@@ -331,7 +331,7 @@ function mockFetch(opts: { reject?: boolean; status?: number; body?: any; stock?
     }
     if (opts.reject) throw new Error('timeout');
     if (url.includes('/public/voma-categories')) {
-      return { status: 200, json: async () => [{ id: 1, code: 'vot', name: 'Vợt' }] } as any;
+      return { status: 200, json: async () => [{ id: 1, code: 'vot', name: 'Vợt', display_name: 'Vợt' }] } as any;
     }
     if (opts.status && opts.status !== 200) return { status: opts.status, json: async () => ({}) } as any;
     const single = url.match(/\/public\/products\/(\d+)$/);

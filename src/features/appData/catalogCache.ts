@@ -9,6 +9,9 @@ declare global {
   interface Window {
     // Product api/product.ts already resolved server-side, inlined into the HTML.
     __PRODUCT__?: Product;
+    // Header menu items api/product.ts built from PIM voma-categories (not yet ordered by product count):
+    // Header renders them hidden until the catalog loads, so the menu has its final rows at first paint.
+    __NAV__?: { code: string; label: string }[];
   }
 }
 

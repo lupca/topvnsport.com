@@ -166,6 +166,9 @@ export default function Header({ cartCount, openCart, products, categories, cate
   const sortedCategories = getCategoriesSortedByCount(categories, products);
   // Published = hiển thị: ngành chỉ có SP hết hàng vẫn có mặt trên menu (SP gắn nhãn Hết hàng, không ẩn).
   const navItems = sortedCategories.map(category => ({ code: category.code, label: getCategoryLabel(category, categories) }));
+  // Product landing before the catalog loads: the server's menu items (window.__NAV__) hold the menu's rows, hidden,
+  // so the page does not move when the real menu (ordered by product count) replaces them (desktop CLS 0.29).
+  const navPlaceholder = navItems.length === 0 && !hasCatalogLoadError && typeof window !== 'undefined' ? window.__NAV__ ?? [] : [];
 
   return (
     <>
@@ -471,7 +474,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
         )}
       </AnimatePresence>
 
-      <MainNav items={navItems}>
+      <MainNav items={navPlaceholder.length > 0 ? navPlaceholder : navItems} placeholder={navPlaceholder.length > 0}>
         {sortedCategories.length === 0 && hasCatalogLoadError && (
           <div className="flex items-center justify-center gap-3 text-xs max-md:text-sm pb-3">
             <span className="text-red-700 font-medium">Chưa tải được danh mục sản phẩm.</span>

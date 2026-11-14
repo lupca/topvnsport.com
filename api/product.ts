@@ -10,13 +10,15 @@ import { getProductPath, findProductBySlug } from '../src/utils/productSlug.js';
 import { mapPmiProduct } from '../src/services/sport-api/productMappers.js';
 import { applyWmsStock, parseWmsStock } from '../src/services/sport-api/wmsStock.js';
 import { aggregateStock, getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
-import type { Product, ProductVariant } from '../src/types.js';
+import { getCategoryLabel } from '../src/utils/categories.js';
+import type { Category, Product, ProductVariant } from '../src/types.js';
 
 export { escapeHtml };
 
 const PRODUCTS_PAGE_SIZE = 100;
 const NO_PRICE_TEXT = 'Liên hệ để biết giá';
 const WMS_TIMEOUT_MS = 4000;
+const PIM_CATEGORIES_TIMEOUT_MS = 4000;
 const SCHEMA_STOCK = (stock: number) => (stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock');
 
 // Policy properties every Offer carries, read from src/config/seo.ts (owner decisions); off = omitted.
@@ -92,8 +94,11 @@ export function productJsonLd(product: Product, canonicalUrl: string, now = new 
   };
 }
 
+type NavItem = { code: string; label: string };
+
 // Pure: shell + product -> HTML. Missing data is omitted, never composed.
-export function renderProductPage(shell: string, product: Product, canonicalUrl: string): string {
+// nav (header menu items) is inlined as window.__NAV__: the menu reserves its rows before the catalog loads.
+export function renderProductPage(shell: string, product: Product, canonicalUrl: string, nav?: NavItem[]): string {
   const description = (product.description ?? '').trim();
   const head = productHeadValues(product, canonicalUrl);
   const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));
@@ -111,7 +116,7 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
   return renderPage(shell, head, {
     jsonLd: productJsonLd(product, canonicalUrl),
     root: body,
-    script: `window.__PRODUCT__=${inlineJson(product)}`,
+    script: `window.__PRODUCT__=${inlineJson(product)}${nav?.length ? `;window.__NAV__=${inlineJson(nav)}` : ''}`,
     productPage: true,
   });
 }
@@ -149,6 +154,26 @@ async function fetchOneProduct(baseUrl: string, token: string, id: string): Prom
   return mapPmiProduct(data, []) ?? undefined;
 }
 
+// Header menu items from PIM voma-categories (2 KB, the categories that have public products; the browser
+// orders them by product count once the catalog loads), or null on any failure (logged).
+async function fetchNavItems(baseUrl: string, token: string): Promise<NavItem[] | null> {
+  try {
+    const resp = await fetch(`${baseUrl}/public/voma-categories`, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(PIM_CATEGORIES_TIMEOUT_MS),
+    });
+    if (resp.status !== 200) throw new Error(`status ${resp.status}`);
+    const categories: Category[] = await resp.json();
+    if (!Array.isArray(categories) || !categories.every((c) => typeof c?.code === 'string' && typeof c?.display_name === 'string')) {
+      throw new Error('malformed body');
+    }
+    return categories.map((c) => ({ code: c.code, label: getCategoryLabel(c, categories) }));
+  } catch (error) {
+    console.error('product page: header menu not inlined, PIM voma-categories failed:', error);
+    return null;
+  }
+}
+
 // WMS stock map, or null on any failure. Malformed (neither stock object nor items array) is a failure, never zero stock.
 async function fetchWmsStockMap(token: string): Promise<Record<string, number> | null> {
   const wmsUrl = process.env.WMS_API_URL;
@@ -182,6 +207,7 @@ export default async function handler(req: any, res: any) {
 
   // WMS starts alongside the PIM pages; fetchWmsStockMap never throws.
   const stockPromise = fetchWmsStockMap(token);
+  const navPromise = fetchNavItems(baseUrl, token);
   const slug = typeof req?.query?.slug === 'string' ? req.query.slug : undefined;
   let product: Product | undefined;
   try {
@@ -213,10 +239,11 @@ export default async function handler(req: any, res: any) {
 
   const canonicalUrl = `${SITE_ORIGIN}${canonicalPath}`;
   // A null map gives stock=undefined (never the PIM variant.stock) and a short/no-store response.
-  const stockMap = await stockPromise;
+  const [stockMap, nav] = await Promise.all([stockPromise, navPromise]);
   const [withStock] = applyWmsStock([product], stockMap);
-  const html = renderProductPage(shell, withStock, canonicalUrl);
-  if (!stockMap) return sendHtml(res, 200, 'no-store', html);
+  const html = renderProductPage(shell, withStock, canonicalUrl, nav ?? undefined);
+  // Without the menu items the page still renders (menu shifts once loaded): served, not cached.
+  if (!stockMap || !nav) return sendHtml(res, 200, 'no-store', html);
   res.setHeader('Vercel-CDN-Cache-Control', CDN_CACHE_CONTROL);
   sendHtml(res, 200, 'public, max-age=0, s-maxage=300', html);
 }

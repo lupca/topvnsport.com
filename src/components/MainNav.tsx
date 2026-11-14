@@ -12,6 +12,8 @@ interface MainNavProps {
   items: MainNavItem[];
   // Dòng báo lỗi tải danh mục (STOR-057) -- nằm trong <nav>.
   children?: ReactNode;
+  // items chỉ để giữ chỗ (window.__NAV__, chưa tải danh mục): ẩn (visibility) nhưng giữ đúng số hàng của menu.
+  placeholder?: boolean;
 }
 
 // Gạch chân vẽ trên <span> chữ: dưới md link rộng tối thiểu 44px nhưng gạch vẫn đúng bề rộng chữ (STOR-166).
@@ -23,7 +25,7 @@ const linkClass = (active: boolean) =>
 
 const linkLabel = (active: boolean, label: string) => <span className={`max-md:relative ${active ? ACTIVE_UNDERLINE : ''}`}>{label}</span>;
 
-export default function MainNav({ items, children }: MainNavProps) {
+export default function MainNav({ items, children, placeholder = false }: MainNavProps) {
   const { pathname, search } = useLocation();
   const activeCategory = pathname === '/catalog' ? new URLSearchParams(search).get('category') : null;
   const homeActive = pathname === '/';
@@ -54,7 +56,7 @@ export default function MainNav({ items, children }: MainNavProps) {
           {items.map(item => {
             const active = activeCategory === item.code;
             return (
-              <li key={item.code} className="max-md:shrink-0 max-md:whitespace-nowrap">
+              <li key={item.code} className={`max-md:shrink-0 max-md:whitespace-nowrap${placeholder ? ' invisible' : ''}`}>
                 <Link
                   to={`/catalog?category=${encodeURIComponent(item.code)}`}
                   aria-current={active ? 'page' : undefined}
