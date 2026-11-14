@@ -224,14 +224,18 @@ describe('STOR-070 JSON-LD', () => {
     expect(rootDiv(html)).toContain(`<p>${formatVnd(data.offers.price)}</p>`);
   });
 
-  it('sku falls back to product.defaultSku when no variant matches', () => {
+  it('no preselected variant: product sku falls back to defaultSku, offers still list every priced variant with its sku', () => {
     const data = ld({
       defaultSku: 'SKU-DEF',
-      tier_variations: [{ name: 'Màu', tier_index: 1, options: ['Đỏ', 'Xanh'] }],
-      variants: [{ id: 1, tier_1_option: 'Đỏ', price: 1200000, stock: 1, sku_code: 'SKU-RED' } as any],
+      tier_variations: [{ name: 'Màu', tier_index: 1, options: ['Đỏ', 'Xanh'] }, { name: 'Cước', tier_index: 2, options: ['A', 'B'] }],
+      variants: [
+        { id: 1, tier_1_option: 'Đỏ', tier_2_option: 'A', price: 1200000, stock: 1, sku_code: 'SKU-RED-A' } as any,
+        { id: 2, tier_1_option: 'Xanh', tier_2_option: 'B', price: 1500000, stock: 0, sku_code: 'SKU-BLUE-B' } as any,
+      ],
     } as any);
     expect(data.sku).toBe('SKU-DEF');
-    expect(data.offers.price).toBe(1500000);
+    expect(data.offers).toMatchObject({ '@type': 'AggregateOffer', lowPrice: 1200000, highPrice: 1500000, offerCount: 2 });
+    expect(data.offers.offers.map((o: any) => [o.sku, o.price])).toEqual([['SKU-RED-A', 1200000], ['SKU-BLUE-B', 1500000]]);
   });
 
   it('no sku key when no SKU exists', () => {
@@ -523,7 +527,7 @@ describe('STOR-078 WMS stock, availability and cache headers', () => {
     expect(jsonLd(res.body).offers.availability).toBe('https://schema.org/OutOfStock');
   });
 
-  it("kind 'none' keeps the Offer, omits availability and gets the known-stock header pair", async () => {
+  it("kind 'none' (no variant at the initial tiers) still offers the priced variant and gets the known-stock header pair", async () => {
     const none = pmi(105, 'Vợt Lining None', {
       tier_1_name: 'Màu', variants: [{ id: 1050, price: 500000, stock: 3, sku_code: 'S105', tier_1_option: 'Đỏ' }],
     });
@@ -531,8 +535,8 @@ describe('STOR-078 WMS stock, availability and cache headers', () => {
     const res = await run('vot-lining-none', { body, stock: { body: { stock: { S105: 9 } } } });
     expect(res.statusCode).toBe(200);
     const { offers } = jsonLd(res.body);
-    expect(offers).toMatchObject({ '@type': 'Offer', priceCurrency: 'VND' });
-    expect(offers).not.toHaveProperty('availability');
+    // The tier option is gone but the priced variant is still offered, with its sku and WMS availability.
+    expect(offers).toMatchObject({ '@type': 'Offer', priceCurrency: 'VND', sku: 'S105', availability: 'https://schema.org/InStock' });
     expect(res.headers).toMatchObject(KNOWN_HEADERS);
   });
 

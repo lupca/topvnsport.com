@@ -49,7 +49,8 @@ export function offerPolicies(): Record<string, unknown> {
 
 // schema.org Product from the values the page shows. Offers only when the page shows a price (never on
 // NO_PRICE_TEXT): one Offer per priced variant (sku, its own price, its WMS availability), the variant the
-// page shows first; several prices -> AggregateOffer(lowPrice/highPrice/offerCount) around them.
+// page shows first leading; several variants -> AggregateOffer(lowPrice/highPrice/offerCount) around them,
+// also when no variant is preselected (two-tier products).
 export function productJsonLd(product: Product, canonicalUrl: string, now = new Date()): Record<string, unknown> {
   const description = (product.description ?? '').trim();
   const image = product.gallery?.find((src) => /^https?:\/\/\S+$/i.test(src));
@@ -62,10 +63,11 @@ export function productJsonLd(product: Product, canonicalUrl: string, now = new 
 
   let offers: Record<string, unknown> | undefined;
   const variants = (product.variants ?? []).filter((v) => v.price > 0);
-  // Per-variant offers only when the page price is a variant's price (else the page price would be missing from them).
-  const first = price.matchedVariant;
-  if (priced && first && variants.includes(first)) {
-    const ordered: ProductVariant[] = [first, ...variants.filter((v) => v !== first)];
+  if (priced && variants.length > 0) {
+    // One Offer per priced variant the web shows (PIM already dropped hidden ones), each with its sku, price and
+    // WMS availability; the variant the page shows first leads. Several -> AggregateOffer around them.
+    const first = price.matchedVariant && variants.includes(price.matchedVariant) ? price.matchedVariant : undefined;
+    const ordered: ProductVariant[] = first ? [first, ...variants.filter((v) => v !== first)] : variants;
     const list = ordered.map((v) => ({
       ...base,
       ...(v.sku_code && { sku: v.sku_code }),
@@ -73,11 +75,11 @@ export function productJsonLd(product: Product, canonicalUrl: string, now = new 
       ...(v.stock !== undefined && { availability: SCHEMA_STOCK(v.stock) }),
     }));
     const prices = list.map((o) => o.price as number);
-    offers = new Set(prices).size === 1 && list.length === 1
+    offers = list.length === 1
       ? list[0]
       : { '@type': 'AggregateOffer', priceCurrency: 'VND', lowPrice: Math.min(...prices), highPrice: Math.max(...prices), offerCount: list.length, offers: list };
   } else if (priced) {
-    // Availability only from WMS stock at the PDP's initial tiers; 'unknown' and 'none' omit it, never invented.
+    // No priced variant: availability only from WMS stock at the PDP's initial tiers; 'unknown' and 'none' omit it, never invented.
     const stock = aggregateStock(product, initialTierValue(product, 1), initialTierValue(product, 2));
     offers = { ...base, price: price.salePrice, ...(stock.kind === 'known' && { availability: SCHEMA_STOCK(stock.stock) }) };
   }
