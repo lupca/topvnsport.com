@@ -28,9 +28,18 @@ export function pageRewrite(url: URL): URL | null {
   return target;
 }
 
+// '/product/<slug>/' -> 308 '/product/<slug>' (query kept): with the slash no rewrite matches and the SPA
+// shell (home) would be served with 200.
+export function productSlashRedirect(url: URL): string | null {
+  const m = url.pathname.match(/^(\/product\/[^/]+)\/+$/);
+  return m ? `${m[1]}${url.search}` : null;
+}
+
 export default function middleware(request: Request): Response | undefined {
   if (request.method !== 'GET' && request.method !== 'HEAD') return undefined;
   const url = new URL(request.url);
+  const slashless = productSlashRedirect(url);
+  if (slashless) return new Response(null, { status: 308, headers: { Location: slashless } });
   const target = pageRewrite(url) ?? stripTracking(url);
   return target ? new Response(null, { headers: { 'x-middleware-rewrite': target.toString() } }) : undefined;
 }

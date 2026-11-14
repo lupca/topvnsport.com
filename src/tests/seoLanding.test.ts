@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { stripTracking } from '../../middleware';
+import middleware, { stripTracking } from '../../middleware';
 import productHandler, { queryOf } from '../../api/product';
 
 describe('ad params are stripped from the canonical product cache key', () => {
@@ -45,5 +45,15 @@ describe('legacy product URLs 301 to the id URL', () => {
     await productHandler({ method: 'GET', url: '/api/product?slug=590', query: { slug: '590' } }, { ...res, code: 0 });
     expect(calls.filter((c) => c.includes('/public/products/590'))).toHaveLength(1);
     expect(calls.some((c) => c.includes('limit=100'))).toBe(false);
+  });
+});
+
+describe('product URL with a trailing slash', () => {
+  it('308s to the slashless URL, query kept; slashless URLs are not redirected', () => {
+    const res = middleware(new Request('https://x.vn/product/590/?gclid=a&color=red'))!;
+    expect(res.status).toBe(308);
+    expect(res.headers.get('Location')).toBe('/product/590?gclid=a&color=red');
+    expect(middleware(new Request('https://x.vn/product/old-name/'))!.headers.get('Location')).toBe('/product/old-name');
+    expect(middleware(new Request('https://x.vn/product/590'))?.status).not.toBe(308);
   });
 });
