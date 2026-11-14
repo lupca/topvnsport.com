@@ -57,8 +57,9 @@ export default function App() {
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
   // STOR-053: trên '/' HomePage tự báo lỗi tải sản phẩm (kèm Thử lại) -> banner bỏ dòng danh mục/sản phẩm, giữ dòng tồn kho.
   const isHome = location.pathname === '/';
-  const showCategoriesError = categoriesError && !isHome;
-  const showProductsError = productsError && !isHome;
+  // Home with no products shows its own load state; with products on screen (inlined/cached) the banner reports it.
+  const showCategoriesError = categoriesError && (!isHome || products.length > 0);
+  const showProductsError = productsError && (!isHome || products.length > 0);
 
   useEffect(() => {
     captureAttribution(location.search);

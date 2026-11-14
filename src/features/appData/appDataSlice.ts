@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sportApi } from '../../services/sportApi';
 import { applyWmsStock } from '../../services/sport-api/wmsStock';
 import { Branch, Category, Product, StringOption } from '../../types';
-import { loadCatalog, saveCatalog, withInlinedProduct } from './catalogCache';
+import { inlinedCatalog, loadCatalog, saveCatalog, withInlinedProduct } from './catalogCache';
 
 export interface AppDataState {
   products: Product[];
@@ -32,7 +32,10 @@ export interface AppDataState {
 type CatalogPayload = Pick<AppDataState, 'products' | 'branches' | 'stringOptions' | 'categories'>;
 
 export function buildInitialState(inlined: Product | undefined = typeof window === 'undefined' ? undefined : window.__PRODUCT__): AppDataState {
-  const cached = loadCatalog<CatalogPayload>();
+  // Server-rendered home/catalog: its inlined catalog (fresher) over the browser cache; both refresh in the background.
+  const stored = loadCatalog<CatalogPayload>();
+  const page = inlinedCatalog();
+  const cached: Partial<CatalogPayload> | null = page ? { ...(stored ?? {}), ...page } : stored;
   return {
     ...baseState,
     ...(cached ?? {}),

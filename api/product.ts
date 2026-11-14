@@ -175,7 +175,7 @@ async function fetchNavItems(baseUrl: string, token: string): Promise<NavItem[] 
 }
 
 // WMS stock map, or null on any failure. Malformed (neither stock object nor items array) is a failure, never zero stock.
-async function fetchWmsStockMap(token: string): Promise<Record<string, number> | null> {
+export async function fetchWmsStockMap(token: string): Promise<Record<string, number> | null> {
   const wmsUrl = process.env.WMS_API_URL;
   if (!wmsUrl) return null;
   try {

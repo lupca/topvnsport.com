@@ -4,9 +4,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { CDN_CACHE_CONTROL, resolveCatalogGrantToken } from './_catalogProxy.js';
-import { escapeHtml, renderPage, sendHtml } from './_render.js';
+import { escapeHtml, inlineJson, renderPage, sendHtml } from './_render.js';
+import { fetchWmsStockMap } from './product.js';
+import { applyWmsStock } from '../src/services/sport-api/wmsStock.js';
 import { HOME_SEO } from '../src/config/seo.js';
-import { catalogHead, catalogPath, homeHead, type ProductHead } from '../src/utils/productHead.js';
+import { catalogH1, catalogHead, catalogPath, homeHead, type ProductHead } from '../src/utils/productHead.js';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../src/utils/categories.js';
 import { getPriceDisplay } from '../src/utils/priceDisplay.js';
 import { getProductPath } from '../src/utils/productSlug.js';
@@ -57,16 +59,19 @@ const categoryLinks = (categories: Category[], products: Product[]) => {
   return shown.length ? `<nav aria-label="Danh mục"><ul>${shown.map((c) => `<li><a href="${catalogPath(c.code)}">${escapeHtml(getCategoryLabel(c, categories))}</a></li>`).join('')}</ul></nav>` : '';
 };
 
+// The catalog the page was rendered from, for the SPA to start from (window.__CATALOG__): a failed or slow
+// /api fetch in the browser (or a crawler that cannot fetch it) never replaces the content with a loading/error state.
+const catalogScript = (categories: Category[], products: Product[]) => `window.__CATALOG__=${inlineJson({ categories, products })}`;
+
 export function renderHome(shell: string, categories: Category[], products: Product[]): string {
   const root = `<div id="ssr"><h1>${escapeHtml(HOME_SEO.h1)}</h1><p>${escapeHtml(HOME_SEO.description)}</p>${heroImage()}${categoryLinks(categories, products)}${productList(products)}</div>`;
-  return renderPage(shell, homeHead(), { root });
+  return renderPage(shell, homeHead(), { root, script: catalogScript(categories, products) });
 }
 
 export function renderCatalog(shell: string, head: ProductHead, code: string | undefined, categories: Category[], products: Product[]): string {
   const items = code ? products.filter((p) => p.categoryCode === code) : products;
-  const h1 = head.title.replace(/ \| .*$/, '');
-  const root = `<div id="ssr"><h1>${escapeHtml(h1)}</h1><p>${escapeHtml(head.description ?? '')}</p>${productList(items)}${categoryLinks(categories, products)}</div>`;
-  return renderPage(shell, head, { root });
+  const root = `<div id="ssr"><h1>${escapeHtml(catalogH1(head))}</h1><p>${escapeHtml(head.description ?? '')}</p>${productList(items)}${categoryLinks(categories, products)}</div>`;
+  return renderPage(shell, head, { root, script: catalogScript(categories, products) });
 }
 
 export default async function handler(req: any, res: any) {
@@ -84,12 +89,17 @@ export default async function handler(req: any, res: any) {
   const token = resolveCatalogGrantToken();
 
   let catalog: { categories: Category[]; products: Product[] } | undefined;
+  let stockMap: Record<string, number> | null = null;
   if (baseUrl && token && !filtered) {
+    // WMS stock alongside (never throws): the inlined products carry the stock the browser would load.
+    const stockPromise = fetchWmsStockMap(token);
     try {
       catalog = await fetchCatalog(baseUrl, token);
     } catch (error) {
       console.error('page render: PIM catalog unavailable', error);
     }
+    stockMap = await stockPromise;
+    if (catalog) catalog = { categories: catalog.categories, products: applyWmsStock(catalog.products, stockMap) };
   }
   // PIM down: home still gets its own head (static config); the catalog gets the plain shell. Never cached.
   if (!catalog) {
@@ -102,6 +112,8 @@ export default async function handler(req: any, res: any) {
     if (!head) return sendHtml(res, 200, 'no-store', shell); // unknown category code: the SPA shows its own state
     html = renderCatalog(shell, head, code, catalog.categories, catalog.products);
   }
+  // No stock: the page is right but its inlined products lack stock until the browser refreshes them: not cached.
+  if (!stockMap) return sendHtml(res, 200, 'no-store', html);
   res.setHeader('Vercel-CDN-Cache-Control', CDN_CACHE_CONTROL);
   sendHtml(res, 200, 'public, max-age=0, s-maxage=300', html);
 }

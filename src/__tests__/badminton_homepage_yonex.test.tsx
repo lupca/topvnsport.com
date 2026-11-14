@@ -114,12 +114,12 @@ describe('STOR-052 hero trang chủ không còn là slider sản phẩm (STOR-10
 });
 
 describe('STOR-052 HomePage.tsx chuẩn Yonex Hub', () => {
-  it('HomePage.tsx hiện tiêu đề h1 BADMINTON trong khối data-testid="badminton-hub-header"', () => {
+  it('HomePage.tsx hiện chữ BADMINTON và h1 = HOME_SEO.h1 (như server render) trong khối data-testid="badminton-hub-header"', () => {
     renderHome();
     const header = screen.getByTestId('badminton-hub-header');
-    expect(header).toBeTruthy();
+    expect(within(header).getByText('BADMINTON').tagName).toBe('P');
     const h1 = within(header).getByRole('heading', { level: 1 });
-    expect(h1.textContent).toBe('BADMINTON');
+    expect(h1.textContent).toBe('Vợt cầu lông, cước, giày và phụ kiện cầu lông');
   });
 
   it('STOR-056: bấm cate-pill-<code> lọc kệ ngay trên trang, URL vẫn là /', () => {

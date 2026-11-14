@@ -74,10 +74,13 @@ describe('STOR-110 khối Đang khuyến mãi trên trang chủ', () => {
     expect(screen.queryByText(/Đang khuyến mãi/i)).toBeNull();
   });
 
-  it('lỗi tải sản phẩm -> role=alert, không có khối KM', () => {
-    renderHome([promo('a', 20)], true);
+  it('lỗi tải sản phẩm, chưa có SP -> role=alert, không có khối KM; SP đang hiện (inline/cache) thì giữ nguyên', () => {
+    renderHome([], true);
     expect(screen.getByRole('alert')).toBeTruthy();
     expect(screen.queryByTestId('sale-section')).toBeNull();
+    cleanup();
+    renderHome([promo('a', 20)], true);
+    expect(screen.getByTestId('sale-section')).toBeTruthy();
   });
 
   it('khối KM nằm sau header hub và kệ nổi bật', () => {

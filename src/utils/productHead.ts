@@ -25,6 +25,9 @@ export function homeHead(): ProductHead {
   return { title: HOME_SEO.title, canonical: `${SITE_ORIGIN}/`, type: 'website', description: HOME_SEO.description, image: HOME_SEO.ogImage.url };
 }
 
+// Catalog H1 = its page title without the site suffix (server render and CatalogPage show the same text).
+export const catalogH1 = (head: ProductHead) => head.title.replace(/ \| .*$/, '');
+
 export const catalogPath = (code?: string) => (code ? `/catalog?category=${encodeURIComponent(code)}` : '/catalog');
 
 // Category head from the category name and the products in it (count, top brands). undefined = unknown code.

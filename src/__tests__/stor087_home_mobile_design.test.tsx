@@ -99,7 +99,7 @@ describe('STOR-087 eyebrow SPECIALTY STORE và chip tách viên theo tab Mobile'
     expect(cls(desktop)).toEqual(expect.arrayContaining(['hidden', 'md:block', 'text-xs', 'tracking-[0.14em]']));
     // eyebrow mobile nằm TRƯỚC eyebrow desktop (stor073 (1) vẫn thấy hub-eyebrow trên h1).
     expect(mobile.nextElementSibling).toBe(desktop);
-    expect(desktop.nextElementSibling).toBe(screen.getByRole('heading', { level: 1, name: 'BADMINTON' }));
+    expect(desktop.nextElementSibling).toBe(screen.getByText('BADMINTON'));
   });
 
   it('thanh chip: trong suốt + viền đáy dưới md (không panel xám), md+ giữ pill-bg viền tròn như cũ', () => {

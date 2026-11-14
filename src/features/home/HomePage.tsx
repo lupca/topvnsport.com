@@ -4,6 +4,7 @@ import { popupService } from '@topvnsport/ui-kit';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import ProductCard from '../../components/ProductCard';
 import { NO_IMAGE_URL } from '../../services/sport-api/constants';
+import { HOME_SEO } from '../../config/seo';
 import { hasO2OStringing } from '../../utils/badmintonReadiness';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
@@ -81,7 +82,8 @@ export default function HomePage() {
     dispatch(addCartItemAndOpen(item));
   };
 
-  if (productsError || products.length === 0) return <HomeLoadState error={productsError} onRetry={() => dispatch(fetchAppData())} />;
+  // Products on screen (server-inlined or cached) stay when a refresh fails; App's banner reports the error.
+  if (products.length === 0) return <HomeLoadState error={productsError} onRetry={() => dispatch(fetchAppData())} />;
 
   return (
     <div className="space-y-12 animate-in fade-in duration-300">
@@ -94,9 +96,11 @@ export default function HomePage() {
             <p data-testid="hub-eyebrow" className="hidden md:block font-mono text-xs font-bold tracking-[0.14em] uppercase text-brand-primary mb-1.5">
               TOPVNSPORT OFFICIAL SPECIALTY HUB
             </p>
-            <h1 className="font-display font-black text-2xl md:text-4xl tracking-tight text-ink-primary uppercase">
+            <p className="font-display font-black text-2xl md:text-4xl tracking-tight text-ink-primary uppercase">
               BADMINTON
-            </h1>
+            </p>
+            {/* Same H1 as the server render (api/page.ts): what the page is about, for search engines and readers. */}
+            <h1 className="mt-1.5 text-sm md:text-base font-semibold text-gray-600">{HOME_SEO.h1}</h1>
           </div>
           {/* STOR-056: chip lọc kệ ngay trên trang (không rời /), "Tất cả" đứng đầu. */}
           <div

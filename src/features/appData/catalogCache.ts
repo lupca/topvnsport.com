@@ -1,4 +1,4 @@
-import type { Product } from '../../types';
+import type { Category, Product } from '../../types';
 
 // Stale-while-revalidate: the last good catalog in localStorage paints a return visit at once;
 // fetchAppData then refreshes it. Storage may be missing/full/blocked: every access is try/catch.
@@ -11,6 +11,8 @@ declare global {
     __PRODUCT__?: Product;
     // Header menu items api/product.ts built from PIM voma-categories (not yet ordered by product count):
     // Header renders them hidden until the catalog loads, so the menu has its final rows at first paint.
+    // Catalog api/page.ts rendered home/catalog from: the SPA starts from it (then refreshes in the background).
+    __CATALOG__?: { categories: Category[]; products: Product[] };
     __NAV__?: { code: string; label: string }[];
   }
 }
@@ -40,4 +42,11 @@ export function loadCatalog<T>(now = Date.now()): T | null {
 export function withInlinedProduct(products: Product[], inlined: Product | undefined): Product[] {
   if (!inlined || typeof inlined !== 'object' || inlined.id === undefined) return products;
   return [inlined, ...products.filter(p => String(p.id) !== String(inlined.id))];
+}
+
+// window.__CATALOG__ when well formed (arrays), else undefined.
+export function inlinedCatalog(inlined = typeof window === 'undefined' ? undefined : window.__CATALOG__): { categories: Category[]; products: Product[] } | undefined {
+  return inlined && Array.isArray(inlined.categories) && Array.isArray(inlined.products) && inlined.products.length > 0
+    ? { categories: inlined.categories, products: inlined.products }
+    : undefined;
 }

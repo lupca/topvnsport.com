@@ -56,8 +56,7 @@ describe('STOR-073 bố cục trang chủ', () => {
     renderHome([prod('1')]);
     const hub = screen.getByTestId('badminton-hub-header');
     const eyebrow = within(hub).getByText('TOPVNSPORT OFFICIAL SPECIALTY HUB');
-    const h1 = within(hub).getByRole('heading', { level: 1, name: 'BADMINTON' });
-    expect(eyebrow.nextElementSibling).toBe(h1);
+    expect(eyebrow.nextElementSibling).toBe(within(hub).getByText('BADMINTON'));
     expect(cls(eyebrow)).toEqual(expect.arrayContaining(['font-mono', 'font-bold', 'uppercase', 'text-brand-primary', 'text-xs']));
   });
 
