@@ -73,6 +73,16 @@ describe('ProductCard component', () => {
     vi.clearAllMocks();
   });
 
+  it('the product name is a real link to the product URL (crawlers follow <a href>)', () => {
+    render(
+      <MemoryRouter>
+        <ProductCard product={mockUnpromotedProduct} onQuickView={onQuickViewMock} onAddToCart={onAddToCartMock} />
+      </MemoryRouter>
+    );
+    const link = screen.getByRole('link', { name: mockUnpromotedProduct.name });
+    expect(link.getAttribute('href')).toBe(getProductPath(mockUnpromotedProduct));
+  });
+
   it('renders unpromoted product card with standard price and no discount badge', () => {
     render(
       <MemoryRouter>

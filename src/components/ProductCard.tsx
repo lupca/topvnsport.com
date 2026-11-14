@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { Eye, ShoppingCart, ImageOff } from 'lucide-react';
 import { getProductPath } from '../utils/productSlug';
@@ -169,7 +169,8 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
 
         {/* Tầng 3: tên 2 dòng */}
         <h3 className="text-[0.875rem] md:text-[15.5px] font-semibold leading-[1.42] text-ink-primary group-hover:text-brand-primary line-clamp-2 min-h-[43px] md:min-h-[44px] mb-1.5 sm:mb-2">
-          {product.name}
+          {/* A real link (crawlers follow <a href>, not onClick); the card's own onClick must not navigate twice. */}
+          <Link to={getProductPath(product)} onClick={(e) => e.stopPropagation()}>{product.name}</Link>
         </h3>
 
         {/* Tầng 4: xem trước biến thể thật */}
