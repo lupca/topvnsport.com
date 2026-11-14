@@ -1,4 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { stripTracking } from '../../middleware';
 import productHandler, { queryOf } from '../../api/product';
 
@@ -14,7 +16,11 @@ describe('ad params are stripped from the canonical product cache key', () => {
   });
 });
 
+// api/product.ts reads dist/index.html; CI runs the tests before the build, so serve the source shell.
+const SHELL = fs.readFileSync(path.resolve(__dirname, '../../index.html'), 'utf8');
+
 describe('legacy product URLs 301 to the id URL', () => {
+  afterEach(() => vi.restoreAllMocks());
   it('keeps ad params on the redirect', () => {
     expect(queryOf({ url: '/api/product?slug=old&gclid=a&utm_source=b' })).toBe('?gclid=a&utm_source=b');
     expect(queryOf({ url: '/api/product?slug=old' })).toBe('');
@@ -23,6 +29,7 @@ describe('legacy product URLs 301 to the id URL', () => {
     process.env.PMI_API_URL = 'http://pim';
     process.env.CATALOG_GRANT_TOKENS = '{"s":"t"}';
     process.env.STOREFRONT_SELLER_ID = 's';
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(SHELL as any);
     const item = { id: 590, name: 'New Name', status: 'Published', variants: [], media: [], tier_variations: [] };
     const calls: string[] = [];
     global.fetch = vi.fn(async (url: string) => {
