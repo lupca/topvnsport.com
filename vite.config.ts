@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+import {defineConfig, type ViteDevServer} from 'vite';
 import {HOME_SEO} from './src/config/seo';
 
 // The bundle CSS blocked the first paint (~0.4 s on throttled mobile): load it without blocking so the
@@ -24,9 +24,25 @@ const shellTitle = () => ({
   transformIndexHtml: (html: string) => html.replace(/<title>[^<]*<\/title>/, () => `<title>${HOME_SEO.title.replace(/[<&]/g, c => (c === '<' ? '&lt;' : '&amp;'))}</title>`)
 });
 
+// Plain vite does not run api/*: mount the real /api/img handler in the dev server (npm run dev, the e2e guard).
+const serveApiImg = () => ({
+  name: 'serve-api-img',
+  configureServer(server: ViteDevServer) {
+    server.middlewares.use('/api/img', async (req, res, next) => {
+      try {
+        const { default: handler } = await server.ssrLoadModule('/api/img.ts');
+        req.url = `/api/img${req.url ?? ''}`; // connect strips the mount path; the handler reads the full URL
+        await handler(req, res);
+      } catch (error) {
+        next(error);
+      }
+    });
+  }
+});
+
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), deferBundleCss(), shellTitle()],
+    plugins: [react(), tailwindcss(), deferBundleCss(), shellTitle(), serveApiImg()],
     build: {
       chunkSizeWarningLimit: 500,
       rollupOptions: {

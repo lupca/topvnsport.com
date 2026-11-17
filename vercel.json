@@ -3,6 +3,9 @@
     "hkg1"
   ],
   "functions": {
+    "api/img.ts": {
+      "maxDuration": 15
+    },
     "api/product.ts": {
       "includeFiles": "dist/index.html"
     },
