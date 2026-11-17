@@ -9,6 +9,10 @@ import { getBrands } from '../../utils/brands';
 import { catalogH1, catalogHead } from '../../utils/productHead';
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
 import { getCheapestPrice } from '../../utils/priceDisplay';
+import { IMAGE_PLACES } from '../../utils/productImage';
+
+// Cards that are on the first screen: one full row of the 3-column desktop grid (the phone's first row is 2 of them).
+const FIRST_SCREEN_CARDS = 3;
 import CatalogFilterDrawer from './CatalogFilterDrawer';
 import {
   resetCatalogFilters,
@@ -327,10 +331,12 @@ export default function CatalogPage() {
 
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-              {sortedProducts.map(p => (
+              {sortedProducts.map((p, i) => (
                 <ProductCard
                   key={p.id}
                   product={p}
+                  priority={i < FIRST_SCREEN_CARDS}
+                  imagePlace={IMAGE_PLACES.cardCatalog}
                   onQuickView={prod => dispatch(setQuickViewProduct(prod))}
                   onAddToCart={(prod, e) => handleAddToCart(prod, e)}
                 />

@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import sharp from 'sharp';
 import handler, { MAX_SOURCE_BYTES } from '../../api/img';
-import { IMAGE_WIDTHS } from '../utils/productImage';
+import { IMAGE_WIDTHS, resizedImageUrl } from '../utils/productImage';
 
 const FILE = '0e7c1d52-6a1b-4f0e-9d0a-2f6b6b1f3a11.jpg';
 let jpeg1024: Buffer, jpegWide: Buffer, jpegSmall: Buffer, pngAlpha: Buffer, jpegRotated: Buffer;
@@ -69,6 +69,7 @@ describe('/api/img parameter validation: every rejection is 400 and never reache
     ['f with a space', q('a b.jpg', 320)],
     ['f svg (not accepted)', q('a.svg', 320)],
     ['f gif (not accepted)', q('a.gif', 320)],
+    ['f avif (not decodable here, so not a resizable name)', q('a.avif', 320)],
     ['f html', q('a.html', 320)],
     ['f without extension', q('a', 320)],
     ['f only an extension', q('.jpg', 320)],
@@ -77,6 +78,14 @@ describe('/api/img parameter validation: every rejection is 400 and never reache
     ['extra query key', `${q(FILE, 320)}&u=https://evil.example`],
     ['duplicate w', `${q(FILE, 320)}&w=540`],
     ['duplicate f', `${q(FILE, 320)}&f=b.jpg`],
+    // One cache entry per picture and width: only the ordered pairs f, w are served (order, extra and repeated keys are refused).
+    ['reordered: w first', `/api/img?w=320&f=${FILE}`],
+    ['trailing ? (w is "320?")', `${q(FILE, 320)}?`],
+    ['extra key between the pairs', `/api/img?f=${FILE}&x=1&w=320`],
+    ['extra key first', `/api/img?x=1&f=${FILE}&w=320`],
+    ['a repeated w with the same value', `${q(FILE, 320)}&w=320`],
+    ['plus-separated', `/api/img?f=${FILE}+&w=320`],
+    ['key case (F, W)', `/api/img?F=${FILE}&W=320`],
   ];
   it.each(bad)('%s -> 400', async (_name, url) => {
     const r = await call(url);
@@ -95,7 +104,7 @@ describe('/api/img parameter validation: every rejection is 400 and never reache
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it.each(['a.jpg', 'a.JPG', 'a.jpeg', 'a.png', 'a.webp', 'a.avif', FILE])('accepts %s', async (f) => {
+  it.each(['a.jpg', 'a.JPG', 'a.jpeg', 'a.png', 'a.webp', FILE])('accepts %s', async (f) => {
     expect((await call(q(f, 320))).status).toBe(200);
   });
 
@@ -119,6 +128,21 @@ describe('/api/img resize result', () => {
     expect(meta.height).toBe(w);
     expect(r.headers['content-type']).toBe('image/webp');
     expect(r.headers['content-length']).toBe(String(r.body.length));
+  });
+
+  // The same ordered pairs f, w in another encoding are the same request (nobody can see byte for byte what the platform
+  // puts in req.url, and a raw-string mismatch would turn every picture into a 400).
+  it.each([
+    ['f with a percent-encoded character', `/api/img?f=${FILE.replace('0e7c', '%30e7c')}&w=320`],
+    ['f with an escaped dot', `/api/img?f=${FILE.replace('.jpg', '%2Ejpg')}&w=320`],
+    ['an empty pair after the last one', `${q(FILE, 320)}&`],
+    ['a doubled separator', `/api/img?f=${FILE}&&w=320`],
+  ])('equivalent encoding is served: %s', async (_name, url) => {
+    expect((await call(url)).status).toBe(200);
+  });
+
+  it('the canonical query the helper emits is the one the function serves', async () => {
+    expect((await call(resizedImageUrl(`https://pim.voma.vn/media/${FILE}`, 540))).status).toBe(200);
   });
 
   it('keeps the aspect ratio (1024x768 -> 540x405), no crop', async () => {
@@ -150,6 +174,21 @@ describe('/api/img resize result', () => {
     expect([meta.width, meta.height]).toEqual([192, 384]);
     expect(meta.exif).toBeUndefined();
     expect(meta.orientation).toBeUndefined();
+  });
+
+  it('a Display P3 JPEG comes out as the same colour in sRGB (the embedded profile is applied, not ignored)', async () => {
+    // Flat sRGB (200, 30, 30) re-encoded INTO Display P3: the stored numbers are P3 numbers, different from 200/30/30.
+    const p3 = await sharp({ create: { width: 64, height: 64, channels: 3, background: { r: 200, g: 30, b: 30 } } }).withIccProfile('p3').jpeg({ quality: 100 }).toBuffer();
+    const stored = await sharp(p3, { ignoreIcc: true }).raw().toBuffer();
+    expect(Math.abs(stored[0] - 200) + Math.abs(stored[1] - 30)).toBeGreaterThan(20); // the fixture really holds P3 numbers
+    expect((await sharp(p3).metadata()).icc).toBeDefined();
+    fetchMock.mockResolvedValue(imageResponse(p3));
+    const out = await call(q(FILE, 192));
+    expect((await sharp(out.body).metadata()).icc).toBeUndefined(); // sRGB, untagged
+    const px = await sharp(out.body).raw().toBuffer();
+    expect(Math.abs(px[0] - 200)).toBeLessThanOrEqual(6);
+    expect(Math.abs(px[1] - 30)).toBeLessThanOrEqual(6);
+    expect(Math.abs(px[2] - 30)).toBeLessThanOrEqual(6);
   });
 
   it('is smaller than the original JPEG', async () => {
@@ -221,6 +260,20 @@ describe('/api/img error paths: explicit status, no-store, never the original', 
   it('image content-type but undecodable bytes -> 415', async () => {
     fetchMock.mockResolvedValue(imageResponse(Buffer.from('this is not a jpeg at all')));
     expectFailure(await call(q(FILE, 320)), 415);
+  });
+  it('SVG bytes under an image content-type -> 415 (only JPEG, PNG and WebP are decoded)', async () => {
+    const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect width="400" height="400" fill="#c81e1e"/></svg>');
+    fetchMock.mockResolvedValue(imageResponse(svg, { type: 'image/svg+xml' }));
+    expectFailure(await call(q(FILE, 320)), 415);
+    fetchMock.mockResolvedValue(imageResponse(svg, { type: 'image/jpeg' }));
+    expectFailure(await call(q(FILE, 320)), 415);
+  });
+  it('a GIF / AVIF body under a .jpg name -> 415', async () => {
+    for (const fmt of ['gif', 'avif'] as const) {
+      const bytes = await sharp({ create: { width: 64, height: 64, channels: 3, background: '#c81e1e' } })[fmt]().toBuffer();
+      fetchMock.mockResolvedValue(imageResponse(bytes, { type: `image/${fmt}` }));
+      expectFailure(await call(q(FILE, 320)), 415);
+    }
   });
   it('truncated JPEG -> 415', async () => {
     fetchMock.mockResolvedValue(imageResponse(jpeg1024.subarray(0, 300)));

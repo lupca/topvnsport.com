@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { isValidPhone, isPhoneComplete, normalizePhone, PHONE_ERROR_MESSAGE } from '../utils/phone';
+import { IMAGE_PLACES, productImgProps } from '../utils/productImage';
 import { X, Minus, Plus, Trash2, ShoppingBag, ShieldCheck, CheckCircle2, Phone, MapPin, Truck, QrCode, CreditCard } from 'lucide-react';
 import { StringOption } from '../types';
 import { sportApi } from '../services/sportApi';
@@ -700,7 +701,7 @@ export default function CartModal({ isOpen, onClose, cartItems, onRemoveItem, on
                         : cartItemWarningMessage(describeCartItemSkuStatus(item, products, cartItems), variantStock(item));
                       return (
                         <div key={item.id} className="py-4 flex gap-3.5" data-testid="cart-line">
-                          <img src={item.image} alt={item.name} className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
+                          <img {...productImgProps(item.image, IMAGE_PLACES.cartLine)} alt={item.name} loading="lazy" decoding="async" className="w-14 h-14 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0" referrerPolicy="no-referrer" />
                           <div className="flex-1 space-y-1 max-md:min-w-0">
                             <span className="text-[10px] font-mono font-bold text-brand-primary uppercase max-md:text-sm">{item.brand}</span>
                             <h4 className="font-bold text-xs text-gray-900 line-clamp-1 leading-normal max-md:text-sm">{item.name}</h4>

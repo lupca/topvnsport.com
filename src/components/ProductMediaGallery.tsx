@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { IMAGE_PLACES, mainPictureSource, productImgProps } from '../utils/productImage';
 
 // Mũi tên dải ảnh (STOR-166, MOB-E): dưới md nút là ô bấm 44px trong suốt, vòng tròn 30px vẽ trên icon.
 // Dùng px vì 1rem của trang là 17px. Từ md giữ nguyên nút tròn cũ.
@@ -97,6 +98,7 @@ export default function ProductMediaGallery({
     setModalZoomLevel((prev) => Math.min(3, Number((prev + 0.2).toFixed(1))));
   };
 
+  const tabletSource = mainPictureSource(selectedImage);
   return (
     <>
       <div
@@ -109,16 +111,23 @@ export default function ProductMediaGallery({
         onMouseMove={handleMainImageMouseMove}
         onClick={() => setIsZoomModalOpen(true)}
       >
-        <img
-          src={selectedImage}
-          alt={productName}
-          className="max-h-full max-w-full object-contain transition-transform duration-150"
-          style={{
-            transform: `scale(${isImageHovered ? 2.25 : 1})`,
-            transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
-          }}
-          referrerPolicy="no-referrer"
-        />
+        {/* Largest picture of the page: eager, high priority. The zoom view below keeps the ORIGINAL url and only renders (so only requests it) once opened. */}
+        {/* display:contents: the <picture> makes no box, so the picture element keeps sizing against the same container (max-h-full / max-w-full). */}
+        <picture style={{ display: 'contents' }}>
+          {tabletSource && <source media={tabletSource.media} srcSet={tabletSource.srcSet} />}
+          <img
+            {...productImgProps(selectedImage, IMAGE_PLACES.galleryMain)}
+            alt={productName}
+            fetchPriority="high"
+            decoding="async"
+            className="max-h-full max-w-full object-contain transition-transform duration-150"
+            style={{
+              transform: `scale(${isImageHovered ? 2.25 : 1})`,
+              transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
+            }}
+            referrerPolicy="no-referrer"
+          />
+        </picture>
         <div className="pointer-events-none absolute left-3 bottom-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] max-md:text-sm font-semibold text-white">
           <span className="hidden [@media(hover:hover)]:inline">Di chuột để zoom • </span>Chạm để phóng to
         </div>
@@ -156,7 +165,7 @@ export default function ProductMediaGallery({
                 aria-label={`Xem ảnh ${i + 1} của ${productName}`}
                 aria-pressed={selectedImage === img}
               >
-                <img src={img} alt={`${productName} gallery ${i + 1}`} className="max-h-full object-contain" referrerPolicy="no-referrer" />
+                <img {...productImgProps(img, IMAGE_PLACES.thumb)} alt={`${productName} gallery ${i + 1}`} loading="lazy" decoding="async" className="max-h-full object-contain" referrerPolicy="no-referrer" />
               </button>
             ))}
           </div>

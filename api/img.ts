@@ -1,6 +1,8 @@
 // GET /api/img?f=<file name>&w=<width>: a pim.voma.vn media picture resized to one of IMAGE_WIDTHS, as WebP.
 // Not a proxy: the only upstream is https://pim.voma.vn/media/<f>, f must be a plain image file name, w must be
-// one of the fixed widths, any other query key is refused. Never upscales, never crops (aspect ratio kept),
+// one of the fixed widths, and the query must be EXACTLY the ordered pairs f then w (parsed, so equivalent encodings pass; a different
+// order, an extra or a repeated key is refused, so one picture at one width is one CDN cache entry). The source
+// must decode as JPEG, PNG or WebP (anything else, e.g. SVG, is 415). Never upscales, never crops (aspect ratio kept),
 // keeps transparency, strips metadata but applies the EXIF orientation. A failure is an explicit status with
 // no-store: it never redirects to or streams the original (the page's own broken-image UI shows the failure).
 // Uses only the plain Node req/res API so the same handler runs on Vercel and in the Vite dev server (vite.config.ts).
@@ -8,9 +10,10 @@ import sharp from 'sharp';
 import { IMAGE_WIDTHS, MEDIA_FILE, MEDIA_ORIGIN } from '../src/utils/productImage.js';
 
 export const UPSTREAM_TIMEOUT_MS = 8000;
-export const MAX_SOURCE_BYTES = 6 * 1024 * 1024; // PIM originals are 80-880 KB
-const MAX_SOURCE_PIXELS = 40_000_000; // decode guard (a 1024x1024 original is ~1 MP)
+export const MAX_SOURCE_BYTES = 6 * 1024 * 1024; // PIM originals measured 11 KB-1.1 MB (median 177 KB); 6 MB leaves room without being unbounded
+const MAX_SOURCE_PIXELS = 40_000_000; // decode guard: originals measured up to 3024x4032 (~12 MP)
 const WEBP_QUALITY = 80;
+const DECODABLE_FORMATS = ['jpeg', 'png', 'webp']; // what the PIM serves; checked by decoding, not by content-type
 // Content-unique uuid file names: the bytes behind a URL never change.
 const IMMUTABLE = 'public, max-age=31536000, immutable';
 
@@ -24,12 +27,14 @@ function fail(res: any, status: number, message: string, extra: Record<string, s
 
 // Returns the validated file name and width, or the 400 message.
 export function parseImgQuery(url: string): { file: string; width: number } | string {
-  const params = new URL(url, 'http://localhost').searchParams;
-  const keys = [...params.keys()];
-  if (keys.some((k) => k !== 'f' && k !== 'w') || new Set(keys).size !== keys.length) return 'only one f and one w are accepted';
-  const file = params.get('f');
+  const { searchParams } = new URL(url, 'http://localhost');
+  // Exactly the ordered pairs f, w (parsed, so equivalent encodings of the same pairs are the same request): a different
+  // order, an extra or a repeated key is refused, so one picture at one width stays one cache entry.
+  const keys = [...searchParams.keys()].join(',');
+  if (keys !== 'f,w') return 'the query must be exactly ?f=<file>&w=<width>';
+  const file = searchParams.get('f');
   if (!file || !MEDIA_FILE.test(file) || file.includes('..')) return 'f must be a plain image file name of /media';
-  const raw = params.get('w') ?? '';
+  const raw = searchParams.get('w') ?? '';
   const width = Number(raw);
   if (String(width) !== raw || !(IMAGE_WIDTHS as readonly number[]).includes(width)) return `w must be one of ${IMAGE_WIDTHS.join(', ')}`;
   return { file, width };
@@ -83,7 +88,10 @@ export default async function handler(req: any, res: any) {
 
   let out: Buffer;
   try {
-    out = await sharp(source, { limitInputPixels: MAX_SOURCE_PIXELS })
+    const input = sharp(source, { limitInputPixels: MAX_SOURCE_PIXELS });
+    const { format } = await input.metadata();
+    if (!format || !DECODABLE_FORMATS.includes(format)) return fail(res, 415, 'source is not a JPEG, PNG or WebP picture');
+    out = await input
       .rotate() // apply EXIF orientation; metadata is dropped on output (sharp default)
       .resize({ width: q.width, withoutEnlargement: true })
       .webp({ quality: WEBP_QUALITY }) // alpha is kept by default

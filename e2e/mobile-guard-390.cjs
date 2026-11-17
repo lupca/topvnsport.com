@@ -48,8 +48,11 @@ async function main() {
         const why = [];
         if (route.id !== 'cart' && top > MAX_TOP) why.push(`MOB-A top ${top}px > ${MAX_TOP}px (h0=${a.h0}, scrolled=${a.hScrolled})`);
         if (sw > WIDTH || sw > iw) why.push(`MOB-D scrollWidth ${sw} > ${WIDTH}px (innerWidth ${iw})`);
+        // product pictures go through /api/img (stub() answers it with a fixture, no network): none may have failed to decode
+        const pics = await page.evaluate(() => [...document.images].filter((i) => i.src.includes('/api/img')).map((i) => i.complete && i.naturalWidth === 0));
+        if (pics.some(Boolean)) why.push(`${pics.filter(Boolean).length} of ${pics.length} /api/img pictures failed to decode`);
         if (why.length) failures++;
-        console.log(`${route.id.padEnd(10)} ${why.length ? 'FAIL' : 'PASS'} top=${top}px sw=${sw}/iw=${iw} scope=${m.scope}${why.length ? ' -- ' + why.join('; ') : ''}`);
+        console.log(`${route.id.padEnd(10)} ${why.length ? 'FAIL' : 'PASS'} top=${top}px sw=${sw}/iw=${iw} scope=${m.scope} resized=${pics.length}${why.length ? ' -- ' + why.join('; ') : ''}`);
       } catch (e) {
         failures++;
         console.log(`${route.id.padEnd(10)} FAIL error: ${e.message.split('\n')[0]}`);

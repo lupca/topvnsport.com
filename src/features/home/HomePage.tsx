@@ -8,6 +8,11 @@ import { HOME_SEO } from '../../config/seo';
 import { hasO2OStringing } from '../../utils/badmintonReadiness';
 import { getCategoriesSortedByCount, getCategoryLabel, getProductCategoryCounts } from '../../utils/categories';
 import { SORT_OPTIONS, SortMode, sortProducts } from '../../utils/productSort';
+import { IMAGE_PLACES, productImgProps } from '../../utils/productImage';
+
+// Cards of the featured grid that are on the first screen: the first row of the 2-column phone layout. The grid is
+// below the fold from 768 px up. Decided from the layout, not measured at run time.
+const FIRST_SCREEN_CARDS = 2;
 import { fetchAppData } from '../appData/appDataSlice';
 import { addCartItemAndOpen, buildDefaultCartItem, setQuickViewProduct } from '../cart/cartSlice';
 import HeroBanner from './HeroBanner';
@@ -182,10 +187,11 @@ export default function HomePage() {
 
           {shown.length === 0 && <p role="status" className="text-center text-sm font-medium text-ink-muted py-8">Không có sản phẩm còn hàng phù hợp bộ lọc.</p>}
           <div data-testid="featured-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-[16px] md:gap-6">
-            {shown.map(p => (
+            {shown.map((p, i) => (
               <ProductCard
                 key={p.id}
                 product={p}
+                priority={i < FIRST_SCREEN_CARDS}
                 onQuickView={prod => dispatch(setQuickViewProduct(prod))}
                 onAddToCart={(prod, e) => handleAddToCart(prod, e)}
               />
@@ -234,7 +240,7 @@ export default function HomePage() {
                 >
                   {image && (
                     <div className="w-full aspect-square md:aspect-[4/3] overflow-hidden bg-brand-light max-md:border max-md:border-line-strong md:border-b md:border-line-tag">
-                      <img src={image} alt={label} loading="lazy" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+                      <img {...productImgProps(image, IMAGE_PLACES.categoryTile)} alt={label} loading="lazy" decoding="async" onError={() => setBrokenImages(b => new Set(b).add(image))} className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />
                     </div>
                   )}
                   <div className="px-3 py-3.5 max-md:px-0 max-md:py-[6px] text-center">

@@ -290,7 +290,16 @@ async function selftest() {
 // ------------------------------------------------------------------------------------------------------------------
 // 3. Fixtures: fake shop, fake identity. Everything under /api/** is answered here.
 // ------------------------------------------------------------------------------------------------------------------
-const IMGS = ['hotline-tu-van', 'dan-vot-30-phut', 'showroom-ha-noi', 'chinh-hang-yonex'].map((n) => `/banners/${n}.webp`);
+// Product pictures are PIM-shaped URLs (https://pim.voma.vn/media/<file>.jpg), as in production, so the storefront rewrites
+// them to /api/img. Neither host is ever reached: stub() answers both with the banner of the same name (no network).
+const IMG_NAMES = ['hotline-tu-van', 'dan-vot-30-phut', 'showroom-ha-noi', 'chinh-hang-yonex'];
+const IMGS = IMG_NAMES.map((n) => `https://pim.voma.vn/media/audit-${n}.jpg`);
+const fixtureImage = (route, file) => {
+  const name = /^audit-(.+)\.jpg$/.exec(file || '')?.[1];
+  return IMG_NAMES.includes(name)
+    ? route.fulfill({ status: 200, contentType: 'image/webp', body: fs.readFileSync(path.join(ROOT, 'public', 'banners', `${name}.webp`)) })
+    : route.fulfill({ status: 404, contentType: 'text/plain', body: 'audit: unknown picture' });
+};
 // Fixture categories mimic the LIVE nav of www.topvnsport.com (5 links = "trang chủ" + 4 in-stock categories, measured read-only
 // 2026-11-04: header 420px / 3 nav rows at 390). Only the racket category is invented (the PDP/stringing states need one).
 // More categories than live would inflate the nav rows and the sticky header height, so keep this at 4.
@@ -330,6 +339,8 @@ const FAKE = { name: 'Khách Kiểm Thử', phone: '0900000000', address: 'Số 
 async function stub(page) {
   await page.route('**/*', (route) => {
     const u = new URL(route.request().url());
+    if (u.hostname === 'pim.voma.vn' && u.pathname.startsWith('/media/')) return fixtureImage(route, u.pathname.slice(7));
+    if (u.hostname === '127.0.0.1' && u.pathname === '/api/img') return fixtureImage(route, u.searchParams.get('f'));
     if (u.hostname !== '127.0.0.1') {
       // no external network: images become a flat grey SVG so layout is stable; anything else is dropped
       return route.request().resourceType() === 'image'

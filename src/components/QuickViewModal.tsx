@@ -7,6 +7,7 @@ import { isRacketCategoryCode } from '../config/storefront';
 import { getSingleSellableSku } from '../features/cart/cartSlice';
 import { getProductPath } from '../utils/productSlug';
 import { getPriceDisplay } from '../utils/priceDisplay';
+import { IMAGE_PLACES, productImgProps } from '../utils/productImage';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -44,7 +45,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }: QuickV
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <div className="aspect-square bg-gray-50 rounded-xl p-4 flex items-center justify-center overflow-hidden">
-                <img src={product.image} alt={product.name} className="max-h-full object-contain" referrerPolicy="no-referrer" />
+                <img {...productImgProps(product.image, IMAGE_PLACES.quickView)} alt={product.name} decoding="async" className="max-h-full object-contain" referrerPolicy="no-referrer" />
               </div>
               
               <div className="space-y-4 pr-1">

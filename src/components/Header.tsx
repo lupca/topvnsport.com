@@ -11,6 +11,7 @@ import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categorie
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
 import { getPriceDisplay } from '../utils/priceDisplay';
+import { IMAGE_PLACES, productImgProps } from '../utils/productImage';
 import { getTrustBrands } from './TrustBadges';
 import MainNav from './MainNav';
 
@@ -307,7 +308,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
                     onClick={() => handleSearchSelect(p)}
                     className="p-3 hover:bg-brand-light/50 cursor-pointer flex items-center gap-3 transition"
                   >
-                    <img src={p.image} alt={p.name} className="w-10 h-10 object-cover rounded-md border border-gray-100" referrerPolicy="no-referrer" />
+                    <img {...productImgProps(p.image, IMAGE_PLACES.searchResult)} alt={p.name} loading="lazy" decoding="async" className="w-10 h-10 object-cover rounded-md border border-gray-100" referrerPolicy="no-referrer" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs max-md:text-sm font-semibold text-gray-900 truncate">{p.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
