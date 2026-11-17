@@ -40,6 +40,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Ceilings live in perf-budget.json (today's value + about 3%). To raise one on purpose: run
+      # `node scripts/check-budget.mjs --print`, edit perf-budget.json and say in the PR why the page may grow.
+      - name: Performance budget (landing JS, shell size, render-blocking requests, no third-party fonts)
+        run: node scripts/check-budget.mjs
+
       - name: Install Playwright Chromium
         run: npx playwright-core install --with-deps chromium
 
