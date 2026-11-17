@@ -4,6 +4,8 @@ const ROBOTS_TXT = [
   'User-agent: *',
   'Allow: /',
   // Public catalog reads the rendered page fetches (Googlebot renders it); every other /api/ path stays out.
+  // Every product picture is /api/img?f=..&w=..: Googlebot must be able to fetch it (longest match beats 'Disallow: /api/').
+  'Allow: /api/img?',
   'Allow: /api/pmi/public/',
   'Allow: /api/wms/public/',
   'Disallow: /api/',

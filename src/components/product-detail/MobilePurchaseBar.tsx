@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { formatVnd } from './helpers';
+import { IMAGE_PLACES, productImgProps } from '../../utils/productImage';
 
 interface MobilePurchaseBarProps {
   productName: string;
@@ -25,8 +26,10 @@ export default function MobilePurchaseBar({
     <div className="sticky bottom-0 -mx-4 z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-sm p-3 flex items-center justify-between gap-3 md:hidden">
       <div className="flex items-center gap-2 min-w-0">
         <img
-          src={productImage}
+          {...productImgProps(productImage, IMAGE_PLACES.purchaseBar)}
           alt={productName}
+          loading="lazy"
+          decoding="async"
           className="w-10 h-10 object-contain rounded-lg bg-gray-50 border border-gray-100 shrink-0"
           referrerPolicy="no-referrer"
         />

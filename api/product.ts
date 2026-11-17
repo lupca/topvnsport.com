@@ -10,9 +10,18 @@ import { applyWmsStock, parseWmsStock } from '../src/services/sport-api/wmsStock
 import { getPdpPrice, formatVnd, initialTierValue } from '../src/components/product-detail/helpers.js';
 import { offerPolicies, productJsonLd } from '../src/utils/productJsonLd.js';
 import { getCategoryLabel } from '../src/utils/categories.js';
+import { IMAGE_PLACES, mainPictureSource, productImgProps } from '../src/utils/productImage.js';
 import type { Category, Product } from '../src/types.js';
 
 export { escapeHtml, offerPolicies, productJsonLd };
+
+// Same <source> as the gallery's main picture (mainPictureSource), so cover and gallery are one download.
+const coverSource = (src: string) => {
+  const t = mainPictureSource(src);
+  return t ? `<source media="${escapeHtml(t.media)}" srcset="${escapeHtml(t.srcSet)}">` : '';
+};
+const imgAttrs = (p: { src: string; srcSet?: string; sizes?: string }) =>
+  [`src="${escapeHtml(p.src)}"`, p.srcSet && `srcset="${escapeHtml(p.srcSet)}"`, p.sizes && `sizes="${escapeHtml(p.sizes)}"`].filter(Boolean).join(' ');
 
 const PRODUCTS_PAGE_SIZE = 100;
 const NO_PRICE_TEXT = 'Liên hệ để biết giá';
@@ -32,8 +41,12 @@ export function renderProductPage(shell: string, product: Product, canonicalUrl:
   const cover = product.image && product.gallery?.includes(product.image) && /^https?:\/\//i.test(product.image) ? product.image : head.image;
   const body = [
     `<h1>${escapeHtml(product.name)}</h1>`,
-    // Cover photo for crawlers that do not run JS; square box, product photos are not cropped.
-    cover && `<img src="${escapeHtml(cover)}" alt="${escapeHtml(product.name)}" width="600" height="600" style="max-width:100%;height:auto;object-fit:contain">`,
+    // Cover photo for crawlers that do not run JS (and what a visitor sees until the app mounts). Same resized picture
+    // and same srcset/sizes as the gallery's main picture, so the browser asks for it once. width/height 600 stay (they
+    // were there before and SEO item 8 pins them); the CSS box is the same square as before for a square photo. A
+    // non-square photo used to reflow from that square to its own ratio on load (height:auto); it now stays in the square
+    // (aspect-ratio + object-fit: contain, as the gallery's aspect-square does).
+    cover && `<picture style="display:contents">${coverSource(cover)}<img ${imgAttrs(productImgProps(cover, IMAGE_PLACES.galleryMain))} alt="${escapeHtml(product.name)}" width="600" height="600" fetchpriority="high" decoding="async" style="display:block;width:100%;max-width:600px;height:auto;aspect-ratio:1/1;object-fit:contain"></picture>`,
     `<p>${escapeHtml(priced ? formatVnd(price.salePrice) : NO_PRICE_TEXT)}</p>`,
     description && `<p>${escapeHtml(description)}</p>`,
   ].filter(Boolean).join('');

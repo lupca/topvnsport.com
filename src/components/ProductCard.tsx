@@ -7,6 +7,7 @@ import { getPriceDisplay } from '../utils/priceDisplay';
 import { getSingleSellableSku } from '../features/cart/cartSlice';
 import { hasO2OStringing, getPrimaryTierPreview } from '../utils/badmintonReadiness';
 import { isStringingTier } from './product-detail/helpers';
+import { IMAGE_PLACES, productImgProps, type ImagePlace } from '../utils/productImage';
 
 interface ProductCardProps {
   key?: string;
@@ -14,6 +15,10 @@ interface ProductCardProps {
 
   onQuickView: (product: Product) => void;
   onAddToCart: (product: Product, e: React.MouseEvent) => void;
+  // The grid says whether this card is on the first screen (decided from the layout, not measured): then its picture is eager.
+  priority?: boolean;
+  // Which box the picture fills (its sizes/srcset): the catalog grid is narrower than the home grid.
+  imagePlace?: ImagePlace;
 }
 
 // Chấm màu CHỈ khi tên tùy chọn khớp đúng nguyên văn; mọi tùy chọn khác hiện
@@ -35,7 +40,7 @@ const BADGE_BG: Partial<Record<NonNullable<Product['badge']>, string>> = {
 
 const badgeClass = 'font-display text-[0.875rem] md:text-[11px] font-extrabold tracking-[0.04em] uppercase px-1.5 sm:px-2 py-0.5 text-white';
 
-export default function ProductCard({ product, onQuickView, onAddToCart }: ProductCardProps) {
+export default function ProductCard({ product, onQuickView, onAddToCart, priority = false, imagePlace = IMAGE_PLACES.cardHome }: ProductCardProps) {
   const navigate = useNavigate();
   const [imageFailed, setImageFailed] = useState(false);
   // Thêm nhanh chỉ khi sản phẩm có ĐÚNG một SKU bán được -- một tầng nhiều
@@ -95,8 +100,11 @@ export default function ProductCard({ product, onQuickView, onAddToCart }: Produ
 
         {hasImage ? (
           <img
-            src={product.image}
+            {...productImgProps(product.image, imagePlace)}
             alt={product.name}
+            // First-screen cards (priority, chosen by the grid from the layout) load at once; the rest wait until near the viewport.
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
             referrerPolicy="no-referrer"
             onError={() => setImageFailed(true)}
