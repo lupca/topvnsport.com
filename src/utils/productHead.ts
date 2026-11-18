@@ -1,4 +1,4 @@
-import type { Category, Product } from '../types';
+import type { Category, FullProduct, Product } from '../types';
 import { SITE_ORIGIN } from '../config/storefront.js';
 import { HOME_SEO, TITLE_SUFFIX } from '../config/seo.js';
 import { getCategoryLabel } from './categories.js';
@@ -15,7 +15,7 @@ export interface ProductHead {
 }
 
 // PIM listing seo_title / seo_description win; otherwise derived from the name / description.
-export function productHeadValues(product: Product, canonical: string): ProductHead {
+export function productHeadValues(product: FullProduct, canonical: string): ProductHead {
   const description = product.seoDescription ?? seoDescriptionFromText(product.description);
   const image = product.gallery?.find((src) => /^https?:\/\/\S+$/i.test(src));
   return { title: product.seoTitle ?? seoTitleFromName(product.name), canonical, type: 'product', ...(description && { description }), ...(image && { image }) };

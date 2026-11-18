@@ -18,6 +18,7 @@ export default function ProductDetailRoute() {
   const products = useAppSelector(state => state.appData.products);
   const stringOptions = useAppSelector(state => state.appData.stringOptions);
   const productsError = useAppSelector(state => state.appData.productsError);
+  const categoriesError = useAppSelector(state => state.appData.categoriesError);
   const isLoading = useAppSelector(state => state.appData.isLoading);
   const product = findProductBySlug(products, slug);
   const { search, hash } = useLocation();
@@ -51,6 +52,12 @@ export default function ProductDetailRoute() {
   // Old name-based link opened in-app: move to the permanent id URL (the server does the same with a 301).
   if (slug !== undefined && decodeURIComponent(slug).toLowerCase() !== product.id.toLowerCase()) {
     return <Navigate replace to={`${getProductPath(product)}${search}${hash}`} />;
+  }
+
+  // Inlined catalog summary: the page needs the description, so it keeps the skeleton until fetchAppData lands;
+  // when that failed, the same load-failure state as an unknown catalog (never a page without its description).
+  if (product.descriptionPending === true) {
+    return productsError || categoriesError ? <HomeLoadState error onRetry={() => dispatch(fetchAppData())} /> : <PageSkeleton />;
   }
 
   const handleAddToCartWithSpecs = (

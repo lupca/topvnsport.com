@@ -1,4 +1,4 @@
-import { Branch, Category, Product, StringOption } from '../../types';
+import { Branch, Category, FullProduct, Product, StringOption } from '../../types';
 import rawData from '../../data.json';
 import { delay, OMS_CHECKOUT_PROXY_URL, OMS_PROXY_URL, PMI_PROXY_URL, SIMULATED_LATENCY, WMS_PROXY_URL } from './constants';
 import { mapPmiProduct } from './productMappers';
@@ -101,7 +101,7 @@ function collectSkus(products: Product[]): string[] {
   return allSkus;
 }
 
-async function mergeWmsStock(products: Product[]): Promise<Product[]> {
+async function mergeWmsStock(products: FullProduct[]): Promise<FullProduct[]> {
   const allSkus = collectSkus(products);
   if (allSkus.length === 0) {
     return products;
@@ -184,7 +184,7 @@ async function getAllStock(): Promise<Record<string, number>> {
   return fetchAllWmsStock();
 }
 
-async function getProducts(categories?: Promise<Category[]>, stock?: Promise<Record<string, number>>): Promise<Product[]> {
+async function getProducts(categories?: Promise<Category[]>, stock?: Promise<Record<string, number>>): Promise<FullProduct[]> {
   await delay(SIMULATED_LATENCY);
   const stockP = (stock ?? fetchAllWmsStock()).catch(() => null);
   const [pmiProducts, loadedCategories, stockMap] = await Promise.all([
@@ -196,7 +196,7 @@ async function getProducts(categories?: Promise<Category[]>, stock?: Promise<Rec
   return stockMap && collectSkus(products).length === 0 ? products : applyWmsStock(products, stockMap);
 }
 
-async function getProductById(id: string): Promise<Product | null> {
+async function getProductById(id: string): Promise<FullProduct | null> {
   await delay(SIMULATED_LATENCY);
   try {
     const [response, categories] = await Promise.all([

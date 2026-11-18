@@ -1,4 +1,4 @@
-import type { Category, Product } from '../../types';
+import type { Category, FullProduct, Product, ProductBase, SummaryProduct } from '../../types';
 
 // Stale-while-revalidate: the last good catalog in localStorage paints a return visit at once;
 // fetchAppData then refreshes it. Storage may be missing/full/blocked: every access is try/catch.
@@ -12,14 +12,16 @@ declare global {
     // Header menu items api/product.ts built from PIM voma-categories (not yet ordered by product count):
     // Header renders them hidden until the catalog loads, so the menu has its final rows at first paint.
     // Catalog api/page.ts rendered home/catalog from: the SPA starts from it (then refreshes in the background).
-    __CATALOG__?: { categories: Category[]; products: Product[] };
+    // Its products carry no description (SummaryProduct once read through inlinedCatalog).
+    __CATALOG__?: { categories: Category[]; products: ProductBase[] };
     __NAV__?: { code: string; label: string }[];
   }
 }
 
 export interface CatalogSnapshot<T> { savedAt: number; data: T }
 
-export function saveCatalog<T>(data: T, now = Date.now()): void {
+// Only a loaded catalog is saved: FullProduct[] in the type, so a summary (no description) cannot reach storage.
+export function saveCatalog<T extends { products: FullProduct[] }>(data: T, now = Date.now()): void {
   try {
     localStorage.setItem(KEY, JSON.stringify({ savedAt: now, data } satisfies CatalogSnapshot<T>));
   } catch {
@@ -45,8 +47,9 @@ export function withInlinedProduct(products: Product[], inlined: Product | undef
 }
 
 // window.__CATALOG__ when well formed (arrays), else undefined.
-export function inlinedCatalog(inlined = typeof window === 'undefined' ? undefined : window.__CATALOG__): { categories: Category[]; products: Product[] } | undefined {
+// The products are marked as summaries: their descriptions arrive with fetchAppData.
+export function inlinedCatalog(inlined = typeof window === 'undefined' ? undefined : window.__CATALOG__): { categories: Category[]; products: SummaryProduct[] } | undefined {
   return inlined && Array.isArray(inlined.categories) && Array.isArray(inlined.products) && inlined.products.length > 0
-    ? { categories: inlined.categories, products: inlined.products }
+    ? { categories: inlined.categories, products: inlined.products.map((p): SummaryProduct => ({ ...p, descriptionPending: true })) }
     : undefined;
 }

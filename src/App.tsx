@@ -9,6 +9,7 @@ import { popupService } from '@topvnsport/ui-kit';
 import { useStore } from 'react-redux';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import type { RootState } from './app/store';
+import type { FullProduct } from './types';
 import FloatingContact from './components/FloatingContact';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -54,6 +55,11 @@ export default function App() {
 
   const { products, branches, categories, isLoading, categoriesError, productsError, stockError, stockRefetching } = useAppSelector(state => state.appData);
   const { items: cartItems, isOpen: isCartOpen, quickViewProduct } = useAppSelector(state => state.cart);
+  // The quick view shows the description: a summary opens it only once the full product is in the store (a failed
+  // load shows the banner above and it stays closed).
+  const quickViewFull = quickViewProduct?.descriptionPending === true
+    ? products.find((p): p is FullProduct => p.id === quickViewProduct.id && p.descriptionPending !== true) ?? null
+    : quickViewProduct;
   const [hasOpenedCart, setHasOpenedCart] = useState(isCartOpen);
   const cartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
   // STOR-053: trên '/' HomePage tự báo lỗi tải sản phẩm (kèm Thử lại) -> banner bỏ dòng danh mục/sản phẩm, giữ dòng tồn kho.
@@ -82,6 +88,8 @@ export default function App() {
       } catch {
         product = undefined; // malformed %-escape in the slug
       }
+      // Description still loading (inlined summary): keep the current head, never emit one without it; products changes when it lands.
+      if (product?.descriptionPending === true) return;
       head = product ? productHeadValues(product, `${SITE_ORIGIN}${getProductPath(product)}`) : null;
       jsonLd = product && productJsonLd(product, `${SITE_ORIGIN}${getProductPath(product)}`);
     } else if (location.pathname === '/') {
@@ -187,7 +195,7 @@ export default function App() {
       )}
 
       <QuickViewModal
-        product={quickViewProduct}
+        product={quickViewFull}
         onClose={() => dispatch(setQuickViewProduct(null))}
         onAddToCart={handleAddToCart}
       />

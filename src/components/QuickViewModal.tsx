@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Product } from '../types';
+import { FullProduct, Product } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { isRacketCategoryCode } from '../config/storefront';
 import { getSingleSellableSku } from '../features/cart/cartSlice';
@@ -10,7 +10,7 @@ import { getPriceDisplay } from '../utils/priceDisplay';
 import { IMAGE_PLACES, productImgProps } from '../utils/productImage';
 
 interface QuickViewModalProps {
-  product: Product | null;
+  product: FullProduct | null;
   onClose: () => void;
   onAddToCart: (product: Product, e?: React.MouseEvent) => void;
 }

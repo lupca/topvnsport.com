@@ -39,7 +39,8 @@ export function parseWmsStock(data: any): Record<string, number> {
 // stockMap null = tồn không tải được -> stock undefined (không biết), không giữ
 // variant.stock của PIM (PIM không có trường tồn).
 // Biến thể cùng stock_code mỗi cái hiện tồn của dòng chung; tổng sản phẩm đếm dòng đó MỘT lần.
-export function applyWmsStock(products: Product[], stockMap: Record<string, number> | null): Product[] {
+// Generic: a FullProduct stays full and a SummaryProduct stays a summary (the description state is not touched).
+export function applyWmsStock<T extends Product>(products: T[], stockMap: Record<string, number> | null): T[] {
   const read = (sku: string) => (stockMap ? stockMap[sku] ?? 0 : undefined);
   const codes = stockCodesOf(stockMap);
 

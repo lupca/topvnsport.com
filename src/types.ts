@@ -44,7 +44,9 @@ export interface ProductMedia {
   tier2Option?: string | null;
 }
 
-export interface Product {
+// Everything a catalog card, filter, quick view and cart read. The description is NOT here: it is on FullProduct
+// (loaded) and absent on SummaryProduct (not loaded yet), so a reader cannot take a missing field for "no description".
+export interface ProductBase {
   id: string;
   slug?: string;
   // VOMA PIM's own slug: accepted as a /product/ URL alias only, never emitted (STOR-085).
@@ -69,7 +71,6 @@ export interface Product {
   specs: ProductSpecs;
   series?: string; // e.g., "ASTROX", "Axforce", "Exbolt"
   characteristics?: 'Tấn Công' | 'Phòng Thủ' | 'Toàn Diện' | 'Người Mới'; // For rackets/paddles
-  description?: string;
   attributes?: ProductAttribute[];
   vomaAttributes?: ProductVomaAttribute[];
   features?: string[];
@@ -89,6 +90,21 @@ export interface Product {
   // PIM products.updated_at (ISO): sitemap <lastmod>.
   updatedAt?: string;
 }
+
+// description undefined = the product has none (PIM sent none).
+export interface FullProduct extends ProductBase {
+  description?: string;
+  descriptionPending?: false;
+}
+
+// The catalog api/page.ts inlines into home/catalog HTML: no description yet; fetchAppData brings it.
+export interface SummaryProduct extends ProductBase {
+  descriptionPending: true;
+}
+
+// Readers of the description narrow to FullProduct with `p.descriptionPending === true` (not truthiness: it does not narrow an optional
+// discriminant); the compiler rejects `p.description` on this union.
+export type Product = FullProduct | SummaryProduct;
 
 export interface TierVariation {
   id?: number;

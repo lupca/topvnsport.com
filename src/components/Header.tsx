@@ -6,7 +6,7 @@ import { fetchAppData } from '../features/appData/appDataSlice';
 import { Search, ChevronRight, Menu, X, MapPin } from 'lucide-react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Category, Product } from '../types';
+import { Category, FullProduct, Product } from '../types';
 import { getCategoriesSortedByCount, getCategoryLabel } from '../utils/categories';
 import { getProductPath } from '../utils/productSlug';
 import { getBrands } from '../utils/brands';
@@ -27,7 +27,7 @@ export const normalizeSearchText = (value: string) =>
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
 
-export const buildSearchIndex = (product: Product) =>
+export const buildSearchIndex = (product: FullProduct) =>
   normalizeSearchText([
     product.name,
     product.brand || '',
@@ -139,13 +139,18 @@ export default function Header({ cartCount, openCart, products, categories, cate
     setShowSearchDropdown(false);
   };
 
+  const descriptionsPending = products.some(product => product.descriptionPending);
+
   // AJAX search emulation
   useEffect(() => {
     const normalizedQuery = normalizeSearchText(searchQuery);
 
-    if (normalizedQuery.length >= 2) {
+    // The index reads the description: while any product's description is still loading the results would be
+    // silently fewer, so none are offered until fetchAppData lands (products changes -> this runs again).
+    if (normalizedQuery.length >= 2 && !descriptionsPending) {
       const tokens = normalizedQuery.split(' ').filter(Boolean);
       const filtered = products.filter(product => {
+        if (product.descriptionPending === true) return false;
         const searchIndex = buildSearchIndex(product);
         return tokens.every(token => searchIndex.includes(token));
       });
@@ -155,7 +160,7 @@ export default function Header({ cartCount, openCart, products, categories, cate
       setSearchResults([]);
       setShowSearchDropdown(false);
     }
-  }, [searchQuery, products]);
+  }, [searchQuery, products, descriptionsPending]);
 
   const handleSearchSelect = (product: Product) => {
     navigate(getProductPath(product));

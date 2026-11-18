@@ -1,7 +1,7 @@
 import { PRICE_VALID_DAYS, RETURN_POLICY, SHIPPING } from '../config/seo.js';
 import { productBrand } from './seoText.js';
 import { aggregateStock, getPdpPrice, initialTierValue } from '../components/product-detail/helpers.js';
-import type { Product, ProductVariant } from '../types.js';
+import type { FullProduct, ProductVariant } from '../types.js';
 
 // Product JSON-LD, shared by api/product.ts (server head) and App.tsx (head sync on route change).
 const SCHEMA_STOCK = (stock: number) => (stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock');
@@ -36,7 +36,7 @@ export function offerPolicies(): Record<string, unknown> {
 // NO_PRICE_TEXT): one Offer per priced variant (sku, its own price, its WMS availability), the variant the
 // page shows first leading; several variants -> AggregateOffer(lowPrice/highPrice/offerCount) around them,
 // also when no variant is preselected (two-tier products).
-export function productJsonLd(product: Product, canonicalUrl: string, now = new Date()): Record<string, unknown> {
+export function productJsonLd(product: FullProduct, canonicalUrl: string, now = new Date()): Record<string, unknown> {
   const description = (product.description ?? '').trim();
   const image = product.gallery?.find((src) => /^https?:\/\/\S+$/i.test(src));
   const price = getPdpPrice(product, initialTierValue(product, 1), initialTierValue(product, 2));

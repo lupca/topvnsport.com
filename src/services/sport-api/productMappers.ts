@@ -1,4 +1,4 @@
-import type { Category, Product, ProductAttribute, ProductVariant, ProductVomaAttribute } from '../../types';
+import type { Category, FullProduct, ProductAttribute, ProductVariant, ProductVomaAttribute } from '../../types';
 import { slugifyProductName } from '../../utils/productSlug.js';
 import { sumStock } from '../../utils/stock.js';
 import { NO_IMAGE_URL } from './constants.js';
@@ -117,7 +117,7 @@ export function mapProductVariant(variant: PmiVariant, productId: number): Produ
 }
 
 // Sản phẩm không tên thì không có gì để hiện cho khách -> null + báo rõ id.
-export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): Product | null {
+export function mapPmiProduct(pmiProduct: PmiProduct, categories: Category[]): FullProduct | null {
   const name = (pmiProduct.name ?? '').trim();
   if (!name) {
     console.error(`Bỏ sản phẩm ${pmiProduct.id}: thiếu tên`);

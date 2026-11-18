@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Product, StringOption } from '../types';
+import { FullProduct, Product, StringOption } from '../types';
 import ProductMediaGallery from './ProductMediaGallery';
 import TrustSealsPanel from './TrustSealsPanel';
 import ProductPurchaseSection from './product-detail/ProductPurchaseSection';
@@ -9,7 +9,7 @@ import { StockState, aggregateStock, getPdpPrice, initialTierValue, inferStringM
 import { isRacketCategoryCode } from '../config/storefront';
 
 interface ProductDetailPageProps {
-  product: Product;
+  product: FullProduct;
   stringOptions: StringOption[];
   onAddToCartWithSpecs: (product: Product, selectedWeight: string, selectedColor: string, stringChoice: StringOption | null, tension: number) => void;
   onBackToCatalog: () => void;

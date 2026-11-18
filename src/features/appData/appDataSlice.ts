@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { sportApi } from '../../services/sportApi';
 import { applyWmsStock } from '../../services/sport-api/wmsStock';
-import { Branch, Category, Product, StringOption } from '../../types';
+import { Branch, Category, FullProduct, Product, StringOption } from '../../types';
 import { inlinedCatalog, loadCatalog, saveCatalog, withInlinedProduct } from './catalogCache';
 
 export interface AppDataState {
@@ -29,13 +29,28 @@ export interface AppDataState {
   catalogFromCache?: boolean;
 }
 
-type CatalogPayload = Pick<AppDataState, 'products' | 'branches' | 'stringOptions' | 'categories'>;
+// What localStorage holds: the loaded catalog only (see saveCatalog).
+type CatalogPayload = Pick<AppDataState, 'branches' | 'stringOptions' | 'categories'> & { products: FullProduct[] };
 
 export function buildInitialState(inlined: Product | undefined = typeof window === 'undefined' ? undefined : window.__PRODUCT__): AppDataState {
-  // Server-rendered home/catalog: its inlined catalog (fresher) over the browser cache; both refresh in the background.
+  // Server-rendered home/catalog: its inlined catalog (fresher: prices, stock) over the browser cache; both refresh in the
+  // background. The inlined products have no description: a product the cache also holds takes its description
+  // from the cache (a full product, as on main), the others stay summaries until fetchAppData lands.
   const stored = loadCatalog<CatalogPayload>();
   const page = inlinedCatalog();
-  const cached: Partial<CatalogPayload> | null = page ? { ...(stored ?? {}), ...page } : stored;
+  const cachedById = new Map((stored?.products ?? []).map(p => [p.id, p]));
+  const cached: Partial<Pick<AppDataState, 'products' | 'branches' | 'stringOptions' | 'categories'>> | null = page
+    ? {
+        ...(stored ?? {}),
+        categories: page.categories,
+        products: page.products.map((p): Product => {
+          const full = cachedById.get(p.id);
+          if (!full) return p;
+          const { descriptionPending: _pending, ...rest } = p;
+          return { ...rest, ...(full.description !== undefined && { description: full.description }) };
+        })
+      }
+    : stored;
   return {
     ...baseState,
     ...(cached ?? {}),

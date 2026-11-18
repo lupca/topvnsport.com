@@ -1,4 +1,4 @@
-import { Product } from '../types';
+import { FullProduct, Product } from '../types';
 import { isRacketCategoryCode } from '../config/storefront';
 import { isStringingTier } from '../components/product-detail/helpers';
 
@@ -12,7 +12,7 @@ const ALLROUND_LINE = /arcsaber|halbertec|tectonic|duora|drive\s*x|cân\s*bằng
 // (1) characteristics / specs.balance từ PIM, (2) dòng vợt & từ khóa trong tên +
 // mô tả, (3) không còn tín hiệu nào thì trả undefined -- không bịa giá trị mặc
 // định cho sản phẩm không có dữ liệu (STOR-008 / 37f60f5b / db4c9460).
-export function inferRacketPlayStyle(product: Product): RacketPlayStyle | undefined {
+export function inferRacketPlayStyle(product: FullProduct): RacketPlayStyle | undefined {
   if (!isRacketCategoryCode(product.categoryCode)) return undefined;
 
   if (product.characteristics === 'Tấn Công') return 'Tấn Công';

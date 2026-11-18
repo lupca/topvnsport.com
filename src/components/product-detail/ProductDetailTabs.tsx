@@ -1,10 +1,10 @@
 import React from 'react';
-import { Product } from '../../types';
+import { FullProduct } from '../../types';
 
 export type DetailTab = 'details' | 'tech';
 
 interface ProductDetailTabsProps {
-  product: Product;
+  product: FullProduct;
   isRacket: boolean;
   activeTab: DetailTab;
   onTabChange: (tab: DetailTab) => void;

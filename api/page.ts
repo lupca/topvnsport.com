@@ -61,7 +61,9 @@ const categoryLinks = (categories: Category[], products: Product[]) => {
 
 // The catalog the page was rendered from, for the SPA to start from (window.__CATALOG__): a failed or slow
 // /api fetch in the browser (or a crawler that cannot fetch it) never replaces the content with a loading/error state.
-const catalogScript = (categories: Category[], products: Product[]) => `window.__CATALOG__=${inlineJson({ categories, products })}`;
+// Without the long unique descriptions (152 KB of the 761 KB, the worst compressing part): the SPA's background refresh brings them,
+// and its types keep a product without a loaded description apart from one that has none (SummaryProduct).
+const catalogScript = (categories: Category[], products: Product[]) => `window.__CATALOG__=${inlineJson({ categories, products: products.map(({ description: _description, ...rest }) => rest) })}`;
 
 export function renderHome(shell: string, categories: Category[], products: Product[]): string {
   const root = `<div id="ssr"><h1>${escapeHtml(HOME_SEO.h1)}</h1><p>${escapeHtml(HOME_SEO.description)}</p>${heroImage()}${categoryLinks(categories, products)}${productList(products)}</div>`;
