@@ -573,5 +573,5 @@ async function main() {
   }
 }
 
-module.exports = { measureInPage, stub, ROUTES, waitPort, BASE, PRODUCTS, STOCK, violations, MOBILE_WIDTHS, PHONE_WIDTHS, AFTER_DESKTOP_OUT, OUT };
+module.exports = { CATS, measureInPage, stub, ROUTES, waitPort, BASE, PRODUCTS, STOCK, violations, MOBILE_WIDTHS, PHONE_WIDTHS, AFTER_DESKTOP_OUT, OUT };
 if (require.main === module) { if (process.argv.includes('--selftest')) selftest(); else main(); }
