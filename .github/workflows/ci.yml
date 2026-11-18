@@ -50,3 +50,6 @@ jobs:
 
       - name: Mobile 390 guard (MOB-A/MOB-D)
         run: node e2e/mobile-guard-390.cjs
+
+      - name: Desktop menu guard (one row, Xem them)
+        run: node e2e/desktop-nav-guard.cjs
